@@ -75,7 +75,7 @@
       'color:var(--foreground)');
 
     card.appendChild(el('div',
-      'font:800 22px Manrope,system-ui,sans-serif;letter-spacing:-.02em', 'Nazariy — admin'));
+      'font:800 22px Manrope,system-ui,sans-serif;letter-spacing:-.02em', 'IQuest — admin'));
     card.appendChild(el('div',
       'margin-top:6px;color:var(--muted-foreground);font-size:13px',
       'Savollar bazasini boshqarish uchun kiring'));

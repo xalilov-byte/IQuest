@@ -59,8 +59,10 @@
       await ln.schedule({
         notifications: [{
           id: ID,
-          title: 'Nazariy',
-          body: 'Bugungi mashqni bajardingizmi? 10 daqiqa yetadi.',
+          title: 'IQuest',
+          /* Matn joriy tilda (nzT) — reja qo'yilgan paytdagi til. Va'da
+             yo'q ("IQ oshadi" emas): faqat mashqqa eslatma. */
+          body: (window.nzT || (s => s))('Bugungi mashq sizni kutmoqda: 10 ta savol yoki bitta aql oʻyini.'),
           // ANIQ ALARM ATAYLAB O'CHIRILGAN (isExactNotification: false).
           //
           // Plagin standart holatda aniq alarm qo'yadi, u esa Android 12+ da

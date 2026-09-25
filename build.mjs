@@ -34,26 +34,17 @@ const SRC = 'src';
 /* mobile — foydalanuvchi ilovasi (APK). Admin va landing kesiladi.
    web    — sayt: foydalanuvchi ilovasi + landing. Admin kesiladi.
    admin  — faqat admin panel. Foydalanuvchi ilovasi va landing kesiladi. */
-/* money — Pro obunasi va to'lov oqimi.
-
-   NIMA UCHUN MOBIL BUILD'DA O'CHIRILGAN: dizayndagi to'lov oqimi
-   TAQLID. "Tasdiqlash" bosilganda hech qanday to'lov bo'lmaydi, ilova
-   shunchaki pro.active = true qilib qo'yadi. Bu Google Play uchun ikki
-   sababdan yaramaydi:
-
-     1. Play'da raqamli mahsulot sotiladigan bo'lsa, to'lov Play
-        Billing orqali o'tishi SHART (Payments policy).
-     2. Tugma bosiladi, lekin hech narsa qilmaydi — bu "broken
-        functionality" va tekshiruvdan o'tmaydi. Tekshiruvchi "Payme"
-        ni tanlab, tasdiqlab, Pro'ni bepul olgan bo'lardi.
-
-   Shuning uchun v1 da pul qatlami MOBIL BUILD'GA KIRMAYDI. Dizayn
-   manbasida va sayt build'ida u o'z o'rnida qoladi — ish davom etadi
-   (REJA.md Faza 7), lekin do'konga tugallanmagan to'lov chiqmaydi. */
+/* PUL QATLAMI YO'Q. Nazariy'da Pro obunasi va to'lov oqimi bor edi
+   (taqlid: "Tasdiqlash" bosilganda hech qanday to'lov bo'lmasdi). IQuest
+   manbasidan u BUTUNLAY olib tashlandi: natija hech qachon pul ortida
+   emas (src/iq/CONTRACT.md §6.6), Play'da raqamli mahsulot esa faqat
+   Play Billing orqali sotiladi. Pastdagi tekshiruv (MONEY_NAMES) uning
+   nomlaridan birortasi HECH QAYSI build'ga qaytib kirmasligini
+   kafolatlaydi. */
 const TARGETS = {
-  mobile: { out: 'www',        app: true,  admin: false, landing: false, money: false, shell: 'shell.css' },
-  web:    { out: 'dist/web',   app: true,  admin: false, landing: true,  money: true,  shell: 'shell.css' },
-  admin:  { out: 'dist/admin', app: false, admin: true,  landing: false, money: true,  shell: 'shell-admin.css' },
+  mobile: { out: 'www',        app: true,  admin: false, landing: false, shell: 'shell.css' },
+  web:    { out: 'dist/web',   app: true,  admin: false, landing: true,  shell: 'shell.css' },
+  admin:  { out: 'dist/admin', app: false, admin: true,  landing: false, shell: 'shell-admin.css' },
 };
 
 const targetArg = process.argv.slice(2).find(a => a.startsWith('--target='));
@@ -236,29 +227,26 @@ function cutLine(code, needle, what) {
   return code.slice(0, a) + code.slice(b);
 }
 
+/* Bir qatorlik skalyar e'lon: const NAME = "…"; yoki const f = x => …;
+   (cutConst qavsli qiymat kutadi, bu yerda qavs yo'q). Ustidagi izoh
+   ham qamraladi — withCommentAbove. */
+function cutConstLine(code, name) {
+  const re = new RegExp(`(^|\\n)const ${name} = [^\\n]*;[ \\t]*(?=\\n)`);
+  const m = re.exec(code);
+  if (!m) throw new Error(`[build] bir qatorlik "const ${name}" topilmadi`);
+  if (re.exec(code.slice(m.index + m[0].length))) throw new Error(`[build] "const ${name}" bir necha marta uchraydi`);
+  const i = m.index + m[1].length;
+  const start = withCommentAbove(code, i);
+  let k = code.indexOf('\n', i);
+  return code.slice(0, start) + code.slice(k + 1);
+}
+
 /* ── 3. Maqsadga kerak bo'lmagan qatlamlarni kesish ──────────────────── */
 
 /* Markup: uchta mustaqil ko'rinish bo'limi bor. */
 if (!CFG.admin)   markup = cutSection(markup, 'isAdmin');
 if (!CFG.landing) markup = cutSection(markup, 'isLanding');
 
-/* Pul qatlami: Pro ekrani, to'lov oynasi va profildagi kirish qatori.
-   Markup kesiladi — mantiq (valsMoney) qoladi, chunki uning ichida
-   liga va reyting qiymatlari ham bor. Kesilgandan keyin pastdagi
-   tekshiruv kirish nuqtasi qolmaganini tasdiqlaydi, ya'ni mantiq
-   ishlatilmaydigan holga tushadi. */
-if (!CFG.money) {
-  markup = cutSection(markup, 'proOn');
-  markup = cutSection(markup, 'payOn');
-
-  // Profildagi "Pro" qatori — Pro ekraniga yagona kirish nuqtasi.
-  const proRow = markup.match(
-    /\n\s*<button onClick="\{\{ openPro \}\}"[^]*?<\/button>/);
-  if (!proRow) {
-    throw new Error('[build] profildagi Pro qatori topilmadi — manba o\'zgargan');
-  }
-  markup = markup.replace(proRow[0], '');
-}
 if (!CFG.app)     markup = cutSection(markup, 'isApp');
 
 /* Maket chromi'dagi ko'rinish almashtirgichi: mavjud bo'lmagan bo'limga
@@ -275,11 +263,18 @@ for (const [what, html, keep] of CHROME_BUTTONS) {
 }
 
 /* Logika: admin qatlami. Bu ro'yxatdagi hamma narsa FAQAT valsAnalytics /
-   valsManage / logAction ichida ishlatiladi — tekshirilgan. */
+   valsManage / logAction / parseBulk / toCsv ichida ishlatiladi —
+   tekshirilgan (pastdagi "o'chirilgan nom qolmadi" tekshiruvi buni har
+   build'da qayta isbotlaydi). Eski savol banki formati (LETTERS, IMG_DIR,
+   SIGN_KEYS …) va Narx bo'limi (DEFAULT_PRICING) ham shu yerda: IQuest
+   ilovasida ular kerak emas, faqat admin paneli ishlatadi. */
 const ADMIN_CONSTS = ['ROLES', 'REASONS', 'ADMIN_USERS', 'ADMIN_QUESTIONS', 'AUDIT_SEED',
                       'CSV_COLUMNS', 'BULK_SAMPLES', 'DAU_90', 'FUNNEL', 'COHORTS',
-                      'ITEMS', 'REV', 'METHOD_SHARE'];
-const ADMIN_FNS = ['nowIso', 'shortTime', 'maskPhone', 'parseBulk', 'toCsv'];
+                      'ITEMS', 'REV', 'METHOD_SHARE', 'SIGN_KEYS', 'DEFAULT_PRICING',
+                      'MONTHS_UZ', 'ICON_OK', 'ICON_WARN', 'ICON_BAD'];
+const ADMIN_SCALARS = ['LETTERS', 'IMG_DIR', 'MIN_OPTIONS', 'MAX_OPTIONS', 'letterOf'];
+const ADMIN_FNS = ['nowIso', 'shortTime', 'maskPhone', 'parseBulk', 'toCsv',
+                   'parseCsvLine', 'csvCell', 'dateAfter'];
 const ADMIN_METHODS = ['valsAnalytics', 'valsManage', 'logAction', 'may'];
 
 const removed = [];
@@ -293,31 +288,13 @@ if (!CFG.admin) {
   logic = cutLine(logic, 'users: ADMIN_USERS.map(', 'state.users');
   logic = cutLine(logic, 'questions: ADMIN_QUESTIONS.map(', 'state.questions');
   logic = cutLine(logic, 'audit: AUDIT_SEED.slice(),', 'state.audit');
+  logic = cutLine(logic, 'pricing: Object.assign({}, DEFAULT_PRICING),', 'state.pricing');
+  logic = cutLine(logic, 'priceDraft: Object.assign({}, DEFAULT_PRICING),', 'state.priceDraft');
 
   for (const name of ADMIN_METHODS) { logic = cutFn(logic, name, 'method'); removed.push(name); }
   for (const name of ADMIN_FNS)     { logic = cutFn(logic, name, 'function'); removed.push(name); }
   for (const name of ADMIN_CONSTS)  { logic = cutConst(logic, name); removed.push(name); }
-}
-
-/* Pul qatlamining MANTIG'I ham kesiladi, faqat markup emas.
-
-   Ilgari faqat markup kesilardi va valsMoney qolardi — sabab: liga,
-   reyting va profil qiymatlari o'sha funksiyaning ichida edi. Natijada
-   build "kesildi — pul qatlami" deb chop etardi, lekin www/index.html
-   da openPro, openPay, openRedeem va payStepMethod ijro etiladigan
-   kodda turardi. Markup'da kirish nuqtasi yo'q edi, ya'ni foydalanuvchi
-   uchun zarar yo'q — LEKIN TASDIQ YOLG'ON edi, va do'kon tekshiruvi
-   APK ichidan to'lov nomlarini topishi mumkin.
-
-   Manbadagi valsMoney endi FAQAT pul qiymatlarini saqlaydi (qolgani
-   valsProfile'ga ajratilgan), shuning uchun uni butunlay kesish
-   mumkin. */
-if (!CFG.money) {
-  logic = cutLine(logic, 'this.valsMoney(s),', 'renderVals → valsMoney chaqiruvi');
-  logic = cutFn(logic, 'valsMoney', 'method');   removed.push('valsMoney');
-  logic = cutFn(logic, 'plansFrom', 'function'); removed.push('plansFrom');
-  logic = cutConst(logic, 'PRO_BENEFITS');       removed.push('PRO_BENEFITS');
-  logic = cutConst(logic, 'PAY_METHODS');        removed.push('PAY_METHODS');
+  for (const name of ADMIN_SCALARS) { logic = cutConstLine(logic, name); removed.push(name); }
 }
 
 /* Kesishdan keyingi tekshiruv: o'chirilgan nom qolgan kodda ishlatilsa,
@@ -351,25 +328,15 @@ const T = [
    '<div style="flex:1;overflow:hidden;display:flex;flex-direction:column">',
    '<div class="nz-screens" style="flex:1;overflow:hidden;display:flex;flex-direction:column">'],
 
-  ['test ekrani maydoni',
-   '<sc-if value="{{ quizOn }}" hint-placeholder-val="{{ false }}">\n      <div style="flex:1;display:flex;flex-direction:column;background:var(--background)">',
-   '<sc-if value="{{ quizOn }}" hint-placeholder-val="{{ false }}">\n      <div class="nz-screens-quiz" style="flex:1;display:flex;flex-direction:column;background:var(--background)">'],
+  ['to\'liq ekranlar maydoni (savol, natija, o\'yin)',
+   '<sc-if value="{{ fullOn }}" hint-placeholder-val="{{ false }}">\n      <div style="flex:1;display:flex;flex-direction:column;background:var(--background)">',
+   '<sc-if value="{{ fullOn }}" hint-placeholder-val="{{ false }}">\n      <div class="nz-screens-quiz" style="flex:1;display:flex;flex-direction:column;background:var(--background)">'],
 
 
   ['pastki tab paneli',
    '<div style="position:absolute;left:0;right:0;bottom:0;height:68px;background:var(--surface);border-top:1px solid var(--hairline);display:grid;grid-template-columns:repeat(4,1fr);align-items:center">',
    '<div class="nz-nav" style="position:absolute;left:0;right:0;bottom:0;height:68px;background:var(--surface);border-top:1px solid var(--hairline);display:grid;grid-template-columns:repeat(4,1fr);align-items:center">'],
 ];
-
-/* Pro ekranidagi almashtirish faqat pul qatlami BOR build'da kerak —
-   aks holda u kesilgan bo'limni qidirib, build'ni yiqitadi. */
-if (CFG.money) {
-  T.push(
-  ['Pro ekrani maydoni',
-   '<sc-if value="{{ proOn }}" hint-placeholder-val="{{ false }}">\n      <div style="flex:1;display:flex;flex-direction:column;background:var(--background)">',
-   '<sc-if value="{{ proOn }}" hint-placeholder-val="{{ false }}">\n      <div class="nz-screens-quiz" style="flex:1;display:flex;flex-direction:column;background:var(--background)">']
-  );
-}
 
 if (CFG.app) {
   for (const [what, from, to] of T) {
@@ -522,8 +489,12 @@ const siteCfg = JSON.parse(readFileSync('site.config.json', 'utf8'));
    qilardi. Bu mo'rt edi: dizayndagi bitta satr o'zgarishi build'ni
    yiqitardi (aynan shunday bo'ldi ham). Endi boshlang'ich ko'rinish
    sozlama orqali uzatiladi va matn almashtirish kerak emas. */
+/* siteUrl — huquqiy sahifalar (maxfiylik, shartlar, aloqa) manzili.
+   Saytda ular shu domenning o'zida, ya'ni nisbiy havola yetadi
+   ("maxfiylik/"); APK ichida esa sahifalar yo'q — to'liq domen. */
 const siteSnippet = `window.nzSite = ${JSON.stringify({
   telegramBot: siteCfg.telegramBot || '',
+  siteUrl: CFG.landing ? '' : 'https://' + (siteCfg.domain || 'iquest.uz') + '/',
   startView: CFG.admin ? 'admin' : CFG.landing ? 'landing' : 'app' })};`;
 const ruDict = readFileSync(join(SRC, 'i18n-ru.js'), 'utf8');
 const shellCss = readFileSync(join(SRC, CFG.shell), 'utf8');
@@ -542,7 +513,7 @@ const viewport = CFG.admin
   ? 'width=device-width,initial-scale=1'
   : 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover';
 
-const title = CFG.admin ? 'Nazariy — admin' : 'Nazariy';
+const title = CFG.admin ? 'IQuest — admin' : 'IQuest';
 
 const html = `<!DOCTYPE html>
 <html lang="uz">
@@ -604,9 +575,9 @@ ${adminScripts}
 `;
 
 /* ── 7. Nazorat: kesish paytida hech narsa tushib qolmadimi ──────────── */
-const NEED = ['.nz-card-reyting{', '.nz-card-hafta{', 'url(./reyting-bg.jpg)', 'url(./hafta-bg.jpg)',
+const NEED = ['.nz-card-reyting{', '.nz-card-hafta{',
               'class Component extends DCLogic', 'renderVals()'];
-if (CFG.app) NEED.push('nz-nav', 'nz-frame');
+if (CFG.app) NEED.push('nz-nav', 'nz-frame', 'nz-screens-quiz');
 NEED.push('IQ.register = register', 'IQ.session =', 'IQ.games =');
 if (CFG.admin) NEED.push('valsManage', 'Admin panel');
 /* Landing'ning MATNI emas, tuzilmasi tekshiriladi: matn mahsulot bilan
@@ -614,25 +585,25 @@ if (CFG.admin) NEED.push('valsManage', 'Admin panel');
    tekshirilardi), bosh blok esa har doim bo'lishi kerak. */
 if (CFG.landing) NEED.push('nz-landing-hero', 'nz-landing-h1');
 
-/* Pul qatlami kesilgan build'da na kirish yo'li, na MANTIG'I qolmasligi
-   kerak. Ilgari bu tekshiruv faqat `markup` ustida ishlardi — ya'ni u
-   "tugma chizilmaydi" ni tasdiqlardi, "kod yo'q" ni emas. Admin
-   tekshiruvi (pastda) boshidan `logicCode` ustida ishlagan va aynan
-   shuning uchun kuchli edi; endi ikkalasi bir xil qat'iylikda. */
-if (!CFG.money) {
+/* Pul qatlami (Nazariy'ning taqlid to'lov oqimi) HECH QAYSI build'da
+   bo'lmasligi kerak — na kodda, na markup'da. Manbadan olib tashlangan;
+   bu tekshiruv uning jimgina qaytib kelishiga yo'l qo'ymaydi. */
+{
   const MONEY_NAMES = ['openPro', 'openPay', 'openRedeem', 'payStepMethod',
                        'proFinePrint', 'valsMoney', 'plansFrom', 'confirmPay',
                        'PRO_BENEFITS', 'PAY_METHODS'];
   for (const bad of MONEY_NAMES) {
-    if (new RegExp(`\\b${bad}\\b`).test(logicCode)) {
-      throw new Error(`[build] XAVFSIZLIK: "${bad}" ${TARGET} build'ining KODIDA qoldi — ` +
-                      `pul qatlami kesilmagan`);
-    }
-    if (markup.indexOf(bad) !== -1) {
-      throw new Error(`[build] "${bad}" ${TARGET} build'ining markup'ida qoldi — ` +
-                      `pul qatlami to'liq kesilmagan`);
+    if (new RegExp(`\\b${bad}\\b`).test(logicCode) || markup.indexOf(bad) !== -1) {
+      throw new Error(`[build] "${bad}" ${TARGET} build'ida topildi — to'lov qatlami ` +
+                      `IQuest'da yo'q (CONTRACT §6.6)`);
     }
   }
+}
+
+/* Haydovchilik ilovasidan qolgan suratlar (reyting-bg.jpg, hafta-bg.jpg)
+   endi ishlatilmaydi — fon sof CSS. Ular bundle'ga qaytmasin. */
+if (/url\(\.\/(reyting|hafta)-bg\.jpg\)/.test(html)) {
+  throw new Error('[build] eski surat (reyting-bg.jpg / hafta-bg.jpg) hali ishlatilmoqda');
 }
 
 for (const need of NEED) {
@@ -670,13 +641,10 @@ if (!CFG.admin) {
 }
 
 writeFileSync(join(OUT, 'index.html'), html);
-for (const img of ['reyting-bg.jpg', 'hafta-bg.jpg']) copyFileSync(join(SRC, img), join(OUT, img));
 
 
 const kb = n => (n / 1024).toFixed(0) + ' KB';
 console.log(`maqsad: ${TARGET} → ${OUT}/`);
 console.log(`${OUT}/index.html — ${kb(html.length)}`);
 console.log(`${OUT}/fonts     — ${fontCount} ta woff2`);
-console.log(`${OUT}/*.jpg     — 2 ta fon surati`);
 if (removed.length) console.log(`kesildi        — admin qatlami (${removed.length} ta nom)`);
-if (!CFG.money) console.log(`kesildi        — pul qatlami (Pro va to'lov oqimi)`);

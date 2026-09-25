@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   Nazariy — mini render runtime (~140 qator, tashqi kutubxonasiz)
+   IQuest — mini render runtime (~140 qator, tashqi kutubxonasiz)
 
    Dizayn manbasi (Main.dc.html) Claude Design Canvas formatida yozilgan:
    sc-if / sc-for teglari va {{ binding }} qiymatlari. Ilova offline

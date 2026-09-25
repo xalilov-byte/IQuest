@@ -16,9 +16,10 @@
       OʻZI bilan kalitlanadi (`i18n-ru.js`). Tarjima topilmasa matn
       oʻzbekcha qoladi — buzilmaydi, shunchaki tarjimasiz koʻrinadi.
 
-   NIMA OʻGIRILMAYDI: brend va texnik nomlar (Telegram, Click, Payme,
-   Pro…), foydalanuvchi nomlari (@sardor_t), havolalar, bitta bosh
-   harf (javob variantlari A–D va toifa "B" uchun).
+   NIMA OʻGIRILMAYDI: brend va texnik nomlar (IQuest, IQ, Telegram…),
+   foydalanuvchi nomlari (@iquest_uz), havolalar, bitta bosh harf
+   (javob variantlari A–F uchun) va renderVals() dagi "xom" kalitlar
+   (…Raw, …Src, …Url, path1/path2 — pastda deep() izohi).
    ───────────────────────────────────────────────────────────────────── */
 
 (function () {
@@ -28,10 +29,9 @@
   /* Oʻgirilmaydigan tokenlar. Brendlar kirill matn ichida ham lotin
      boʻlib qoladi — bu odatiy amaliyot va tanilishni saqlaydi. */
   const KEEP = new Set([
-    'Nazariy', 'Pro', 'Telegram', 'Stars', 'Click', 'Payme', 'Uzum',
-    'UZCARD', 'HUMO', 'SMS', 'YHQ', 'DIF', 'DIS', 'NFD', 'Play', 'Market',
-    'Android', 'App', 'Mini', 'Web', 'Bot', 'ID', 'CSV', 'km', 'm',
-    'OO', 'YY', 'Wi', 'Fi',
+    'IQuest', 'IQ', 'Telegram', 'Play', 'Market', 'Google',
+    'Android', 'App', 'Mini', 'Web', 'Bot', 'ID', 'CSV', 'SMS',
+    'Wi', 'Fi', 'N',
   ]);
 
   /* Lotin → kirill. Uzun qoidalar oldin tekshiriladi (sh, ch, oʻ, gʻ,
@@ -88,14 +88,22 @@
     return out;
   }
 
+  /* Havola, domen yoki foydalanuvchi nomi — shu BO'LAK (bo'sh joygacha)
+     o'girilmaydi, qolgan matn esa o'giriladi. Ilgari bunday satr BUTUNLAY
+     lotinda qolardi: "Sertifikatni IQuest.uz beradi" kirill rejimida
+     yarim-lotin jumla bo'lib chiqardi. */
+  const URLISH = /^[(«"']*@|https?:\/\/|mailto:|t\.me\/|\.uz\b|\.com\b|\.org\b/i;
+
   function transliterate(text) {
     if (!text) return text;
-    // Havola yoki foydalanuvchi nomi boʻlsa butunlay tegilmaydi.
-    if (/(^|\s)[@]/.test(text) || /https?:\/\/|t\.me|\.uz\b|\.com\b/.test(text)) {
-      // Faqat havola/nom boʻlagi emas, butun satr saqlanadi — ichidagi
-      // soʻzni oʻgirib, havolani buzib qoʻyish xavfidan koʻra shu yaxshi.
-      return text;
+    if (/\s/.test(text) || URLISH.test(text)) {
+      return text.split(/(\s+)/).map(tok =>
+        (!tok || /^\s+$/.test(tok) || URLISH.test(tok)) ? tok : translitRun(tok)).join('');
     }
+    return translitRun(text);
+  }
+
+  function translitRun(text) {
     let out = '';
     let i = 0;
     while (i < text.length) {
@@ -157,9 +165,25 @@
     return /^(var\(|--[a-z]|#[0-9a-fA-F]{3,8}$|rgba?\()/.test(str);
   }
 
+  /* Rasm manbasi (data:image/svg+xml,…) — savol va o'yin rasmlari. U
+     o'girilsa (kirillda "x" → "х") rasm ko'rinmay qoladi. */
+  function isDataUri(str) { return str.slice(0, 5) === 'data:'; }
+
   function skip(str) {
-    return isCss(str) || isSvgPath(str);
+    return isCss(str) || isDataUri(str) || isSvgPath(str);
   }
+
+  /* KALIT bo'yicha chetlab o'tiladigan qiymatlar (deep() uchun):
+       …Raw  — tilga bog'liq bo'lmagan xom matn (variant harfi "A",
+               o'yin katagidagi son, HUD qiymati "12/24");
+       …Src  — rasm manbasi; …Url — havola (nisbiy havola "maxfiylik/"
+               kirillga o'girilsa buziladi);
+       path1, path2 — SVG yo'li (qisqa yo'l isSvgPath'dan o'tib ketishi
+               mumkin);
+       theme, …Current, …pressed — atribut qiymatlari (data-theme="dark",
+               aria-current="page", aria-pressed="true"). Kirillda "dark"
+               "дарк" bo'lib, tungi tema umuman yoqilmay qolardi. */
+  const RAW_KEY = /(Raw|Src|Url|Current|[Pp]ressed)$|^path\d$|^theme$/;
 
   /* Satrni joriy tilga oʻgiradi. Oʻzbek lotinda — hech narsa qilmaydi
      (nol xarajat). */
@@ -210,7 +234,7 @@
        ham qamraladi; uslub obyektlari (style) tegilmaydi. */
     deep: function (v, key) {
       if (lang === 'uz') return v;
-      if (typeof v === 'string') return t(v);
+      if (typeof v === 'string') return (key && RAW_KEY.test(key)) ? v : t(v);
       if (Array.isArray(v)) return v.map(x => window.nzI18n.deep(x));
       if (v && typeof v === 'object') {
         // Uslub obyektlarini oʻgirish mantiqsiz va xatarli ("flex" →

@@ -16,7 +16,7 @@
        sitemap.xml, robots.txt
        fonts/, *.jpg, ikonkalar
 
-   NIMA UCHUN MATN SAHIFALARI ALOHIDA: ilova bundle'i 240 KB. Maxfiylik
+   NIMA UCHUN MATN SAHIFALARI ALOHIDA: ilova bundle'i ~0.5 MB. Maxfiylik
    siyosatini o'qish uchun odam (yoki Play Console tekshiruvchisi) butun
    ilovani yuklab olmasligi kerak — ular 7 KB va JS'siz.
 
@@ -70,14 +70,16 @@ function copyDir(from, to) {
 copyDir('dist/web', OUT);
 
 /* ── 3. Landing sahifasining <head> qismi ────────────────────────────
-   Ilova build'i faqat "Nazariy" nomini qo'yadi — ilovaga shundan ortiq
+   Ilova build'i faqat "IQuest" nomini qo'yadi — ilovaga shundan ortiq
    kerak emas. Saytga esa kerak: qidiruv natijasidagi matn, Telegram va
    ijtimoiy tarmoqdagi havola ko'rinishi (Open Graph) va qaysi manzil
    asosiy ekani (canonical). */
-const TITLE = 'Nazariy — avtotest (YHQ) nazariy imtihoniga tayyorgarlik';
-const DESC = 'O‘zbekiston avtotest (YHQ) nazariy imtihoniga tayyorgarlik: ' +
-             'imtihon simulyatsiyasi, mavzular, yo‘l belgilari, xatolar ustida ' +
-             'ishlash. Internetsiz ishlaydi, bepul.';
+/* Matn qisqa va halol (src/iq/CONTRACT.md §6): "rasmiy",
+   "sertifikatlangan", persentil, "IQ oshiradi" va'dasi yo'q. */
+const APP = cfg.appName || 'IQuest';
+const TITLE = `${APP} — IQ test, mashq va aql o‘yinlari`;
+const DESC = '30 savollik moslashuvchan IQ test, savol turlari bo‘yicha mashq ' +
+             'va aql o‘yinlari. Internetsiz ishlaydi, ro‘yxatdan o‘tish shart emas.';
 
 /* Havola ko'rinishidagi rasm (Telegram, WhatsApp, ijtimoiy tarmoq).
    tools/mkog.mjs bilan yasaladi. Fayl yo'q bo'lsa og:image YOZILMAYDI —
@@ -92,12 +94,12 @@ let index = readFileSync(join(OUT, 'index.html'), 'utf8');
 const head = [
   `<title>${TITLE}</title>`,
   `<meta name="description" content="${DESC}">`,
-  `<meta name="apple-mobile-web-app-title" content="Nazariy">`,
+  `<meta name="apple-mobile-web-app-title" content="${APP}">`,
   `<link rel="manifest" href="manifest.webmanifest">`,
   `<link rel="icon" href="favicon.png" sizes="32x32">`,
   `<link rel="apple-touch-icon" href="apple-touch-icon.png">`,
   `<meta property="og:type" content="website">`,
-  `<meta property="og:site_name" content="Nazariy">`,
+  `<meta property="og:site_name" content="${APP}">`,
   `<meta property="og:title" content="${TITLE}">`,
   `<meta property="og:description" content="${DESC}">`,
   `<meta property="og:locale" content="uz_UZ">`,
@@ -107,15 +109,16 @@ const head = [
   SITE && hasOg ? `<meta property="og:image" content="${SITE}/og.jpg">` : null,
   SITE && hasOg ? `<meta property="og:image:width" content="1200">` : null,
   SITE && hasOg ? `<meta property="og:image:height" content="630">` : null,
-  hasOg ? `<meta property="og:image:alt" content="Nazariy — avtotest tayyorgarligi">` : null,
+  hasOg ? `<meta property="og:image:alt" content="${APP} — IQ test va aql o‘yinlari">` : null,
 ].filter(Boolean).join('\n');
 
-/* Faqat <title> almashtiriladi — qolgan head o'z joyida qoladi. */
-if (index.indexOf('<title>Nazariy</title>') === -1) {
-  throw new Error('[mksite] dist/web/index.html da "<title>Nazariy</title>" topilmadi — ' +
+/* Faqat <title> almashtiriladi — qolgan head o'z joyida qoladi.
+   build.mjs sarlavhani "IQuest" qilib yozadi (u yerda ham shu nom). */
+if (index.indexOf('<title>IQuest</title>') === -1) {
+  throw new Error('[mksite] dist/web/index.html da "<title>IQuest</title>" topilmadi — ' +
                   'build.mjs o\'zgargan, mksite.mjs yangilansin');
 }
-index = index.replace('<title>Nazariy</title>', head);
+index = index.replace('<title>IQuest</title>', head);
 
 /* JS o'chirilgan brauzer (va JS ishlatmaydigan indekslovchi) bo'sh
    ekran ko'rmasligi kerak. Bu marketing matni emas — sahifaning
@@ -123,10 +126,9 @@ index = index.replace('<title>Nazariy</title>', head);
 const noscript = `
 <noscript>
 <div style="max-width:680px;margin:0 auto;padding:48px 24px;font:500 16px/1.6 Manrope,system-ui,sans-serif">
-<h1 style="font-size:32px;font-weight:800;letter-spacing:-.02em">Nazariy</h1>
-<p>Avtotest (YHQ) nazariy imtihoniga tayyorgarlik: imtihon simulyatsiyasi,
-mavzular bo‘yicha mashq, yo‘l belgilari va xatolar ustida ishlash.
-Ilova internetsiz ham to‘liq ishlaydi.</p>
+<h1 style="font-size:32px;font-weight:800;letter-spacing:-.02em">${APP}</h1>
+<p>30 savollik moslashuvchan IQ test, savol turlari bo‘yicha mashq va aql
+o‘yinlari. Ilova internetsiz ham to‘liq ishlaydi.</p>
 <p><strong>Ilovadan foydalanish uchun JavaScript yoqilishi kerak.</strong></p>
 <p><a href="maxfiylik/">Maxfiylik siyosati</a> ·
 <a href="shartlar/">Foydalanish shartlari</a> ·
@@ -197,7 +199,7 @@ gap:16px;flex-wrap:wrap}
       buni sezish qiyin, chunki sahifa baribir o'qiladi.
 
    2. Sayt endi ildizga bog'liq emas: uni pastki papkada ham
-      (example.com/nazariy/) yoki oflayn papka sifatida ham ochish
+      (example.com/iquest/) yoki oflayn papka sifatida ham ochish
       mumkin. */
 const NAV = [
   ['../', 'Bosh sahifa'],
@@ -230,17 +232,17 @@ function page(p) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#F5F3FF">
 <link rel="icon" href="../favicon.png" sizes="32x32">
-<title>${p.title} — Nazariy</title>
+<title>${p.title} — ${APP}</title>
 <meta name="description" content="${p.description}">
 ${canonical}<meta property="og:type" content="article">
-<meta property="og:title" content="${p.title} — Nazariy">
+<meta property="og:title" content="${p.title} — ${APP}">
 <meta property="og:description" content="${p.description}">
 ${SITE && hasOg ? `<meta property="og:image" content="${SITE}/og.jpg">\n` : ''}<style>${fontFaces}</style>
 <style>${CSS}</style>
 </head>
 <body>
 <header><div class="wrap">
-<a class="brand" href="../">Nazariy</a>
+<a class="brand" href="../">${APP}</a>
 <nav>${nav}</nav>
 </div></header>
 <main><div class="wrap">${p.body}
@@ -289,8 +291,8 @@ if (existsSync(ICON_SRC)) {
   warn.push('resources/icon-only.png yo\'q — PWA ikonkalari yasalmadi');
 }
 writeFileSync(join(OUT, 'manifest.webmanifest'), JSON.stringify({
-  name: 'Nazariy — avtotest tayyorgarligi',
-  short_name: 'Nazariy',
+  name: `${APP} — IQ test va aql o‘yinlari`,
+  short_name: APP,
   description: DESC,
   start_url: './',
   scope: './',

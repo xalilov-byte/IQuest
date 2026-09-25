@@ -7,7 +7,11 @@
   const root = document.getElementById('nz-root');
   const tpl = document.getElementById('nz-tpl');
 
-  /* ── Tema: qurilma sozlamasidan (Android tungi rejimi) ── */
+  /* ── Tema ─────────────────────────────────────────────────────────────
+     Sukut bo'yicha qurilma sozlamasidan (Android tungi rejimi). Profilda
+     "Tema" qatori uni qo'lda tanlashga imkon beradi (themePref — "auto" |
+     "light" | "dark", qurilmada saqlanadi). Qurilma o'zgarishi faqat
+     "auto" rejimda kuzatiladi. */
   const mq = window.matchMedia('(prefers-color-scheme: dark)');
   const themeOf = () => (mq.matches ? 'dark' : 'light');
 
@@ -30,7 +34,9 @@
     }
   }
 
-  mq.addEventListener('change', () => { app.setState({ theme: themeOf() }); });
+  mq.addEventListener('change', () => {
+    if (app.state.themePref === 'auto') app.setState({ theme: themeOf() });
+  });
 
   /* ── Sozlamalarni qurilma qatlamiga ulash ────────────────────────────
      Dizayn sozlamalarni state'da ushlaydi ("Ovoz: Yoniq"), lekin ularni
@@ -57,7 +63,7 @@
         onDenied: function (reason) {
           app.setState({ notifOn: false });
           if (reason === 'denied') {
-            toast('Bildirishnomaga ruxsat berilmagan — tizim sozlamalaridan yoqing');
+            toast(tr('Bildirishnomaga ruxsat berilmagan — tizim sozlamalaridan yoqing'));
           }
         }
       });
@@ -69,10 +75,13 @@
      yozuvlarni birlashtiradi, shuning uchun bu qimmat emas). Shu yer
      tanlangani uchun dizaynda "saqlash" degan tushuncha yo'q: ilova
      shunchaki holatini o'zgartiradi, saqlash esa avtomatik. */
+  /* Savol banki yo'q (IQuest savollari generatordan) — shuning uchun
+     bo'sh ro'yxat uzatiladi. Saqlanadigani: ball, kunlik hisoblagich,
+     sozlamalar. Testlar tarixi va darajalar progress.js ning o'zida
+     (recordTest), tugallanmagan test esa Main.dc.html da (nz-iq-run). */
   function saveProgress() {
     if (!window.nzProgress) return;
-    if (typeof QUESTIONS === 'undefined') return;
-    window.nzProgress.save(app.state, QUESTIONS);
+    window.nzProgress.save(app.state, []);
   }
 
   // Tema o'zgarganda status bar ham ergashsin
@@ -107,7 +116,12 @@
     });
     const CapAppEarly = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
     if (CapAppEarly && CapAppEarly.addListener) {
-      CapAppEarly.addListener('appStateChange', st => { if (!st.isActive) flushNow(); });
+      CapAppEarly.addListener('appStateChange', st => {
+        if (!st.isActive) flushNow();
+        /* O'yin taymeri ilova fonda turganda to'xtaydi (WebView har doim
+           visibilitychange bermaydi). */
+        if (app.setPaused) app.setPaused(!st.isActive);
+      });
     }
   }
 
@@ -120,8 +134,20 @@
   /* ── Android "orqaga" tugmasi ──────────────────────────────────────────
      Standart xulq: WebView'da orqaga bosilsa ilova darhol yopiladi.
      Bu yerda orqaga tugmasi ilovaning O'Z ierarxiyasi bo'yicha yuradi:
-     ochiq oyna → test → tab → bosh ekran → chiqish (ikki marta bosish).  */
+
+       ochiq oyna (tasdiq)  → yopiladi
+       o'yin                → o'yindan chiqadi
+       test                 → "Testni to'xtatasizmi?" (javoblar saqlangan)
+       mashq / takrorlash   → chiqadi
+       natija ekrani        → yopiladi
+       tab ≠ Bosh           → Bosh ekranga
+       Bosh ekranda         → "Chiqish uchun yana bosing" → chiqadi
+
+     Holat nomlarini faqat ilovaning o'zi biladi (app.onBack) — bu yerda
+     faqat admin oynalari va "ikki marta bosish" qoladi. */
   let lastBack = 0;
+
+  function tr(text) { return window.nzT ? window.nzT(text) : text; }
 
   function toast(text) {
     const t = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Toast;
@@ -132,17 +158,16 @@
     const s = app.state;
     const CapApp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
 
+    // Admin panel oynalari (faqat admin build'ida bo'ladi).
     if (s.bulk) return app.setState({ bulk: null });
     if (s.confirm) return app.setState({ confirm: null });
     if (s.drawer) return app.setState({ drawer: null, piiShown: false });
-    if (s.pay) return app.setState({ pay: null });
-    if (s.proView) return app.setState({ proView: false });
-    if (s.quiz) return app.setState({ quiz: null });
-    if (s.tab !== 'home') return app.setState({ tab: 'home' });
+
+    if (app.onBack && app.onBack()) return;
 
     if (Date.now() - lastBack < 2000) { if (CapApp) CapApp.exitApp(); return; }
     lastBack = Date.now();
-    toast('Chiqish uchun yana bir marta bosing');
+    toast(tr('Chiqish uchun yana bir marta bosing'));
   }
 
   function wireBack() {
@@ -153,56 +178,11 @@
   if (window.Capacitor) wireBack();
   else document.addEventListener('deviceready', wireBack, { once: true });
 
-  /* ── Savollar bazasi ────────────────────────────────────────────────
-     Ilova APK ichidagi savollar bilan DARHOL ishlay boshlaydi; baza esa
-     orqa fonda so'raladi va muvaffaq bo'lsa bankni almashtiradi.
-     Shuning uchun sekin yoki yo'q internet ilovani kutdirmaydi.
-
-     canSwap: test davom etayotganda bankni almashtirish MUMKIN EMAS —
-     savol indekslari pool'ga bog'langan, bank o'zgarsa foydalanuvchi
-     boshqa savolga javob bergan bo'lib qoladi. Bunday holda yangilanish
-     saqlanadi va keyingi ochilishda qo'llanadi. */
-  if (window.nzData) {
-    const canSwap = () => !app.state.quiz;
-
-    /* Bank almashgandan keyin "Saqlangan" va "Xatolarim" ro'yxatlarini
-       QAYTA hisoblash SHART. Ular holatda massiv indeksi bilan yuradi,
-       diskda esa ref bilan — bank o'zgarsa indekslar siljiydi va qayta
-       hisoblanmasa odam o'zi saqlamagan savolni ko'radi. Shuning uchun
-       manba (ref) diskdan qayta o'qiladi va yangi bankka moslanadi. */
-    const redraw = () => {
-      if (window.nzProgress && typeof QUESTIONS !== 'undefined') {
-        const re = window.nzProgress.initial(QUESTIONS);
-        app.setState({
-          wrongIds: re.wrongIds,
-          savedIds: re.savedIds,
-          signsAnswered: re.signsAnswered,
-        });
-        return;
-      }
-      app.setState({});
-    };
-    /* .catch() SHART: sync() — async funksiya, ya'ni undagi kutilmagan
-       xato promise ichida qoladi va hech qayerda ko'rinmaydi. Ilova
-       ishlayveradi (APK ichidagi to'plam bilan), lekin sabab yo'qoladi
-       va muammo faqat "savollar yangilanmayapti" shikoyati bo'lib
-       qaytadi. */
-    window.nzData.sync(app.state.lang, canSwap, redraw).catch(e => {
-      try { console.warn('[nzData] sync yiqildi: ' + (e && e.message)); } catch (e2) {}
-    });
-
-    /* Til almashganda savol matni ham o'sha tilga o'tishi kerak —
-       tarjima bazada saqlanadi (question_translations). */
-    const origSetLangSync = syncSettings;
-    let lastLang = app.state.lang;
-    syncSettings = function () {
-      origSetLangSync();
-      if (app.state.lang !== lastLang) {
-        lastLang = app.state.lang;
-        if (!app.state.quiz && window.nzData.applyLang(app.state.lang)) app.setState({});
-      }
-    };
-  }
+  /* Savollar bazasi (src/data.js — Nazariy'dan qolgan Supabase bank
+     sinxronizatsiyasi) CHAQIRILMAYDI: IQuest savollari qurilmadagi
+     generatorlardan (src/iq/gen/*) yasaladi va 1-versiya internetga
+     umuman chiqmaydi (maxfiylik siyosati — src/site/pages.mjs). Server
+     tekshiruvi (CONTRACT §10) backend bilan birga ulanadi. */
 
   /* Splash — ilova chizilgandan keyin yopiladi (oq ekran ko'rinmasin) */
   requestAnimationFrame(() => {
