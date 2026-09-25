@@ -467,7 +467,15 @@ const IQ_GENS = readdirSync(join(SRC, 'iq', 'gen'))
      bo'lmaydi. */
   .filter(f => f.endsWith('.js') && (f !== 'demo.js' || process.env.IQ_DEMO === '1'))
   .sort();
-const iqBundle = IQ_CORE.map(f => join(SRC, 'iq', f))
+/* Og'zaki savollar — qo'lda yozilgan kontent (uz + ru). Generator emas,
+   ma'lumot: content/verbal.json. U bundle'ga window.IQ_VERBAL sifatida
+   joylanadi va gen/verbal.js shundan o'qiydi. Fayl bo'lmasa — og'zaki
+   tur shunchaki ro'yxatdan o'tmaydi, ilova qolgan turlar bilan ishlaydi. */
+const VERBAL_PATH = join('content', 'verbal.json');
+const verbalSnippet = existsSync(VERBAL_PATH)
+  ? `window.IQ_VERBAL = ${JSON.stringify(JSON.parse(readFileSync(VERBAL_PATH, 'utf8')))};\n`
+  : '';
+const iqBundle = verbalSnippet + IQ_CORE.map(f => join(SRC, 'iq', f))
   .concat(IQ_GENS.map(f => join(SRC, 'iq', 'gen', f)))
   .map(p => `/* ── ${p} ── */\n` + readFileSync(p, 'utf8'))
   .join('\n');

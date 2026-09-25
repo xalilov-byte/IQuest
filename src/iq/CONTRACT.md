@@ -92,6 +92,40 @@ boshqa urug' bilan qayta urinadi. Har generator testi minglab urug' uchun
 
 ---
 
+### Og'zaki savollar — `content/verbal.json`
+
+Generator emas, qo'lda yozilgan kontent. Ikki ega unga tayanadi:
+**verbal** (yozadi) va **backend** (bazaga seed qiladi). Shakl:
+
+```json
+{
+  "version": 1,
+  "items": [
+    {
+      "key": "v001",
+      "kind": "analogy",
+      "level": 3,
+      "uz": { "prompt": "…", "stimulus": "Qush : uya = asalari : ?", "options": ["…", "…", "…", "…"] },
+      "ru": { "prompt": "…", "stimulus": "Птица : гнездо = пчела : ?", "options": ["…", "…", "…", "…"] },
+      "correct": 2,
+      "explain": { "uz": "…", "ru": "…" },
+      "reviewed": false
+    }
+  ]
+}
+```
+
+- `key` — barqaror, hech qachon qayta ishlatilmaydi (`v001`, `v002`…).
+- `kind` — `analogy` | `odd` (ortiqchasini top) | `category` | `relation`.
+- uz va ru'da variantlar soni va `correct` indeksi **bir xil**.
+- `reviewed: false` — odam ko'rib chiqmaguncha. Hozir hammasi false.
+
+Build uni `window.IQ_VERBAL = {…}` sifatida bundle'ga qo'yadi (`build.mjs`),
+`gen/verbal.js` shundan o'qiydi. Testlar faylni diskdan o'qib
+`window.IQ_VERBAL` ga qo'yadi.
+
+---
+
 ## 3. Sessiya — `src/iq/session.js`
 
 Test va mashq oqimi ilovada emas, shu modulda (testlanadigan joyda).
