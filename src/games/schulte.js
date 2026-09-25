@@ -41,17 +41,30 @@
 
    BOTGA QARSHI: kiritishlar orasidagi < 120 ms oraliq "shubhali".
    Ketma-ket 3 ta shubhali (4 ta bosish ≈ 0,4 s ichida) yoki jami ≥ 5 va
-   ≥ 15% — points = 0, daraja o'zgarmaydi. Bitta qo'sh bosish jazolanmaydi.
+   ≥ 15% — flagged: points = 0, daraja o'zgarmaydi. Sababi done-
+   ko'rinishning display matnida. Bitta qo'sh bosish jazolanmaydi.
 
-   Jurnal (log): 'press' start, har 'tap', va o'yin holatini vaqt bilan
-   o'zgartirgan (jadval yopildi / keyingisi / tugadi) 'tick'. Holat
-   o'tishlari rejalashtirilgan vaqtda hisoblanadi (tick kelgan paytda
-   emas) — natija tick chastotasiga bog'liq emas.
+   KO'RINISH: panjara HAMMA fazada bir xil o'lchamda turadi — intro'da
+   bo'sh 'disabled' kataklar (sonlar oldindan ko'rinmaydi), jadvallar
+   orasida tugagan jadval 'disabled', pauzada 'hidden'. HUD har doim
+   Jadval · Vaqt · Xato (1 jadvalli darajada ham "1/1").
+
+   PAUZA: pause(now) / resume(now) (yoki press('pause'|'resume')). Faol
+   vaqt to'xtaydi, sonlar yashiriladi, bosishlar e'tiborsiz; davom etgach
+   RESUME_MS "Tayyorlaning…" (vaqt hali to'xtagan).
+
+   Jurnal (log): kiritilgan DEVOR vaqti bilan 'press' start, har 'tap',
+   o'yin holatini vaqt bilan o'zgartirgan (jadval yopildi / keyingisi /
+   tugadi) 'tick' va 'press' pause/resume. Holat o'tishlari
+   rejalashtirilgan (o'yin) vaqtda hisoblanadi (tick kelgan paytda emas) —
+   natija tick chastotasiga bog'liq emas.
+
+   Matnlar: T(uz, ru, en), langs: ['uz','ru','en'] (CONTRACT §2, §9).
    ───────────────────────────────────────────────────────────────────── */
 (function (root) {
   const IQ = root.IQ;
 
-  const FAST_MS = 120, BAD_MS = 400, OK_MS = 250, BREAK_MS = 1500;
+  const FAST_MS = 120, BAD_MS = 400, OK_MS = 250, BREAK_MS = 1500, RESUME_MS = 600;
   const MODE_K = { asc: 1, desc: 1.15, zig: 1.6 };
   //            tomon, tartib, jadvallar, topilgan 'ok' bo'lib qoladimi
   const LV = [null,
@@ -60,10 +73,16 @@
     [4, 'zig', 4, false], [6, 'desc', 2, false], [5, 'zig', 2, false],
     [6, 'zig', 1, false]];
 
-  const T = (uz, ru) => ({ uz, ru });
-  const sec = ms => (Math.max(0, ms) / 1000).toFixed(1).replace('.', ',');
+  const T = (uz, ru, en) => ({ uz, ru, en });
   const clockText = ms => { const s = Math.floor(Math.max(0, ms) / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
   const clampLv = l => Math.max(1, Math.min(10, Math.round(Number(l)) || 1));
+
+  const BTN_START = { id: 'start', label: T('Boshlash', 'Начать', 'Start'), kind: 'primary' };
+  const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
+  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
+  const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
+  const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');
 
   /* Daraja qoidalari — testlar va ilova (masalan, "5×5, kamayish") uchun ochiq. */
   function rules(level) {
@@ -82,10 +101,12 @@
     return out;
   }
 
+  /* Qoida — intro va o'yin paytida BIR XIL matn (ko'rsatma sakramaydi). */
   function ruleText(n, mode) {
-    if (mode === 'asc') return T('1 dan ' + n + ' gacha tartib bilan bosing', 'Нажимайте по порядку: от 1 до ' + n);
-    if (mode === 'desc') return T(n + ' dan 1 gacha kamayish tartibida bosing', 'Нажимайте по убыванию: от ' + n + ' до 1');
-    return T('Navbat bilan bosing: 1 → ' + n + ' → 2 → ' + (n - 1) + ' → …', 'Нажимайте поочерёдно: 1 → ' + n + ' → 2 → ' + (n - 1) + ' → …');
+    if (mode === 'asc') return T('1 dan ' + n + ' gacha tartib bilan bosing', 'Нажимайте по порядку: от 1 до ' + n, 'Tap the numbers in order from 1 to ' + n);
+    if (mode === 'desc') return T(n + ' dan 1 gacha kamayish tartibida bosing', 'Нажимайте по убыванию: от ' + n + ' до 1', 'Tap the numbers in reverse, from ' + n + ' down to 1');
+    return T('Navbat bilan bosing: 1 → ' + n + ' → 2 → ' + (n - 1) + ' → …', 'Нажимайте поочерёдно: 1 → ' + n + ' → 2 → ' + (n - 1) + ' → …',
+      'Alternate the ends: 1 → ' + n + ' → 2 → ' + (n - 1) + ' → …');
   }
 
   /* Botga qarshi hisob (izoh yuqorida). */
@@ -103,8 +124,9 @@
 
   IQ.games.register({
     id: 'schulte', skill: 'attention',
-    title: T('Shulte jadvali', 'Таблица Шульте'),
-    desc: T('Sonlarni tartib bilan imkon qadar tez toping', 'Находите числа по порядку как можно быстрее'),
+    langs: ['uz', 'ru', 'en'],
+    title: T('Shulte jadvali', 'Таблица Шульте', 'Schulte table'),
+    desc: T('Sonlarni tartib bilan imkon qadar tez toping', 'Находите числа по порядку как можно быстрее', 'Find the numbers in order as fast as you can'),
     rules, order,
     create(seed, level) {
       const cfg = rules(level), R = IQ.rng(seed), N = cfg.n, ORDER = order(N, cfg.mode);
@@ -112,19 +134,26 @@
       for (let k = 0; k < cfg.tables; k++) layouts.push(R.shuffle(Array.from({ length: N }, (_, i) => i + 1)));
       const TOTAL = N * cfg.tables, guard = makeGuard(), log = [], stats = [];
 
-      let last = null, lastLog = null, shown = '';
+      let last = null, lastLog = null, shown = '';      // o'yin vaqti
       let phase = 'intro', t0 = null, endAt = null;
       let ti = 0, k = 0, found = null, tStart = 0, tErr = 0, errors = 0, fbUntil = 0;
       let badCell = -1, badUntil = 0, okCell = -1, okUntil = 0;
 
       /* Vaqt faqat tashqaridan. Orqaga ketgan yoki son bo'lmagan vaqt
-         oxirgi ma'lum vaqtga tenglanadi — holat orqaga qaytmaydi. */
+         oxirgi ma'lum vaqtga tenglanadi — holat orqaga qaytmaydi.
+         Devor vaqti → o'yin vaqti: off — pauzalar yig'indisi, hold — o'yin
+         vaqti g da to'xtagan, devor vaqti `until` gacha (Infinity — pauza). */
+      let wall = null, off = 0, hold = null;
       function clock(now) {
-        let t = (typeof now === 'number' && isFinite(now)) ? now : (last === null ? 0 : last);
-        if (last !== null && t < last) t = last;
-        return (last = t);
+        let w = (typeof now === 'number' && isFinite(now)) ? now : (wall === null ? 0 : wall);
+        if (wall !== null && w < wall) w = wall;
+        wall = w;
+        return (last = hold && w < hold.until ? hold.g : w - off);
       }
-      const push = (t, kind, v) => { log.push({ t, k: kind, v }); lastLog = t; };
+      const paused = () => hold !== null && hold.until === Infinity;
+      const holding = () => hold !== null && wall < hold.until;
+      const running = () => phase !== 'intro' && phase !== 'done';
+      const push = (t, kind, v) => { log.push({ t: wall, k: kind, v }); lastLog = t; };
 
       function startTable(t) {
         found = new Array(N).fill(false); k = 0; tStart = t; tErr = 0;
@@ -163,17 +192,37 @@
         else if (i === badCell && last < badUntil) state = 'bad';
         return { label: String(num), state };
       });
+      const blankGrid = state => ({ cols: cfg.side, cells: Array.from({ length: N }, () => ({ label: '', state })) });
+
+      /* HUD — hamma fazada bir xil uyalar. Vaqt: joriy (yoki tugagan)
+         jadvalning faol vaqti. */
+      function hud() {
+        let ms = 0;
+        if (phase === 'input') ms = last - tStart;
+        else if (phase === 'feedback' || phase === 'done') ms = stats[stats.length - 1].ms;
+        return [{ label: T('Jadval', 'Таблица', 'Table'), value: Math.min(ti + 1, cfg.tables) + '/' + cfg.tables },
+                { label: T('Vaqt', 'Время', 'Time'), value: clockText(ms) },
+                { label: T('Xato', 'Ошибки', 'Mistakes'), value: String(errors) }];
+      }
+      /* Ko'rinishni belgilaydigan hamma narsa (view() ni har tick'da
+         qurib solishtirish qimmat): tick shu o'zgargandagina true. */
+      const sig = () => [phase, paused(), holding(), ti, k, errors, stats.length,
+        badCell, last < badUntil, okCell, last < okUntil, hud()[1].value].join('|');
+      const progress = () => Math.min(1, (stats.reduce((a, s) => a + s.found, 0) + (phase === 'input' ? k : 0)) / TOTAL);
 
       const g = {
         get done() { return phase === 'done'; },
+        get paused() { return paused(); },
         tick(now) {
           const t = clock(now);
-          if (phase !== 'intro' && phase !== 'done') advance(t);
-          const key = JSON.stringify(g.view()), changed = key !== shown;
+          if (running()) advance(t);
+          const key = sig(), changed = key !== shown;
           shown = key;
           return changed;
         },
         press(id, now) {
+          if (id === 'pause') { g.pause(now); return; }
+          if (id === 'resume') { g.resume(now); return; }
           const t = clock(now);
           if (phase !== 'intro' || id !== 'start') return;
           push(t, 'press', id);
@@ -181,7 +230,7 @@
         },
         tap(i, now) {
           const t = clock(now);
-          if (phase === 'intro' || phase === 'done') return;
+          if (!running() || holding()) return;
           advance(t);
           if (phase === 'done' || !Number.isInteger(i) || i < 0 || i >= N) return;
           push(t, 'tap', i);
@@ -195,6 +244,26 @@
             errors++; tErr++; badCell = i; badUntil = t + BAD_MS;
           }
         },
+        /* O'yin vaqtini to'xtatadi. Faqat o'yin paytida; true — to'xtadi. */
+        pause(now) {
+          const t = clock(now);
+          if (!running() || paused()) return false;
+          advance(t);
+          if (!running()) return false;
+          hold = { g: t, until: Infinity };
+          log.push({ t: wall, k: 'press', v: 'pause' });   // lastLog o'zgarmaydi
+          return true;
+        },
+        /* Davom etadi: RESUME_MS "Tayyorlaning…", keyin vaqt yuradi. */
+        resume(now) {
+          const t = clock(now);
+          if (!paused()) return false;
+          const until = wall + RESUME_MS;
+          off = until - hold.g;
+          hold = { g: hold.g, until };
+          log.push({ t: wall, k: 'press', v: 'resume' });   // lastLog o'zgarmaydi
+          return true;
+        },
         log: () => log.map(e => ({ t: e.t, k: e.k, v: e.v })),
         result() {
           const p = perfOf(), bot = guard.flagged(), L = cfg.level;
@@ -205,60 +274,61 @@
             total: TOTAL,
             durationMs: t0 === null ? 0 : (phase === 'done' ? endAt : lastLog) - t0,
             nextLevel: bot || t0 === null ? L : p.perf >= 0.75 ? Math.min(10, L + 1) : p.perf < 0.4 ? Math.max(1, L - 1) : L,
+            flagged: bot,
           };
         },
         view() {
-          const rule = ruleText(N, cfg.mode), sz = cfg.side + '×' + cfg.side;
+          const rule = ruleText(N, cfg.mode);
           if (phase === 'intro') {
             return {
-              phase, prompt: rule,
-              hud: [{ label: T('Daraja', 'Уровень'), value: String(cfg.level) },
-                    { label: T('Jadval', 'Таблица'), value: sz },
-                    { label: T('Jadvallar', 'Таблиц'), value: String(cfg.tables) }],
-              display: { kind: 'text', uz: 'Tez va xatosiz! Noto\'g\'ri bosish — jarima.', ru: 'Быстро и без ошибок! Неверное нажатие — штраф.' },
-              grid: null,
-              buttons: [{ id: 'start', label: T('Boshlash', 'Начать'), kind: 'primary' }],
-              progress: 0,
+              phase, paused: false, prompt: rule, hud: hud(), display: null,
+              grid: blankGrid('disabled'), buttons: [BTN_START], progress: 0,
             };
           }
           if (phase === 'done') {
-            const r = g.result(), bot = guard.flagged();
+            const bot = guard.flagged();
             return {
-              phase,
-              prompt: bot ? T('Juda tez bosishlar aniqlandi — ball berilmadi', 'Слишком быстрые нажатия — очки не начислены')
-                          : T('O\'yin tugadi', 'Игра окончена'),
-              hud: [{ label: T('Ball', 'Очки'), value: String(r.points) },
-                    { label: T('Topildi', 'Найдено'), value: r.correct + '/' + r.total },
-                    { label: T('Xato', 'Ошибки'), value: String(errors) }],
-              display: { kind: 'text', uz: 'Natija: ' + r.score + ' / 100', ru: 'Результат: ' + r.score + ' / 100' },
-              grid: null, buttons: [], progress: 1,
+              phase, paused: false,
+              prompt: bot ? BOT : P_OVER,
+              hud: hud(),
+              display: bot ? Object.assign({ kind: 'text' }, BOT)
+                : { kind: 'text', uz: 'Xato bosishlar: ' + errors, ru: 'Ошибочных нажатий: ' + errors, en: 'Wrong taps: ' + errors },
+              grid: { cols: cfg.side, cells: layouts[ti].map(num => ({ label: String(num), state: 'disabled' })) },
+              buttons: [], progress: 1,
             };
           }
-          const hud = [];
-          if (cfg.tables > 1) hud.push({ label: T('Jadval', 'Таблица'), value: (ti + 1) + '/' + cfg.tables });
-          const progress = Math.min(1, (stats.reduce((a, s) => a + s.found, 0) + (phase === 'input' ? k : 0)) / TOTAL);
+          if (holding()) {
+            const p = paused();
+            return {
+              phase, paused: p, prompt: p ? P_PAUSED : P_READY, hud: hud(), display: null,
+              grid: blankGrid('hidden'), buttons: p ? [BTN_RESUME] : [], progress: progress(),
+            };
+          }
           if (phase === 'feedback') {
             const s = stats[stats.length - 1];
-            hud.push({ label: T('Vaqt, s', 'Время, с'), value: sec(s.ms) }, { label: T('Xato', 'Ошибки'), value: String(s.errors) });
             return {
-              phase,
+              phase, paused: false,
               prompt: s.timedOut
-                ? T('Vaqt tugadi — ' + s.found + ' / ' + N + ' topildi', 'Время вышло — найдено ' + s.found + ' из ' + N)
-                : T('Jadval tugadi! Keyingisi hozir', 'Таблица пройдена! Сейчас следующая'),
-              hud,
-              display: { kind: 'text', uz: sec(s.ms) + ' s', ru: sec(s.ms) + ' с' },
-              grid: null, buttons: [], progress,
+                ? T('Vaqt tugadi — ' + s.found + ' / ' + N + ' topildi', 'Время вышло — найдено ' + s.found + ' из ' + N, 'Time’s up — found ' + s.found + ' of ' + N)
+                : T('Jadval tugadi! Keyingisi hozir boshlanadi', 'Таблица пройдена! Сейчас начнётся следующая', 'Table complete! The next one starts now'),
+              hud: hud(), display: null,
+              grid: { cols: cfg.side, cells: layouts[ti].map(num => ({ label: String(num), state: 'disabled' })) },
+              buttons: [], progress: progress(),
             };
           }
-          hud.push({ label: T('Vaqt', 'Время'), value: clockText(last - tStart) },
-                   { label: T('Xato', 'Ошибки'), value: String(errors) });
           return {
-            phase, prompt: rule, hud, display: null,
+            phase, paused: false, prompt: rule, hud: hud(), display: null,
             grid: { cols: cfg.side, cells: cellsView() },
-            buttons: [], progress,
+            buttons: [], progress: progress(),
           };
         },
       };
+      /* Ilova har bosishdan keyin qayta chizadi — tick faqat o'shandan
+         beri o'zgargan bo'lsa true qaytarsin. */
+      for (const m of ['tap', 'press', 'pause', 'resume']) {
+        const f = g[m];
+        g[m] = function () { const r = f.apply(g, arguments); shown = sig(); return r; };
+      }
       return g;
     },
   });

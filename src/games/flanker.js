@@ -36,17 +36,27 @@
 
    BOTGA QARSHI: shubhali kiritish — oldingisidan < 120 ms keyin YOKI
    strelkalar chiqqanidan < 150 ms da javob. Ketma-ket 3 ta shubhali yoki
-   jami ≥ 5 va ≥ 15% — points = 0, daraja o'zgarmaydi.
+   jami ≥ 5 va ≥ 15% — flagged: points = 0, daraja o'zgarmaydi. Sababi
+   done-ko'rinishning display matnida.
 
-   Jurnal: 'press' (start, left, right), holatni vaqt bilan o'zgartirgan
-   'tick' (strelkalar chiqdi / muddat tugadi / keyingi sinov / tugadi).
-   O'tishlar rejalashtirilgan vaqtda hisoblanadi — natija tick
+   PAUZA: pause(now) / resume(now) (yoki press('pause'|'resume')). Vaqt
+   (javob vaqti ham) to'xtaydi, strelkalar o'rnida pauza belgisi.
+   "Davom etish" tugmasi "Chap/O'ng" bilan bir joyda — davom etgach
+   RESUME_MS "Tayyorlaning…" (nishon, bosish e'tiborsiz) tasodifiy
+   ikkinchi bosishni yutadi; keyin sinov to'xtagan joyidan davom etadi.
+
+   Jurnal: kiritilgan DEVOR vaqti bilan 'press' (start, left, right,
+   pause, resume), holatni vaqt bilan o'zgartirgan 'tick' (strelkalar
+   chiqdi / muddat tugadi / keyingi sinov / tugadi). O'tishlar
+   rejalashtirilgan (o'yin) vaqtda hisoblanadi — natija tick
    chastotasiga bog'liq emas.
+
+   Matnlar: T(uz, ru, en), langs: ['uz','ru','en'] (CONTRACT §2, §9).
    ───────────────────────────────────────────────────────────────────── */
 (function (root) {
   const IQ = root.IQ;
 
-  const FAST_MS = 120, MIN_RT = 150, TRIALS = 40, FB_OK = 300, FB_BAD = 700, FIRST_EXTRA = 500;
+  const FAST_MS = 120, MIN_RT = 150, TRIALS = 40, FB_OK = 300, FB_BAD = 700, FIRST_EXTRA = 500, RESUME_MS = 600;
   const INK = '#1c1b29', GREY = '#8a8799';
   //            strelka, zid, neytral, muddat, "+" min, "+" max, joy o'zgaradi
   const LV = [null,
@@ -61,7 +71,7 @@
     [7, 0.60, 0, 1050, 350, 650, true],
     [7, 0.65, 0, 950, 300, 600, true]];
 
-  const T = (uz, ru) => ({ uz, ru });
+  const T = (uz, ru, en) => ({ uz, ru, en });
   const clampLv = l => Math.max(1, Math.min(10, Math.round(Number(l)) || 1));
 
   function rules(level) {
@@ -78,6 +88,7 @@
     '</defs>';
   const svg = body => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200">' +
     '<rect width="320" height="200" fill="#fff"/>' + DEFS + body + '</svg>';
+  const PAUSE = svg('<rect x="140" y="76" width="12" height="48" rx="4" fill="' + GREY + '"/><rect x="168" y="76" width="12" height="48" rx="4" fill="' + GREY + '"/>');
   const FIX = svg('<path d="M160 86V114M146 100H174" stroke="' + INK + '" stroke-width="4" stroke-linecap="round" fill="none"/>');
 
   /* Qator: markaz — target, qolganlari — flanker ('same' | 'opp' | 'n'). */
@@ -111,13 +122,25 @@
     };
   }
 
-  const BTN = [{ id: 'left', label: T('◀ Chap', '◀ Влево'), kind: 'primary' },
-               { id: 'right', label: T('O\'ng ▶', 'Вправо ▶'), kind: 'primary' }];
+  /* Strelka belgisi + U+FE0E (emoji emas, matn ko'rinishi) + U+2002
+     (en-space: ba'zi shriftlarda oddiy probel belgi yonida yo'qoladi). */
+  const L_ = '◀\uFE0E\u2002', _R = '\u2002▶\uFE0E';
+  const BTN = [{ id: 'left', label: T(L_ + 'Chap', L_ + 'Влево', L_ + 'Left'), kind: 'primary' },
+               { id: 'right', label: T('Oʻng' + _R, 'Вправо' + _R, 'Right' + _R), kind: 'primary' }];
+  const BTN_START = { id: 'start', label: T('Boshlash', 'Начать', 'Start'), kind: 'primary' };
+  const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
+  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
+  const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
+  const P_ASK = T('Oʻrtadagi strelka qaysi tomonga?', 'Куда смотрит средняя стрелка?', 'Which way does the middle arrow point?');
+  const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');
 
   IQ.games.register({
     id: 'flanker', skill: 'attention',
-    title: T('Strelkalar', 'Стрелки'),
-    desc: T('Faqat o\'rtadagi strelkaga qarang — yondagilar chalg\'itadi', 'Смотрите только на среднюю стрелку — соседние отвлекают'),
+    langs: ['uz', 'ru', 'en'],
+    title: T('Strelkalar', 'Стрелки', 'Arrows'),
+    desc: T('Faqat oʻrtadagi strelkaga qarang — yondagilar chalgʻitadi', 'Смотрите только на среднюю стрелку — соседние отвлекают',
+            'Watch only the middle arrow — the others are there to distract you'),
     rules,
     create(seed, level) {
       const cfg = rules(level), L = cfg.level, R = IQ.rng(seed);
@@ -135,16 +158,23 @@
       }));
       const guard = makeGuard(), log = [], res = [];
 
-      let last = null, lastLog = null, shown = '';
+      let last = null, lastLog = null, shown = '';      // o'yin vaqti
       let phase = 'intro', t0 = null, endAt = null;
       let ti = 0, fixEnd = 0, onset = 0, fbUntil = 0;
 
+      /* Devor vaqti → o'yin vaqti: off — pauzalar yig'indisi, hold — o'yin
+         vaqti g da to'xtagan, devor vaqti `until` gacha (Infinity — pauza). */
+      let wall = null, off = 0, hold = null;
       function clock(now) {
-        let t = (typeof now === 'number' && isFinite(now)) ? now : (last === null ? 0 : last);
-        if (last !== null && t < last) t = last;
-        return (last = t);
+        let w = (typeof now === 'number' && isFinite(now)) ? now : (wall === null ? 0 : wall);
+        if (wall !== null && w < wall) w = wall;
+        wall = w;
+        return (last = hold && w < hold.until ? hold.g : w - off);
       }
-      const push = (t, kind, v) => { log.push({ t, k: kind, v }); lastLog = t; };
+      const paused = () => hold !== null && hold.until === Infinity;
+      const holding = () => hold !== null && wall < hold.until;
+      const running = () => phase !== 'intro' && phase !== 'done';
+      const push = (t, kind, v) => { log.push({ t: wall, k: kind, v }); lastLog = t; };
 
       function advance(t) {
         let moved = false;
@@ -172,18 +202,25 @@
         return { ok, bad, meanRt, perf: accK * spdK };
       }
 
+      /* Ko'rinishni belgilaydigan hamma narsa (SVG'ni har tick'da qurib
+         solishtirish qimmat): tick shu o'zgargandagina true. */
+      const sig = () => [phase, paused(), holding(), ti, res.length].join('|');
+
       const g = {
         get done() { return phase === 'done'; },
+        get paused() { return paused(); },
         tick(now) {
           const t = clock(now);
-          if (phase !== 'intro' && phase !== 'done') advance(t);
-          const key = JSON.stringify(g.view()), changed = key !== shown;
+          if (running()) advance(t);
+          const key = sig(), changed = key !== shown;
           shown = key;
           return changed;
         },
         press(id, now) {
+          if (id === 'pause') { g.pause(now); return; }
+          if (id === 'resume') { g.resume(now); return; }
           const t = clock(now);
-          if (phase === 'done') return;
+          if (phase === 'done' || holding()) return;
           if (phase === 'intro') {
             if (id !== 'start') return;
             push(t, 'press', id);
@@ -200,6 +237,26 @@
           res.push({ out, rt });
           phase = 'feedback'; fbUntil = t + (out === 'ok' ? FB_OK : FB_BAD);
         },
+        /* O'yin vaqtini to'xtatadi. Faqat o'yin paytida; true — to'xtadi. */
+        pause(now) {
+          const t = clock(now);
+          if (!running() || paused()) return false;
+          advance(t);
+          if (!running()) return false;
+          hold = { g: t, until: Infinity };
+          log.push({ t: wall, k: 'press', v: 'pause' });   // lastLog o'zgarmaydi
+          return true;
+        },
+        /* Davom etadi: RESUME_MS "Tayyorlaning…", keyin vaqt yuradi. */
+        resume(now) {
+          const t = clock(now);
+          if (!paused()) return false;
+          const until = wall + RESUME_MS;
+          off = until - hold.g;
+          hold = { g: hold.g, until };
+          log.push({ t: wall, k: 'press', v: 'resume' });   // lastLog o'zgarmaydi
+          return true;
+        },
         tap() {},
         log: () => log.map(e => ({ t: e.t, k: e.k, v: e.v })),
         result() {
@@ -210,53 +267,69 @@
             correct: s.ok, total: TRIALS,
             durationMs: t0 === null ? 0 : (phase === 'done' ? endAt : lastLog) - t0,
             nextLevel: bot || t0 === null ? L : s.perf >= 0.75 ? Math.min(10, L + 1) : s.perf < 0.4 ? Math.max(1, L - 1) : L,
+            flagged: bot,
           };
         },
         view() {
+          const s = stats();
+          /* HUD — hamma fazada bir xil uyalar (intro'da boshlang'ich qiymat). */
+          const hud = [{ label: T('Toʻgʻri', 'Верно', 'Correct'), value: String(s.ok) },
+                       { label: T('Xato', 'Ошибки', 'Mistakes'), value: String(s.bad) },
+                       { label: T('Oʻrtacha, ms', 'Среднее, мс', 'Avg time, ms'), value: s.meanRt === null ? '—' : String(Math.round(s.meanRt)) }];
           if (phase === 'intro') {
             return {
-              phase,
-              prompt: T('Faqat O\'RTADAGI strelka qaysi tomonga qaraganini bosing. Yondagilarga e\'tibor bermang.',
-                        'Нажимайте, куда смотрит только СРЕДНЯЯ стрелка. Соседние не учитывайте.'),
-              hud: [{ label: T('Daraja', 'Уровень'), value: String(L) }, { label: T('Sinovlar', 'Попыток'), value: String(TRIALS) }],
+              phase, paused: false,
+              prompt: T('Faqat oʻrtadagi strelka yoʻnalishini bosing — yondagilarga eʼtibor bermang',
+                        'Нажимайте, куда смотрит средняя стрелка, — соседние не в счёт',
+                        'Tap the way the middle arrow points — ignore the others'),
+              hud,
               display: { kind: 'svg', svg: svg(row({ type: 'inc', dir: 'r', y: 100 }, cfg.arrows, true)) },
               grid: null,
-              buttons: [{ id: 'start', label: T('Boshlash', 'Начать'), kind: 'primary' }],
+              buttons: [BTN_START],
               progress: 0,
             };
           }
-          const s = stats();
           if (phase === 'done') {
-            const r = g.result(), bot = guard.flagged();
+            const bot = guard.flagged();
             return {
-              phase,
-              prompt: bot ? T('Juda tez bosishlar aniqlandi — ball berilmadi', 'Слишком быстрые нажатия — очки не начислены')
-                          : T('O\'yin tugadi', 'Игра окончена'),
-              hud: [{ label: T('Ball', 'Очки'), value: String(r.points) },
-                    { label: T('To\'g\'ri', 'Верно'), value: s.ok + '/' + TRIALS },
-                    { label: T('O\'rtacha, ms', 'Среднее, мс'), value: s.meanRt === null ? '—' : String(Math.round(s.meanRt)) }],
-              display: { kind: 'text', uz: 'Natija: ' + r.score + ' / 100', ru: 'Результат: ' + r.score + ' / 100' },
+              phase, paused: false,
+              prompt: bot ? BOT : P_OVER,
+              hud,
+              /* Ball tezlik va aniqlikdan chiqadi — aniqlik yakun uyasida,
+                 bu yerda tezlik. */
+              display: bot ? Object.assign({ kind: 'text' }, BOT) : (() => {
+                const ms = s.meanRt === null ? '—' : String(Math.round(s.meanRt));
+                return { kind: 'text', uz: 'Oʻrtacha javob vaqti: ' + ms + ' ms', ru: 'Среднее время ответа: ' + ms + ' мс', en: 'Average response time: ' + ms + ' ms' };
+              })(),
               grid: null, buttons: [], progress: 1,
             };
           }
-          const hud = [{ label: T('To\'g\'ri', 'Верно'), value: String(s.ok) },
-                       { label: T('Xato', 'Ошибки'), value: String(s.bad) },
-                       { label: T('O\'rtacha, ms', 'Среднее, мс'), value: s.meanRt === null ? '—' : String(Math.round(s.meanRt)) }];
           const tr = trials[ti], progress = Math.min(1, res.length / TRIALS);
-          let prompt = T('O\'rtadagi strelka qaysi tomonga?', 'Куда смотрит средняя стрелка?'), display;
+          if (holding()) {
+            const p = paused();
+            return { phase, paused: p, prompt: p ? P_PAUSED : P_READY, hud,
+              display: { kind: 'svg', svg: p ? PAUSE : FIX }, grid: null, buttons: p ? [BTN_RESUME] : [], progress };
+          }
+          let prompt = P_ASK, display;
           if (phase === 'show') display = { kind: 'svg', svg: FIX };
           else if (phase === 'input') display = { kind: 'svg', svg: svg(row(tr, cfg.arrows, false)) };
           else {
             const out = res[res.length - 1].out;
-            prompt = out === 'ok' ? T('To\'g\'ri!', 'Верно!')
-              : out === 'miss' ? T('Kechikdingiz', 'Слишком поздно')
-              : out === 'fast' ? T('Juda erta — strelkani ko\'rib bosing', 'Слишком рано — сначала посмотрите')
-              : T('Xato — o\'rtadagisiga qarang', 'Ошибка — смотрите на среднюю');
+            prompt = out === 'ok' ? T('Toʻgʻri!', 'Верно!', 'Correct!')
+              : out === 'miss' ? T('Kechikdingiz', 'Слишком поздно', 'Too slow')
+              : out === 'fast' ? T('Juda erta — strelkani koʻrib bosing', 'Слишком рано — сначала посмотрите', 'Too early — wait for the arrows')
+              : T('Xato — oʻrtadagisiga qarang', 'Ошибка — смотрите на среднюю', 'Wrong — look at the middle one');
             display = { kind: 'svg', svg: svg(row(tr, cfg.arrows, true) + mark(out === 'ok', tr.y)) };
           }
-          return { phase, prompt, hud, display, grid: null, buttons: BTN, progress };
+          return { phase, paused: false, prompt, hud, display, grid: null, buttons: BTN, progress };
         },
       };
+      /* Ilova har bosishdan keyin qayta chizadi — tick faqat o'shandan
+         beri o'zgargan bo'lsa true qaytarsin. */
+      for (const m of ['tap', 'press', 'pause', 'resume']) {
+        const f = g[m];
+        g[m] = function () { const r = f.apply(g, arguments); shown = sig(); return r; };
+      }
       return g;
     },
   });

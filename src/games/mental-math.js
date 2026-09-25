@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   src/games/mental-math.js — Og'zaki hisob (skill: speed)
+   src/games/mental-math.js — Ogʻzaki hisob (skill: speed)
 
    QOIDA. 60 soniyada iloji boricha ko'p misol yechish. Ekranda misol
    ("7 + 5 = ?"), ostida 4 ta javob — 2×2 katak (grid). To'g'ri javob
@@ -42,20 +42,36 @@
 
    BOTGA QARSHI: shubhali kiritish — oldingisidan < 120 ms keyin YOKI
    misol ko'ringanidan < 250 ms da javob. Ketma-ket 3 ta shubhali yoki
-   jami ≥ 5 va ≥ 15% — points = 0, daraja o'zgarmaydi.
+   jami ≥ 5 va ≥ 15% — flagged: points = 0, daraja o'zgarmaydi. Sababi
+   done-ko'rinishning display matnida.
 
-   Jurnal: 'press' start, har 'tap', holatni vaqt bilan o'zgartirgan
-   (keyingi misol / tugadi) 'tick'. O'tishlar rejalashtirilgan vaqtda
-   hisoblanadi — natija tick chastotasiga bog'liq emas.
+   KO'RINISH: 2×2 panjara va display hamma fazada bor (intro'da bo'sh
+   'disabled' kataklar va baholash qoidasi) — ekran sakramaydi.
+
+   PAUZA: pause(now) / resume(now) (yoki press('pause'|'resume')). 60 s
+   hisobi to'xtaydi, misol va variantlar yashiriladi. Misol ko'rinib
+   turganda pauza qilinsa, davom etgach YANGI misol chiqadi (eskisi
+   javobsiz, hisobga kirmaydi) — pauzada o'ylab olish foyda bermaydi.
+   Davom etgach RESUME_MS "Tayyorlaning…" (vaqt hali to'xtagan).
+   Qo'shimcha misollar o'sha IQ.rng oqimidan ketma-ket olinadi —
+   deterministik.
+
+   Jurnal: kiritilgan DEVOR vaqti bilan 'press' start, har 'tap', holatni
+   vaqt bilan o'zgartirgan (keyingi misol / tugadi) 'tick', 'press'
+   pause/resume. O'tishlar rejalashtirilgan (o'yin) vaqtda hisoblanadi —
+   natija tick chastotasiga bog'liq emas.
+
+   Matnlar: T(uz, ru, en), langs: ['uz','ru','en'] (CONTRACT §2, §9).
    ───────────────────────────────────────────────────────────────────── */
 (function (root) {
   const IQ = root.IQ;
 
-  const FAST_MS = 120, MIN_RT = 250, LIMIT_MS = 60000, MAXQ = 40, FB_OK = 250, FB_BAD = 700;
+  const FAST_MS = 120, MIN_RT = 250, LIMIT_MS = 60000, MAXQ = 40, FB_OK = 250, FB_BAD = 700, RESUME_MS = 600;
   const TARGET = [0, 30, 27, 24, 21, 19, 16, 14, 12, 10, 9];
   const MINUS = '−';
 
-  const T = (uz, ru) => ({ uz, ru });
+  const T = (uz, ru, en) => ({ uz, ru, en });
+  const text = s => ({ kind: 'text', uz: s, ru: s, en: s });
   const num = v => (v < 0 ? MINUS + (-v) : String(v));
   const clampLv = l => Math.max(1, Math.min(10, Math.round(Number(l)) || 1));
   const clockText = ms => { const s = Math.ceil(Math.max(0, ms) / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
@@ -181,27 +197,45 @@
     };
   }
 
+  const BTN_START = { id: 'start', label: T('Boshlash', 'Начать', 'Start'), kind: 'primary' };
+  const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
+  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
+  const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
+  const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');
+
   IQ.games.register({
     id: 'mental-math', skill: 'speed',
-    title: T('Og\'zaki hisob', 'Устный счёт'),
-    desc: T('60 soniyada iloji boricha ko\'p misol yeching', 'Решите как можно больше примеров за 60 секунд'),
+    langs: ['uz', 'ru', 'en'],
+    title: T('Ogʻzaki hisob', 'Устный счёт', 'Mental math'),
+    desc: T('60 soniyada iloji boricha koʻp misol yeching', 'Решите как можно больше примеров за 60 секунд', 'Solve as many problems as you can in 60 seconds'),
     rules,
     create(seed, level) {
       const cfg = rules(level), L = cfg.level, R = IQ.rng(seed);
       const Q = [];
-      for (let i = 0; i < MAXQ; i++) { const p = problem(R, L); const o = options(R, p, cfg.allowNegative); Q.push({ text: p.text, value: p.value, opts: o.opts, correct: o.correct }); }
+      const gen = () => { const p = problem(R, L); const o = options(R, p, cfg.allowNegative); Q.push({ text: p.text, value: p.value, opts: o.opts, correct: o.correct }); };
+      for (let i = 0; i < MAXQ; i++) gen();
+      /* Pauzadan keyin almashtirilgan misollar uchun — o'sha R oqimidan. */
+      const q = i => { while (Q.length <= i) gen(); return Q[i]; };
       const guard = makeGuard(), log = [];
 
-      let last = null, lastLog = null, shown = '';
+      let last = null, lastLog = null, shown = '';      // o'yin vaqti
       let phase = 'intro', t0 = null, endAt = null;
       let qi = 0, tShow = 0, fbUntil = 0, chosen = -1, answered = 0, correct = 0, wrong = 0;
 
+      /* Devor vaqti → o'yin vaqti: off — pauzalar yig'indisi, hold — o'yin
+         vaqti g da to'xtagan, devor vaqti `until` gacha (Infinity — pauza). */
+      let wall = null, off = 0, hold = null;
       function clock(now) {
-        let t = (typeof now === 'number' && isFinite(now)) ? now : (last === null ? 0 : last);
-        if (last !== null && t < last) t = last;
-        return (last = t);
+        let w = (typeof now === 'number' && isFinite(now)) ? now : (wall === null ? 0 : wall);
+        if (wall !== null && w < wall) w = wall;
+        wall = w;
+        return (last = hold && w < hold.until ? hold.g : w - off);
       }
-      const push = (t, kind, v) => { log.push({ t, k: kind, v }); lastLog = t; };
+      const paused = () => hold !== null && hold.until === Infinity;
+      const holding = () => hold !== null && wall < hold.until;
+      const running = () => phase !== 'intro' && phase !== 'done';
+      const push = (t, kind, v) => { log.push({ t: wall, k: kind, v }); lastLog = t; };
       const finish = t => { phase = 'done'; endAt = t; };
 
       function advance(t) {
@@ -222,22 +256,32 @@
         return Math.max(0, Math.min(1, (correct - wrong) / cfg.target));
       }
 
-      const hudPlay = () => [
-        { label: T('Vaqt', 'Время'), value: clockText(t0 + LIMIT_MS - last) },
-        { label: T('To\'g\'ri', 'Верно'), value: String(correct) },
-        { label: T('Xato', 'Ошибки'), value: String(wrong) },
+      const flagged = () => guard.flagged();
+      /* HUD — intro'da ham xuddi shu uyalar (boshlang'ich qiymatlar). */
+      const hud = () => [
+        { label: T('Vaqt', 'Время', 'Time'), value: clockText(t0 === null ? LIMIT_MS : phase === 'done' ? t0 + LIMIT_MS - endAt : t0 + LIMIT_MS - last) },
+        { label: T('Toʻgʻri', 'Верно', 'Correct'), value: String(correct) },
+        { label: T('Xato', 'Ошибки', 'Mistakes'), value: String(wrong) },
       ];
+      const blankGrid = state => ({ cols: 2, cells: [0, 1, 2, 3].map(() => ({ label: '', state })) });
+      /* Ko'rinishni belgilaydigan hamma narsa: tick shu o'zgargandagina true. */
+      const sig = () => [phase, paused(), holding(), qi, chosen, answered, correct, wrong,
+        hud()[0].value, running() ? progress() : 0].join('|');
+      const progress = () => Math.min(1, Math.max((last - t0) / LIMIT_MS, answered / MAXQ));
 
       const g = {
         get done() { return phase === 'done'; },
+        get paused() { return paused(); },
         tick(now) {
           const t = clock(now);
-          if (phase !== 'intro' && phase !== 'done') advance(t);
-          const key = JSON.stringify(g.view()), changed = key !== shown;
+          if (running()) advance(t);
+          const key = sig(), changed = key !== shown;
           shown = key;
           return changed;
         },
         press(id, now) {
+          if (id === 'pause') { g.pause(now); return; }
+          if (id === 'resume') { g.resume(now); return; }
           const t = clock(now);
           if (phase !== 'intro' || id !== 'start') return;
           push(t, 'press', id);
@@ -245,74 +289,110 @@
         },
         tap(i, now) {
           const t = clock(now);
-          if (phase === 'intro' || phase === 'done') return;
+          if (!running() || holding()) return;
           advance(t);
           if (phase === 'done' || !Number.isInteger(i) || i < 0 || i > 3) return;
           push(t, 'tap', i);
           if (phase !== 'input') { guard.input(t, false); return; }
-          const q = Q[qi], fast = t - tShow < MIN_RT, right = i === q.correct;
+          const cq = q(qi), fast = t - tShow < MIN_RT, right = i === cq.correct;
           guard.input(t, fast);
           answered++; chosen = i;
           if (!right) wrong++;
           else if (!fast) correct++;
           phase = 'feedback'; fbUntil = t + (right ? FB_OK : FB_BAD);
         },
+        /* O'yin vaqtini to'xtatadi. Faqat o'yin paytida; true — to'xtadi. */
+        pause(now) {
+          const t = clock(now);
+          if (!running() || paused()) return false;
+          advance(t);
+          if (!running()) return false;
+          hold = { g: t, until: Infinity };
+          log.push({ t: wall, k: 'press', v: 'pause' });   // lastLog o'zgarmaydi
+          return true;
+        },
+        /* Davom etadi: RESUME_MS "Tayyorlaning…", keyin vaqt yuradi. Misol
+           ko'rinib turgan bo'lsa — yangisi (javobsiz, hisobga kirmaydi). */
+        resume(now) {
+          const t = clock(now);
+          if (!paused()) return false;
+          const until = wall + RESUME_MS;
+          off = until - hold.g;
+          hold = { g: hold.g, until };
+          log.push({ t: wall, k: 'press', v: 'resume' });   // lastLog o'zgarmaydi
+          if (phase === 'input') { qi++; tShow = t; chosen = -1; }
+          return true;
+        },
         log: () => log.map(e => ({ t: e.t, k: e.k, v: e.v })),
         result() {
-          const perf = perfOf(), bot = guard.flagged();
+          const perf = perfOf(), bot = flagged();
           return {
             score: Math.round(100 * perf),
             points: bot ? 0 : Math.round((60 + 9 * L) * perf),
             correct, total: answered,
             durationMs: t0 === null ? 0 : (phase === 'done' ? endAt : lastLog) - t0,
             nextLevel: bot || t0 === null ? L : perf >= 0.75 ? Math.min(10, L + 1) : perf < 0.4 ? Math.max(1, L - 1) : L,
+            flagged: bot,
           };
         },
         view() {
           if (phase === 'intro') {
             return {
-              phase,
-              prompt: T('60 soniyada iloji boricha ko\'p misol yeching. Xato javob bitta to\'g\'ri javobni "yeydi".',
-                        'Решите как можно больше примеров за 60 секунд. Ошибка «съедает» один верный ответ.'),
-              hud: [{ label: T('Daraja', 'Уровень'), value: String(L) }, { label: T('Vaqt', 'Время'), value: '1:00' }],
-              display: { kind: 'text', uz: '4 ta javobdan to\'g\'risini bosing', ru: 'Нажмите верный из 4 ответов' },
-              grid: null,
-              buttons: [{ id: 'start', label: T('Boshlash', 'Начать'), kind: 'primary' }],
+              phase, paused: false,
+              prompt: T('60 soniyada iloji boricha koʻp misol yeching', 'Решите как можно больше примеров за 60 секунд', 'Solve as many problems as you can in 60 seconds'),
+              hud: hud(),
+              display: { kind: 'text', uz: 'Xato javob bitta toʻgʻri javobni «yeydi»', ru: 'Ошибка «съедает» один верный ответ', en: 'Each wrong answer cancels out a right one' },
+              grid: blankGrid('disabled'),
+              buttons: [BTN_START],
               progress: 0,
             };
           }
           if (phase === 'done') {
-            const r = g.result(), bot = guard.flagged();
+            const bot = flagged(), net = num(correct - wrong);
             return {
-              phase,
-              prompt: bot ? T('Juda tez bosishlar aniqlandi — ball berilmadi', 'Слишком быстрые нажатия — очки не начислены')
-                          : T('O\'yin tugadi', 'Игра окончена'),
-              hud: [{ label: T('Ball', 'Очки'), value: String(r.points) },
-                    { label: T('To\'g\'ri', 'Верно'), value: correct + '/' + answered },
-                    { label: T('Xato', 'Ошибки'), value: String(wrong) }],
-              display: { kind: 'text', uz: correct + ' ta to\'g\'ri javob', ru: 'Верных ответов: ' + correct },
-              grid: null, buttons: [], progress: 1,
+              phase, paused: false,
+              prompt: bot ? BOT : P_OVER,
+              hud: hud(),
+              /* Natija sof hisobdan chiqadi — uni izohlaydi (to'g'ri/jami
+                 o'yin yakunidagi uyada bor). */
+              display: bot ? Object.assign({ kind: 'text' }, BOT)
+                : { kind: 'text', uz: 'Sof natija: ' + net + ' (toʻgʻri − xato)', ru: 'Чистый счёт: ' + net + ' (верные − ошибки)', en: 'Net score: ' + net + ' (right − wrong)' },
+              grid: blankGrid('disabled'), buttons: [], progress: 1,
             };
           }
-          const q = Q[qi], fb = phase === 'feedback';
-          const cells = q.opts.map((o, i) => ({
+          if (holding()) {
+            const p = paused();
+            return {
+              phase, paused: p, prompt: p ? P_PAUSED : P_READY, hud: hud(),
+              display: p ? { kind: 'text', uz: 'Pauza', ru: 'Пауза', en: 'Paused' } : text('…'),
+              grid: blankGrid('hidden'), buttons: p ? [BTN_RESUME] : [], progress: progress(),
+            };
+          }
+          const cq = q(qi), fb = phase === 'feedback';
+          const cells = cq.opts.map((o, i) => ({
             label: num(o),
-            state: !fb ? 'idle' : i === q.correct ? 'ok' : i === chosen ? 'bad' : 'disabled',
+            state: !fb ? 'idle' : i === cq.correct ? 'ok' : i === chosen ? 'bad' : 'disabled',
           }));
-          const right = fb && chosen === q.correct;
+          const right = fb && chosen === cq.correct;
           return {
-            phase,
-            prompt: !fb ? T('To\'g\'ri javobni tanlang', 'Выберите верный ответ')
-                  : right ? T('To\'g\'ri!', 'Верно!')
-                  : T('Xato — to\'g\'ri javob: ' + num(q.value), 'Ошибка — верный ответ: ' + num(q.value)),
-            hud: hudPlay(),
-            display: { kind: 'text', uz: q.text + ' = ' + (fb ? num(q.value) : '?'), ru: q.text + ' = ' + (fb ? num(q.value) : '?') },
+            phase, paused: false,
+            prompt: !fb ? T('Toʻgʻri javobni tanlang', 'Выберите верный ответ', 'Pick the right answer')
+                  : right ? T('Toʻgʻri!', 'Верно!', 'Correct!')
+                  : T('Xato — toʻgʻri javob: ' + num(cq.value), 'Ошибка — верный ответ: ' + num(cq.value), 'Wrong — the answer is ' + num(cq.value)),
+            hud: hud(),
+            display: text(cq.text + ' = ' + (fb ? num(cq.value) : '?')),
             grid: { cols: 2, cells },
             buttons: [],
-            progress: Math.min(1, Math.max((last - t0) / LIMIT_MS, answered / MAXQ)),
+            progress: progress(),
           };
         },
       };
+      /* Ilova har bosishdan keyin qayta chizadi — tick faqat o'shandan
+         beri o'zgargan bo'lsa true qaytarsin. */
+      for (const m of ['tap', 'press', 'pause', 'resume']) {
+        const f = g[m];
+        g[m] = function () { const r = f.apply(g, arguments); shown = sig(); return r; };
+      }
       return g;
     },
   });

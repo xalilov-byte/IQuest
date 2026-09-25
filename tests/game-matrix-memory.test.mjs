@@ -7,7 +7,9 @@
        ko'rinishlar, jurnal va natija;
      · replay — IQ.games.replay aynan shu result() va log() ni beradi;
      · mukammal o'yinchi ko'p, tasodifiy bosuvchi kam, tez bot 0 ball;
-     · daraja qiyinlikni oshiradi; o'yin cheklangan vaqtda tugaydi.
+     · daraja qiyinlikni oshiradi; o'yin cheklangan vaqtda tugaydi;
+     · uz/ru/en matnlar (ʻ, ʼ, «»), ko'rsatma 2 qatorga sig'adi;
+     · pauza: vaqt kirmaydi, pauzali jurnal replay'da aynan o'sha natija.
 
    Fayllar node:vm ichida yuklanadi; muhitda Math.random va Date.now
    chaqirilsa darhol yiqiladi.
@@ -48,8 +50,110 @@ function prng(seed) {
 }
 
 function check(g, where) {
-  const e = IQ.games.validateView(g.view());
+  const v = g.view();
+  const e = IQ.games.validateView(v, ID);
   assert.deepEqual(plain(e), [], where + ': ' + e.join('; '));
+  checkLangs(v, where);
+  return v;
+}
+
+/* ── Tillar, tipografika va pauza (CONTRACT §2, §9; ARXITEKTURA §8) ──── */
+const RESUME = 600;                                  // o'yindagi RESUME_MS
+const CYR = /[Ѐ-ӿ]/;
+function checkText(o, where) {
+  for (const k of ['uz', 'ru', 'en']) assert.ok(o && typeof o[k] === 'string' && o[k].trim() !== '', where + ': ' + k);
+  assert.ok(!CYR.test(o.en) && !/[ʻʼ«»]/.test(o.en), where + ': en da kirill / ʻ / «»: ' + o.en);
+  assert.ok(!/['"‘’]/.test(o.uz), where + ': uz da ʻ/ʼ/«» o\'rniga boshqa belgi: ' + o.uz);
+  assert.ok(!/[A-Za-z]{2}/.test(o.ru), where + ': ru da lotin so\'z: ' + o.ru);
+}
+/* Har ko'rinish: hamma matnda uz/ru/en; ko'rsatma 2 qatorga sig'adi
+   (Playwright o'lchovi bilan tanlangan chegara), HUD yorlig'i qisqa. */
+function checkLangs(v, where) {
+  assert.equal(typeof v.paused, 'boolean', where + ': paused');
+  checkText(v.prompt, where + ' prompt');
+  for (const k of ['uz', 'ru', 'en']) assert.ok(v.prompt[k].length <= 76, where + ': ko\'rsatma uzun: ' + v.prompt[k]);
+  v.hud.forEach((h, i) => {
+    checkText(h.label, where + ' hud' + i);
+    for (const k of ['uz', 'ru', 'en']) assert.ok(h.label[k].length <= 14, where + ': HUD yorlig\'i uzun: ' + h.label[k]);
+  });
+  if (v.display && v.display.kind === 'text') checkText(v.display, where + ' display');
+  v.buttons.forEach((b, i) => checkText(b.label, where + ' tugma' + i));
+}
+/* Jurnalga pauza qo'shadi: i-hodisadan keyin (o'sha devor vaqtida)
+   'pause', gap ms dan keyin 'resume'; keyingi hodisalar gap + RESUME ga
+   suriladi. O'yin vaqti o'zgarmaydi — natija aynan o'sha bo'lishi kerak. */
+function withPause(log, i, gap) {
+  const P = log[i].t, out = log.slice(0, i + 1);
+  out.push({ t: P, k: 'press', v: 'pause' }, { t: P + gap, k: 'press', v: 'resume' });
+  for (const e of log.slice(i + 1)) out.push({ t: e.t + gap + RESUME, k: e.k, v: e.v });
+  return out;
+}
+/* Tugagan o'yin jurnaliga 1–3 ta pauza qo'shib replay qiladi: natija va
+   jurnal aynan (pauza vaqti o'yinga kirmaydi). `ok(e)` — pauza qo'yiladigan
+   hodisa. */
+function checkPausedReplay(seed, level, log, res, rs, ok = () => true) {
+  const R = prng(rs);
+  const idx = log.map((e, i) => i).filter(i => i < log.length - 1 && ok(log[i]));
+  if (!idx.length) return;
+  const picks = [...new Set([0, 1, 2].slice(0, 1 + Math.floor(R() * 3)).map(() => idx[Math.floor(R() * idx.length)]))].sort((a, b) => b - a);
+  let pl = log;
+  for (const i of picks) pl = withPause(pl, i, 1000 + Math.floor(R() * 600000));
+  const rp = IQ.games.replay(ID, seed, level, JSON.parse(JSON.stringify(pl)));
+  assert.deepEqual(plain(rp.result()), plain(res), 'pauzali replay natijasi');
+  assert.deepEqual(plain(rp.log()), pl, 'pauzali replay jurnali');
+}
+function checkRegistered() {
+  const G = IQ.games.get(ID);
+  checkText(G.title, 'title');
+  checkText(G.desc, 'desc');
+  assert.deepEqual(plain(G.langs), ['uz', 'ru', 'en']);
+  if (IQ.games.langsOf) assert.deepEqual(plain(IQ.games.langsOf(ID)), ['uz', 'ru', 'en']);
+}
+const BOT_EN = 'Taps too fast — no points awarded';
+/* Jonli pauza: intro'da pauza yo'q; o'yin paytida pause → ko'rinish
+   ma'lumot bermaydi, faqat "Davom etish"; kutish (10 daqiqa) o'yinni
+   tugatmaydi, tick false, bosishlar e'tiborsiz va jurnalga yozilmaydi;
+   resume → RESUME ms "Tayyorlaning…" (bosish yana e'tiborsiz), keyin
+   o'yin to'xtagan joyidan. `inputs(g, t)` — o'yinning hamma bosishlari. */
+function livePause(inputs, { level = 3, warm = 1300 } = {}) {
+  const g = IQ.games.create(ID, 7, level);
+  assert.equal(g.pause(500), false, 'intro — pauza yo\'q');
+  assert.equal(g.resume(600), false);
+  assert.equal(g.log().length, 0);
+  g.press('start', 1000);
+  g.tick(warm);
+  const before = JSON.stringify(g.view()), n0 = g.log().length, res0 = JSON.stringify(g.result());
+  assert.equal(g.pause(warm), true);
+  assert.equal(g.paused, true);
+  assert.equal(g.pause(warm + 10), false, 'ikkinchi pauza — yo\'q');
+  const v = check(g, 'pauza');
+  assert.equal(v.paused, true);
+  assert.deepEqual(plain(v.buttons.map(b => b.id)), ['resume']);
+  assert.equal(v.prompt.en, 'Paused — the clock is stopped');
+  if (v.grid) assert.ok(v.grid.cells.every(c => c.state === 'hidden' && c.label === ''), 'pauzada panjara yashirin');
+  const pv = JSON.stringify(v);
+  g.tick(warm);                                   // ilova pauzadan keyin bir marta chizadi
+  let t = warm;
+  for (let s = 0; s < 40; s++) { t += 15000; assert.equal(g.tick(t), false); inputs(g, t); }
+  assert.equal(JSON.stringify(g.view()), pv);
+  assert.equal(g.log().length, n0 + 1, 'pauzada hech narsa yozilmaydi');
+  assert.ok(!g.done, '10 daqiqa pauza o\'yinni tugatmaydi');
+  assert.equal(JSON.stringify(g.result()), res0, 'pauza natijani o\'zgartirmaydi');
+  assert.equal(g.resume(t), true);
+  assert.equal(g.paused, false);
+  const rv = check(g, 'tayyorlanish');
+  assert.equal(rv.paused, false);
+  assert.equal(rv.prompt.en, 'Get ready…');
+  assert.deepEqual(plain(rv.buttons), []);
+  if (rv.grid) assert.ok(rv.grid.cells.every(c => c.state === 'hidden'));
+  inputs(g, t + 100);
+  g.tick(t + 200);
+  assert.equal(g.log().length, n0 + 2, 'tayyorlanishda bosish e\'tiborsiz');
+  assert.equal(g.tick(t + RESUME - 1), false);
+  assert.equal(g.tick(t + RESUME), true, 'tayyorlanish tugadi');
+  assert.deepEqual(plain(g.log().slice(n0)), [{ t: warm, k: 'press', v: 'pause' }, { t, k: 'press', v: 'resume' }]);
+  check(g, 'davom');
+  return { g, before, after: JSON.stringify(g.view()), res0, t: t + RESUME };
 }
 
 /* Tasodifiy "maymun": tick, bosish (noto'g'ri indekslar ham), tugmalar,
@@ -73,10 +177,11 @@ function monkey(IQx, seed, level, rs, steps, onStep) {
       const i = R() < 0.05 ? [-1, 99, 2.5, '3', null][Math.floor(R() * 5)] : Math.floor(R() * 36);
       g.tap(i, now);
     } else {
-      g.press(['start', 'start', 'yes', 'x', undefined][Math.floor(R() * 5)], now);
+      g.press(['start', 'start', 'yes', 'x', undefined, 'pause', 'resume', 'resume'][Math.floor(R() * 8)], now);
     }
     if (onStep) onStep(g);
   }
+  g.resume(t);                              // pauzada qolgan bo'lsa
   g.press('start', t);
   g.tick(t + 1e7);
   if (onStep) onStep(g);
@@ -144,10 +249,13 @@ test('validateView har holatda bo\'sh (minglab tasodifiy harakat)', () => {
   const phases = new Set();
   for (let run = 0; run < 60; run++) {
     const level = 1 + (run % 10);
-    monkey(IQ, 7919 * run + 3, level, run + 11, 800, g => { check(g, 'run ' + run); views++; phases.add(g.view().phase); });
+    monkey(IQ, 7919 * run + 3, level, run + 11, 800, g => {
+      const v = check(g, 'run ' + run); views++; phases.add(v.phase);
+      if (v.paused) phases.add('paused');
+    });
   }
   assert.ok(views > 40000);
-  for (const p of ['intro', 'show', 'input', 'feedback', 'done']) assert.ok(phases.has(p), 'faza uchramadi: ' + p);
+  for (const p of ['intro', 'show', 'input', 'feedback', 'done', 'paused']) assert.ok(phases.has(p), 'faza uchramadi: ' + p);
 });
 
 test('deterministik: ikki muhitda bir xil harakatlar → bir xil hamma narsa', () => {
@@ -179,6 +287,8 @@ test('replay: aynan shu result() va log() (tasodifiy va haqiqiy o\'yinlar)', () 
     assert.deepEqual(plain(rp.log()), log, 'run ' + run);
     // JSON orqali o'tgan jurnal ham (serverga shunday boradi)
     assert.deepEqual(plain(IQ.games.replay(ID, seed, level, JSON.parse(JSON.stringify(log))).result()), plain(g.result()));
+    // o'sha o'yin 1–3 ta pauza bilan — natija aynan o'sha
+    if (!(run % 2)) checkPausedReplay(seed, level, log, g.result(), run);
   }
 });
 
@@ -225,6 +335,9 @@ test('tez bot (bosishlar orasi < 120 ms) 0 ball oladi', () => {
     const r = g.result();
     assert.equal(r.correct, 10, 'bot hammasini to\'g\'ri topadi');
     assert.equal(r.points, 0);
+    assert.equal(r.flagged, true);
+    assert.equal(r.nextLevel, 1 + (s % 10), 'bot darajani o\'zgartirmaydi');
+    assert.equal(g.view().display.en, BOT_EN, 'sabab — yakun matnida');
     // replay ham 0 beradi
     assert.equal(IQ.games.replay(ID, 300 + s, 1 + (s % 10), plain(g.log())).result().points, 0);
   }
@@ -311,4 +424,39 @@ test('cheklangan: faqat tick — o\'yin o\'zi tugaydi; bosishlar soni chegaralan
     const g = monkey(IQ, run, 1 + (run % 10), run, 3000);
     assert.ok(g.log().filter(e => e.k === 'tap').length <= 10 * 14);
   }
+});
+
+test('matnlar: uz/ru/en, langs; odam o\'yinida flagged yo\'q, yakun matni izohlaydi', () => {
+  checkRegistered();
+  const g = drive(IQ.games.create(ID, 100, 5), player({ gap: 350 }));
+  const r = g.result(), v = check(g, 'done');
+  assert.equal(r.flagged, false);
+  assert.equal(v.display.en, 'Most cells remembered: ' + r.score);
+  assert.ok(!/клеток$/.test(v.display.ru), 'ru — son ikki nuqtadan keyin');
+});
+
+test('intro: HUD, panjara va ko\'rsatma o\'yin paytidagi bilan bir xil shaklda (sakrash yo\'q)', () => {
+  for (let L = 1; L <= 10; L++) {
+    const g = IQ.games.create(ID, L, L);
+    const a = check(g, 'intro');
+    g.press('start', 0);
+    const b = check(g, 'show');
+    assert.deepEqual(plain(a.hud.map(h => h.label)), plain(b.hud.map(h => h.label)));
+    assert.ok(!a.hud.some(h => h.label.uz === 'Daraja'), 'daraja sarlavhada bor — HUD da takrorlanmaydi');
+    assert.equal(a.grid.cols, b.grid.cols);
+    assert.equal(a.grid.cells.length, b.grid.cells.length);
+    assert.ok(a.grid.cells.every(c => c.state === 'disabled' && c.label === ''));
+    assert.equal(a.display, null);
+  }
+});
+
+test('pauza (jonli): vaqt to\'xtaydi, yongan kataklar yashirinadi, keyin aynan davom etadi', () => {
+  const inputs = (g, t) => { for (let i = 0; i < 36; i++) g.tap(i, t); g.press('start', t); };
+  const { before, after, res0, g } = livePause(inputs, { warm: 1300 });
+  assert.equal(after, before, 'davom etgach ko\'rinish pauzadan oldingi bilan bir xil');
+  assert.equal(JSON.stringify(g.result()), res0);
+  // replay (pauza bilan) — aynan
+  const rp = IQ.games.replay(ID, 7, 3, plain(g.log()));
+  assert.deepEqual(plain(rp.log()), plain(g.log()));
+  assert.deepEqual(plain(rp.result()), plain(g.result()));
 });
