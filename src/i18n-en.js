@@ -18,7 +18,7 @@
      ball → points · tanga → coins · ketma-ketlik → streak
      Boshlovchi · Bronza · Kumush · Oltin · Platina · Olmos
         → Beginner · Bronze · Silver · Gold · Platinum · Diamond
-     Kunlik vazifalar → Daily quests · Xatolarim / Saqlangan → My mistakes / Saved
+     Kunlik vazifalar → Daily quests · Xatolarim / Saqlangan → Mistakes / Saved (360 px plitkaga sigʻishi uchun; §8.5 da «My mistakes»)
      IQ oʻyinlari / Aql oʻyini → IQ games / Brain game
      Doʻkon / Nishonlar / Vitrina → Shop / Badges / Showcase
      Sozlamalar / Eslatma → Settings / Reminder · Oraliq → Range
@@ -46,7 +46,6 @@ window.nzEn = {
   "Saqlash": "Save",
   "Orqaga": "Back",
   "Keyingi": "Next",
-  "kun": "days",
   "Yangi": "New",
   "Bugun": "Today",
 
@@ -54,10 +53,8 @@ window.nzEn = {
   "{0} kun": { one: "{0} day", other: "{0} days" },
   "+{0} ball": { one: "+{0} point", other: "+{0} points" },
   "{0} ball": { one: "{0} point", other: "{0} points" },
-  "◆ +{0} ball": { one: "◆ +{0} point", other: "◆ +{0} points" },
   "{0} tanga": { one: "{0} coin", other: "{0} coins" },
   "+{0} tanga": { one: "+{0} coin", other: "+{0} coins" },
-  "● +{0} tanga": { one: "● +{0} coin", other: "● +{0} coins" },
   "{0} ta savol": { one: "{0} question", other: "{0} questions" },
   "{0}-daraja": "Level {0}",
   "{0}% · {1} ta javob": "{0}% · {1} answered",
@@ -65,7 +62,6 @@ window.nzEn = {
   "Oraliq {0}+": "Range {0}+",
   "Oraliq ≤{0}": "Range ≤{0}",
   "Ketma-ket faol kunlar: {0}": "Active days in a row: {0}",
-  "Ketma-ketlik: {0} kun": { one: "Streak: {0} day", other: "Streak: {0} days" },
 
   /* ── Liga ─────────────────────────────────────────────────────────── */
   "{0} liga": "{0} League",
@@ -79,13 +75,18 @@ window.nzEn = {
   "Olmos": "Diamond",
   "Bu hafta": "This week",
   "Bu hafta: {0} ball": { one: "This week: {0} point", other: "This week: {0} points" },
-  "Oʻtgan hafta": "Last week",
   "Eng yaxshi hafta": "Best week",
   "Oxirgi haftalar": "Recent weeks",
   "Eng yaxshi IQ": "Best IQ",
   "Jami ball": "Total points",
   "{0} liga!": "{0} League!",
-  "Mukofot: {0}": "Reward: {0}",
+  "Bu hafta {0} ball": { one: "{0} point this week", other: "{0} points this week" },
+  "Oʻtgan hafta: {0}": "Last week: {0}",
+  "Mukofot:": "Reward:",
+  "Mukofot: Bronzadan boshlab": "Reward: from Bronze up",
+  "Hafta yakuni": "Week results",
+  "joriy": "current",
+  "oʻtildi": "passed",
 
   /* ── Bosh ekran ───────────────────────────────────────────────────── */
   "IQ test": "IQ test",
@@ -94,20 +95,21 @@ window.nzEn = {
   "Boshlash": "Start",
   "Davom ettirish": "Resume",
   "Yangidan": "Start over",
-  "Oxirgi IQ": "Last IQ",
-  "Oxirgi natija: IQ {0}": "Last result: IQ {0}",
   "Bugungi mashq": "Today’s practice",
   "IQ oʻyinlari": "IQ games",
-  "{0} ta oʻyin": { one: "{0} game", other: "{0} games" },
   "Kunlik vazifalar": "Daily quests",
   "Aql oʻyini": "Brain game",
   "Xatolarni tuzating": "Fix your mistakes",
   "{0} mashqi": "{0} practice",
-  "✓ Olindi": "✓ Claimed",
-  "Keyingi qadam": "Next step",
+  "Oxirgi natija: {0}": "Last result: {0}",
+  "Qayta topshirish": "Retake",
+  "{0}/{1} savol": "{0}/{1} questions",
+  "Kun oʻyini: {0}": "Today: {0}",
+  "Olindi": "Claimed",
+  "Tanga: {0}": "Coins: {0}",
 
   /* ── Mashq ────────────────────────────────────────────────────────── */
-  "Xatolarim": "My mistakes",
+  "Xatolarim": "Mistakes",
   "Saqlangan": "Saved",
   "Diqqat": "Attention",
   "Xotira": "Memory",
@@ -124,20 +126,22 @@ window.nzEn = {
   "Savol rasmi": "Question image",
   "Variant": "Option",
   "Toʻgʻri": "Correct",
-  "Notoʻgʻri · javob {0}": "Incorrect · answer {0}",
-  "Notoʻgʻri · toʻgʻri javob: {0}": "Incorrect · correct answer: {0}",
   "Izoh": "Explanation",
   "Javobni tanlang": "Choose an answer",
   "Yakunlash": "Finish",
   "Natija": "Result",
+  "Notoʻgʻri": "Incorrect",
+  "Toʻgʻri javob: {0}": "Answer: {0}",
+  "Test qanday oʻtadi": "How the test works",
+  "Variantni tanlang va «Keyingi»ni bosing": "Pick an option, then tap “Next”",
+  "Oldingi savolga qaytib boʻlmaydi": "You can’t go back to a previous question",
+  "Toʻxtatsangiz — keyin davom etasiz": "Pause any time and pick up later",
 
   /* ── Natija ekrani ────────────────────────────────────────────────── */
   "NATIJA": "RESULT",
   "TOʻGʻRI": "CORRECT",
   "Mashq qilish": "Practice",
   "Yana mashq": "Practice again",
-  "Test xatolari": "Test mistakes",
-  "Mashq xatolari": "Practice mistakes",
 
   /* ── Oʻyin ekrani ─────────────────────────────────────────────────── */
   "Oʻyindan chiqish": "Exit game",
@@ -151,12 +155,11 @@ window.nzEn = {
   "yopiq": "hidden",
   "faol emas": "inactive",
   "Juda tez bosildi — ball berilmadi": "Tapped too fast — no points awarded",
+  "Daraja": "Level",
 
   /* ── Profil ───────────────────────────────────────────────────────── */
   "Testlar": "Tests",
-  "Yechilgan savollar": "Questions solved",
   "Eng uzun ketma-ketlik": "Longest streak",
-  "Eng uzun streak": "Longest streak",
   "Testlar tarixi": "Test history",
   "Hali test topshirilmagan": "No tests yet",
   "Savol turlari": "Question types",
@@ -177,7 +180,6 @@ window.nzEn = {
   "Galereyadan": "From gallery",
   "Olib tashlash": "Remove",
   "Bu rasmni ochib boʻlmadi": "Couldn’t open this photo",
-  "Rasm juda katta": "Photo is too large",
   "Rasm saqlanmadi": "Photo wasn’t saved",
   "Boshqa rasm": "Choose another",
   "Yuqori": "Top",
@@ -185,14 +187,7 @@ window.nzEn = {
   "Past": "Bottom",
   "Chap": "Left",
   "Oʻng": "Right",
-  "3–20 ta belgi": "3–20 characters",
-  "Harf bilan boshlansin": "Start with a letter",
-  "Faqat a–z, 0–9, nuqta va _": "Only a–z, 0–9, dot and _",
-  "Nuqta va _ ketma-ket boʻlmasin": "No dots or _ in a row",
-  "Bu nomni tanlab boʻlmaydi": "This name isn’t available",
-  "Nomaqbul soʻz": "Inappropriate word",
-  "Koʻpi bilan 80 ta belgi": "80 characters max",
-  "Havola qoʻshib boʻlmaydi": "Links aren’t allowed",
+  "Galereya": "Gallery",
 
   /* ── Nishonlar va Doʻkon ──────────────────────────────────────────── */
   "Vitrina": "Showcase",
@@ -208,14 +203,18 @@ window.nzEn = {
   "Sizda bor": "Owned",
   "✓ Tanlangan": "✓ Selected",
   "Tanga qanday olinadi": "How to earn coins",
-  "Narxi": "Price",
-  "Balans": "Balance",
   "Yana {0} tanga kerak": { one: "{0} more coin needed", other: "{0} more coins needed" },
   "Sizniki!": "It’s yours!",
   "Qoʻllash": "Apply",
-  "Kunlik vazifalar — kuniga 30 gacha": "Daily quests — up to 30 a day",
-  "Nishonlar — bir martalik mukofot": "Badges — one-time reward",
-  "Hafta yakuni — ligaga qarab 100 gacha": "Week end — up to 100 by league",
+  "Boʻsh joy": "Empty slot",
+  "olinmagan": "not earned",
+  "Kolleksiya nishoni": "Collection badge",
+  "Narxi: {0} tanga": { one: "Price: {0} coin", other: "Price: {0} coins" },
+  "Balans: {0} tanga": { one: "Balance: {0} coin", other: "Balance: {0} coins" },
+  "Sotib olish · {0}": "Buy · {0}",
+  "Yangi nishonlar": "New badges",
+  "{0} ta yangi nishon": { one: "{0} new badge", other: "{0} new badges" },
+  "Koʻrish": "View",
 
   /* ── Sozlamalar ───────────────────────────────────────────────────── */
   "Umumiy": "General",
@@ -226,15 +225,11 @@ window.nzEn = {
   "Ovoz": "Sound",
   "Ovoz effektlari": "Sound effects",
   "Tebranish": "Vibration",
-  "Yoniq": "On",
-  "Oʻchiq": "Off",
-  "Bildirishnoma": "Notifications",
   "Bildirishnomalar": "Notifications",
   "Kunlik eslatma": "Daily reminder",
   "Har kuni {0}": "Every day at {0}",
   "Tizim sozlamalarida ruxsat bering": "Allow in system settings",
   "Ketma-ketlik eslatmasi": "Streak reminder",
-  "Streak eslatmasi": "Streak reminder",
   "Faol boʻlmagan kuni {0}": "On inactive days at {0}",
   "Yordam": "Help",
   "Qanday ishlaydi": "How it works",
@@ -253,7 +248,6 @@ window.nzEn = {
   "Yangi test?": "Start a new test?",
   "Tugallanmagan test oʻchiriladi.": "Your unfinished test will be deleted.",
   "Maʼlumotlarni oʻchirish?": "Delete your data?",
-  "Natijalar, ballar va roʻyxatlar oʻchiriladi.": "Results, points and lists will be deleted.",
   "Natijalar, ballar, tangalar, nishonlar va profil oʻchiriladi.":
     "Results, points, coins, badges and your profile will be deleted.",
   "Oʻchirish": "Delete",
@@ -286,35 +280,31 @@ window.nzEn = {
   "Kerak emas": "Not now",
   "Keyinroq": "Later",
   "Oʻtkazib yuborish": "Skip",
+  "{0} ta savol. Natija — IQ va oraliq.": { one: "{0} question. You get your IQ and a range.", other: "{0} questions. You get your IQ and a range." },
+  "Matritsa": "Matrix",
 
   /* ── Qurilma xabarlari (bootstrap.js, notify.js) ──────────────────── */
   "Chiqish uchun yana bir marta bosing": "Press again to exit",
   "Bildirishnomaga ruxsat berilmagan — tizim sozlamalaridan yoqing":
     "Notifications are off — turn them on in system settings",
-  "Bugungi mashq sizni kutmoqda: 10 ta savol yoki bitta aql oʻyini.":
-    "Today’s practice is waiting: 10 questions or one brain game.",
   "Bugungi vazifalar tayyor: 10 ta savol va bitta aql oʻyini.":
     "Today’s quests are ready: 10 questions and one brain game.",
   "{0} kunlik ketma-ketlikni saqlab qoling — bugun bitta savol yetarli.":
     "Keep your {0}-day streak — one question today is enough.",
-  "IQ test · aql oʻyinlari · liga": "IQ test · brain games · league",
-  "IQ test · oʻyinlar · liga": "IQ test · games · league",
+
+  /* ── Landing (sayt) ───────────────────────────────────────────────── */
   "Mantiqiy fikrlashingizni sinang va mashq qiling": "Test and train your logical thinking",
-  "{0} savollik moslashuvchan IQ test, mashq va aql oʻyinlari.":
-    "A {0}-question adaptive IQ test, practice and brain games.",
   "{0} savollik moslashuvchan IQ test, mashq va IQ oʻyinlari.":
     "A {0}-question adaptive IQ test, practice and IQ games.",
   "Telegramda ochish": "Open in Telegram",
   "Brauzerda ochish": "Open in browser",
   "savollik test": { one: "question per test", other: "questions per test" },
   "savol turi": { one: "question type", other: "question types" },
-  "aql oʻyini": { one: "brain game", other: "brain games" },
   "IQ oʻyini": { one: "IQ game", other: "IQ games" },
   "liga darajasi": { one: "league tier", other: "league tiers" },
   "Testni boshlang": "Take the test",
   "Qiyinlik javoblaringizga moslashadi.": "Difficulty adapts to your answers.",
   "Natijani koʻring": "See your result",
-  "IQ balli va savol turlari boʻyicha tahlil.": "Your IQ and a breakdown by question type.",
   "IQ natijasi va savol turlari boʻyicha tahlil.": "Your IQ and a breakdown by question type.",
   "Mashq qiling": "Practice",
   "Har kuni mashq — ligada yuqoriga.": "Practice daily — climb the league.",
@@ -323,7 +313,6 @@ window.nzEn = {
   "Har bir savol turi alohida, izoh bilan.": "Each question type on its own, with explanations.",
   "Xotira, diqqat va tezlik.": "Memory, attention and speed.",
   "Liga": "League",
-  "Haftalik ballar — Bronzadan Olmosgacha.": "Weekly points — from Bronze to Diamond.",
   "Haftalik ballar — Boshlovchidan Olmosgacha.": "Weekly points — from Beginner to Diamond.",
   "Xato qilingan savollar takrori.": "Review the questions you missed.",
   "Internetsiz": "Works offline",
@@ -331,5 +320,5 @@ window.nzEn = {
   "Bugundan boshlang": "Start today",
   "Roʻyxatdan oʻtish shart emas.": "No sign-up needed.",
   "Interfeys asosi:": "Interface based on:",
-  "UI asosi: Game Management App UI Kit (CC BY 4.0)": "Interface based on: Game Management App UI Kit (CC BY 4.0)",
+  "IQ test · IQ oʻyinlari · liga": "IQ test · IQ games · league",
 };

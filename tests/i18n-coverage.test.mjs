@@ -1,12 +1,12 @@
 /* Lugʻat qamrovi (ARXITEKTURA §8.1, §8.4) — tools/i18n-extract.mjs.
 
    BOSQICHLAR:
-     1-bosqich (hozir): UI (Main.dc.html) parallel qayta yozilmoqda, yangi
+     1-bosqich (tugadi): UI (Main.dc.html) parallel qayta yozilmoqda, yangi
         v1.1 satrlari hali muzlamagan. Yetishmayotgan kalitlar HISOBOT
         sifatida chiqadi, test yiqilmaydi. Chiqarib olish mexanizmi va
         lugʻat shakli esa qatʼiy tekshiriladi.
-     2-bosqich (WP7-U5 «satrlar muzlaydi» dan keyin, WP5 yakuniy
-        tozalash): STRICT.ru = true — rus tilida 0 ta boʻshliq.
+     2-bosqich (HOZIR — WP7 satrlari muzlatildi): STRICT.ru = STRICT.en =
+        true — 0 ta boʻshliq; koʻplik kalitlari faqat nzTN/trn bilan.
      v1.2 (EN darvozasi): STRICT.en = true (build darvozasi baribir
         shu hisobni ishlatadi).
    Muhitdan ham yoqiladi: I18N_STRICT=ru  yoki  I18N_STRICT=ru,en */
@@ -14,7 +14,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { coverage, loadDicts, extractMarkup, extractLogic, extractModule, jsStrings } from '../tools/i18n-extract.mjs';
 
-const STRICT = { ru: false, en: false };
+const STRICT = { ru: true, en: true };   // 2-bosqich: UI satrlari muzlatildi (WP7 commit 0313338)
 for (const L of String(process.env.I18N_STRICT || '').split(',').map(s => s.trim()).filter(Boolean)) STRICT[L] = true;
 
 const cov = coverage();
@@ -66,6 +66,24 @@ test('chiqarib olish: mantiq satrlari kontekst boʻyicha', () => {
     }`;
   const got = extractLogic(code).map(r => r.v).sort();
   assert.deepEqual(got, ['+{0} ball', 'Har kuni mashq — ligada yuqoriga.', 'Qurilma', 'Tayyor', 'Tungi', 'Yangi', 'Yangi test?', 'yongan', '{0} ta savol']);
+});
+
+test('chiqarib olish: btn()/sec(), kortejlar, oʻzgaruvchiga yorliq, jadval; var( — matn emas', () => {
+  const code = `
+    const NAV = [["home", "home", "Bosh"], ["practice", "dumbbell", "Mashq"]];
+    const aligns = [["left", "Chap"], ["center", "Markaz"]];
+    const THEME_LABELS = { auto: "Qurilma", dark: "Tungi" };
+    const langs = ["uz", "ru"];
+    function g() {
+      let primary = "Keyingi";
+      if (x) { primary = "Saqlash"; secondary = "Keyinroq"; }
+      const o = Object.assign(base, btn(ok ? "Qoʻllash" : "Vitrinaga qoʻyish", fn), sec("Yopish", fn));
+      const st = { background: "var(--surface) va boshqa", color: "var(--primary)" };
+      return o;
+    }`;
+  const got = extractLogic(code).map(r => r.v).sort();
+  assert.deepEqual(got, ['Bosh', 'Chap', 'Keyingi', 'Keyinroq', 'Markaz', 'Mashq', 'Qoʻllash', 'Qurilma', 'Saqlash',
+                         'Tungi', 'Vitrinaga qoʻyish', 'Yopish']);
 });
 
 test('chiqarib olish: modul uchliklari va tr() argumentlari', () => {

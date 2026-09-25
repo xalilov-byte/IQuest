@@ -57,8 +57,10 @@ export const IGNORE = new Set([
   'Oʻzbek (lotin)', 'Ўзбек (кирилл)',                // 1.0 dagi til nomlari (zaxira qiymat)
 ]);
 
-const T_FUNCS = new Set(['T', 'nzT', 'nzTN', 'tr', 'trn', 't', 'plural', 'tn', 'say', 'toast']);
-const TEXT_KEY = /^(title|sub|subtitle|body|label|text|name|aria|ariaLabel|hint|placeholder|desc|description|caption|heading|lead|badge|note|msg|message|tip|cta|confirm|cancel|action|button|btn|empty|toast|help|info|line|verdict|summary|prompt|unit|chip|pill|tag|reason|cond|condition|question|answer|header|footer|value)$|(Label|Title|Sub|Text|Aria|Hint|Body|Desc|Name|Msg|Message|Lead|Badge|Note|Caption|Heading|Cta|Tip|Toast|Help|Line|Verdict|Summary|Prompt|Placeholder|Error|Err|Unit|Chip|Pill|Tag|Reason|Cond)$/;
+/* Birinchi argumenti foydalanuvchi matni boʻlgan funksiyalar: tarjima
+   yordamchilari va Mainʼdagi varaq tugmalari btn(label, fn) / sec(label, fn). */
+const T_FUNCS = new Set(['T', 'nzT', 'nzTN', 'tr', 'trn', 't', 'plural', 'tn', 'say', 'toast', 'btn', 'sec']);
+const TEXT_KEY = /^(title|sub|subtitle|body|label|text|name|aria|ariaLabel|hint|placeholder|desc|description|caption|heading|lead|badge|note|msg|message|tip|cta|confirm|cancel|action|button|btn|empty|toast|help|info|line|verdict|summary|prompt|unit|chip|pill|tag|reason|cond|condition|question|answer|header|footer|value|primary|secondary|kicker)$|(Label|Title|Sub|Text|Aria|Hint|Body|Desc|Name|Msg|Message|Lead|Badge|Note|Caption|Heading|Cta|Tip|Toast|Help|Line|Verdict|Summary|Prompt|Placeholder|Error|Err|Unit|Chip|Pill|Tag|Reason|Cond|Kicker)$/;
 const RAW_KEY = /(Raw|Src|Url|Current|[Pp]ressed|Id|Key|Kind|Icon|Glyph|Style|Color|Class)$|^(id|key|kind|type|icon|glyph|style|color|theme|href|src|url|path\d?|mode|state|view|tab|lang|variant|shape|align|dir|role)$/;
 const ADMIN_METHODS = ['valsAnalytics', 'valsManage', 'logAction', 'may'];
 const ADMIN_CONSTS = ['ROLES', 'REASONS', 'ADMIN_USERS', 'ADMIN_QUESTIONS', 'AUDIT_SEED', 'CSV_COLUMNS',
@@ -67,7 +69,8 @@ const ADMIN_CONSTS = ['ROLES', 'REASONS', 'ADMIN_USERS', 'ADMIN_QUESTIONS', 'AUD
 const ADMIN_FNS = ['parseBulk', 'toCsv', 'parseCsvLine', 'csvCell', 'nowIso', 'shortTime', 'maskPhone', 'dateAfter'];
 
 /* ── Satr turini aniqlash ──────────────────────────────────────────── */
-const UZ_HINT = /[ʻʼ]|\b(va|bilan|uchun|yoki|emas|yoʻq|ta|kun|savol|oʻyin|test|liga|ball|tanga|mashq|natija|javob|daraja|bugun|hafta|profil|nishon|rang|sozlama)/i;
+/* Funksional soʻzlar — butun soʻz ("va" "var(" ichida emas); oʻzaklar — soʻz boshida. */
+const UZ_HINT = /[ʻʼ]|\b(?:va|bilan|uchun|yoki|emas|ta)\b|\b(?:yoʻq|kun|savol|oʻyin|test|liga|ball|tanga|mashq|natija|javob|daraja|bugun|hafta|profil|nishon|rang|sozlama)/i;
 
 export function isCodeLike(s) {
   const t = s.trim();
@@ -201,7 +204,10 @@ export function jsStrings(code) {
                       (p.t === 'id' && /^(return|yield|case)$/.test(p.v));
         const decl = (p && p.v === '=' && toks[k - 2] && toks[k - 2].t === 'id') ? toks[k - 2].v : null;
         stack.push({ kind: isObj ? 'obj' : 'block', key: null, expectKey: isObj, decl });
-      } else if (tk.v === '[') stack.push({ kind: 'arr' });
+      } else if (tk.v === '[') {
+        const t0 = top();
+        stack.push({ kind: 'arr', idx: 0, head: true, nested: !!(t0 && t0.kind === 'arr') });
+      }
       else if (tk.v === '(') {
         let callee = null;
         if (prev && prev.t === 'id') callee = prev.v;
@@ -210,6 +216,7 @@ export function jsStrings(code) {
       else if (tk.v === ',') {
         const s = top();
         if (s && s.kind === 'paren') s.argIdx++;
+        if (s && s.kind === 'arr') s.idx++;
         if (s && s.kind === 'obj') { s.expectKey = true; s.key = null; }
       }
       continue;
@@ -231,8 +238,21 @@ export function jsStrings(code) {
     if (next && next.t === 'id' && next.v === 'in') continue;
     // Kontekst: T("…") ning 1-argumenti?
     let ctx = 'free', key = null, callee = null;
+    /* Kortej [["left", "Chap"], …] / [["home", "home", "Bosh"], …]: boshida
+       identifikator(lar), oxirida yorliq. */
+    if (s && s.kind === 'arr' && s.nested) {
+      const idLike = /^[a-z][a-z0-9-]*$/.test(tk.v);
+      if (s.head && s.idx > 0 && !idLike && !isCodeLike(tk.v)) { out.push({ v: tk.v, ctx: 'tuple', key: null, callee: null, pos: tk.pos }); continue; }
+      if (!idLike) s.head = false;
+    }
+    // Oʻzgaruvchiga: primary = "Saqlash"; label = "…"
+    if (prev && prev.v === '=' && toks[k - 2] && toks[k - 2].t === 'id' && TEXT_KEY.test(toks[k - 2].v) &&
+        next && next.t === 'punc' && /^[;,)}]$/.test(next.v)) {
+      out.push({ v: tk.v, ctx: 'key', key: toks[k - 2].v, callee: null, pos: tk.pos }); continue;
+    }
+    // T("…") / btn(ok ? "A" : "B", …) — 1-argument (ternar tarmoqlari ham).
     if (s && s.kind === 'paren' && s.argIdx === 0 && T_FUNCS.has(s.callee) &&
-        prev && prev.t === 'punc' && prev.v === '(') {
+        prev && prev.t === 'punc' && /^(\(|\?|:|\|\||\?\?)$/.test(prev.v)) {
       ctx = 'call'; callee = s.callee;
     } else {
       for (let q = stack.length - 1; q >= 0; q--) {
@@ -241,6 +261,9 @@ export function jsStrings(code) {
           key = f.key;
           const d = stack.slice(0, q + 1).reverse().find(x => x.decl);
           if (d && tables.has(d.decl)) ctx = 'table';
+          // const NAME_LABELS = { auto: "Qurilma", … } — katta harfli qiymatli jadval
+          else if (f.decl && /^[A-Z][A-Z0-9_]+$/.test(f.decl) && f.key && !RAW_KEY.test(f.key) &&
+                   /^[A-ZʻOʼ][a-zʻʼ]/.test(tk.v) && !isCodeLike(tk.v)) ctx = 'table';
           break;
         }
         if (f.kind === 'block') break;
@@ -357,7 +380,7 @@ export function extractLogic(logic) {
     const v = s.v.trim();
     if (!isUserText(v)) continue;
     let take = false;
-    if (s.ctx === 'call' || s.ctx === 'table') take = true;
+    if (s.ctx === 'call' || s.ctx === 'table' || s.ctx === 'tuple') take = true;
     else if (s.ctx === 'arg') take = false;
     else if (s.ctx === 'key') take = !RAW_KEY.test(s.key) && (TEXT_KEY.test(s.key) ? !isCodeLike(v) && (/[\sʻʼ]/.test(v) || /^[A-ZА-Я]/.test(v) || UZ_HINT.test(v) || /^[a-zʻ]+$/.test(v)) : looksUzbekProse(v));
     else take = looksUzbekProse(v);

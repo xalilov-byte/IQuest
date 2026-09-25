@@ -285,7 +285,7 @@ test('lugʻat: en da kirill va ʻ/ʼ yoʻq; ru da oʻzbek harflari yoʻq; termin
   }
   // Glossariy (§8.5)
   const g = { 'Bosh': 'Home', 'Mashq': 'Practice', 'Reyting': 'League', 'Profil': 'Profile', 'Kunlik vazifalar': 'Daily quests',
-              'Xatolarim': 'My mistakes', 'Saqlangan': 'Saved', 'IQ oʻyinlari': 'IQ games', 'Aql oʻyini': 'Brain game',
+              'Xatolarim': 'Mistakes', 'Saqlangan': 'Saved', 'IQ oʻyinlari': 'IQ games', 'Aql oʻyini': 'Brain game',
               'Doʻkon': 'Shop', 'Nishonlar': 'Badges', 'Vitrina': 'Showcase', 'Sozlamalar': 'Settings', 'Eslatma': 'Reminder',
               'Boshlovchi': 'Beginner', 'Bronza': 'Bronze', 'Kumush': 'Silver', 'Oltin': 'Gold', 'Platina': 'Platinum', 'Olmos': 'Diamond' };
   for (const [uz, en] of Object.entries(g)) assert.equal(D.en[uz], en, `glossariy: ${uz}`);
