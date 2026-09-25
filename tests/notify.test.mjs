@@ -22,7 +22,7 @@ const plain = x => JSON.parse(JSON.stringify(x));
 
 const RU = {
   'Bugungi vazifalar tayyor: 10 ta savol va bitta aql oʻyini.': 'RU-daily',
-  '{0} kunlik seriyani saqlab qoling — bugun bitta savol yetarli.': 'RU-streak {0}',
+  '{0} kunlik ketma-ketlikni saqlab qoling — bugun bitta savol yetarli.': 'RU-streak {0}',
 };
 
 /* lang — nzT/nzTN taqlidi uchun joriy til (i18n.js kabi global). */
@@ -74,7 +74,7 @@ test('faol emas, streak 5, 19:00: 7 ta kunlik + bugun 21:30 streak', () => {
   const d = plan.find(p => p.id === 1901), s = plan.find(p => p.id === 1911);
   assert.equal(d.title, 'IQuest');
   assert.equal(d.body, 'Bugungi vazifalar tayyor: 10 ta savol va bitta aql oʻyini.');
-  assert.equal(s.body, '5 kunlik seriyani saqlab qoling — bugun bitta savol yetarli.');
+  assert.equal(s.body, '5 kunlik ketma-ketlikni saqlab qoling — bugun bitta savol yetarli.');
   assert.deepEqual(plain(d.extra), { to: 'home', kind: 'daily', lang: 'uz' });
 });
 

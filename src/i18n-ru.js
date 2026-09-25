@@ -313,7 +313,7 @@ window.nzRu = {
   "Bugungi vazifalar tayyor: 10 ta savol va bitta aql oʻyini.":
     "Задания дня готовы: 10 вопросов и одна игра для ума.",
   // Koʻplik: «серию из 1 дня / из 2 дней / из 5 дней».
-  "{0} kunlik seriyani saqlab qoling — bugun bitta savol yetarli.": {
+  "{0} kunlik ketma-ketlikni saqlab qoling — bugun bitta savol yetarli.": {
     one: "Сохраните серию из {0} дня — сегодня хватит одного вопроса.",
     few: "Сохраните серию из {0} дней — сегодня хватит одного вопроса.",
     many: "Сохраните серию из {0} дней — сегодня хватит одного вопроса.",

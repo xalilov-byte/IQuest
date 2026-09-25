@@ -295,7 +295,7 @@ window.nzEn = {
     "Today’s practice is waiting: 10 questions or one brain game.",
   "Bugungi vazifalar tayyor: 10 ta savol va bitta aql oʻyini.":
     "Today’s quests are ready: 10 questions and one brain game.",
-  "{0} kunlik seriyani saqlab qoling — bugun bitta savol yetarli.":
+  "{0} kunlik ketma-ketlikni saqlab qoling — bugun bitta savol yetarli.":
     "Keep your {0}-day streak — one question today is enough.",
   "IQ test · aql oʻyinlari · liga": "IQ test · brain games · league",
   "IQ test · oʻyinlar · liga": "IQ test · games · league",

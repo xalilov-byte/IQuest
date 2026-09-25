@@ -51,7 +51,7 @@
   const TITLE = 'IQuest';
   /* Uzbek manba satrlari (rus/ingliz lugʻatlari shu satr bilan kalitlanadi). */
   const DAILY_BODY = 'Bugungi vazifalar tayyor: 10 ta savol va bitta aql oʻyini.';
-  const STREAK_BODY = '{0} kunlik seriyani saqlab qoling — bugun bitta savol yetarli.';
+  const STREAK_BODY = '{0} kunlik ketma-ketlikni saqlab qoling — bugun bitta savol yetarli.';
 
   function plugin() {
     const cap = window.Capacitor;
