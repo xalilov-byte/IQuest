@@ -206,7 +206,10 @@ me'yorlanmagan (norm) test qilyapmiz.
    uchun jazolangan — raqamli va'da bizga eng yaqin xavf). Mumkin:
    "mantiqiy fikrlashni mashq qiling", "natijangiz o'sishini kuzating".
    Mumkin emas: "IQ'ingizni 20 ballga oshiring", "aqlli bo'ling".
-4. **"Rasmiy", "sertifikatlangan", "Mensa", "klinik"** so'zlari yo'q.
+4. **"Rasmiy", "sertifikatlangan/akkreditatsiyalangan test", "Mensa",
+   "klinik"** degan ishoralar yo'q — test hech qanday tashkilot
+   tomonidan tasdiqlanmagan. IQuest'ning O'Z sertifikati (§6.7) bundan
+   mustasno: u "IQuest.uz tomonidan berilgan" deb aniq yoziladi.
 5. `reliable: false` bo'lsa IQ raqami ko'rsatilmaydi — faqat to'g'ri
    javoblar soni.
 6. **Natija hech qachon pul ortida emas.** Test va uning natijasi (oraliq
