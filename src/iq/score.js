@@ -105,11 +105,44 @@
     return Math.round(clamp(100 + 15 * theta, IQ_MIN, IQ_MAX));
   }
 
-  /* Oraliq θ ± z·se, IQ shkalasida. z = 1.645 → 90%. */
+  /* Oraliq θ ± z·se, IQ shkalasida. z = 1.645 → 90%.
+
+     Uchlar AVVAL qisilmagan holda hisoblanadi (100 + 15·(θ ∓ z·se),
+     yaxlitlangan), keyin 55..145 ga qisiladi. loOpen / hiOpen — qisilmagan
+     uch shkaladan tashqarida (< 55 yoki > 145) edimi. Busiz qisish
+     oraliqni soxta toraytirardi: 30/30 da haqiqiy 142–161 "142–145"
+     bo'lib, hammasi xato bo'lganda 38–51 esa "55–55" (nol kenglik)
+     bo'lib ko'rinardi (§4: oraliq toraytirilmaydi). Ilova ochiq uchni
+     "≤{hi}" / "{lo}+" deb yozadi — qisilgan raqam hech qachon aniq
+     chegara sifatida ko'rsatilmaydi.
+
+     lo === hi faqat ikkala uch bir chekkadan tashqarida bo'lganda
+     (yoki se buzuq bo'lganda) chiqadi; chekkada esa shu chekka doim
+     ochiq deb belgilanadi. */
   function interval(theta, se, z) {
     const zz = typeof z === 'number' && isFinite(z) ? z : 1.645;
     const s = typeof se === 'number' && isFinite(se) && se > 0 ? se : 0;
-    return { lo: toIQ(theta - zz * s), hi: toIQ(theta + zz * s) };
+    const t = typeof theta === 'number' && !isNaN(theta) ? theta : 0;
+    const rawLo = Math.round(100 + 15 * (t - zz * s));
+    const rawHi = Math.round(100 + 15 * (t + zz * s));
+    return {
+      lo: toIQ(t - zz * s), hi: toIQ(t + zz * s),
+      loOpen: rawLo < IQ_MIN, hiOpen: rawHi > IQ_MAX,
+    };
+  }
+
+  /* Tasodifiy javob beruvchining to'g'ri javoblar soni: o'rtacha
+     mean = Σ 1/kᵢ, sd = √Σ (1/kᵢ)(1 − 1/kᵢ) (Bernulli yig'indisi).
+     k yo'q yozuv (c = 0) hissa qo'shmaydi. IQ.session "tasodifdan
+     yuqori emas" qoidasi (flag 'chance', §6.5) shundan foydalanadi. */
+  function chance(responses) {
+    let mean = 0, v = 0;
+    for (const r of responses || []) {
+      if (!r) continue;
+      const c = guess(r.k);
+      mean += c; v += c * (1 - c);
+    }
+    return { mean, sd: Math.sqrt(v) };
   }
 
   /* Keyingi savol darajasi.
@@ -141,6 +174,9 @@
     nextLevel,
     prob,
     guess,
+    chance,
     TARGET_OFFSET,
+    IQ_MIN,
+    IQ_MAX,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

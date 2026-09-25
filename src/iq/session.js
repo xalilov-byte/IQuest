@@ -1,7 +1,8 @@
 /* ─────────────────────────────────────────────────────────────────────────
    IQ.session — test va mashq oqimi (adaptiv)
 
-   Shartnoma: src/iq/CONTRACT.md §3 (sessiya), §10 (server tekshiruvi).
+   Shartnoma: src/iq/CONTRACT.md §3 (sessiya), §6.5 (reliable), §10
+   (server tekshiruvi).
 
    ASOSIY TALAB — QAYTA O'YNASH (replay). Sessiyadagi har narsa faqat
    (seed, mode, types, length, startLevels) va javoblar jurnalidan
@@ -9,7 +10,9 @@
      · savol turi i-o'rinda  — seed dan aralashtirilgan tartib;
      · savol darajasi       — oldingi javoblardan (test: θ bahosi,
                                mashq: zinapoya);
-     · savol urug'i         — IQ.hash('item:' + seed + ':' + i + ':' + urinish).
+     · savol urug'i         — IQ.hash('item:' + seed + ':' + i + ':' + urinish);
+     · qaysi urinish olinadi — shu sessiyada OLDIN chiqqan savollardan
+                               (takrorlanmaslik, pastda).
    Date.now() va Math.random() natijaga ta'sir qilmaydi (Date.now faqat
    seed berilmaganda standart urug' uchun). Shuning uchun
    IQ.session.restore(snapshot) jurnalni qayta o'ynab AYNAN shu savollarni
@@ -32,25 +35,88 @@
        mustaqil.
      · mashq: har tur uchun alohida ZINAPOYA (2-pastga-1-yuqoriga):
        shu turda ketma-ket 2 ta to'g'ri → daraja +1, xato → daraja −1,
-       1..10 oralig'ida. Bu ~71% to'g'ri javobga yaqinlashadi — mashqda
-       odam ko'proq muvaffaqiyat ko'rishi kerak, lekin zerikmasligi ham.
+       1..10 oralig'ida. Nazariy muvozanat ~71%; amalda (daraja qadami
+       katta, turlar aralash, har turga sessiyada 2–3 savol) simulyatsiya
+       65–69% to'g'ri javob ko'rsatadi — mashqda odam ko'proq
+       muvaffaqiyat ko'rishi kerak, lekin zerikmasligi ham.
        Boshlanish: opts.startLevel (son yoki { tur: daraja }), bo'lmasa
        nzProgress.levelFor(tur), u ham bo'lmasa 3. Tanlangan daraja
        snapshot'ga yoziladi — tiklashda qayta so'ralmaydi.
 
    BUZUQ SAVOL. IQ.makeItem otsa, keyingi urinish urug'i bilan
    (urinish + 1) qayta — ham deterministik, server ham aynan shu
-   urinishlarni takrorlaydi. MAX_TRIES tadan keyin xato otiladi.
+   urinishlarni takrorlaydi. MAX_TRIES ta xatodan keyin (va olinadigan
+   hech bir savol bo'lmasa) xato otiladi (IQ_GEN_FAILED).
+
+   TAKRORLANMASLIK (ENGINE 2). Bir sessiyada bir savol ikki marta
+   chiqmasligi kerak: odam uchun bu xato ko'rinadi, EAP uchun esa bir
+   dalilni ikki marta sanash (ikkinchi javob — xotira, qobiliyat emas).
+   ENGINE 1 da og'zaki savollar hovuzi kichik (darajada 13–15 ta) bo'lgani
+   uchun 30 savollik testlarning ~58% ida takror bor edi.
+     · Savol kaliti (contentKey): generator `key` bersa (qo'lda yozilgan
+       bank — og'zaki) — tur + key. Aks holda tur + IQ.hash(prompt +
+       stimulus). Og'zakida stimulga emas, key ga qaraladi: "ortiqchasini
+       top" savolining stimuli aralashtirilgan variantlardan yig'iladi,
+       ya'ni bir savol turli satr bo'lib chiqadi.
+     · Sessiya kalitlar to'plamini (seen) yuritadi. gen(i) urinishlarni
+       tartib bilan ko'radi va birinchi YANGI savolni oladi. Ikki alohida
+       byudjet: generator xatosi — MAX_TRIES, takror/boshqa qism —
+       UNIQUE_TRIES. Byudjet tugasa savol baribir beriladi (sessiya
+       hech qachon hovuz tugagani uchun yiqilmaydi va cheksiz aylanmaydi):
+       avval ko'rilmagan "boshqa qism" savoli, u ham bo'lmasa birinchi
+       takror.
+     · seen faqat gen() da to'ldiriladi, restore/verify esa savollarni
+       aynan gen() orqali qayta yaratadi — ya'ni to'plam ham, id'lar ham
+       aynan bir xil tiklanadi.
+
+   BANK QISMLARI (ENGINE 2). Qo'lda yozilgan bank (key bor savollar)
+   ikki teng qismga bo'linadi: IQ.hash('side:' + key) juft — 'test',
+   toq — 'practice'. Test o'z qismidan, mashq o'zinikidan oladi. Sabab:
+   mashq to'g'ri javob va izohni ko'rsatadi; umumiy hovuzda 30 kunlik
+   mashqdan keyin testdagi og'zaki savollarning ~2/3 qismi oldindan
+   yodlangan bo'lib, o'rtacha IQ ~5 ballga ko'tarilardi (qobiliyat emas,
+   xotira). Qism tugasa — yuqoridagi tartib: boshqa qismdagi yangi savol
+   takrordan afzal. Generator savollari (key yo'q) bo'linmaydi.
+
+   ISHONCHLILIK (result().reliable, result().flag). IQ raqami faqat
+   quyidagilarning HAMMASI bajarilganda ko'rsatiladi (§6.5), aks holda
+   flag sababni aytadi (ilova faqat to'g'ri/jami ko'rsatadi):
+     · 'practice' — mashq rejimi (IQ hech qachon chiqarilmaydi);
+     · 'short'    — javoblar RELIABLE_MIN (20) tadan kam;
+     · 'chance'   — to'g'ri javoblar soni tasodifdan yetarlicha yuqori
+                    emas: correct ≤ μ + CHANCE_Z·σ, bu yerda
+                    μ = Σ 1/kᵢ, σ² = Σ (1/kᵢ)(1 − 1/kᵢ) (IQ.score.chance),
+                    CHANCE_Z = 1.645 (bir tomonlama 95%). 30 ta 4 variantli
+                    savolda bu ≤ 11 to'g'ri. Tasodifiy bosuvchining ~95%
+                    ini ushlaydi; halol θ = −2 (IQ 70) odamning <1% ini;
+     · 'fast'     — javob vaqtining medianasi FAST_MEDIAN_MS (1500 ms) dan
+                    kam: savolni o'qimasdan bosish. Faqat vaqti
+                    ma'lum (ms > 0) javoblar kamida yarmi bo'lsa tekshiriladi.
+   Tartib: practice → short → chance → fast (birinchisi yoziladi).
+   reliable === (flag === null) — doim. Qoida result() ichida, ya'ni
+   verify() (server, sertifikat §6.7) ham aynan shu qoidani qo'llaydi.
+
+   ORALIQ. lo/hi — 55..145 ga qisilgan butun sonlar; loOpen/hiOpen —
+   qisilmagan uchi shkaladan tashqariga chiqdimi (IQ.score.interval).
+   Ilova ochiq uchni "≤55" / "145+" ma'nosida ko'rsatadi, "55–55"
+   kabi soxta aniqlik yo'q.
    ───────────────────────────────────────────────────────────────────── */
 (function (root) {
   const IQ = root.IQ = root.IQ || {};
 
-  /* Sessiya algoritmi versiyasi. Tartib, urug' yoki daraja qoidasi
-     o'zgarsa oshiriladi — eski jurnallar boshqa savol beradi (§10). */
-  const ENGINE = 1;
-  const MAX_TRIES = 20;
+  /* Sessiya algoritmi versiyasi. Tartib, urug', daraja yoki savol
+     tanlash qoidasi o'zgarsa oshiriladi — eski jurnallar boshqa savol
+     beradi (§10). 2 — takrorlanmaslik va bank qismlari. */
+  const ENGINE = 2;
+  const MAX_TRIES = 20;          // generator xatosi byudjeti (bir o'rin uchun)
+  const UNIQUE_TRIES = 40;       // takror / boshqa qism byudjeti (bir o'rin uchun)
   const LENGTH_MAX = 200;
   const LEVEL_DEFAULT = 3;
+
+  /* Ishonchlilik qoidasi (yuqoridagi izoh). */
+  const RELIABLE_MIN = 20;
+  const CHANCE_Z = 1.645;
+  const FAST_MEDIAN_MS = 1500;
 
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
   const clampLevel = (v, d) => (typeof v === 'number' && isFinite(v)
@@ -59,6 +125,37 @@
 
   const itemSeed = (seed, i, a) => IQ.hash('item:' + seed + ':' + i + ':' + a);
   const levelRng = (seed, i) => IQ.rng(IQ.hash('level:' + seed + ':' + i));
+
+  /* Savolning mazmun kaliti: bir xil kalit — foydalanuvchi uchun bir
+     xil savol (yuqoridagi TAKRORLANMASLIK). */
+  function contentKey(it) {
+    if (typeof it.key === 'string' && it.key) return it.type + '#' + it.key;
+    return it.type + ':' + IQ.hash(JSON.stringify(it.prompt) + '\n' + JSON.stringify(it.stimulus));
+  }
+
+  /* Bank qismi: 'test' | 'practice' | null (generator savoli — bo'linmaydi). */
+  function bankSide(it) {
+    if (typeof it.key !== 'string' || !it.key) return null;
+    return IQ.hash('side:' + it.key) % 2 === 0 ? 'test' : 'practice';
+  }
+
+  /* Ishonchlilik sababi (yuqoridagi ISHONCHLILIK). null — ishonchli. */
+  function assess(mode, log) {
+    if (mode !== 'test') return 'practice';
+    if (log.length < RELIABLE_MIN) return 'short';
+    const ch = IQ.score.chance(log);
+    let correct = 0;
+    const ms = [];
+    log.forEach(r => { if (r.correct) correct++; if (r.ms > 0) ms.push(r.ms); });
+    if (correct <= ch.mean + CHANCE_Z * ch.sd) return 'chance';
+    if (ms.length * 2 >= log.length) {
+      ms.sort((a, b) => a - b);
+      const h = ms.length >> 1;
+      const med = ms.length % 2 ? ms[h] : (ms[h - 1] + ms[h]) / 2;
+      if (med < FAST_MEDIAN_MS) return 'fast';
+    }
+    return null;
+  }
 
   function fail(msg, extra) {
     const e = new Error('[IQ] ' + msg);
@@ -145,6 +242,7 @@
     const log = [];                       // to'liq yozuvlar: {id,type,level,b,k,answer,correct,ms}
     const stair = {};                     // mashq: { tur: { level, streak } }
     if (startLevels) types.forEach(t => { stair[t] = { level: startLevels[t], streak: 0 }; });
+    const seen = new Set();               // chiqqan savollarning contentKey'lari
     let cur = null;
 
     function levelAt(i) {
@@ -153,13 +251,27 @@
       return IQ.score.nextLevel(q4(theta), levelRng(seed, i));
     }
 
+    /* i-o'rindagi savol. Urinishlar a = 0, 1, 2 … tartibida: birinchi
+       yaroqli, YANGI va o'z qismidagi savol olinadi. Byudjet tugasa —
+       ko'rilmagan boshqa qism savoli (other), u ham bo'lmasa birinchi
+       takror (again). Hammasi faqat oldingi savollarga bog'liq —
+       deterministik. */
     function gen(i) {
       const type = order[i], level = levelAt(i);
-      let last = null;
-      for (let a = 0; a < MAX_TRIES; a++) {
-        try { return IQ.makeItem(type, itemSeed(seed, i, a), level); }
-        catch (e) { last = e; }
+      let last = null, errors = 0, rejects = 0, other = null, again = null;
+      for (let a = 0; errors < MAX_TRIES && rejects < UNIQUE_TRIES; a++) {
+        let it;
+        try { it = IQ.makeItem(type, itemSeed(seed, i, a), level); }
+        catch (e) { last = e; errors++; continue; }
+        const key = contentKey(it);
+        if (seen.has(key)) { if (!again) again = { it, key }; rejects++; continue; }
+        const side = bankSide(it);
+        if (side && side !== mode) { if (!other) other = { it, key }; rejects++; continue; }
+        seen.add(key);
+        return it;
       }
+      const pick = other || again;
+      if (pick) { seen.add(pick.key); return pick.it; }
       throw fail(type + ': ' + MAX_TRIES + ' urinishda ham to\'g\'ri savol chiqmadi — '
         + (last && last.message), { code: 'IQ_GEN_FAILED', index: i });
     }
@@ -201,6 +313,7 @@
     function result() {
       const est = IQ.score.estimate(log);
       const iv = IQ.score.interval(est.theta, est.se);
+      const flag = assess(mode, log);
       const byType = {};
       let correct = 0, durationMs = 0;
       log.forEach(r => {
@@ -213,7 +326,9 @@
         mode, n: log.length, correct, durationMs,
         theta: est.theta, se: est.se,
         iq: IQ.score.toIQ(est.theta), lo: iv.lo, hi: iv.hi,
-        reliable: mode === 'test' && log.length >= 20,
+        loOpen: iv.loOpen, hiOpen: iv.hiOpen,
+        reliable: flag === null,
+        flag,
         byType,
         items: log.map(r => Object.assign({}, r)),
         /* Shartnomadan tashqari (qo'shimcha): */
@@ -288,5 +403,9 @@
     return s.result();
   }
 
-  IQ.session = { create, restore, verify, ENGINE };
+  IQ.session = {
+    create, restore, verify, ENGINE,
+    contentKey, bankSide,
+    RULES: { minItems: RELIABLE_MIN, chanceZ: CHANCE_Z, fastMedianMs: FAST_MEDIAN_MS },
+  };
 })(typeof window !== 'undefined' ? window : globalThis);

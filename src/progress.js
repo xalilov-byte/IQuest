@@ -238,6 +238,37 @@
     return scoredIdx;
   }
 
+  /* Bugun faol bo'ldi: streak kuniga bir marta yuritiladi. answered()
+     va markActive() (o'yin) shu yerdan o'tadi. Qaytaradi: streak
+     o'zgargan bo'lsa yangi qiymat, aks holda null. */
+  function touchStreak() {
+    const today = dayKey();
+    if (store.lastActiveDay === today) return null;
+    const gap = daysBetween(store.lastActiveDay, today);
+    // gap === 1 → kecha ham faol, ketma-ketlik davom etadi.
+    // Boshqa har qanday holatda (birinchi kun yoki uzilgan) — 1 dan.
+    store.streak = (gap === 1) ? store.streak + 1 : 1;
+    store.lastActiveDay = today;
+    if (store.streak > store.longest) store.longest = store.streak;
+    return store.streak;
+  }
+
+  function schedule() {
+    pending = Object.assign({}, store);
+    if (!timer) timer = setTimeout(commit, 400);
+  }
+
+  /* Ikki saqlanadigan qiymat bir xilmi (satr massivlari — element
+     bo'yicha, qolgani ===). */
+  function same(a, b) {
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+      return true;
+    }
+    return a === b;
+  }
+
   function liveStreak() {
     const d = daysBetween(store.lastActiveDay, dayKey());
     if (d === null || d > 1) return 0;
@@ -358,10 +389,20 @@
      keraksiz ish bo'lardi. Shuning uchun yozish ham kechiktirilmaydi:
      natija kamdan-kam va qimmatli, ilova shu zahoti yopilishi mumkin.
 
-     Diskdagi shakl:
+     Diskdagi shakl (v: 1, qo'shimcha maydonlar orqaga mos):
        { v: 1,
-         tests:  [{ at, mode, iq, lo, hi, n, correct, reliable, byType, theta, se }],
-         recent: { tur: [[daraja, 1|0], …] } }   // har tur uchun oxirgi javoblar
+         tests:  [{ at, mode, iq, lo, hi, loOpen, hiOpen, n, correct,
+                    reliable, flag, byType, theta, se }],
+         recent: { tur: [[daraja, 1|0], …] },   // har tur uchun oxirgi javoblar
+         best:   { at, iq, lo, hi, loOpen, hiOpen } | null,   // eng yaxshi ishonchli test
+         count:  n }                            // umrbod testlar soni
+
+     CHEGARA HAR REJIMGA ALOHIDA: testlar ≤ TESTS_MAX (100), mashqlar
+     ≤ PRACTICE_MAX (30). Ilgari bitta umumiy 100 lik chegara bor edi va
+     har mashqdan chiqish (hatto 1 javob bilan) yozuv qo'shardi — kunlik
+     mashq qiladigan odamning IQ testlari bir necha haftada tarixdan
+     siqib chiqarilar, "Eng yaxshi IQ" va "Testlar" "—" ga tushardi.
+     best va count ro'yxatdan mustaqil — 100 tadan keyin ham yo'qolmaydi.
 
      `recent` — levelFor() uchun. Natijaning o'zi (byType) faqat
      to'g'ri/jami sonini saqlaydi, qaysi DARAJADA yechilgani esa unda
@@ -369,17 +410,29 @@
      ~100 KB bo'lardi. Har turga eng ko'pi RECENT_MAX ta juftlik. */
   const TESTS_KEY = 'nz-iq-tests';
   const TESTS_MAX = 100;
+  const PRACTICE_MAX = 30;
   const RECENT_MAX = 20;
   const LEVEL_WINDOW = 10;       // levelFor qarayadigan oxirgi javoblar
+  const LEVEL_OWN_MIN = 8;       // shuncha o'z javobi bo'lsa — faqat o'zinikidan
+  const LEVEL_POOL_MIN = 8;      // sovuq start: umumiy javoblar shuncha bo'lsa
   const LEVEL_DEFAULT = 3;       // yangi foydalanuvchi: oson boshlanadi
   const LEVEL_MIN = 1, LEVEL_MAX = 10;
+
+  /* IQ shkalasi (CONTRACT §4). IQ bundle progress.js dan KEYIN
+     yuklanadi (build tartibi), shuning uchun eski yozuvlarni tozalashda
+     IQ.score ga tayanib bo'lmaydi — shu qiymatlar bilan bir xil. */
+  const IQ_MIN = 55, IQ_MAX = 145, Z90 = 1.645;
+  /* Ishonchsizlik sabablari (IQ.session, CONTRACT §6.5). */
+  const FLAGS = ['practice', 'short', 'chance', 'fast'];
 
   const isNum = v => typeof v === 'number' && isFinite(v);
   /* Tur nomi — kalit sifatida ishlatiladi. "__proto__" oddiy {} da
      kalit emas, prototipni almashtiradi — shuning uchun rad etiladi. */
   const okType = t => typeof t === 'string' && t.length > 0 && t.length <= 40 && t !== '__proto__';
 
-  function blankTests() { return { v: 1, tests: [], recent: Object.create(null) }; }
+  function blankTests() {
+    return { v: 1, tests: [], recent: Object.create(null), best: null, count: 0 };
+  }
 
   /* byType: { tur: { n, correct } } — tur nomlari ham ishonchsiz kirish. */
   function saneByType(bt) {
@@ -395,23 +448,75 @@
     return out;
   }
 
-  /* Bitta natija yozuvi. Yaramaydigani null — ro'yxatdan tushadi. */
+  /* Eski (ENGINE 1) yozuvda flag yo'q va reliable faqat "test va ≥ 20
+     savol" degani edi — tasodifiy bosish ham "IQ 55 · Oraliq 55–55"
+     bo'lib saqlangan. Bunday yozuv yuklanganda chance qoidasi qayta
+     qo'llanadi. k (variantlar soni) saqlanmagan, shuning uchun k = 4
+     deb olinadi: past darajalarda (tasodifiy bosuvchi tushadigan joy)
+     variantlar aynan 4 ta. */
+  const aboveChance = (n, c) => c > n / 4 + Z90 * Math.sqrt(n * 3 / 16);
+
+  /* Bitta natija yozuvi. Yaroqsizi null — ro'yxatdan tushadi. */
   function saneTest(r, at) {
     if (!r || typeof r !== 'object') return null;
     if (!isNum(r.iq) || !isNum(r.lo) || !isNum(r.hi)) return null;
     if (!isNum(r.n) || r.n < 0) return null;
     const n = Math.round(r.n);
     const c = isNum(r.correct) && r.correct >= 0 ? Math.min(Math.round(r.correct), n) : 0;
+    const mode = r.mode === 'practice' ? 'practice' : 'test';
+    const lo = Math.round(r.lo), hi = Math.round(r.hi);
+    const theta = isNum(r.theta) ? r.theta : null;
+    const se = isNum(r.se) && r.se >= 0 ? r.se : null;
+
+    /* reliable ⇔ flag === null. Berilgan flag yaroqli bo'lsa u; eski
+       yozuv (flag umuman yo'q) — qoida qayta qo'llanadi. */
+    const given = FLAGS.indexOf(r.flag) >= 0 ? r.flag : null;
+    let reliable = r.reliable === true && mode === 'test' && given === null;
+    if (reliable && r.flag === undefined && !aboveChance(n, c)) reliable = false;
+    const flag = reliable ? null
+      : given || (mode === 'practice' ? 'practice' : n < 20 ? 'short' : 'chance');
+
+    /* Ochiq uchlar: berilgan bo'lsa — o'zi; yo'q bo'lsa θ, se dan
+       (IQ.score.interval bilan bir xil), ular ham yo'q bo'lsa chegaradan. */
+    let loOpen, hiOpen;
+    if (typeof r.loOpen === 'boolean' && typeof r.hiOpen === 'boolean') {
+      loOpen = r.loOpen; hiOpen = r.hiOpen;
+    } else if (theta !== null && se !== null) {
+      loOpen = Math.round(100 + 15 * (theta - Z90 * se)) < IQ_MIN;
+      hiOpen = Math.round(100 + 15 * (theta + Z90 * se)) > IQ_MAX;
+    } else {
+      loOpen = lo <= IQ_MIN; hiOpen = hi >= IQ_MAX;
+    }
     return {
       at: isNum(at) ? at : 0,
-      mode: r.mode === 'practice' ? 'practice' : 'test',
-      iq: Math.round(r.iq), lo: Math.round(r.lo), hi: Math.round(r.hi),
+      mode: mode,
+      iq: Math.round(r.iq), lo: lo, hi: hi, loOpen: loOpen, hiOpen: hiOpen,
       n: n, correct: c,
-      reliable: r.reliable === true,
+      reliable: reliable, flag: flag,
       byType: saneByType(r.byType),
-      theta: isNum(r.theta) ? r.theta : null,
-      se: isNum(r.se) && r.se >= 0 ? r.se : null,
+      theta: theta, se: se,
     };
+  }
+
+  /* Eng yaxshi natija yozuvi (faqat ko'rsatiladigan maydonlar). */
+  const bestOf = e => ({ at: e.at, iq: e.iq, lo: e.lo, hi: e.hi, loOpen: e.loOpen, hiOpen: e.hiOpen });
+  function saneBest(b) {
+    if (!b || typeof b !== 'object' || !isNum(b.iq) || !isNum(b.lo) || !isNum(b.hi)) return null;
+    return { at: isNum(b.at) ? b.at : 0, iq: Math.round(b.iq), lo: Math.round(b.lo), hi: Math.round(b.hi),
+             loOpen: b.loOpen === true, hiOpen: b.hiOpen === true };
+  }
+  /* Yuqori IQ yutadi; teng bo'lsa — birinchi erishilgani qoladi. */
+  const better = (a, b) => (!b ? a : (!a || b.iq > a.iq ? b : a));
+
+  /* Har rejimga alohida chegara, tartib (eskidan yangiga) saqlanadi. */
+  function capRows(rows) {
+    let t = 0, p = 0;
+    const keep = [];
+    for (let i = rows.length - 1; i >= 0; i--) {
+      const e = rows[i];
+      if (e.mode === 'practice' ? ++p <= PRACTICE_MAX : ++t <= TESTS_MAX) keep.push(e);
+    }
+    return keep.reverse();
   }
 
   function saneTests(raw) {
@@ -422,8 +527,18 @@
         const s = saneTest(t, t && t.at);
         if (s) out.tests.push(s);
       });
-      out.tests = out.tests.slice(-TESTS_MAX);
     }
+    /* count va best — ro'yxatdan oldin (kesilgunga qadar) hisoblanadi:
+       eski diskda ular yo'q, lekin ro'yxat hali to'liq. */
+    let n = 0, best = saneBest(raw.best);
+    out.tests.forEach(e => {
+      if (e.mode !== 'test') return;
+      n++;
+      if (e.reliable) best = better(best, bestOf(e));
+    });
+    out.count = Math.max(n, Number.isInteger(raw.count) && raw.count >= 0 ? raw.count : 0);
+    out.best = best;
+    out.tests = capRows(out.tests);
     const rc = raw.recent;
     if (rc && typeof rc === 'object') {
       Object.keys(rc).slice(0, 20).forEach(k => {
@@ -435,6 +550,15 @@
       });
     }
     return out;
+  }
+
+  /* levelFor ning eski qoidasi: o'rtacha daraja, ulush ≥ 80% → +1,
+     < 50% → −1. */
+  function meanRule(list) {
+    let sum = 0, ok = 0;
+    list.forEach(p => { sum += p[0]; ok += p[1]; });
+    const acc = ok / list.length;
+    return Math.round(sum / list.length) + (acc >= 0.8 ? 1 : acc < 0.5 ? -1 : 0);
   }
 
   let iqStore = saneTests(read(TESTS_KEY));
@@ -471,23 +595,63 @@
 
     /* Holatni diskka. Chaqiruvchi butun state'ni beradi, bu yerda faqat
        kerakli maydonlar olinadi — ilova holatining qolgani (ochiq oyna,
-       tanlangan tab, test) saqlanmaydi va saqlanmasligi kerak. */
+       tanlangan tab, test) saqlanmaydi va saqlanmasligi kerak.
+
+       UCH QOIDA (v1.1):
+       1. Hech narsa o'zgarmagan bo'lsa — hech narsa yozilmaydi. Bootstrap
+          save() ni HAR setState'dan keyin chaqiradi, o'yinda esa bu
+          sekundiga ~10 marta (tick). Ilgari har chaqiruv butun holatni
+          (5000 ta `scored` ref bilan ~110 KB) qayta yozishni rejalashtirardi.
+       2. Kunlik hisoblagich faqat O'Z kuniga yoziladi. Kun rollDay() bilan
+          almashadi (store.day ni to'g'ridan-to'g'ri bugunga qo'yish emas);
+          state.countDay bugungi kun bo'lmasa answeredCount — kechagi son,
+          u bugunga yozilmaydi (0). Ilgari kechqurun 7 ta javob, ertalab
+          fonga o'tish (flush) → diskda {bugun, 7} va qayta ochilganda
+          "7/10 Bugungi mashq" chiqardi. countDay berilmasa — eski xulq.
+       3. soundOn/notifOn nzSettings bor bo'lsa QAYTA YOZILMAYDI
+          (ARXITEKTURA §10.3): sozlamalar endi nz-settings da, bu yerdagi
+          qiymat faqat bir martalik ko'chirish uchun o'qiladi va eski
+          versiyaga qaytilsa ham o'zgarmagan holda turadi. */
     save: function (state, questions) {
       if (!state) return;
-      store.points = state.points || 0;
-      store.marathonBest = state.marathonBest || 0;
-      store.wrong = uniq(toRefs(state.wrongIds, questions).concat(orphans.wrong));
-      store.saved = uniq(toRefs(state.savedIds, questions).concat(orphans.saved));
-      store.day = dayKey();
-      store.answered = state.answeredCount || 0;
-      store.exams = state.examsDone || 0;
-      store.signs = uniq(toRefs(state.signsAnswered, questions).concat(orphans.signs));
-      store.tasks = Array.isArray(state.tasksAwarded) ? state.tasksAwarded.slice() : [];
-      store.soundOn = !!state.soundOn;
-      store.notifOn = !!state.notifOn;
+      const rolled = rollDay();
+      const fresh = typeof state.countDay !== 'string' || state.countDay === store.day;
+      const next = {
+        points: state.points || 0,
+        marathonBest: state.marathonBest || 0,
+        wrong: uniq(toRefs(state.wrongIds, questions).concat(orphans.wrong)),
+        saved: uniq(toRefs(state.savedIds, questions).concat(orphans.saved)),
+        answered: fresh ? (state.answeredCount || 0) : 0,
+        exams: state.examsDone || 0,
+        signs: uniq(toRefs(state.signsAnswered, questions).concat(orphans.signs)),
+        tasks: Array.isArray(state.tasksAwarded) ? state.tasksAwarded.slice() : [],
+      };
+      if (!window.nzSettings) {
+        next.soundOn = !!state.soundOn;
+        next.notifOn = !!state.notifOn;
+      }
+      let changed = rolled;
+      Object.keys(next).forEach(k => {
+        if (!same(store[k], next[k])) { store[k] = next[k]; changed = true; }
+      });
+      if (changed) schedule();
+    },
 
-      pending = Object.assign({}, store);
-      if (!timer) timer = setTimeout(commit, 400);
+    /* Bugun faol bo'lganmi (javob yoki tugallangan o'yin). Kunlik
+       eslatma va streak eslatmasi uchun (ARXITEKTURA §7.2). */
+    activeToday: function () {
+      return store.lastActiveDay === dayKey();
+    },
+
+    /* Javobsiz faollik — tugallangan o'yin. Streak'ni yuritadi va kunni
+       faol deb belgilaydi, lekin totalAnswered, mavzular, navbat va
+       ballga TEGMAYDI (answered() dan farqi). Qaytaradi: { streak } —
+       answered() dagi kabi: o'zgargan bo'lsa yangi qiymat, aks holda null. */
+    markActive: function () {
+      const rolled = rollDay();
+      const changed = touchStreak();
+      if (changed !== null || rolled) schedule();
+      return { streak: changed !== null ? changed : (rolled ? -1 : null) };
     },
 
     flush: flush,
@@ -507,7 +671,6 @@
     answered: function (a) {
       // Ilova 04:00 dan o'tib ochiq qolgan bo'lsa — yangi kun.
       const rolled = rollDay();
-      const today = dayKey();
       let changed = rolled ? -1 : null;
 
       store.totalAnswered += 1;
@@ -542,21 +705,18 @@
         }
       }
 
-      if (a && typeof a.topic === 'string' && a.topic) {
+      /* Test javobi mavzu kesimiga DARHOL tushmaydi: to'xtatilgan test
+         paytida Mashq tabidagi "0% · 1 ta javob" har javob to'g'ri yoki
+         xato ekanini sezdirardi. Test tugaganda recordTest() byType dan
+         bir yo'la qo'shadi (ball va "Xatolarim" kabi). */
+      if (a && a.mode !== 'test' && typeof a.topic === 'string' && a.topic) {
         const k = a.topic.slice(0, 60);
         const cur = store.topics[k] || [0, 0];
         store.topics[k] = [cur[0] + 1, cur[1] + (a.correct ? 1 : 0)];
       }
 
-      if (store.lastActiveDay !== today) {
-        const gap = daysBetween(store.lastActiveDay, today);
-        // gap === 1 → kecha ham yechgan, ketma-ketlik davom etadi.
-        // Boshqa har qanday holatda (birinchi kun yoki uzilgan) — 1 dan.
-        store.streak = (gap === 1) ? store.streak + 1 : 1;
-        store.lastActiveDay = today;
-        if (store.streak > store.longest) store.longest = store.streak;
-        changed = store.streak;
-      }
+      const st = touchStreak();
+      if (st !== null) changed = st;
 
       if (a && a.ref) {
         queueLoad().push({
@@ -570,8 +730,7 @@
         queueDirty = true;
       }
 
-      pending = Object.assign({}, store);
-      if (!timer) timer = setTimeout(commit, 400);
+      schedule();
       return { streak: changed, award: award };
     },
 
@@ -628,16 +787,32 @@
 
     /* ── IQ testi natijalari (CONTRACT §5) ─────────────────────────────
        recordTest(result) — IQ.session Result'i. Diskka darhol yoziladi.
-       Saqlanadi: { at, mode, iq, lo, hi, n, correct, reliable, byType,
-       theta, se } — items jurnali EMAS (u serverga ketadi, bu yerda
-       faqat tarix ekrani uchun). Tarix eng ko'pi 100 ta, eng eskisi
-       tashlanadi. Yaroqsiz natija (iq/lo/hi/n son emas) yozilmaydi —
-       null qaytadi; aks holda saqlangan yozuvning nusxasi. */
+       Saqlanadi: { at, mode, iq, lo, hi, loOpen, hiOpen, n, correct,
+       reliable, flag, byType, theta, se } — items jurnali EMAS (u serverga
+       ketadi, bu yerda faqat tarix ekrani uchun). Testlar ≤ 100, mashqlar
+       ≤ 30 (alohida), eng eskisi tashlanadi. Yaroqsiz natija (iq/lo/hi/n
+       son emas) yozilmaydi — null qaytadi; aks holda saqlangan yozuvning
+       nusxasi.
+
+       Test natijasi (mode 'test') qo'shimcha:
+         · count +1, reliable bo'lsa best yangilanadi;
+         · byType mavzu kesimiga (topicStats) qo'shiladi — test javoblari
+           answered() da ataylab qo'shilmaydi (u yerdagi izoh). */
     recordTest: function (result) {
       const e = saneTest(result, Date.now());
       if (!e) return null;
       iqStore.tests.push(e);
-      if (iqStore.tests.length > TESTS_MAX) iqStore.tests = iqStore.tests.slice(-TESTS_MAX);
+      iqStore.tests = capRows(iqStore.tests);
+      if (e.mode === 'test') {
+        iqStore.count += 1;
+        if (e.reliable) iqStore.best = better(iqStore.best, bestOf(e));
+        Object.keys(e.byType).forEach(k => {
+          const key = k.slice(0, 60), b = e.byType[k];
+          const cur = store.topics[key] || [0, 0];
+          store.topics[key] = [cur[0] + b.n, cur[1] + b.correct];
+        });
+        if (Object.keys(e.byType).length) schedule();
+      }
       (Array.isArray(result.items) ? result.items : []).forEach(it => {
         if (!it || !okType(it.type)) return;
         if (!(Number.isInteger(it.level) && it.level >= LEVEL_MIN && it.level <= LEVEL_MAX)) return;
@@ -649,30 +824,55 @@
       return Object.assign({}, e, { byType: saneByType(e.byType) });
     },
 
-    /* Eskidan yangiga. Nusxa — chaqiruvchi o'zgartirsa ham xotira buzilmaydi. */
+    /* Eskidan yangiga: testlar (≤100) va mashqlar (≤30) aralash, mode
+       bilan ajratiladi. Nusxa — chaqiruvchi o'zgartirsa ham xotira
+       buzilmaydi. */
     testHistory: function () {
       return iqStore.tests.map(e => Object.assign({}, e, { byType: saneByType(e.byType) }));
     },
 
+    /* Umrbod: { count — tugallangan testlar soni, best — eng yuqori
+       ISHONCHLI natija { at, iq, lo, hi, loOpen, hiOpen } yoki null }.
+       Tarix chegarasidan mustaqil ("Testlar", "Eng yaxshi IQ"). */
+    testStats: function () {
+      return { count: iqStore.count, best: iqStore.best ? Object.assign({}, iqStore.best) : null };
+    },
+
     /* Mashqning boshlang'ich darajasi, 1..10. QOIDA:
-         · shu turda hali javob yo'q → 3 (yangi odam oson boshlaydi,
-           birinchi taassurot "juda qiyin" bo'lmasligi kerak);
-         · aks holda shu turdagi oxirgi ≤ 10 ta javob (test ham, mashq
-           ham) olinadi: L = ularning o'rtacha darajasi (yaxlitlangan),
-           to'g'ri ulushi ≥ 80% bo'lsa L + 1, 50% dan kam bo'lsa L − 1,
-           oradagi holatda L; natija 1..10 ga qisiladi.
-       Mashq zinapoyasi (IQ.session, ~71% ga yaqinlashadi) ham shu
-       darajadan davom etadi, ya'ni har mashq oldingisi to'xtagan joydan
-       ±1 atrofida boshlanadi. */
+         · shu turda ≥ 8 ta o'z javobi bor → oxirgi ≤ 10 tasi: L = o'rtacha
+           daraja (yaxlitlangan), to'g'ri ulushi ≥ 80% bo'lsa L + 1, 50%
+           dan kam bo'lsa L − 1, oradagi holatda L;
+         · kamroq bo'lsa (SOVUQ START) — hamma turlarning oxirgi ≤ 10 tadan
+           javoblari birga (≥ 8 ta bo'lsa) EAP bilan baholanadi
+           (IQ.score.estimate, b = IQ.levelToB(daraja), k = 4 — recent'da
+           k saqlanmaydi) va L = IQ.score.nextLevel(θ̂) (jittersiz). Busiz
+           aralash kunlik mashqda har turga sessiyada 2–3 savol tushib,
+           kuchli odam bir hafta 3–5-darajada ~92% to'g'ri yechardi;
+           IQ bundle yo'q bo'lsa — o'z javoblari bo'yicha eski qoida;
+         · hech qanday javob yo'q → 3 (yangi odam oson boshlaydi).
+       Natija 1..10 ga qisiladi. Mashq zinapoyasi (IQ.session, amalda
+       65–69% to'g'ri) shu darajadan davom etadi. */
     levelFor: function (type) {
-      const list = okType(type) ? iqStore.recent[type] : null;
-      if (!list || !list.length) return LEVEL_DEFAULT;
-      const last = list.slice(-LEVEL_WINDOW);
-      let sum = 0, ok = 0;
-      last.forEach(p => { sum += p[0]; ok += p[1]; });
-      const acc = ok / last.length;
-      let lv = Math.round(sum / last.length) + (acc >= 0.8 ? 1 : acc < 0.5 ? -1 : 0);
-      return Math.max(LEVEL_MIN, Math.min(LEVEL_MAX, lv));
+      const own = okType(type) && iqStore.recent[type] ? iqStore.recent[type].slice(-LEVEL_WINDOW) : [];
+      let lv = null;
+      if (own.length >= LEVEL_OWN_MIN) {
+        lv = meanRule(own);
+      } else {
+        const IQ = window.IQ;
+        const pooled = [];
+        Object.keys(iqStore.recent).forEach(t => {
+          iqStore.recent[t].slice(-LEVEL_WINDOW).forEach(p => pooled.push(p));
+        });
+        if (pooled.length >= LEVEL_POOL_MIN && IQ && IQ.score && IQ.score.estimate &&
+            IQ.score.nextLevel && IQ.levelToB) {
+          try {
+            const est = IQ.score.estimate(pooled.map(p => ({ b: IQ.levelToB(p[0]), k: 4, correct: p[1] === 1 })));
+            lv = IQ.score.nextLevel(est.theta);
+          } catch (e) { lv = null; }
+        }
+        if (!isNum(lv)) lv = own.length ? meanRule(own) : LEVEL_DEFAULT;
+      }
+      return Math.max(LEVEL_MIN, Math.min(LEVEL_MAX, Math.round(lv)));
     },
 
     /* Serverga yuborilmagan javoblar soni. Sinxronizatsiya kelganda

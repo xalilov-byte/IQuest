@@ -42,6 +42,25 @@ function realm(extra) {
       return Object.assign({}, it, { type: 'flaky', id: 'flaky:' + level + ':' + seed });
     },
   });
+  /* Qo'lda yozilgan bankka o'xshash (og'zaki kabi): 12 ta yozuv, key
+     bilan; stimul variantlar tartibiga bog'liq ("ortiqchasini top"
+     kabi) — ya'ni takror faqat key orqali aniqlanadi. */
+  IQ.register({
+    type: 'bank', label: { uz: 'x', ru: 'x' },
+    generate(seed, level) {
+      const r = IQ.rng(seed);
+      const key = 'k' + String(1 + r.int(BANK_N)).padStart(2, '0');
+      const words = r.shuffle(['olma', 'nok', 'uzum', 'stol']);
+      const t = s => ({ kind: 'text', uz: s, ru: s });
+      return {
+        id: 'bank:' + level + ':' + seed, type: 'bank', level, b: IQ.levelToB(level), key,
+        prompt: { uz: 'Ortiqchasi?', ru: 'Лишнее?' },
+        stimulus: t(key + ': ' + words.join(', ')),
+        options: words.map(t), correct: words.indexOf('stol'),
+        explain: { uz: 'Stol — meva emas.', ru: 'Стол — не фрукт.' },
+      };
+    },
+  });
   IQ.register({
     type: 'never', label: { uz: 'x', ru: 'x' },
     generate() { return { id: 'never:1:1', type: 'never' }; },   // doim buzuq
@@ -49,6 +68,7 @@ function realm(extra) {
   return { IQ, ctx };
 }
 
+const BANK_N = 12;
 const plain = x => JSON.parse(JSON.stringify(x));
 const { IQ } = realm();
 const TYPES = ['series', 'spatial'];
@@ -61,7 +81,7 @@ const mixed = (it, i) => (i % 3 === 2 ? wrong(it) : right(it));
 function run(s, policy, msOf) {
   while (!s.done) {
     const it = s.current();
-    s.answer(policy(it, s.index), msOf ? msOf(s.index) : 1000 + s.index);
+    s.answer(policy(it, s.index), msOf ? msOf(s.index) : 5000 + s.index);   // halol odam tezligi (FAST_MEDIAN_MS dan yuqori)
   }
   return s;
 }
@@ -86,7 +106,7 @@ test('standart qiymatlar: test 30, mashq 10; seed yo\'q — uint32', () => {
 
 
 test('to\'liq test: jurnal shakli, durationMs = ms yig\'indisi, reliable', () => {
-  const s = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 42 }), mixed, i => 500 + 10 * i);
+  const s = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 42 }), mixed, i => 3000 + 10 * i);
   assert.equal(s.done, true);
   assert.equal(s.index, 30);
   assert.equal(s.current(), null);
@@ -99,10 +119,13 @@ test('to\'liq test: jurnal shakli, durationMs = ms yig\'indisi, reliable', () =>
   assert.equal(r.correct, r.items.filter(x => x.correct).length);
   assert.equal(r.correct, 20);
   let ms = 0;
-  for (let i = 0; i < 30; i++) ms += 500 + 10 * i;
+  for (let i = 0; i < 30; i++) ms += 3000 + 10 * i;
   assert.equal(r.durationMs, ms);
   assert.equal(r.reliable, true);
+  assert.equal(r.flag, null);
   assert.equal(r.complete, true);
+  assert.equal(r.loOpen, false);
+  assert.equal(r.hiOpen, false);
   assert.ok(isFinite(r.theta) && r.se > 0 && r.se < 1);
   assert.ok(r.lo <= r.iq && r.iq <= r.hi && r.lo >= 55 && r.hi <= 145);
   assert.equal(r.iq, IQ.score.toIQ(r.theta));
@@ -139,16 +162,19 @@ test('answer: -1 / null — javob berilmadi (xato), noto\'g\'ri indeks — xato 
   assert.equal(r.items[1].answer, -1);
   assert.equal(r.items[1].ms, 0, 'yaroqsiz ms — 0');
   assert.equal(r.reliable, false, '2 ta savol — ishonchsiz');
+  assert.equal(r.flag, 'short');
 });
 
 
 test('reliable: faqat test rejimi va n ≥ 20', () => {
   const r19 = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 8, length: 19 }), right).result();
   assert.equal(r19.reliable, false);
+  assert.equal(r19.flag, 'short');
   const r20 = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 8, length: 20 }), right).result();
   assert.equal(r20.reliable, true);
   const p = run(IQ.session.create({ mode: 'practice', types: TYPES, seed: 8, length: 25 }), right).result();
   assert.equal(p.reliable, false, 'mashq hech qachon IQ raqami bermaydi');
+  assert.equal(p.flag, 'practice');
 });
 
 
@@ -228,7 +254,7 @@ test('snapshot → JSON → restore: aynan shu joydan, aynan shu savollar', () =
     const whole = run(IQ.session.create(opts), mixed).result();
 
     const s = IQ.session.create(opts);
-    for (let i = 0; i < 13; i++) s.answer(mixed(s.current(), i), 1000 + i);
+    for (let i = 0; i < 13; i++) s.answer(mixed(s.current(), i), 5000 + i);
     const snap = JSON.parse(JSON.stringify(s.snapshot()));
     const back = realm().IQ.session.restore(snap);          // boshqa realm — "ilova qayta ochildi"
     assert.equal(back.index, 13);
@@ -331,7 +357,7 @@ test('verify: to\'g\'rilik javobdan qayta chiqariladi', () => {
 
 test('verify: tugallanmagan sessiya rad etiladi (erta to\'xtatish), buzuq payload — xato', () => {
   const s = IQ.session.create({ mode: 'test', types: TYPES, seed: 99 });
-  for (let i = 0; i < 25; i++) s.answer(right(s.current()), 1000);
+  for (let i = 0; i < 25; i++) s.answer(right(s.current()), 5000);
   const p = plain(s.payload());
   assert.throws(() => IQ.session.verify(p), e => e.code === 'IQ_INCOMPLETE');
   const partial = IQ.session.verify(p, { allowPartial: true });
@@ -425,4 +451,120 @@ test('mashq: nzProgress.levelFor dan boshlanadi, snapshot uni saqlaydi', () => {
   // Test rejimida startLevel/levelFor e'tiborsiz: boshlanish θ = 0 dan.
   const t = Q.session.create({ mode: 'test', types: TYPES, seed: 10, startLevel: 10 });
   assert.ok(t.current().level <= 5);
+});
+
+
+
+/* ── ENGINE 2: takrorlanmaslik va bank qismlari ───────────────────── */
+
+/* Sessiya savollarini (Item) yig'ib o'tadi. */
+function collect(s, policy) {
+  const items = [];
+  while (!s.done) { const it = s.current(); items.push(it); s.answer(policy(it, s.index), 5000); }
+  return items;
+}
+
+test('ENGINE 2: eski (engine 1) snapshot toza rad etiladi', () => {
+  assert.equal(IQ.session.ENGINE, 2);
+  const s = IQ.session.create({ mode: 'test', types: TYPES, seed: 7 });
+  s.answer(0, 5000);
+  const snap = plain(s.snapshot());
+  assert.equal(snap.engine, 2);
+  assert.throws(() => IQ.session.restore(Object.assign(snap, { engine: 1 })), e => e.code === 'IQ_ENGINE_MISMATCH');
+  const p = plain(run(s, mixed).payload());
+  assert.throws(() => IQ.session.verify(Object.assign(p, { engine: 1 })), e => e.code === 'IQ_ENGINE_MISMATCH');
+});
+
+
+test('bir sessiyada bir savol ikki marta chiqmaydi (contentKey), replay aynan shu', () => {
+  const K = IQ.session.contentKey;
+  for (let seed = 1; seed <= 40; seed++) {
+    const s = IQ.session.create({ mode: 'test', types: ['series', 'spatial', 'bank'], seed });
+    const items = collect(s, mixed);
+    const keys = items.map(K);
+    assert.equal(new Set(keys).size, 30, 'seed ' + seed + ': takror bor');
+    // bank: stimul har xil satr, lekin key bir xil bo'lsa — bir savol
+    assert.ok(items.filter(x => x.type === 'bank').every(x => K(x) === 'bank#' + x.key));
+    assert.deepEqual(plain(IQ.session.verify(plain(s.payload()))), plain(s.result()));
+  }
+  // Mashq ham (series: kichik hovuzli variantlar bor)
+  for (let seed = 1; seed <= 40; seed++) {
+    const items = collect(IQ.session.create({ mode: 'practice', types: ['series'], seed, length: 20, startLevel: 5 }), mixed);
+    assert.equal(new Set(items.map(K)).size, 20, 'mashq seed ' + seed);
+  }
+});
+
+
+test('bank qismlari: test o\'z qismidan, mashq o\'zinikidan; tugasa — yangi, keyin takror', () => {
+  const side = k => IQ.session.bankSide({ key: k });
+  const all = Array.from({ length: BANK_N }, (_, i) => 'k' + String(i + 1).padStart(2, '0'));
+  const nTest = all.filter(k => side(k) === 'test').length;
+  assert.ok(nTest > 0 && nTest < BANK_N, 'ikkala qism ham bor: ' + nTest);
+  assert.equal(IQ.session.bankSide({ type: 'series' }), null, 'generator savoli bo\'linmaydi');
+  for (const mode of ['test', 'practice']) {
+    const own = all.filter(k => side(k) === mode).length;
+    for (let seed = 1; seed <= 20; seed++) {
+      const s = IQ.session.create({ mode, types: ['bank'], seed, length: 30, startLevel: 5 });
+      const keys = collect(s, mixed).map(x => x.key);
+      assert.ok(keys.slice(0, own).every(k => side(k) === mode), mode + ' ' + seed + ': avval o\'z qismi ' + keys);
+      assert.equal(new Set(keys.slice(0, own)).size, own, 'o\'z qismida takror yo\'q');
+      // Oxirgi 1–2 yangi yozuvni 40 urinishda topmaslik ehtimoli bor
+      // (byudjet ataylab cheklangan) — shuning uchun ≥ BANK_N − 2.
+      assert.ok(new Set(keys.slice(0, BANK_N)).size >= BANK_N - 2, 'hovuz tugaguncha deyarli takror yo\'q');
+      assert.equal(keys.length, 30, 'hovuz tugasa ham sessiya davom etadi (takror bilan)');
+      assert.deepEqual(plain(IQ.session.restore(plain(s.snapshot())).result()), plain(s.result()));
+    }
+  }
+});
+
+
+/* ── Ishonchlilik: tasodif va shoshilish (§6.5) ───────────────────── */
+
+test('reliable ⇔ flag === null; hammasi xato — chance, "IQ 55 · 55–55" ko\'rsatilmaydi', () => {
+  for (const seed of [1, 2, 3]) {
+    const r = run(IQ.session.create({ mode: 'test', types: TYPES, seed }), wrong).result();
+    assert.equal(r.reliable, false);
+    assert.equal(r.flag, 'chance');
+    assert.equal(r.loOpen, true, 'qisilmagan pastki uch 55 dan past');
+  }
+  const r = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 4 }), right).result();
+  assert.equal(r.reliable, true); assert.equal(r.flag, null);
+  assert.equal(r.hiOpen, true, '30/30 — yuqori uch ochiq');
+  assert.deepEqual(plain(IQ.session.RULES), { minItems: 20, chanceZ: 1.645, fastMedianMs: 1500 });
+});
+
+
+test('tasodifiy bosuvchining ≥ 90% i ishonchsiz; halol θ = −1 odam ishonchli', () => {
+  const r = IQ.rng(2026);
+  let unrel = 0;
+  const N = 100;
+  for (let seed = 1; seed <= N; seed++) {
+    const res = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 5000 + seed }), it => r.int(it.options.length)).result();
+    if (!res.reliable) { unrel++; assert.equal(res.flag, 'chance'); }
+    if (res.reliable) assert.ok(res.lo < res.hi || res.loOpen || res.hiOpen);
+    assert.equal(res.reliable, res.flag === null);
+  }
+  assert.ok(unrel / N >= 0.9, 'tasodifiy: ishonchsiz ' + unrel + '/' + N);
+
+  let rel = 0;
+  const honest = it => (r.next() < IQ.score.prob(-1, it.b, it.options.length) ? it.correct : wrong(it));
+  for (let seed = 1; seed <= 60; seed++) {
+    if (run(IQ.session.create({ mode: 'test', types: TYPES, seed: 9000 + seed }), honest).result().reliable) rel++;
+  }
+  assert.ok(rel >= 58, 'halol θ = −1: ishonchli ' + rel + '/60');
+});
+
+
+test('fast: median javob vaqti < 1500 ms — ishonchsiz; vaqt noma\'lum bo\'lsa tekshirilmaydi', () => {
+  const s = run(IQ.session.create({ mode: 'test', types: TYPES, seed: 12 }), right, () => 900);
+  assert.equal(s.result().flag, 'fast');
+  assert.equal(IQ.session.verify(plain(s.payload())).flag, 'fast', 'server ham shu qoidani qo\'llaydi');
+  assert.equal(run(IQ.session.create({ mode: 'test', types: TYPES, seed: 12 }), right, () => 1500).result().flag, null);
+  // Yarmidan ko'pi 0 ms (vaqt yo'q) — "tez" deb bo'lmaydi.
+  assert.equal(run(IQ.session.create({ mode: 'test', types: TYPES, seed: 12 }), right, i => (i % 3 ? 0 : 500)).result().flag, null);
+  // Median: yarmi tez, yarmi sekin — o'rtasi hisoblanadi.
+  assert.equal(run(IQ.session.create({ mode: 'test', types: TYPES, seed: 12 }), right, i => (i < 16 ? 800 : 9000)).result().flag, 'fast');
+  assert.equal(run(IQ.session.create({ mode: 'test', types: TYPES, seed: 12 }), right, i => (i < 14 ? 800 : 9000)).result().flag, null);
+  // chance tez bosishdan ustun turadi.
+  assert.equal(run(IQ.session.create({ mode: 'test', types: TYPES, seed: 12 }), wrong, () => 700).result().flag, 'chance');
 });

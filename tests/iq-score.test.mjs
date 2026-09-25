@@ -207,17 +207,53 @@ test('toIQ: 100 + 15θ, butun son, 55..145', () => {
 
 
 test('interval: standart z = 1.645 (90%), lo ≤ iq ≤ hi', () => {
-  assert.deepEqual({ ...S.interval(0, 0.4) }, { lo: S.toIQ(-0.658), hi: S.toIQ(0.658) });
-  assert.deepEqual({ ...S.interval(0, 0.4) }, { ...S.interval(0, 0.4, 1.645) });
-  assert.deepEqual({ ...S.interval(0, 1, 1) }, { lo: 85, hi: 115 });
-  assert.deepEqual({ ...S.interval(3, 0.5) }, { lo: 133, hi: 145 }, 'chegarada qisiladi');
-  assert.deepEqual({ ...S.interval(0.3, NaN) }, { lo: 105, hi: 105 }, 'se buzuq — nol kenglik');
+  const iv = (t, se, z) => { const x = S.interval(t, se, z); return { lo: x.lo, hi: x.hi, loOpen: x.loOpen, hiOpen: x.hiOpen }; };
+  assert.deepEqual(iv(0, 0.4), { lo: S.toIQ(-0.658), hi: S.toIQ(0.658), loOpen: false, hiOpen: false });
+  assert.deepEqual(iv(0, 0.4), iv(0, 0.4, 1.645));
+  assert.deepEqual(iv(0, 1, 1), { lo: 85, hi: 115, loOpen: false, hiOpen: false });
+  assert.deepEqual(iv(3, 0.5), { lo: 133, hi: 145, loOpen: false, hiOpen: true }, 'chegarada qisiladi, uchi ochiq');
+  assert.deepEqual(iv(0.3, NaN), { lo: 105, hi: 105, loOpen: false, hiOpen: false }, 'se buzuq — nol kenglik');
   const r = IQ.rng(5);
   for (let i = 0; i < 500; i++) {
     const t = r.next() * 8 - 4, se = r.next();
     const iv = S.interval(t, se);
     assert.ok(iv.lo <= S.toIQ(t) && S.toIQ(t) <= iv.hi);
   }
+});
+
+
+/* Qisilgan oraliq soxta aniqlik bermasligi kerak: chekkadagi uch
+   ochiq deb belgilanadi va lo === hi chekkada hech qachon "yopiq"
+   ko'rinmaydi. */
+test('interval: qisilmagan uchlar shkaladan chiqsa loOpen / hiOpen', () => {
+  // Hammasi xato: θ −3.69, se 0.26 → qisilmagan 38–51, ko'rinadigan 55–55.
+  const low = S.interval(-3.69, 0.26);
+  assert.equal(low.lo, 55); assert.equal(low.hi, 55);
+  assert.equal(low.loOpen, true, 'pastki uch ochiq');
+  // 30/30: θ 3.43, se 0.38 → 142–161, ko'rinadigan 142–145.
+  const top = S.interval(3.43, 0.38);
+  assert.equal(top.lo, 142); assert.equal(top.hi, 145);
+  assert.equal(top.hiOpen, true); assert.equal(top.loOpen, false);
+  // Aynan chegarada (yaxlitlangan 55) — ochiq emas.
+  assert.equal(S.interval((55 - 100) / 15 + 1.645 * 0.3, 0.3).loOpen, false);
+  assert.equal(S.interval((54 - 100) / 15 + 1.645 * 0.3, 0.3).loOpen, true);
+  const r = IQ.rng(8);
+  for (let i = 0; i < 2000; i++) {
+    const x = S.interval(r.next() * 10 - 5, r.next() * 0.8 + 0.05);
+    if (x.lo === x.hi) assert.ok(x.lo === S.IQ_MIN ? x.loOpen : x.hiOpen, JSON.stringify(x));
+    if (x.lo === S.IQ_MIN && !x.loOpen) assert.ok(x.hi > x.lo);
+    assert.ok(x.lo >= S.IQ_MIN && x.hi <= S.IQ_MAX);
+  }
+  assert.equal(S.IQ_MIN, 55); assert.equal(S.IQ_MAX, 145);
+});
+
+
+test('chance: tasodifiy to\'g\'ri javoblar soni — o\'rtacha Σ1/k, sd √Σc(1−c)', () => {
+  const c = S.chance([{ k: 4 }, { k: 4 }, { k: 5 }, null, { k: undefined }]);
+  assert.ok(Math.abs(c.mean - 0.7) < 1e-12);
+  assert.ok(Math.abs(c.sd - Math.sqrt(0.1875 * 2 + 0.16)) < 1e-12);
+  assert.deepEqual({ ...S.chance([]) }, { mean: 0, sd: 0 });
+  assert.deepEqual({ ...S.chance() }, { mean: 0, sd: 0 });
 });
 
 

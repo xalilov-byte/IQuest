@@ -48,7 +48,7 @@ function env(saved, extra) {
   vm.createContext(ctx);
   vm.runInContext(SRC, ctx);
   return {
-    p: ctx.window.nzProgress, io,
+    p: ctx.window.nzProgress, io, ctx,
     disk: () => JSON.parse(store.get(KEY) || 'null'),
     queue: () => JSON.parse(store.get('nz-attempts') || 'null'),
     raw: k => store.get(k),
@@ -404,10 +404,11 @@ test('recordTest diskka yozadi, qayta ochilganda tarix joyida', () => {
   assert.equal(h.length, 1);
   const e = h[0];
   assert.deepEqual(Object.keys(e).sort(),
-    ['at', 'byType', 'correct', 'hi', 'iq', 'lo', 'mode', 'n', 'reliable', 'se', 'theta']);
+    ['at', 'byType', 'correct', 'flag', 'hi', 'hiOpen', 'iq', 'lo', 'loOpen', 'mode', 'n', 'reliable', 'se', 'theta']);
   assert.ok(e.at >= before && e.at <= Date.now());
-  assert.deepEqual(plain(e), plain({ at: e.at, mode: 'test', iq: 106, lo: 95, hi: 117, n: 24, correct: 13,
-    reliable: true, byType: { series: { n: 12, correct: 8 }, spatial: { n: 12, correct: 5 } }, theta: 0.4, se: 0.43 }));
+  assert.deepEqual(plain(e), plain({ at: e.at, mode: 'test', iq: 106, lo: 95, hi: 117, loOpen: false, hiOpen: false,
+    n: 24, correct: 13, reliable: true, flag: null,
+    byType: { series: { n: 12, correct: 8 }, spatial: { n: 12, correct: 5 } }, theta: 0.4, se: 0.43 }));
 
   // Qayta ochish
   const again = env(undefined, { [TESTS_KEY]: raw(TESTS_KEY) });
@@ -478,6 +479,203 @@ test('buzilgan disk: tarix bo\'sh, ilova yiqilmaydi', () => {
   assert.equal(p.testHistory()[0].mode, 'test');
   // Yaroqli juftliklar: [5,1], [7,0] → o'rtacha 6, ulush 50% → 6
   assert.equal(p.levelFor('series'), 6);
+});
+
+
+/* ── v1.1: kunlik hisoblagich, yozuvni tejash, sozlamalar ─────────── */
+
+const today = () => {
+  const d = new Date(Date.now() - 4 * 3600000);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+};
+
+test('save: kechagi answeredCount bugunga yozilmaydi (countDay)', () => {
+  const { p, disk } = env();
+  p.save({ answeredCount: 7, countDay: '2000-01-01' }, []);
+  p.flush();
+  assert.equal(disk().answered, 0, 'eski kunning soni — 0');
+  assert.equal(disk().day, today());
+  p.save({ answeredCount: 3, countDay: today() }, []);
+  p.flush();
+  assert.equal(disk().answered, 3);
+  p.save({ answeredCount: 4 }, []);                 // countDay yo'q — eski xulq
+  p.flush();
+  assert.equal(disk().answered, 4);
+  // Diskda kechagi kun: yuklanganda 0 dan.
+  const old = env(saqlangan({ day: '2000-01-01', answered: 9 }));
+  assert.equal(old.p.initial([]).answeredCount, 0);
+});
+
+
+test('save: hech narsa o\'zgarmasa diskka yozilmaydi (o\'yin tick\'lari)', () => {
+  const { p, io } = env();
+  const st = { points: 40, answeredCount: 2, countDay: today(), wrongIds: [], savedIds: [], soundOn: true, notifOn: false };
+  p.save(st, []); p.flush();
+  const w = io.writes;
+  for (let i = 0; i < 100; i++) { p.save(Object.assign({}, st, { game: { tick: i } }), []); p.flush(); }
+  assert.equal(io.writes, w, '100 ta o\'zgarishsiz save — 0 ta yozuv');
+  p.save(Object.assign({}, st, { points: 50 }), []); p.flush();
+  assert.equal(io.writes, w + 1);
+});
+
+
+test('save: nzSettings bor bo\'lsa soundOn/notifOn qayta yozilmaydi', () => {
+  const { p, disk, ctx } = env(saqlangan({ day: today(), soundOn: false, notifOn: true }));
+  ctx.window.nzSettings = { get() { return {}; } };
+  p.save({ points: 5, soundOn: true, notifOn: false, countDay: today() }, []);
+  p.flush();
+  assert.equal(disk().soundOn, false, 'saqlangan qiymat o\'zgarmaydi');
+  assert.equal(disk().notifOn, true);
+  assert.equal(disk().points, 5);
+  // nzSettings yo'q (eski build) — eski xulq.
+  const b = env();
+  b.p.save({ soundOn: true, notifOn: false }, []); b.p.flush();
+  assert.equal(b.disk().soundOn, true);
+  assert.equal(b.disk().notifOn, false);
+  // initial() ko'chirish uchun qiymatni baribir beradi.
+  assert.equal(env(saqlangan({ soundOn: false })).p.initial([]).soundOn, false);
+});
+
+
+test('activeToday / markActive: o\'yin streak\'ni yuritadi, javob hisoblagichlariga tegmaydi', () => {
+  const { p, disk } = env(saqlangan({ streak: 4, longest: 4, lastActiveDay: '2000-01-01' }));
+  assert.equal(p.activeToday(), false);
+  assert.equal(p.markActive().streak, 1, 'uzilgan streak 1 dan');
+  assert.equal(p.activeToday(), true);
+  assert.equal(p.markActive().streak, null, 'kuniga bir marta');
+  assert.equal(p.streak(), 1);
+  assert.equal(p.stats().answered, 0, 'totalAnswered o\'zgarmaydi');
+  assert.equal(p.queued(), 0, 'navbatga tushmaydi');
+  p.flush();
+  assert.equal(disk().lastActiveDay, today());
+  // Kecha faol bo'lgan — davom etadi.
+  const y = new Date(Date.now() - 4 * 3600000 - 86400000);
+  const yk = y.getFullYear() + '-' + String(y.getMonth() + 1).padStart(2, '0') + '-' + String(y.getDate()).padStart(2, '0');
+  const q = env(saqlangan({ streak: 4, longest: 4, lastActiveDay: yk })).p;
+  assert.equal(q.markActive().streak, 5);
+  assert.equal(q.stats().longest, 5);
+  // answered() ham activeToday ni yoqadi.
+  const r = env().p;
+  r.answered({ ref: 'x', correct: true, mode: 'practice' });
+  assert.equal(r.activeToday(), true);
+});
+
+
+/* ── v1.1: IQ tarixi ───────────────────────────────────────────────── */
+
+test('mashq natijalari IQ testlarini tarixdan siqib chiqarmaydi (alohida chegara)', () => {
+  const { p, raw } = env();
+  p.recordTest(natija({ iq: 131, lo: 120, hi: 142 }, qator('series', 6, 24, 18)));
+  for (let i = 0; i < 150; i++) p.recordTest(natija({ mode: 'practice', reliable: false }, qator('series', 5, 1, 1)));
+  const h = p.testHistory();
+  assert.equal(h.filter(x => x.mode === 'test').length, 1, 'test joyida');
+  assert.equal(h.filter(x => x.mode === 'practice').length, 30, 'mashq ≤ 30');
+  assert.deepEqual(plain(p.testStats()), { count: 1, best: { at: h[0].at, iq: 131, lo: 120, hi: 142, loOpen: false, hiOpen: false } });
+  // Qayta ochilganda ham.
+  const again = env(undefined, { [TESTS_KEY]: raw(TESTS_KEY) }).p;
+  assert.equal(again.testHistory().filter(x => x.mode === 'test').length, 1);
+  assert.equal(again.testStats().count, 1);
+  // Eski disk: 100 ta aralash yozuv — yuklanganda ham har rejimga o'z chegarasi.
+  const rows = [{ at: 1, mode: 'test', iq: 120, lo: 110, hi: 130, n: 30, correct: 20, reliable: true }];
+  for (let i = 0; i < 99; i++) rows.push({ at: 2 + i, mode: 'practice', iq: 100, lo: 90, hi: 110, n: 10, correct: 5 });
+  const old = env(undefined, { [TESTS_KEY]: { v: 1, tests: rows, recent: {} } }).p;
+  assert.equal(old.testHistory().length, 31);
+  assert.equal(old.testHistory()[0].iq, 120);
+  assert.equal(old.testStats().best.iq, 120);
+});
+
+
+test('testStats: count va best 100 tadan keyin ham yo\'qolmaydi; best — faqat ishonchli', () => {
+  const { p } = env();
+  p.recordTest(natija({ iq: 140, lo: 130, hi: 145, hiOpen: true, loOpen: false }, qator('series', 9, 24, 20)));
+  p.recordTest(natija({ iq: 145, lo: 140, hi: 145, reliable: false, flag: 'fast' }, qator('series', 9, 24, 24)));
+  for (let i = 0; i < 110; i++) p.recordTest(natija({ iq: 100 + (i % 5) }, qator('series', 5, 24, 15)));
+  const st = p.testStats();
+  assert.equal(st.count, 112);
+  assert.equal(st.best.iq, 140, 'ishonchsiz 145 hisoblanmaydi, tarixdan chiqqan 140 esa saqlanadi');
+  assert.equal(st.best.hiOpen, true);
+  assert.equal(p.testHistory().length, 100);
+  st.best.iq = 1;
+  assert.equal(p.testStats().best.iq, 140, 'nusxa');
+  p.reset();
+  assert.deepEqual(plain(p.testStats()), { count: 0, best: null });
+});
+
+
+test('eski (flag\'siz) yozuv: tasodif darajasidagi "IQ 55" ishonchsiz deb qayta baholanadi', () => {
+  const rows = [
+    { at: 1, mode: 'test', iq: 55, lo: 55, hi: 55, n: 30, correct: 6, reliable: true, theta: -3.69, se: 0.26 },
+    { at: 2, mode: 'test', iq: 92, lo: 81, hi: 103, n: 30, correct: 16, reliable: true, theta: -0.5, se: 0.4 },
+    { at: 3, mode: 'test', iq: 145, lo: 142, hi: 145, n: 30, correct: 30, reliable: true, theta: 3.43, se: 0.38 },
+    { at: 4, mode: 'test', iq: 60, lo: 55, hi: 66, n: 30, correct: 11, reliable: true },
+    { at: 5, mode: 'test', iq: 98, lo: 80, hi: 115, n: 12, correct: 6, reliable: false },
+  ];
+  const h = env(undefined, { [TESTS_KEY]: { v: 1, tests: rows, recent: {} } }).p.testHistory();
+  assert.deepEqual(plain(h.map(x => [x.reliable, x.flag])),
+    [[false, 'chance'], [true, null], [true, null], [false, 'chance'], [false, 'short']]);
+  assert.equal(h[0].loOpen, true, 'θ, se dan: qisilmagan 38–51');
+  assert.equal(h[2].hiOpen, true, 'θ, se dan: qisilmagan 142–161');
+  assert.equal(h[2].loOpen, false);
+  assert.equal(h[3].loOpen, true, 'θ yo\'q — chegaradan');
+  // Yangi yozuv flag bilan: berilgani olinadi, reliable ⇔ flag === null.
+  const { p } = env();
+  const e = p.recordTest(natija({ reliable: true, flag: 'chance' }, qator('series', 2, 24, 8)));
+  assert.deepEqual([e.reliable, e.flag], [false, 'chance']);
+  const f = p.recordTest(natija({ mode: 'practice', reliable: false, flag: null }));
+  assert.deepEqual([f.reliable, f.flag], [false, 'practice']);
+});
+
+
+test('test javobi mavzu kesimiga javob paytida emas, recordTest da tushadi', () => {
+  const { p } = env();
+  p.answered({ ref: 'matrix:3:1', correct: false, mode: 'test', topic: 'matrix' });
+  p.answered({ ref: 'series:3:1', correct: true, mode: 'test', topic: 'series' });
+  assert.deepEqual(plain(p.topicStats(1)), [], 'to\'xtatilgan test to\'g\'ri/xatoni sezdirmaydi');
+  assert.equal(p.stats().answered, 2, 'umumiy hisob va streak yuradi');
+  assert.equal(p.streak(), 1);
+  p.recordTest(natija({}, [['matrix', 3, false], ['series', 3, true], ['series', 4, true]]));
+  assert.deepEqual(plain(p.topicStats(1).map(t => [t.name, t.n, t.pct])), [['matrix', 1, 0], ['series', 2, 100]]);
+  // Mashq javobi — darhol, recordTest ikkinchi marta qo'shmaydi.
+  p.answered({ ref: 'verbal:3:1', correct: true, mode: 'practice', topic: 'verbal' });
+  p.recordTest(natija({ mode: 'practice' }, [['verbal', 3, true]]));
+  assert.equal(p.topicStats(1).find(t => t.name === 'verbal').n, 1);
+});
+
+
+test('levelFor sovuq start: IQ bundle bilan hamma turlarning javoblari birga baholanadi', () => {
+  const IQSRC = ['src/iq/rng.js', 'src/iq/index.js', 'src/iq/score.js']
+    .map(f => fs.readFileSync(new URL('../' + f, import.meta.url), 'utf8'));
+  const withIQ = () => {
+    const e = env();
+    IQSRC.forEach(src => vm.runInContext(src, e.ctx));   // window.IQ
+    return e.p;
+  };
+  // Kuchli odam: 4 turda 3–4-darajada 12/12 to'g'ri (har turga 3 ta).
+  const strong = [];
+  ['matrix', 'series', 'spatial', 'verbal'].forEach(t => { strong.push([t, 3, true], [t, 4, true], [t, 4, true]); });
+  const p = withIQ();
+  p.recordTest(natija({ mode: 'practice' }, strong));
+  const lv = p.levelFor('series');
+  assert.ok(lv >= 7, 'kuchli odam tez ko\'tariladi: ' + lv);
+  const plainRule = env().p;
+  plainRule.recordTest(natija({ mode: 'practice' }, strong));
+  assert.equal(plainRule.levelFor('series'), 5, 'IQ yo\'q — eski qoida (o\'rtacha 4 + 1)');
+  // Zaif odam 3-darajada ko'p xato — pastga.
+  const weak = [];
+  ['matrix', 'series', 'spatial', 'verbal'].forEach(t => { weak.push([t, 3, false], [t, 3, true], [t, 3, false]); });
+  const w = withIQ();
+  w.recordTest(natija({ mode: 'practice' }, weak));
+  assert.ok(w.levelFor('series') <= 3, 'zaif: ' + w.levelFor('series'));
+  // Kam javob (< 8) — eski qoida; javobsiz tur — sovuq start umumiy javobdan.
+  const few = withIQ();
+  few.recordTest(natija({ mode: 'practice' }, [['series', 4, true], ['series', 4, true]]));
+  assert.equal(few.levelFor('series'), 5);
+  assert.equal(few.levelFor('matrix'), 3);
+  assert.ok(p.levelFor('matrix') >= 7, 'shu turda javob yo\'q, lekin umumiy baho bor');
+  // O'z javobi ≥ 8 — faqat o'zinikidan.
+  const own = withIQ();
+  own.recordTest(natija({ mode: 'practice' }, qator('series', 6, 10, 6).concat(qator('matrix', 2, 10, 10))));
+  assert.equal(own.levelFor('series'), 6);
 });
 
 
