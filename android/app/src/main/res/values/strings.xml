@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Nazariy</string>
-    <string name="title_activity_main">Nazariy</string>
-    <string name="package_name">uz.nazariy.app</string>
-    <string name="custom_url_scheme">uz.nazariy.app</string>
+    <string name="app_name">IQuest</string>
+    <string name="title_activity_main">IQuest</string>
+    <string name="package_name">uz.iquest.app</string>
+    <string name="custom_url_scheme">uz.iquest.app</string>
 </resources>

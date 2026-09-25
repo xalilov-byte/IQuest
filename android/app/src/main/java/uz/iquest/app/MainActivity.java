@@ -1,4 +1,4 @@
-package uz.nazariy.app;
+package uz.iquest.app;
 
 import com.getcapacitor.BridgeActivity;
 

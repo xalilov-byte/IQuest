@@ -1,20 +1,20 @@
 # ─────────────────────────────────────────────────────────────────────────
-#  Nazariy — Android build (APK + AAB)
+#  IQuest — Android build (APK + AAB)
 #
 #  Kompyuteringizga hech narsa o'rnatmasdan yig'ish uchun: loyihani GitHub'ga
 #  qo'ying, quyidagi Secrets'ni sozlang va Actions → "Android build" → Run.
 #
 #  GitHub → Settings → Secrets and variables → Actions → New repository secret:
 #    KEYSTORE_BASE64     — kalit faylining base64 ko'rinishi
-#                          (base64 -w0 nazariy.keystore > keystore.txt)
+#                          (base64 -w0 iquest.keystore > keystore.txt)
 #    KEYSTORE_PASSWORD   — kalit ombori paroli
-#    KEY_ALIAS           — kalit nomi (masalan: nazariy)
+#    KEY_ALIAS           — kalit nomi (masalan: iquest)
 #    KEY_PASSWORD        — kalit paroli
 #
 #  Secrets qo'yilmasa ham workflow ishlaydi. Har doim uchta fayl chiqadi:
-#    Nazariy-debug.apk    — telefonga DARHOL o'rnatiladi (sinash uchun)
-#    Nazariy-release.apk  — secrets bo'lsa imzolangan, bo'lmasa imzosiz
-#    Nazariy-release.aab  — Play Market uchun (imzo shart)
+#    IQuest-debug.apk     — telefonga DARHOL o'rnatiladi (sinash uchun)
+#    IQuest-release.apk   — secrets bo'lsa imzolangan, bo'lmasa imzosiz
+#    IQuest-release.aab   — Play Market uchun (imzo shart)
 # ─────────────────────────────────────────────────────────────────────────
 name: Android build
 
@@ -89,7 +89,7 @@ jobs:
       - name: Saytni yuklab olish uchun saqlash
         uses: actions/upload-artifact@v4
         with:
-          name: nazariy-sayt
+          name: iquest-sayt
           path: dist/site
           if-no-files-found: error
 
@@ -101,7 +101,7 @@ jobs:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/nazariy.keystore"
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/iquest.keystore"
             echo "Kalit tayyor — imzolangan build."
           else
             echo "KEYSTORE_BASE64 yo'q — imzosiz build (faqat sinash uchun)."
@@ -128,10 +128,10 @@ jobs:
       - name: APK va AAB yig'ish
         working-directory: android
         env:
-          NAZARIY_KEYSTORE: ${{ runner.temp }}/nazariy.keystore
-          NAZARIY_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          NAZARIY_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          NAZARIY_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          IQUEST_KEYSTORE: ${{ runner.temp }}/iquest.keystore
+          IQUEST_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          IQUEST_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          IQUEST_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew --no-daemon assembleDebug assembleRelease bundleRelease
 
       - name: Yig'ilgan fayllarni ko'rsatish
@@ -145,12 +145,12 @@ jobs:
           # build-tools bir nechta versiyada bo'lishi mumkin — eng yangisi
           bt=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)
           "$bt/apksigner" verify --print-certs \
-            app/build/outputs/apk/debug/Nazariy-debug.apk | head -4 || true
+            app/build/outputs/apk/debug/IQuest-debug.apk | head -4 || true
 
       - name: Natijalarni yuklab olish uchun saqlash
         uses: actions/upload-artifact@v4
         with:
-          name: nazariy-android
+          name: iquest-android
           path: |
             android/app/build/outputs/apk/debug/*.apk
             android/app/build/outputs/apk/release/*.apk
@@ -194,14 +194,14 @@ jobs:
           gh release create "$tag" "${files[@]}" \
             --target "$GITHUB_SHA" \
             --prerelease \
-            --title "Nazariy — sinov APK ($GITHUB_REF_NAME)" \
+            --title "IQuest — sinov APK ($GITHUB_REF_NAME)" \
             --notes "Avtomatik yig'ilgan sinov versiyasi.
 
           Commit: \`$GITHUB_SHA\`
           Yig'ildi: $(date -u '+%Y-%m-%d %H:%M UTC')
 
-          \`Nazariy-debug.apk\` — telefonga darhol o'rnatiladi. Android
+          \`IQuest-debug.apk\` — telefonga darhol o'rnatiladi. Android
           \"noma'lum manbadan o'rnatish\" ruxsatini so'raydi.
 
           Play Market uchun \`.aab\` fayli Actions artefaktida
-          (\`nazariy-android\`) — u imzo kalitini talab qiladi."
+          (\`iquest-android\`) — u imzo kalitini talab qiladi."

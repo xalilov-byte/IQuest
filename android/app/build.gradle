@@ -50,17 +50,17 @@ tasks.register("nzAssetsFresh") {
 }
 tasks.matching { it.name == "preBuild" }.configureEach { dependsOn("nzAssetsFresh") }
 
-/* Yig'ilgan fayllar nomi: Nazariy-release.apk / Nazariy-debug.apk /
-   Nazariy-release.aab (standart "app-..." o'rniga). */
+/* Yig'ilgan fayllar nomi: IQuest-release.apk / IQuest-debug.apk /
+   IQuest-release.aab (standart "app-..." o'rniga). */
 base {
-    archivesName = "Nazariy"
+    archivesName = "IQuest"
 }
 
 android {
-    namespace = "uz.nazariy.app"
+    namespace = "uz.iquest.app"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "uz.nazariy.app"
+        applicationId "uz.iquest.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode nzVersion.versionCode
@@ -75,8 +75,8 @@ android {
     /* ── Imzo (signing) ────────────────────────────────────────────────
        Kalit fayli va parollar loyihada SAQLANMAYDI. Ikki manba:
          1) mahalliy:  android/keystore.properties  (git'ga tushmaydi)
-         2) CI:        NAZARIY_KEYSTORE / NAZARIY_STORE_PASSWORD /
-                       NAZARIY_KEY_ALIAS / NAZARIY_KEY_PASSWORD muhit
+         2) CI:        IQUEST_KEYSTORE / IQUEST_STORE_PASSWORD /
+                       IQUEST_KEY_ALIAS / IQUEST_KEY_PASSWORD muhit
                        o'zgaruvchilari (GitHub Secrets)
        Kalit topilmasa release baribir yig'iladi — faqat imzosiz
        (Play Market'ga yuklash uchun imzo shart).                        */
@@ -85,12 +85,12 @@ android {
             def props = new Properties()
             def f = rootProject.file("keystore.properties")
             if (f.exists()) props.load(new FileInputStream(f))
-            def storePath = props['storeFile'] ?: System.getenv('NAZARIY_KEYSTORE')
+            def storePath = props['storeFile'] ?: System.getenv('IQUEST_KEYSTORE')
             if (storePath && file(storePath).exists()) {
                 storeFile file(storePath)
-                storePassword props['storePassword'] ?: System.getenv('NAZARIY_STORE_PASSWORD')
-                keyAlias props['keyAlias'] ?: System.getenv('NAZARIY_KEY_ALIAS')
-                keyPassword props['keyPassword'] ?: System.getenv('NAZARIY_KEY_PASSWORD')
+                storePassword props['storePassword'] ?: System.getenv('IQUEST_STORE_PASSWORD')
+                keyAlias props['keyAlias'] ?: System.getenv('IQUEST_KEY_ALIAS')
+                keyPassword props['keyPassword'] ?: System.getenv('IQUEST_KEY_PASSWORD')
             }
         }
     }

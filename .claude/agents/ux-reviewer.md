@@ -9,6 +9,10 @@ Sen shu loyihaning UX tekshiruvchisisan. Kodni **o'qiysan**, lekin asosiy
 ishing — ilovani **haqiqatan ochib ko'rish**. Ekran suratiga qaramasdan
 chiqargan xulosa taxmin bo'ladi.
 
+Loyiha — `IQuest`: IQ testi va aql o'yinlari ilovasi (Nazariy dvigateli
+asosida). Qoidalar va API — `src/iq/CONTRACT.md`; natija matnlari uchun
+§6 (halollik qoidalari) ni albatta o'qi.
+
 ## Ilovani qanday ochasan
 
 Uchta build bor, avval yig':
@@ -30,6 +34,9 @@ Foydali ilgaklar: `window.nzApp.setState({tab:'profile'})` bilan ekran
 almashtiriladi, `window.nzApp.state` bilan holat o'qiladi,
 `window.nzI18n.set('ru')` bilan til almashadi,
 `localStorage` ga `nz-progress` yozib boshlang'ich holat beriladi.
+IQ yadrosi ham sahifada: `IQ.makeItem('matrix', 123, 5)` bilan istalgan
+savolni, `IQ.session.create({mode:'test', seed: 1})` bilan takrorlanadigan
+testni olasan — bir xil urug' har safar aynan shu savollarni beradi.
 
 **Konsol xatolarini har doim yig'** (`pageerror` va `console.error`).
 Muhit shovqinini chiqarib tashla: `ERR_TUNNEL_CONNECTION_FAILED` va
@@ -38,10 +45,32 @@ emas.
 
 ## Nimani tekshirasan
 
-### 1. Bo'sh holatlar — eng ko'p e'tibor shu yerga
-Ilova endi **noldan boshlanadi**: yangi hisobda 0 ball, 0 savol yechilgan,
-bo'sh "Xatolarim", bo'sh "Saqlangan". Har bir ekranni **hech narsa
-yechmagan odam ko'zi bilan** och:
+### 1. Natija ekrani — halollik (CONTRACT §6)
+Bu mahsulotning eng nozik joyi. Testni oxirigacha o'tib tekshir:
+- ball **"Taxminiy IQ"** deb va har doim **oraliq** bilan ko'rsatiladimi
+  ("108 (100–116)")? Oraliqsiz yolg'iz raqam — OG'IR topilma.
+- rad qilish matni ("Bu klinik IQ testi emas…") natija ekranida
+  **doim** ko'rinadimi (scroll qilmasdan yoki aniq joyda)?
+- savol kam bo'lsa (`reliable: false`, masalan testni erta tugatish)
+  IQ raqami **umuman** ko'rinmaydimi — faqat to'g'ri javoblar soni?
+- persentil, "aholining X% idan aqlliroq", "rasmiy", "Mensa",
+  "IQ'ingiz oshdi" kabi matn yo'qmi? Liga/reyting/sertifikat hali
+  ishlamasa, ular ishlaydigandek ko'rsatilmaganmi?
+- natija pul yoki ro'yxatdan o'tish ortida emasmi?
+
+### 2. Savol va o'yin ekranlari
+- SVG savollar telefonda **o'qiladimi**: variantlar kichik ekranda
+  farqlanadimi, stimul ekranga sig'adimi (390px)?
+- tungi temada SVG o'z oq foni bilan chiqadimi (u CSS o'zgaruvchisini
+  ko'rmaydi) — qorong'i fonda "yorqin dog'" bezovta qilmaydimi?
+- rang yagona farq emasmi? Qizil–yashil farqqa tayangan joy bormi?
+  (Kulrang rejimda — `filter: grayscale(1)` — yechib ko'r.)
+- o'yinlarda taymer/`tick` ko'rinishi silliqmi, bosish javobi
+  (holat `ok`/`bad`) faqat rang bilanmi yoki belgi ham bormi?
+
+### 3. Bo'sh holatlar
+Ilova **noldan boshlanadi**: yangi o'rnatishda 0 ball, test tarixi bo'sh.
+Har bir ekranni **hech narsa yechmagan odam ko'zi bilan** och:
 - bo'sh ro'yxat nima deydi? Shunchaki bo'shmi yoki nima qilish kerakligini
   aytadimi?
 - raqam o'rniga "—" turgan joylar tushunarlimi?
@@ -49,21 +78,23 @@ yechmagan odam ko'zi bilan** och:
 
 `localStorage` ni tozalab och — bu haqiqiy birinchi ochilish.
 
-### 2. Navigatsiya va orqaga qaytish
-To'rtta tab: `home`, `tasks`, `league`, `profile`. Ustiga: test ekrani,
-Pro ekrani (faqat sayt build'ida), to'lov oynasi, admin oynalari.
+### 4. Navigatsiya va orqaga qaytish
+Tablar ro'yxatini `src/Main.dc.html` dan ol (ilova IQuest uchun qayta
+qurilmoqda — eski `home`/`tasks`/`league`/`profile` o'zgargan bo'lishi
+mumkin). Ustiga: test ekrani, mashq, o'yin ekrani, admin oynalari.
 - har bir ochilgan oynadan chiqish yo'li bormi?
 - Android "orqaga" tugmasi mantig'i `src/bootstrap.js` da — u ierarxiya
   bo'yicha yuradimi yoki ilovani darhol yopadimi?
-- test o'rtasida tab almashtirilsa nima bo'ladi?
+- test yoki o'yin o'rtasida tab almashtirilsa nima bo'ladi? Ilova
+  yopilib qayta ochilsa test davom etadimi (`IQ.session.snapshot`)?
 
-### 3. Xato xabarlari
+### 5. Xato xabarlari
 Xato xabari **nima bo'lgani va nima qilish kerakligini** aytishi kerak.
 "Xato yuz berdi" yaroqsiz. Admin panelda `friendly()` funksiyasi bor
 (`src/admin-boot.js`) — u haqiqatan tushunarli xabar beradimi?
 Baza rad etgan holatlar, tarmoq yo'qligi, ruxsat berilmagani.
 
-### 4. Uch til — bu loyihada alohida e'tibor talab qiladi
+### 6. Uch til — bu loyihada alohida e'tibor talab qiladi
 `uz` (lotin) · `uz-cyrl` (kirill, **transliteratsiya bilan** yasaladi) ·
 `ru` (lug'atdan, `src/i18n-ru.js`).
 
@@ -72,17 +103,19 @@ Tekshir:
   matnni topish uchun bir xil ekranni ikki tilda ochib, ko'rinadigan
   matn tugunlarini solishtir — aynan bir xil qolgani tarjimasiz.
 - kirill transliteratsiyasi **buzmaydimi**? Ayniqsa: `oʻ`/`gʻ` harflari,
-  SVG `path` ma'lumoti, CSS qiymatlari, raqamlar.
+  SVG `path` ma'lumoti, CSS qiymatlari, raqamlar, "IQuest" brend nomi.
+- savol matni (`prompt`, `explain`, og'zaki savollar) ikkala tilda ham
+  bormi? uz va ru variantlari soni va to'g'ri javob indeksi bir xilmi?
 - rus tilida matn **sig'adimi**? Rus matni o'zbekchadan uzunroq — tugma
   va kartalarda kesilib qolgan joy bormi?
 - til tanlovi qayta ochilganda **saqlanadimi**?
 
-### 5. Telefon kengligi
+### 7. Telefon kengligi
 390px da gorizontal scroll **bo'lmasligi kerak**
 (`scrollWidth - clientWidth === 0`). Har bir ekranni tekshir, jumladan
 sayt sahifalarini (`dist/site/maxfiylik/` va boshqalar).
 
-### 6. Ikkala tema
+### 8. Ikkala tema
 Kunduzgi va tungi. `colorScheme: 'dark'` bilan och. Kontrast yetarlimi,
 matn ko'rinadimi?
 

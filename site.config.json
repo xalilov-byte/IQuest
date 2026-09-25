@@ -9,21 +9,27 @@
     "PLACEHOLDER qiymatlar bilan build YIQILMAYDI, lekin baland",
     "ogohlantirish beradi va sitemap'ga noto'g'ri domen yozilmaydi.",
     "Play Console'ga havola berishdan OLDIN hammasi to'ldirilishi shart:",
-    "maxfiylik siyosati va aloqa manzili Google'ning majburiy talabi."
+    "maxfiylik siyosati va aloqa manzili Google'ning majburiy talabi.",
+    "",
+    "domainConfirmed: false — iquest.uz hali ulanmagan. true qilinmaguncha",
+    "sitemap/canonical yozilmaydi va robots.txt indekslashni to'sadi.",
+    "telegramBot ATAYLAB bo'sh: bot hali yaratilmagan. Bo'sh bo'lsa",
+    "Telegram tugmalari umuman ko'rsatilmaydi — o'lik havola bo'lmaydi.",
+    "Bot yaratilgach nomi @ belgisiz yoziladi (masalan: IQuestBot)."
   ],
 
-  "domain": "nazariy.uz",
+  "domain": "iquest.uz",
   "domainConfirmed": false,
 
-  "contactEmail": "PLACEHOLDER@nazariy.uz",
+  "contactEmail": "PLACEHOLDER@iquest.uz",
   "contactTelegram": "",
 
   "telegramBot": "",
 
-  "appId": "uz.nazariy.app",
-  "appName": "Nazariy",
+  "appId": "uz.iquest.app",
+  "appName": "IQuest",
 
-  "publisher": "Nazariy",
+  "publisher": "IQuest",
   "publisherLegal": "",
 
   "playUrl": ""

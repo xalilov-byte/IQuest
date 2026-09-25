@@ -1,29 +1,74 @@
 <!DOCTYPE html><html><head><meta charset="utf-8">
+<!--
+  IQUEST IKONKASI VA SPLASH — MANBA
+
+  `node tools/mkicons.mjs` shu sahifani ochib, quyidagi to'rt blokni
+  resources/ ga PNG qilib saqlaydi. Keyin `npx capacitor-assets generate
+  --android` ulardan Android'ning hamma o'lchamlarini yasaydi
+  (`npm run icons` ikkalasini ketma-ket bajaradi).
+
+  BELGI: qalin "IQ" monogrammasi. Q ning dumi pastki o'ngga cho'zilgan —
+  bu uni lupa (qidiruv ikonkasi) dan ajratadi va "yo'l/izlanish"
+  (quest) ga ishora qiladi. Ataylab YO'Q narsalar: miya, stetoskop,
+  shifokor xochi va boshqa tibbiy/klinik ishoralar (CONTRACT.md §6 —
+  bu klinik test emas), "rasmiy" nishon yoki medal.
+
+  SHRIFT YO'Q: harflar geometrik shakl (to'rtburchak + halqa + dum).
+  Shunda ikonka www/ yig'ilmagan bo'lsa ham, shrift yuklanmasa ham
+  bir xil chiqadi, 48 px da ham o'qiladi (chiziq qalinligi ≈ belgi
+  balandligining 27%).
+
+  Ranglar ilova palitrasidan (src/Main.dc.html):
+    --gold #FFA726 — belgi;  fon — to'q indigo (#2B2270 → #14121F),
+    ya'ni --primary / --purple ning qorong'i davomi. Splash foni
+    capacitor.config.json dagi #14121F bilan bir xil.
+-->
 <style>
-  @font-face{font-family:'Manrope';font-weight:800;src:url(../www/fonts/manrope-latin-800-normal.woff2) format('woff2')}
   html,body{margin:0;padding:0}
-  .canvas{width:1024px;height:1024px;display:grid;place-items:center;position:relative}
-  .bg-dark{background:#14121F}
-  .bg-none{background:transparent}
-  /* Brend belgisi: oltin romb + qorong'i "N" — ilova sarlavhasidagi bilan bir xil */
-  .romb{
-    width:var(--s);height:var(--s);background:#FFA726;
-    border-radius:calc(var(--s) * .25);
-    transform:rotate(45deg);
-    display:grid;place-items:center;
-  }
-  .romb span{
-    transform:rotate(-45deg);
-    font-family:'Manrope',sans-serif;font-weight:800;
-    font-size:calc(var(--s) * .54);color:#1C1B29;line-height:1;
-    margin-top:calc(var(--s) * -.02);
-  }
-  /* splash uchun kichikroq belgi */
-  .splash{width:2732px;height:2732px;display:grid;place-items:center}
+  .canvas{width:1024px;height:1024px;position:relative}
+  .splash{width:2732px;height:2732px;position:relative;background:#14121F}
+  .canvas > svg,.splash > svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 </style></head>
 <body>
-<div id="icon" class="canvas bg-dark"><div class="romb" style="--s:520px"><span>N</span></div></div>
-<div id="fg" class="canvas bg-none"><div class="romb" style="--s:460px"><span>N</span></div></div>
-<div id="bg" class="canvas bg-dark"></div>
-<div id="splash" class="splash bg-dark"><div class="romb" style="--s:520px"><span>N</span></div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Belgi 100×100 koordinatada. Asosiy massa (I + halqa) markazi
+         (50, 50); dum pastga tortgani uchun optik markaz 2 birlik yuqorida. -->
+    <symbol id="iq" viewBox="0 0 100 100" overflow="visible">
+      <rect x="8" y="21" width="16" height="58" rx="3" fill="#FFA726"/>
+      <circle cx="63" cy="50" r="21" fill="none" stroke="#FFA726" stroke-width="16"/>
+      <path d="M60 64 L92 86" stroke="#FFA726" stroke-width="15" stroke-linecap="round"/>
+    </symbol>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2B2270"/>
+      <stop offset="1" stop-color="#14121F"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- icon-only.png — eski (adaptive bo'lmagan) ikonka va Play'dagi 512 px
+     ikonka manbasi. Fon to'liq, belgi kenglikning ~60% i. -->
+<div id="icon" class="canvas">
+  <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="url(#bgGrad)"/>
+    <use href="#iq" x="20" y="18" width="60" height="60"/></svg>
+</div>
+
+<!-- icon-foreground.png — adaptive ikonka old qatlami (shaffof).
+     capacitor-assets uni 16.7% inset bilan joylaydi, launcher niqobi
+     (doira ≈ kanvasning 92% i) belgini kesmasligi uchun belgi
+     kenglikning ~58% ida qoladi. -->
+<div id="fg" class="canvas">
+  <svg viewBox="0 0 100 100"><use href="#iq" x="21" y="19" width="58" height="58"/></svg>
+</div>
+
+<!-- icon-background.png — adaptive ikonka orqa qatlami. -->
+<div id="bg" class="canvas">
+  <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="url(#bgGrad)"/></svg>
+</div>
+
+<!-- splash.png / splash-dark.png — 2732×2732, CENTER_CROP bilan
+     kesiladi, shuning uchun belgi markazda va kichik (~18%). -->
+<div id="splash" class="splash">
+  <svg viewBox="0 0 100 100"><use href="#iq" x="41" y="40" width="18" height="18"/></svg>
+</div>
 </body></html>
