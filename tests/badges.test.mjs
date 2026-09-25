@@ -201,3 +201,12 @@ test('yangiroq versiya → readOnly: nishon berilmaydi, ustiga yozilmaydi', () =
   assert.equal(store.has(KEY), false);
   assert.equal(B.readOnly(), false);
 });
+
+test('nishon setkasi (80 px, 2 qator): ru/en nomda har soʻz ≤ 12 belgi', () => {
+  const { B } = env();
+  B.catalogue().forEach(b => ['uz', 'ru', 'en'].forEach(l => {
+    const words = b.name[l].split(/\s+/);
+    words.forEach(w => assert.ok(w.length <= 12, b.id + ' ' + l + ': ' + w));
+    assert.ok(words.length <= 3 && b.name[l].length <= 24, b.id + ' ' + l);
+  }));
+});

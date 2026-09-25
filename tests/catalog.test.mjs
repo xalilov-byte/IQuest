@@ -136,3 +136,9 @@ test('LEAGUES (Main) ↔ rewards.weekly ↔ liga nishonlari', (t) => {
     assert.equal(b.target, mins[b.league], b.id);
   });
 });
+
+test('360 px: Doʻkon plitkasida ru/en nom ≤ 10 belgi, oʻyin yorligʻi qisqa', () => {
+  C.colors.concat(C.badges).forEach(e => ['ru', 'en'].forEach(l =>
+    assert.ok(e.name[l].length <= 10, e.id + ' ' + l + ': ' + e.name[l])));
+  ['ru', 'en'].forEach(l => assert.ok(C.questText.game.unit[l].replace('{0}', '').length <= 7, C.questText.game.unit[l]));
+});

@@ -34,6 +34,9 @@
        games: { id: { plays, level } }, fixes,
        lastRun: { kind, n, correct }, profileComplete }
    Yetishmagan yoki buzilgan maydon 0 / false deb olinadi.
+
+   Nomlar 80 px katakka 2 qatorda sigʻadi: ru/en da har soʻz ≤ 12 belgi
+   (soʻz oʻrtasidan boʻlinmasin).
    ───────────────────────────────────────────────────────────────────── */
 
 (function (root) {
@@ -104,13 +107,13 @@
       name: L('Son ustasi', 'Мастер чисел', 'Number master'),
       cond: L('Son qatorlarida 7-darajaga yeting', 'Достигните 7-го уровня в числовых рядах', 'Reach level 7 in Number series') },
     { id: 'spatial-7', coins: 30, tier: 'silver', target: 7, value: s => num(obj(s.levels).spatial),
-      name: L('Fazo ustasi', 'Мастер пространства', 'Space master'),
+      name: L('Fazo ustasi', 'Пространство', 'Space master'),
       cond: L('Fazoviy tafakkurda 7-darajaga yeting', 'Достигните 7-го уровня в пространственном мышлении', 'Reach level 7 in Spatial reasoning') },
     { id: 'verbal-7', coins: 30, tier: 'silver', target: 7, value: s => num(obj(s.levels).verbal),
       name: L('Soʻz ustasi', 'Мастер слова', 'Word master'),
       cond: L('Ogʻzaki mantiqda 7-darajaga yeting', 'Достигните 7-го уровня в вербальной логике', 'Reach level 7 in Verbal logic') },
     { id: 'games-all', coins: 20, tier: 'bronze', target: GAMES.length, value: gamesPlayed,
-      name: L('Kashfiyotchi', 'Исследователь', 'Explorer'),
+      name: L('Kashfiyotchi', 'Разведчик', 'Explorer'),
       cond: L('6 ta oʻyinning har birini bir marta oʻynang', 'Сыграйте в каждую из 6 игр', 'Play each of the 6 games once') },
     { id: 'game-lv5', coins: 20, tier: 'silver', target: 5, value: maxGameLevel,
       name: L('Yuqori daraja', 'Высокий уровень', 'High level'),

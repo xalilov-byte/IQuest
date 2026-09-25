@@ -66,12 +66,12 @@
   const COLLECTION = [
     { id: 'compass',  name: L('Kompas', 'Компас', 'Compass'),               price: 300 },
     { id: 'rocket',   name: L('Raketa', 'Ракета', 'Rocket'),                price: 300 },
-    { id: 'knight',   name: L('Shaxmat oti', 'Шахматный конь', 'Knight'),   price: 400 },
+    { id: 'knight',   name: L('Shaxmat oti', 'Конь', 'Knight'),   price: 400 },
     { id: 'maze',     name: L('Labirint', 'Лабиринт', 'Maze'),              price: 400 },
     { id: 'crystal',  name: L('Kristall', 'Кристалл', 'Crystal'),           price: 500 },
     { id: 'planet',   name: L('Sayyora', 'Планета', 'Planet'),              price: 500 },
     { id: 'tangram',  name: L('Tangram', 'Танграм', 'Tangram'),             price: 700 },
-    { id: 'infinity', name: L('Cheksizlik', 'Бесконечность', 'Infinity'),   price: 800 },
+    { id: 'infinity', name: L('Cheksizlik', 'Вечность', 'Infinity'),   price: 800 },
   ];
   COLLECTION.forEach(b => { b.shape = 'round'; });
 
@@ -96,12 +96,15 @@
     practice: { name: L('Bugungi mashq', 'Тренировка дня', 'Daily practice'),
                 unit: L('{0}/{1} savol', 'Вопросы: {0}/{1}', 'Questions: {0}/{1}') },
     game:     { name: L('Aql oʻyini', 'Игра для ума', 'Brain game'),
-                unit: L('Kun oʻyini: {0}', 'Игра дня: {0}', 'Game of the day: {0}') },
+                unit: L('Kun oʻyini: {0}', 'Игра: {0}', 'Today: {0}') },
     fix:      { name: L('Xatolarni tuzating', 'Исправьте ошибки', 'Fix your mistakes'),
                 unit: L('{0}/{1} savol', 'Вопросы: {0}/{1}', 'Questions: {0}/{1}') },
     type:     { name: L('{0} mashqi', 'Тренировка: {0}', '{0} practice'),
                 unit: L('{0}/{1} savol', 'Вопросы: {0}/{1}', 'Questions: {0}/{1}') },
   };
+
+  /* Nomlar tor joyga sigʻishi kerak (360 px): Doʻkon plitkasida ru/en
+     nom ≤ 10 belgi, Bosh sahifa qatorida oʻyin nomi oldidagi yorliq qisqa. */
 
   /* «Tanga qanday olinadi» varagʻi (§3.8) — 3 qator. Raqamlar
      yuqoridagi jadvaldan olinadi, matnda qoʻlda yozilmaydi. */
