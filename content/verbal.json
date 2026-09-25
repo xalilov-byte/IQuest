@@ -682,14 +682,6 @@
       "reviewed": false
     },
     {
-      "key": "v086", "kind": "analogy", "level": 6,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qurt : kapalak = itbaliq : ?","options":["baliq","baqa","suv","ilon"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Гусеница : бабочка = головастик : ?","options":["рыба","лягушка","вода","змея"]},
-      "correct": 1,
-      "explain": {"uz":"Qurt o'sib kapalakka, itbaliq esa baqaga aylanadi: yosh bosqich va voyaga yetgan jonzot.","ru":"Гусеница превращается в бабочку, а головастик — в лягушку: ранняя стадия и взрослое животное."},
-      "reviewed": false
-    },
-    {
       "key": "v087", "kind": "analogy", "level": 6,
       "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Tarozi : og'irlik = chizg'ich : ?","options":["santimetr","qalam","uzunlik","to'g'ri"]},
       "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Весы : вес = линейка : ?","options":["сантиметр","карандаш","длина","прямая"]},
@@ -842,14 +834,6 @@
       "reviewed": false
     },
     {
-      "key": "v106", "kind": "analogy", "level": 7,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Pilla : ipak = paxta : ?","options":["qurt","dala","ip","oq"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Кокон : шёлк = хлопок : ?","options":["гусеница","поле","нить","белый"]},
-      "correct": 2,
-      "explain": {"uz":"Pilladan ipak ip olinadi, paxtadan ham ip yigiriladi: xomashyo va undan olinadigan ip.","ru":"Из кокона получают шёлковую нить, из хлопка тоже прядут нить: сырьё и нить из него."},
-      "reviewed": false
-    },
-    {
       "key": "v107", "kind": "analogy", "level": 7,
       "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Saxiy : ziqna = kamtar : ?","options":["uyatchan","maqtanchoq","jasur","sodda"]},
       "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Щедрый : жадный = скромный : ?","options":["застенчивый","хвастливый","смелый","простой"]},
@@ -970,14 +954,6 @@
       "reviewed": false
     },
     {
-      "key": "v122", "kind": "analogy", "level": 8,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Oz : ko'p = kamdan-kam : ?","options":["hech qachon","doim","tez-tez","ba'zan"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Мало : много = редко : ?","options":["никогда","всегда","часто","иногда"]},
-      "correct": 2,
-      "explain": {"uz":"«Oz» — «ko'p»ning qarama-qarshisi, «kamdan-kam» — «tez-tez»ning. «Ko'p» — «hammasi» degani emas, shuning uchun «doim» mos emas.","ru":"«Мало» противоположно «много», «редко» — «часто». «Много» не значит «всё», поэтому «всегда» не подходит."},
-      "reviewed": false
-    },
-    {
       "key": "v123", "kind": "analogy", "level": 8,
       "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Bo'yoq : rassom = so'z : ?","options":["lug'at","yozuvchi","harf","kitob"]},
       "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Краски : художник = слова : ?","options":["словарь","писатель","буква","книга"]},
@@ -1050,14 +1026,6 @@
       "reviewed": false
     },
     {
-      "key": "v132", "kind": "category", "level": 8,
-      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Bug'doy, guruch, makkajo'xori","options":["loviya","kartoshka","kungaboqar","arpa"]},
-      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Пшеница, рис, кукуруза","options":["фасоль","картофель","подсолнечник","ячмень"]},
-      "correct": 3,
-      "explain": {"uz":"Guruhdagilar — g'alla (don) ekinlari. Arpa ham shunday.","ru":"В группе — зерновые культуры. Ячмень тоже."},
-      "reviewed": false
-    },
-    {
       "key": "v133", "kind": "category", "level": 8,
       "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Muqaddima, bob, xotima","options":["muallif","nashriyot","kitobxon","mundarija"]},
       "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Вступление, глава, заключение","options":["автор","издательство","читатель","оглавление"]},
@@ -1119,14 +1087,6 @@
       "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Проблема : решение = болезнь : ?","options":["больница","врач","симптом","лечение"]},
       "correct": 3,
       "explain": {"uz":"Muammoni yechim, kasallikni davo bartaraf etadi. Shifokor — davolovchi odam, davoning o'zi emas.","ru":"Проблему устраняет решение, болезнь — лечение. Врач — человек, который лечит, а не само лечение."},
-      "reviewed": false
-    },
-    {
-      "key": "v141", "kind": "analogy", "level": 9,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kulgi : quvonch = ko'z yoshi : ?","options":["ko'z","suv","yig'lamoq","qayg'u"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Смех : радость = слёзы : ?","options":["глаза","вода","плакать","грусть"]},
-      "correct": 3,
-      "explain": {"uz":"Kulgi — quvonchning, ko'z yoshi — qayg'uning tashqi belgisi: ko'rinadigan belgi va ichki his.","ru":"Смех — внешний знак радости, слёзы — грусти: видимый признак и внутреннее чувство."},
       "reviewed": false
     },
     {
@@ -1234,46 +1194,6 @@
       "reviewed": false
     },
     {
-      "key": "v155", "kind": "analogy", "level": 10,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Yo'qotmoq : topmoq = unutmoq : ?","options":["bilmoq","eslamoq","yo'qotmoq","o'rganmoq"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Потерять : найти = забыть : ?","options":["знать","вспомнить","потерять","выучить"]},
-      "correct": 1,
-      "explain": {"uz":"Yo'qotilgan narsa topiladi, unutilgan narsa eslanadi: yo'qolganini qaytarib olish.","ru":"Потерянное находят, забытое вспоминают: вернуть то, что было утрачено."},
-      "reviewed": false
-    },
-    {
-      "key": "v156", "kind": "analogy", "level": 10,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Hamma : ba'zi = doim : ?","options":["hech qachon","hamisha","tez-tez","ba'zan"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Все : некоторые = всегда : ?","options":["никогда","постоянно","часто","иногда"]},
-      "correct": 3,
-      "explain": {"uz":"«Ba'zi» — «hamma»ning bir qismi. Vaqt bo'yicha xuddi shunday: «doim»ning bir qismi — «ba'zan».","ru":"«Некоторые» — часть от «все». Так же и со временем: часть от «всегда» — «иногда»."},
-      "reviewed": false
-    },
-    {
-      "key": "v157", "kind": "analogy", "level": 10,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Mehmon : mezbon = yo'lovchi : ?","options":["bekat","chipta","yo'l","haydovchi"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Гость : хозяин = пассажир : ?","options":["остановка","билет","дорога","водитель"]},
-      "correct": 3,
-      "explain": {"uz":"Mezbon mehmonni kutib oladi va unga xizmat qiladi, haydovchi esa yo'lovchini manziliga eltadi: xizmat oluvchi va xizmat ko'rsatuvchi.","ru":"Хозяин принимает гостя, водитель везёт пассажира: тот, кому служат, и тот, кто служит."},
-      "reviewed": false
-    },
-    {
-      "key": "v158", "kind": "analogy", "level": 10,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qarz : to'lamoq = va'da : ?","options":["bermoq","bajarmoq","unutmoq","so'z"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Долг : вернуть = обещание : ?","options":["дать","сдержать","забыть","слово"]},
-      "correct": 1,
-      "explain": {"uz":"Qarzni to'lash va va'dani bajarish — olingan majburiyatni ado etish. Va'da berish esa majburiyatni endi olish.","ru":"Вернуть долг и сдержать обещание — значит выполнить взятое обязательство. «Дать обещание» — это только взять его."},
-      "reviewed": false
-    },
-    {
-      "key": "v159", "kind": "analogy", "level": 10,
-      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Mikroskop : kichik = teleskop : ?","options":["katta","yulduz","uzoq","osmon"]},
-      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Микроскоп : маленькое = телескоп : ?","options":["большое","звёзды","далёкое","небо"]},
-      "correct": 2,
-      "explain": {"uz":"Mikroskop juda kichik narsalarni, teleskop juda uzoqdagi narsalarni ko'rishga yordam beradi. Yulduzlar katta, lekin juda uzoqda bo'lgani uchun kichik ko'rinadi.","ru":"Микроскоп помогает видеть очень маленькое, телескоп — очень далёкое. Звёзды большие, но из-за огромного расстояния кажутся маленькими."},
-      "reviewed": false
-    },
-    {
       "key": "v160", "kind": "analogy", "level": 10,
       "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kecha : ertaga = o'tmish : ?","options":["kelajak","hozir","tarix","vaqt"]},
       "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Вчера : завтра = прошлое : ?","options":["будущее","настоящее","история","время"]},
@@ -1338,14 +1258,6 @@
       "reviewed": false
     },
     {
-      "key": "v168", "kind": "relation", "level": 10,
-      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Tejamkor — xasis","options":["O'ziga ishongan — manman","Saxiy — ziqna","Mehnatkash — tirishqoq","Kamtar — maqtanchoq"]},
-      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Бережливый — скупой","options":["Уверенный — самоуверенный","Щедрый — жадный","Трудолюбивый — старательный","Скромный — хвастливый"]},
-      "correct": 0,
-      "explain": {"uz":"Xasislik — tejamkorlikning haddan oshgani; manmanlik ham o'ziga ishonchning haddan oshgani. Qolganlari — qarama-qarshi yoki ma'nodosh.","ru":"Скупость — бережливость, доведённая до крайности; самоуверенность — уверенность в себе, доведённая до крайности. Остальные пары — противоположности или синонимы."},
-      "reviewed": false
-    },
-    {
       "key": "v169", "kind": "relation", "level": 10,
       "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Tajriba — xulosa","options":["Dalillar — hukm","Xulosa — tajriba","Olim — tajriba","Savol — imtihon"]},
       "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Эксперимент — вывод","options":["Улики — приговор","Вывод — эксперимент","Учёный — эксперимент","Вопрос — экзамен"]},
@@ -1359,6 +1271,94 @@
       "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Совет — приказ","options":["Приказ — совет","Вопрос — ответ","Просьба — требование","Разрешение — запрет"]},
       "correct": 2,
       "explain": {"uz":"Maslahatga amal qilish ixtiyoriy, buyruqqa esa majburiy; iltimos va talab ham xuddi shunday: yumshoq va qat'iy shakl.","ru":"Совету следовать необязательно, приказу — обязательно; так же различаются просьба и требование: мягкая и жёсткая форма."},
+      "reviewed": false
+    },
+    {
+      "key": "v171", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Chiroq : yorug'lik = karnay : ?","options":["quloq","radio","sim","tovush"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Лампа : свет = громкоговоритель : ?","options":["ухо","радио","провод","звук"]},
+      "correct": 3,
+      "explain": {"uz":"Chiroq yorug'lik, karnay esa tovush chiqaradi: qurilma va u chiqaradigan narsa. Quloq tovushni qabul qiladi, chiqarmaydi.","ru":"Лампа испускает свет, громкоговоритель — звук: устройство и то, что оно испускает. Ухо звук воспринимает, а не издаёт."},
+      "reviewed": false
+    },
+    {
+      "key": "v172", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Murabbiy : jamoa = dirijyor : ?","options":["tayoqcha","orkestr","kuy","sahna"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Тренер : команда = дирижёр : ?","options":["палочка","оркестр","мелодия","сцена"]},
+      "correct": 1,
+      "explain": {"uz":"Murabbiy jamoani, dirijyor orkestrni boshqaradi: rahbar va u boshqaradigan odamlar guruhi.","ru":"Тренер руководит командой, дирижёр — оркестром: руководитель и группа людей, которой он руководит."},
+      "reviewed": false
+    },
+    {
+      "key": "v173", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kashfiyot : olim = rekord : ?","options":["medal","stadion","sportchi","musobaqa"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Открытие : учёный = рекорд : ?","options":["медаль","стадион","спортсмен","соревнование"]},
+      "correct": 2,
+      "explain": {"uz":"Kashfiyotni olim, rekordni sportchi qiladi: yutuq va unga erishgan odam. Medal — mukofot, stadion va musobaqa — joy va voqea.","ru":"Открытие совершает учёный, рекорд — спортсмен: достижение и тот, кто его добился. Медаль — награда, стадион и соревнование — место и событие."},
+      "reviewed": false
+    },
+    {
+      "key": "v174", "kind": "category", "level": 8,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Muz, sham, sariyog'","options":["qog'oz","taxta","paxta","shokolad"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Лёд, свеча, сливочное масло","options":["бумага","доска","хлопок","шоколад"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar isitilsa eriydi — qattiqdan suyuqqa aylanadi. Shokolad ham shunday; qog'oz, taxta va paxta esa erimaydi, yonadi.","ru":"Всё в группе при нагревании тает — из твёрдого становится жидким. Шоколад тоже; бумага, доска и хлопок не тают, а горят."},
+      "reviewed": false
+    },
+    {
+      "key": "v175", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qo'shish : ayirish = ko'paytirish : ?","options":["qo'shish","bo'lish","son","natija"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Сложение : вычитание = умножение : ?","options":["сложение","деление","число","результат"]},
+      "correct": 1,
+      "explain": {"uz":"Ayirish qo'shishni, bo'lish ko'paytirishni bekor qiladi: amal va unga teskari amal.","ru":"Вычитание отменяет сложение, деление — умножение: действие и обратное ему действие."},
+      "reviewed": false
+    },
+    {
+      "key": "v176", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qulf : kalit = jumboq : ?","options":["savol","topishmoq","o'yin","javob"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Замок : ключ = загадка : ?","options":["вопрос","головоломка","игра","отгадка"]},
+      "correct": 3,
+      "explain": {"uz":"Kalit qulfni, javob jumboqni «ochadi»: yopiq narsa va uni ochadigan narsa. Topishmoq — jumboqning o'zi, savol ham shunga yaqin.","ru":"Ключ открывает замок, отгадка «открывает» загадку: закрытое и то, что его открывает. Головоломка и вопрос — сами похожи на загадку."},
+      "reviewed": false
+    },
+    {
+      "key": "v177", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Soyabon : ho'l bo'lish = emlash : ?","options":["davolanish","tuzalish","kasal bo'lish","sog'lom bo'lish"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Зонт : промокнуть = прививка : ?","options":["лечиться","выздороветь","заболеть","быть здоровым"]},
+      "correct": 2,
+      "explain": {"uz":"Soyabon ho'l bo'lishdan, emlash kasal bo'lishdan saqlaydi: himoya va u oldini oladigan noxushlik. Sog'lom bo'lish — emlash saqlab qoladigan holat, oldi olinadigan noxushlik emas; davolanish va tuzalish esa kasallikdan keyin keladi.","ru":"Зонт защищает от того, чтобы промокнуть, прививка — от того, чтобы заболеть: защита и неприятность, которую она предотвращает. «Быть здоровым» — то, что прививка сохраняет, а не то, что она предотвращает; лечиться и выздороветь — это уже после болезни."},
+      "reviewed": false
+    },
+    {
+      "key": "v178", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Iqlim : ob-havo = xarakter : ?","options":["aql","odam","tarbiya","kayfiyat"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Климат : погода = характер : ?","options":["ум","человек","воспитание","настроение"]},
+      "correct": 3,
+      "explain": {"uz":"Iqlim — uzoq muddatli barqaror holat, ob-havo — tez o'zgaradigan hozirgi holat. Xarakter ham barqaror, kayfiyat esa tez o'zgaradi.","ru":"Климат — долговременное устойчивое состояние, погода — быстро меняющееся текущее. Так же характер устойчив, а настроение быстро меняется."},
+      "reviewed": false
+    },
+    {
+      "key": "v179", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Sinonim : o'xshashlik = antonim : ?","options":["so'z","qarama-qarshilik","lug'at","tenglik"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Синоним : сходство = антоним : ?","options":["слово","противоположность","словарь","равенство"]},
+      "correct": 1,
+      "explain": {"uz":"Sinonimlar ma'nosining o'xshashligi bilan, antonimlar esa qarama-qarshiligi bilan bog'langan.","ru":"Синонимы связаны сходством значений, антонимы — их противоположностью."},
+      "reviewed": false
+    },
+    {
+      "key": "v180", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Tovush : sukunat = yorug'lik : ?","options":["chiroq","rang","qorong'ilik","ko'z"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Звук : тишина = свет : ?","options":["лампа","цвет","темнота","глаза"]},
+      "correct": 2,
+      "explain": {"uz":"Sukunat — tovushning yo'qligi, qorong'ilik — yorug'likning yo'qligi: narsa va uning yo'qligi.","ru":"Тишина — отсутствие звука, темнота — отсутствие света: явление и его отсутствие."},
+      "reviewed": false
+    },
+    {
+      "key": "v181", "kind": "relation", "level": 10,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Oqim — to'g'on","options":["Harakat — tormoz","Tormoz — mashina","Daryo — suv","Tezlik — spidometr"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Течение — плотина","options":["Движение — тормоз","Тормоз — машина","Река — вода","Скорость — спидометр"]},
+      "correct": 0,
+      "explain": {"uz":"To'g'on oqimni, tormoz harakatni to'xtatadi: jarayon va uni to'xtatadigan narsa. Spidometr tezlikni to'xtatmaydi, faqat o'lchaydi.","ru":"Плотина останавливает течение, тормоз — движение: процесс и то, что его останавливает. Спидометр скорость не останавливает, а только измеряет."},
       "reviewed": false
     }
   ]

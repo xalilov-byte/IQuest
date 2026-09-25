@@ -149,6 +149,21 @@ test('kontent: sxema tekshirgichi buzuq savolni HAQIQATAN ushlaydi', () => {
   }
 });
 
+/* Olib tashlangan savollarning kalitlari. CONTRACT: key hech qachon qayta
+   ishlatilmaydi — backend seed'i `on conflict (key)` bilan yangilaydi,
+   ya'ni eski kalitga yangi savol yozilsa, bazadagi eski savolning
+   statistikasi (qiyinlik, javoblar) yangisiga "yopishib" qoladi.
+   Yangi savolga doim eng katta kalitdan keyingisi beriladi. */
+const RETIRED = [
+  // ikki ma'noli deb topildi (shkala so'zlari, so'zning ikkinchi ma'nosi, bilimga tayanish)
+  'v086', 'v106', 'v122', 'v132', 'v141', 'v155', 'v156', 'v157', 'v158', 'v159', 'v168',
+];
+
+test('kontent: olib tashlangan kalitlar qayta ishlatilmagan', () => {
+  const used = DATA.items.map(it => it.key).filter(k => RETIRED.includes(k));
+  assert.deepEqual(used, [], 'qayta ishlatilgan kalit');
+});
+
 test('kontent: kamida 150 savol, har darajada ≥ 12, har tur bor', () => {
   assert.ok(DATA.items.length >= 150, 'savollar: ' + DATA.items.length);
   for (let lv = 1; lv <= 10; lv++) {
