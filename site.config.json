@@ -6,24 +6,59 @@
     "Open Graph, maxfiylik siyosati, ma'lumot o'chirish sahifasi) va",
     "ularni qo'lda tarqatib yozish bitta joyni unutishga olib keladi.",
     "",
-    "PLACEHOLDER qiymatlar bilan build YIQILMAYDI, lekin baland",
+    "To'ldirilmagan qiymatlar bilan build YIQILMAYDI, lekin baland",
     "ogohlantirish beradi va sitemap'ga noto'g'ri domen yozilmaydi.",
     "Play Console'ga havola berishdan OLDIN hammasi to'ldirilishi shart:",
-    "maxfiylik siyosati va aloqa manzili Google'ning majburiy talabi."
+    "maxfiylik siyosati va aloqa manzili Google'ning majburiy talabi.",
+    "",
+    "NOMA'LUM QIYMATLAR ATAYLAB BO'SH — taxmin bilan yozilmagan.",
+    "Loyiha Nazariy'dan olingan; uning domeni va pochtasi bu yerda",
+    "qolsa, IQuest foydalanuvchilarining xatlari boshqa ilovaga ketardi.",
+    "",
+    "domain          — sayt domeni, 'https://' siz. Mahsulot egasi tanlagan:",
+    "                  iquest.uz (sertifikat tekshirish havolasi ham shu",
+    "                  domenda: iquest.uz/sertifikat/?kod=…).",
+    "domainConfirmed — sayt shu domenda HAQIQATAN ochilgani tekshirilgach",
+    "                  true. Shungacha sitemap/canonical/og:image yozilmaydi",
+    "                  va robots.txt indekslashni taqiqlaydi.",
+    "contactEmail    — haqiqiy, o'qiladigan pochta. 'PLACEHOLDER' —",
+    "                  tools/mksite.mjs taniydigan belgi: u turgan paytda",
+    "                  build ogohlantiradi (bo'sh qator ogohlantirmaydi).",
+    "contactTelegram — ixtiyoriy, @siz foydalanuvchi nomi.",
+    "telegramBot     — Telegram Web App boti; bo'sh bo'lsa tugma yo'q.",
+    "publisher       — sayt pastida '© yil publisher' sifatida chiqadi.",
+    "publisherLegal  — Play Console'dagi dasturchi nomi / yuridik shaxs",
+    "                  (maxfiylik siyosatidagi 'ma'lumot egasi').",
+    "playUrl         — Play'da e'lon qilingach: ",
+    "                  https://play.google.com/store/apps/details?id=uz.iquest.app",
+    "                  Undan oldin bo'sh: ochilmaydigan havola bermaymiz.",
+    "serverCountry   — ma'lumot saqlanadigan server joylashgan davlat",
+    "                  (maxfiylik siyosatida yoziladi; bo'sh bo'lsa sahifada",
+    "                  'hali aniqlanmoqda' va build ogohlantiradi). Hosting",
+    "                  tanlangach yoziladi — taxmin qilinmaydi.",
+    "description     — sayt va manifest uchun qisqa tavsif (PLAY.md bilan",
+    "                  bir xil ohangda: 'taxminiy', raqamli va'dasiz —",
+    "                  src/iq/CONTRACT.md §6)."
   ],
 
-  "domain": "nazariy.uz",
+  "domain": "iquest.uz",
   "domainConfirmed": false,
 
-  "contactEmail": "PLACEHOLDER@nazariy.uz",
+  "contactEmail": "PLACEHOLDER",
   "contactTelegram": "",
 
   "telegramBot": "",
 
-  "appId": "uz.nazariy.app",
-  "appName": "Nazariy",
+  "serverCountry": "",
 
-  "publisher": "Nazariy",
+  "appId": "uz.iquest.app",
+  "appName": "IQuest",
+  "description": {
+    "uz": "IQ testi, aql o'yinlari va mantiq mashqlari. Natija taxminiy — har doim oraliq bilan.",
+    "ru": "Тест IQ, игры для ума и задачи на логику. Результат примерный — всегда с интервалом."
+  },
+
+  "publisher": "IQuest",
   "publisherLegal": "",
 
   "playUrl": ""

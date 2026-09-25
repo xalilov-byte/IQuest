@@ -1,29 +1,80 @@
 <!DOCTYPE html><html><head><meta charset="utf-8">
+<!--
+  IQUEST IKONKASI — manba. PNG'larni tools/mkicons.mjs shu sahifadan oladi
+  (har bir #id — alohida rasm). Bu VAQTINCHALIK brend belgisi: foydalanuvchi
+  RASMLAR.md bo'yicha o'z rasmini resources/art/ ga qo'ysa, mkicons.mjs
+  o'shani ishlatadi va bu sahifa faqat yetishmagan qatlam uchun kerak bo'ladi.
+
+  Belgi: 3×3 matritsa — IQ testlaridagi "bo'sh katakni top" topshirig'ining
+  eng taniqli shakli — ustida qalin halqa va pastki o'ngdagi oltin katak.
+  Birga ular "Q" harfini (IQuest) va lupani ("quest" — izlash) o'qitadi;
+  oltin katak — matritsadagi "topilgan javob". Kataklar xira, shuning
+  uchun halqa birinchi o'qiladi, panjara esa ikkinchi. Rang yagona farq
+  emas — Q shakli rangsiz ham o'qiladi. 48px va 32px da tekshirilgan.
+
+  Shrift ATAYLAB yo'q: harfli ikonka 48px da o'qilmaydi, shrift yuklanmay
+  qolsa esa rasm jimgina buziladi.
+
+  Adaptiv ikonka: capacitor-assets fon va old qatlamni 16.7% ichkariga
+  suradi (inset), ya'ni 1024px PNG ≈ 72dp ko'rinadigan maydon, xavfsiz
+  doira (66dp) ≈ 940px. Belgi 560px — diagonali ~790px, doiradan chiqmaydi,
+  atrofida esa launcher shakli (doira, squircle) uchun havo qoladi.
+-->
 <style>
-  @font-face{font-family:'Manrope';font-weight:800;src:url(../www/fonts/manrope-latin-800-normal.woff2) format('woff2')}
-  html,body{margin:0;padding:0}
+  html,body{margin:0;padding:0;background:transparent}
+  :root{
+    /* Brend rangi — dizayndagi --primary atrofida. Yuqori chap yorug'roq,
+       pastki o'ng to'qroq: tekis rangga qaraganda chuqurlik beradi, lekin
+       kichik o'lchamda loyqa ko'rinmaydi. */
+    --brand-hi:#6384FF; --brand:#4C6FFF; --brand-lo:#3552E0;
+    --ink-dark:#14121F;      /* ilovaning tungi foni — splash va status bar bilan bir xil */
+  }
   .canvas{width:1024px;height:1024px;display:grid;place-items:center;position:relative}
-  .bg-dark{background:#14121F}
+  .bg-brand{background:linear-gradient(145deg,var(--brand-hi) 0%,var(--brand) 48%,var(--brand-lo) 100%)}
   .bg-none{background:transparent}
-  /* Brend belgisi: oltin romb + qorong'i "N" — ilova sarlavhasidagi bilan bir xil */
-  .romb{
-    width:var(--s);height:var(--s);background:#FFA726;
-    border-radius:calc(var(--s) * .25);
-    transform:rotate(45deg);
+  .bg-dark{background:var(--ink-dark)}
+
+  /* Belgi SVG'da (pastdagi skript chizadi): viewBox 300×300, katak 84,
+     oraliq 24. O'lcham faqat --s bilan beriladi — bitta belgi hamma
+     rasmda bir xil proporsiyada. */
+  .glyph{width:var(--s);height:var(--s)}
+  .glyph svg{display:block;width:100%;height:100%}
+
+  /* Splash: brend plitkasi qorong'i fonda. Plitka burchagi Android
+     ikonkalarining "squircle" shakliga yaqin. */
+  .tile{width:var(--t);height:var(--t);border-radius:calc(var(--t) * .23);
     display:grid;place-items:center;
-  }
-  .romb span{
-    transform:rotate(-45deg);
-    font-family:'Manrope',sans-serif;font-weight:800;
-    font-size:calc(var(--s) * .54);color:#1C1B29;line-height:1;
-    margin-top:calc(var(--s) * -.02);
-  }
-  /* splash uchun kichikroq belgi */
+    background:linear-gradient(145deg,var(--brand-hi) 0%,var(--brand) 48%,var(--brand-lo) 100%);
+    box-shadow:0 calc(var(--t) * .06) calc(var(--t) * .18) rgba(0,0,0,.35)}
   .splash{width:2732px;height:2732px;display:grid;place-items:center}
 </style></head>
 <body>
-<div id="icon" class="canvas bg-dark"><div class="romb" style="--s:520px"><span>N</span></div></div>
-<div id="fg" class="canvas bg-none"><div class="romb" style="--s:460px"><span>N</span></div></div>
-<div id="bg" class="canvas bg-dark"></div>
-<div id="splash" class="splash bg-dark"><div class="romb" style="--s:520px"><span>N</span></div></div>
+<!-- To'liq ikonka (eski Android va Play 512×512): fon + belgi, burchaksiz
+     kvadrat — Play va launcher shaklni o'zi kesadi. -->
+<div id="icon" class="canvas bg-brand"><div class="glyph" style="--s:560px"></div></div>
+<!-- Adaptiv old qatlam: faqat belgi, shaffof fon. -->
+<div id="fg" class="canvas bg-none"><div class="glyph" style="--s:560px"></div></div>
+<!-- Adaptiv fon qatlami. -->
+<div id="bg" class="canvas bg-brand"></div>
+<!-- Splash: CENTER_CROP bilan telefon ekraniga kesiladi — portretda
+     kvadratning markaziy ~46% kengligi qoladi, shuning uchun plitka
+     markazda va 1000px dan kichik. -->
+<div id="splash" class="splash bg-dark"><div class="tile" style="--t:600px"><div class="glyph" style="--s:360px"></div></div></div>
+<script>
+  /* Kataklar (pastki o'ngdan tashqari) xira oq; markazda qalin oq halqa,
+     undan pastki o'ngga dum — "Q". Oltin katak eng oxirida chiziladi,
+     shuning uchun dum uning ostiga kirib ketadi va katak Q'ning uchiga
+     aylanadi. */
+  var OFF = 'rgba(255,255,255,.26)', KEY = '#FFB84D', R = 96, W = 48;
+  var cell = function (r, c, fill) {
+    return '<rect x="' + c * 108 + '" y="' + r * 108 + '" width="84" height="84" rx="22" fill="' + fill + '"/>';
+  };
+  var k = Math.SQRT1_2 * (R - 10);
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">';
+  for (var r = 0; r < 3; r++) for (var c = 0; c < 3; c++) if (!(r === 2 && c === 2)) svg += cell(r, c, OFF);
+  svg += '<circle cx="150" cy="150" r="' + R + '" fill="none" stroke="#fff" stroke-width="' + W + '"/>';
+  svg += '<path d="M' + (150 + k) + ',' + (150 + k) + ' L258,258" stroke="#fff" stroke-width="' + W + '" stroke-linecap="round"/>';
+  svg += cell(2, 2, KEY) + '</svg>';
+  document.querySelectorAll('.glyph').forEach(function (g) { g.innerHTML = svg; });
+</script>
 </body></html>

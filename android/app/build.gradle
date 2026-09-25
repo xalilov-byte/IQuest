@@ -50,17 +50,85 @@ tasks.register("nzAssetsFresh") {
 }
 tasks.matching { it.name == "preBuild" }.configureEach { dependsOn("nzAssetsFresh") }
 
-/* Yig'ilgan fayllar nomi: Nazariy-release.apk / Nazariy-debug.apk /
-   Nazariy-release.aab (standart "app-..." o'rniga). */
+/* ── ILOVA IDENTIFIKATORI VA NOMI ──────────────────────────────────────
+   Yagona manba — loyiha ildizidagi capacitor.config.json (appId, appName).
+   Nima uchun u yerda: `cap sync` ham shu qiymatlarni o'qiydi, ya'ni ID
+   ikki joyda yozilsa, ular bir kun ajralib qoladi. Ish davomida nom
+   bir marta almashgan (Zukko → IQuest) — shunda faqat manba va qo'lda
+   yoziladigan ikki joy tahrirlandi (README.md → "Nomni almashtirish"),
+   shuning uchun bu fayl nomni o'zi yozmaydi.
+
+   applicationId — Play Market'dagi DOIMIY manzil: birinchi yuklashdan
+   keyin o'zgartirib bo'lmaydi (boshqa ID = boshqa ilova).
+
+   Loyiha Nazariy dvigatelidan olingan, Nazariy esa Play'da alohida
+   ilova bo'lib qoladi. Uning ID'si qolib ketsa, bu APK Nazariy'ning
+   "yangilanishi" bo'lib chiqadi — shuning uchun bunday ID bilan build
+   darhol to'xtaydi. */
+def iqCapConfig = rootProject.file("../capacitor.config.json")
+def iqCap = new JsonSlurper().parseText(iqCapConfig.getText("UTF-8"))
+def iqAppId = iqCap.appId
+def iqAppName = iqCap.appName
+if (!(iqAppId ==~ /[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+/)) {
+    throw new GradleException("capacitor.config.json appId noto'g'ri: \"" + iqAppId + "\"")
+}
+if (iqAppId.toLowerCase().contains("nazariy")) {
+    throw new GradleException(
+        "capacitor.config.json appId = \"" + iqAppId + "\" — bu Nazariy ilovasining ID'si.\n" +
+        "IQuest o'z ID'si bilan yig'iladi (README.md → \"Nomni almashtirish\").")
+}
+
+/* Qo'lda yoziladigan ikki joy capacitor.config.json ga mos kelishi
+   shart. Mos kelmasa xato build'da emas, TELEFONDA chiqadi:
+     - MainActivity.java — manifestdagi ".MainActivity" namespace'ga
+       qo'shib o'qiladi. Java paketi boshqacha bo'lsa build O'TADI,
+       lekin ilova ochilishi bilan ClassNotFoundException bilan yiqiladi.
+     - strings.xml — launcher'dagi nom (app_name) va Capacitor'ning
+       package_name / custom_url_scheme qiymatlari.
+   Shuning uchun ikkalasi yig'ishdan oldin solishtiriladi. */
+def iqActivity = project.file("src/main/java/" + iqAppId.replace('.', '/') + "/MainActivity.java")
+def iqStrings = project.file("src/main/res/values/strings.xml")
+
+tasks.register("iqIdentity") {
+    doLast {
+        if (!iqActivity.exists()) {
+            throw new GradleException(
+                "MainActivity topilmadi: " + iqActivity + "\n" +
+                "Java paketi papkasi applicationId (" + iqAppId + ") bilan bir xil bo'lishi shart.")
+        }
+        if (!iqActivity.getText("UTF-8").contains("package " + iqAppId + ";")) {
+            throw new GradleException(
+                "MainActivity.java dagi package satri \"" + iqAppId + "\" emas.\n" +
+                "Mos kelmasa ilova ishga tushishda yiqiladi.")
+        }
+        def xml = iqStrings.getText("UTF-8")
+        def want = [
+            app_name: iqAppName, title_activity_main: iqAppName,
+            package_name: iqAppId, custom_url_scheme: iqAppId
+        ]
+        want.each { key, val ->
+            if (!xml.contains("<string name=\"" + key + "\">" + val + "</string>")) {
+                throw new GradleException(
+                    "strings.xml → " + key + " \"" + val + "\" emas (capacitor.config.json bilan mos emas).")
+            }
+        }
+    }
+}
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn("iqIdentity") }
+
+/* Yig'ilgan fayllar nomi: IQuest-release.apk / IQuest-debug.apk /
+   IQuest-release.aab (standart "app-..." o'rniga). Ilova nomidan
+   olinadi; fayl nomida bo'sh joy va apostrof bo'lmasligi uchun
+   faqat lotin harfi va raqam qoldiriladi. */
 base {
-    archivesName = "Nazariy"
+    archivesName = iqAppName.replaceAll('[^A-Za-z0-9]+', '-')
 }
 
 android {
-    namespace = "uz.nazariy.app"
+    namespace = iqAppId
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "uz.nazariy.app"
+        applicationId iqAppId
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode nzVersion.versionCode
@@ -75,22 +143,33 @@ android {
     /* ── Imzo (signing) ────────────────────────────────────────────────
        Kalit fayli va parollar loyihada SAQLANMAYDI. Ikki manba:
          1) mahalliy:  android/keystore.properties  (git'ga tushmaydi)
-         2) CI:        NAZARIY_KEYSTORE / NAZARIY_STORE_PASSWORD /
-                       NAZARIY_KEY_ALIAS / NAZARIY_KEY_PASSWORD muhit
+         2) CI:        IQUEST_KEYSTORE / IQUEST_STORE_PASSWORD /
+                       IQUEST_KEY_ALIAS / IQUEST_KEY_PASSWORD muhit
                        o'zgaruvchilari (GitHub Secrets)
        Kalit topilmasa release baribir yig'iladi — faqat imzosiz
-       (Play Market'ga yuklash uchun imzo shart).                        */
+       (Play Market'ga yuklash uchun imzo shart).
+
+       Kalit IQuest'ning O'ZINIKI bo'lishi shart (PLAY.md §7). Nazariy
+       kalitini qayta ishlatish eng ehtimolli xato (loyiha o'sha
+       dvigateldan olingan, eski hujjatda alias "nazariy" edi), shuning
+       uchun bunday alias'li kalit bilan build to'xtaydi.               */
     signingConfigs {
         release {
             def props = new Properties()
             def f = rootProject.file("keystore.properties")
             if (f.exists()) props.load(new FileInputStream(f))
-            def storePath = props['storeFile'] ?: System.getenv('NAZARIY_KEYSTORE')
+            def storePath = props['storeFile'] ?: System.getenv('IQUEST_KEYSTORE')
             if (storePath && file(storePath).exists()) {
+                def iqAlias = props['keyAlias'] ?: System.getenv('IQUEST_KEY_ALIAS')
+                if (iqAlias && iqAlias.toLowerCase().contains("nazariy")) {
+                    throw new GradleException(
+                        "Imzo kaliti alias'i \"" + iqAlias + "\" — bu Nazariy ilovasining kaliti.\n" +
+                        "IQuest uchun alohida kalit yarating (PLAY.md §7).")
+                }
                 storeFile file(storePath)
-                storePassword props['storePassword'] ?: System.getenv('NAZARIY_STORE_PASSWORD')
-                keyAlias props['keyAlias'] ?: System.getenv('NAZARIY_KEY_ALIAS')
-                keyPassword props['keyPassword'] ?: System.getenv('NAZARIY_KEY_PASSWORD')
+                storePassword props['storePassword'] ?: System.getenv('IQUEST_STORE_PASSWORD')
+                keyAlias iqAlias
+                keyPassword props['keyPassword'] ?: System.getenv('IQUEST_KEY_PASSWORD')
             }
         }
     }

@@ -1,6 +1,6 @@
 {
-  "appId": "uz.nazariy.app",
-  "appName": "Nazariy",
+  "appId": "uz.iquest.app",
+  "appName": "IQuest",
   "webDir": "www",
   "android": {
     "adjustMarginsForEdgeToEdge": "disable"
