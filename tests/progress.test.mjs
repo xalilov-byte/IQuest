@@ -726,3 +726,32 @@ test('mavjud holat yozuvi IQ tarixini buzmaydi (alohida kalit)', () => {
   assert.equal(disk().tests, undefined, 'asosiy holatga aralashmaydi');
   assert.equal(JSON.parse(raw(TESTS_KEY)).tests.length, 1);
 });
+
+
+test('G1: ownLevel — faqat shu turdagi ≥ 8 oʻz javobidan; oʻynalmagan tur 0 (nishonlar sovuq start bahosidan olinmaydi)', () => {
+  const { p } = env();
+  assert.equal(p.ownLevel('matrix'), 0);
+  assert.equal(p.ownLevel(undefined), 0);
+  p.recordTest(natija({}, qator('series', 8, 12, 12).concat(qator('spatial', 7, 7, 7))));
+  assert.equal(p.ownLevel('series'), 9, 'oxirgi 10 ta: 8-daraja, 100% → +1');
+  assert.equal(p.ownLevel('spatial'), 0, '7 ta javob — hali kam');
+  assert.equal(p.ownLevel('matrix'), 0, 'hech oʻynalmagan');
+  assert.equal(p.ownLevel('verbal'), 0);
+  assert.ok(p.levelFor('matrix') >= 1, 'levelFor (mashq zinapoyasi) oʻzgarmagan');
+  p.recordTest(natija({}, qator('spatial', 7, 1, 1)));
+  assert.equal(p.ownLevel('spatial'), 8, '8-javobdan keyin oʻz darajasi');
+});
+
+
+test('G6: soat orqaga surilsa (lastActiveDay kelajakda) streak nolga tushmaydi', () => {
+  const t = new Date(Date.now() - 4 * 3600000 + 86400000);
+  const tk = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+  const { p, disk } = env(saqlangan({ streak: 6, longest: 9, lastActiveDay: tk }));
+  assert.equal(p.markActive().streak, null, 'manfiy oraliq — streak tegilmaydi');
+  assert.equal(p.answered({ ref: 'x', correct: true, mode: 'practice' }).streak, null);
+  assert.equal(p.stats().answered, 1, 'javob baribir hisoblanadi');
+  p.flush();
+  assert.equal(disk().streak, 6);
+  assert.equal(disk().longest, 9);
+  assert.equal(disk().lastActiveDay, tk, 'oxirgi faol kun orqaga yozilmaydi');
+});

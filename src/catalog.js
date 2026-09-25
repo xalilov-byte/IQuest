@@ -71,7 +71,7 @@
     { id: 'crystal',  name: L('Kristall', 'Кристалл', 'Crystal'),           price: 500 },
     { id: 'planet',   name: L('Sayyora', 'Планета', 'Planet'),              price: 500 },
     { id: 'tangram',  name: L('Tangram', 'Танграм', 'Tangram'),             price: 700 },
-    { id: 'infinity', name: L('Cheksizlik', 'Вечность', 'Infinity'),   price: 800 },
+    { id: 'infinity', name: L('Cheksizlik', 'Петля', 'Infinity'),   price: 800 },
   ];
   COLLECTION.forEach(b => { b.shape = 'round'; });
 
@@ -93,7 +93,7 @@
   /* Kunlik vazifa nomlari — Bosh sahifadagi H4 qatorlari (§3.1).
      q3b nomi turga bogʻliq: «{0} mashqi», {0} — tur nomi. */
   const QUEST_TEXT = {
-    practice: { name: L('Bugungi mashq', 'Тренировка дня', 'Daily practice'),
+    practice: { name: L('Bugungi mashq', 'Тренировка дня', 'Today’s practice'),
                 unit: L('{0}/{1} savol', 'Вопросы: {0}/{1}', 'Questions: {0}/{1}') },
     game:     { name: L('Aql oʻyini', 'Игра для ума', 'Brain game'),
                 unit: L('Kun oʻyini: {0}', 'Игра: {0}', 'Today: {0}') },
@@ -113,7 +113,7 @@
       value: 3 * REWARDS.quest },
     { id: 'badges', text: L('Nishonlar — bir martalik mukofot', 'Значки — разовая награда', 'Badges — one-time reward'),
       value: null },
-    { id: 'week',   text: L('Hafta yakuni — ligaga qarab {0} gacha', 'Итог недели — до {0} в зависимости от лиги', 'Week end — up to {0} by league'),
+    { id: 'week',   text: L('Hafta yakuni — ligaga qarab {0} gacha', 'Итоги недели — до {0} в зависимости от лиги', 'Weekly result — up to {0}, based on league'),
       value: Math.max.apply(null, REWARDS.weekly) },
   ];
 

@@ -692,3 +692,36 @@ test('matnlar: har xato kodi uchun {uz, ru, en}; oʻzbekchada toʻgʻri tutuq be
   assert.equal(P.errText('photo', 'size', 'ru'), 'Фото слишком большое');
   assert.equal(P.errText('bio', 'link', 'uz-cyrl'), 'Havola qoʻshib boʻlmaydi');
 });
+
+/* S1: SOF 256 KB dan keyin — 50 MP chegarasi chetlab oʻtilmaydi. */
+function jpegFarSof(w, h) {
+  const pad = [];
+  for (let k = 0; k < 5; k++) {           // 5 × 64 KB APP2 — SOF ~320 KB da
+    const len = 65535;
+    pad.push(0xff, 0xe2, len >> 8, len & 255, ...new Array(len - 2).fill(0x41));
+  }
+  const tail = jpeg(w, h).slice(2);
+  return new Uint8Array([0xff, 0xd8, ...pad, ...tail]);
+}
+
+test('S1: JPEG oʻlchami 256 KB dan keyin boʻlsa ham 50 MP dan kattasi dekodlashdan OLDIN rad', async () => {
+  const { P } = env();
+  const big = jpegFarSof(10000, 9000);
+  assert.ok(big.length > 256 * 1024);
+  const s = stubEnv({ decoded: [10000, 9000] });
+  const r = await P.preparePhoto(fakeFile(big, 'image/jpeg'), 'top', s.env);
+  assert.deepEqual(plain(r), { ok: false, err: 'size' });
+  assert.equal(s.log.bitmapArgs.length, 0, 'dekoder chaqirilmadi');
+  // kichik rasm xuddi shu shaklda — oʻtadi
+  const ok = await P.preparePhoto(fakeFile(jpegFarSof(800, 600), 'image/jpeg'), 'top', stubEnv({ decoded: [800, 600] }).env);
+  assert.equal(ok.ok, true);
+});
+
+test('S1: sarlavha aldasa ham dekodlangan oʻlcham > 50 MP — rad, bitmap yopiladi', async () => {
+  const { P } = env();
+  const s = stubEnv({ decoded: [10000, 9000] });
+  const r = await P.preparePhoto(fakeFile(jpeg(100, 100), 'image/jpeg'), 'top', s.env);
+  assert.deepEqual(plain(r), { ok: false, err: 'size' });
+  assert.equal(s.log.closed, 1);
+  assert.equal(s.log.canvases.length, 0, 'chizilmadi');
+});

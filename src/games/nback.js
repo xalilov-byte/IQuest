@@ -58,7 +58,7 @@
   const BTN_YES = { id: 'yes', label: T('Mos', 'Совпадает', 'Match'), kind: 'primary' };
   const BTN_NO = { id: 'no', label: T('Mos emas', 'Не совпадает', 'No match'), kind: 'secondary' };
   const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
-  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_PAUSED = T('Vaqt toʻxtatildi', 'Время остановлено', 'The clock is stopped');
   const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
   const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
   const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');

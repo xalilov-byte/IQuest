@@ -45,6 +45,9 @@
        --primary-soft — faol holatning yumshoq "pill" foni: holat faqat rang
        bilan emas, SHAKL bilan ham bildirilsin (WCAG 1.4.1). */
     --primary-ink:#3D5EFF; --primary-soft:rgba(61,94,255,.12);
+    /* Tusli fon (--primary-soft, --surface-alt) ustidagi koʻk MATN: --primary-ink
+       u yerda 4.0–4.2:1 edi. Yorugʻda soft ustida 5.20–5.67, surface-alt 4.81 (L11). */
+    --primary-ink-strong:#2E4BDB;
     /* DIAGRAMMA TOKENLARI — dataviz validatori bilan tekshirilgan (ko'z bilan emas).
        Kategorik tartib: 1-blue, 2-gold, 3-teal. Brendning pushti+teal juftligi
        CVD testidan yiqildi (deutan ΔE 5.3 — 6 chegarasidan past), shuning uchun
@@ -122,6 +125,8 @@
        AA. To'ldirish roli (--primary) tegilmadi: oq matn u ustida hamon
        to'g'ri. */
     --primary-ink:#6B87FF; --primary-soft:rgba(107,135,255,.18);
+    /* Tungi: soft ustida 5.11–6.27 (L11). */
+    --primary-ink-strong:#93A6FF;
     /* Tungi pog'onalar avtomatik teskari aylantirilmagan — quyuq sirt uchun
        alohida tanlangan va validatordan alohida o'tkazilgan. */
     --c1:#5C7BFF; --c2:#D99A2B; --c3:#2FB5AD;
@@ -290,12 +295,12 @@
      style'ida qolmoqda — faqat "necha ustun/qanday o'lcham" shu yerga
      ko'chdi, targeted change doirasidan chiqmasdan. */
   .nz-landing-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
-  .nz-landing-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .nz-landing-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
   .nz-landing-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .nz-landing-h1{font-size:56px}
   @media (max-width:760px){
     .nz-landing-hero{grid-template-columns:1fr;gap:32px}
-    .nz-landing-stats{grid-template-columns:repeat(2,1fr)}
+    .nz-landing-stats{gap:8px}
     .nz-landing-grid3{grid-template-columns:1fr}
     .nz-landing-h1{font-size:34px}
   }
@@ -317,7 +322,7 @@
   [data-theme="dark"] .nz-svg{filter:invert(1) hue-rotate(180deg);mix-blend-mode:lighten}
   @keyframes nzFade{0%{opacity:0}100%{opacity:1}}
   @keyframes nzPush{0%{transform:translateX(24px);opacity:0}100%{transform:none;opacity:1}}
-  @keyframes nzToast{0%{transform:translate(-50%,-8px);opacity:0}100%{transform:translate(-50%,0);opacity:1}}
+  @keyframes nzToast{0%{transform:translate(-50%,8px);opacity:0}100%{transform:translate(-50%,0);opacity:1}}
   @keyframes nzMedal{0%{transform:scale(.6)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
 
   /* ========== KOMPONENTLAR (3-qatlam, ARXITEKTURA §9.3) ==========
@@ -395,9 +400,11 @@
   .nz-radio .dot{width:22px;height:22px;border-radius:999px;box-shadow:inset 0 0 0 2px var(--muted-foreground);display:grid;place-items:center;flex:none;color:#fff}
   .nz-radio[aria-checked="true"]{box-shadow:inset 0 0 0 2px var(--primary)}
   .nz-radio[aria-checked="true"] .dot{background:var(--primary);box-shadow:none}
-  .nz-toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top) + 12px);transform:translateX(-50%);z-index:90;height:48px;max-width:calc(100% - 32px);padding:0 18px;border-radius:999px;background:var(--foreground);color:var(--background);display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;box-shadow:var(--shadow);pointer-events:none;white-space:nowrap;animation:nzToast .2s ease-out}
+  .nz-toast{position:absolute;left:50%;top:auto;bottom:calc(68px + env(safe-area-inset-bottom) + 12px);transform:translateX(-50%);z-index:90;height:48px;max-width:calc(100% - 32px);padding:0 18px;border-radius:999px;background:var(--foreground);color:var(--background);display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;box-shadow:var(--shadow);pointer-events:none;white-space:nowrap;animation:nzToast .2s ease-out}
   .nz-toast span{overflow:hidden;text-overflow:ellipsis}
-  .nz-celebrate{width:300px;height:340px;max-width:calc(100% - 32px);background:var(--surface);border-radius:var(--r-hero);box-shadow:var(--shadow);padding:24px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;animation:nzPop .25s ease-out}
+  .nz-celebrate{width:300px;height:340px;max-width:calc(100% - 32px);background:var(--surface);border-radius:var(--r-hero);box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;animation:nzPop .25s ease-out}
+  /* 104+16+30+28+52+44 + 5×6 + 36 = 340: hech bir bola siqilmaydi (L1) */
+  .nz-celebrate>*{flex-shrink:0}
   .nz-medal{animation:nzMedal .4s ease-out}
 </style>
 </helmet>
@@ -521,7 +528,7 @@
                 <span style="{{ t.nameStyle }}">{{ t.name }}</span>
                 <span class="nz-ell nz-cap nz-num">{{ t.sub }}</span>
               </span>
-              <span class="nz-chip" style="background:var(--surface-alt);color:var(--primary-ink);height:26px;padding:0 8px;font-size:12px">{{ t.levelLabel }}</span>
+              <span class="nz-chip" style="background:var(--surface-alt);color:var(--primary-ink-strong);height:26px;padding:0 8px;font-size:12px">{{ t.levelLabel }}</span>
             </button>
           </sc-for>
 
@@ -553,7 +560,7 @@
                 </span>
                 <span class="nz-ell" style="{{ g.skillStyle }}">{{ g.skill }}</span>
               </span>
-              <span class="nz-chip" style="background:var(--surface-alt);color:var(--primary-ink);height:26px;padding:0 8px;font-size:12px">{{ g.levelLabel }}</span>
+              <span class="nz-chip" style="background:var(--surface-alt);color:var(--primary-ink-strong);height:26px;padding:0 8px;font-size:12px">{{ g.levelLabel }}</span>
             </button>
           </sc-for>
         </div>
@@ -670,7 +677,7 @@
                 <button onClick="{{ goBadges }}" aria-label="{{ m.aria }}" style="{{ m.style }}"><img class="nz-art" src="{{ m.src }}" alt="" width="40" height="40" style="{{ m.imgStyle }}"></button>
               </sc-for>
             </div>
-            <button onClick="{{ openEdit }}" class="nz-btn ghost" style="height:44px;margin-top:12px;font-size:15px">Profilni tahrirlash</button>
+            <button onClick="{{ openEdit }}" class="nz-btn ghost" style="margin-top:12px">Profilni tahrirlash</button>
           </div>
 
           <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px">
@@ -786,9 +793,9 @@
         <sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}">
         <div class="nz-push">
           <div class="nz-pushhead">
-            <div class="nz-side" style="width:44px"><button onClick="{{ goBack }}" aria-label="Orqaga" class="nz-plainbtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="{{ ic.chevronLeft.path1 }}"></path></svg></button></div>
-            <div class="nz-pushtitle" style="font-size:15px">Profilni tahrirlash</div>
-            <div class="nz-side" style="width:auto;min-width:44px;justify-content:flex-end"><button onClick="{{ saveEdit }}" disabled="{{ editSaveDisabled }}" class="nz-textbtn" style="font-size:17px">{{ editSaveLabel }}</button></div>
+            <div class="nz-side"><button onClick="{{ goBack }}" aria-label="Orqaga" class="nz-plainbtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="{{ ic.chevronLeft.path1 }}"></path></svg></button></div>
+            <div class="nz-pushtitle">Tahrirlash</div>
+            <div class="nz-side" style="justify-content:flex-end"><button onClick="{{ saveEdit }}" disabled="{{ editSaveDisabled }}" class="nz-textbtn" style="max-width:100%;min-width:44px;padding:0;font-size:15px;font-weight:700"><span class="nz-ell">{{ editSaveLabel }}</span></button></div>
           </div>
           <div class="nz-pushbody" style="gap:16px">
             <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex:none">
@@ -928,11 +935,11 @@
               <sc-if value="{{ obIsMoney }}" hint-placeholder-val="{{ false }}">
                 <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px">
                   <div style="height:160px;border-radius:var(--r-hero);background:var(--ball);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;box-shadow:var(--shadow)">
-                    <span style="width:40px;height:40px;border-radius:6px;background:#fff;transform:rotate(45deg)"></span>
+                    <span style="width:48px;height:48px;flex:none;display:grid;place-items:center"><span style="width:34px;height:34px;border-radius:6px;background:#fff;transform:rotate(45deg)"></span></span>
                     <span class="display" style="font-size:24px;font-weight:800">Ball</span>
                   </div>
                   <div style="height:160px;border-radius:var(--r-hero);background:var(--coin);color:var(--coin-on);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;box-shadow:var(--shadow)">
-                    <span style="width:48px;height:48px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 6px var(--coin-rim)"></span>
+                    <span style="width:48px;height:48px;flex:none;display:grid;place-items:center"><span style="width:48px;height:48px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 6px var(--coin-rim)"></span></span>
                     <span class="display" style="font-size:24px;font-weight:800">Tanga</span>
                   </div>
                 </div>
@@ -1224,7 +1231,7 @@
               <sc-for list="{{ gStats }}" as="x" hint-placeholder-count="3">
                 <div class="nz-card" style="padding:14px 8px;min-width:0">
                   <div class="nz-num" style="font-size:20px;font-weight:800;white-space:nowrap">{{ x.value }}</div>
-                  <div class="nz-ell" style="font-size:12px;font-weight:600;color:var(--muted-foreground)">{{ x.label }}</div>
+                  <div style="height:28px;font-size:12px;font-weight:600;line-height:14px;color:var(--muted-foreground);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere">{{ x.label }}</div>
                 </div>
               </sc-for>
             </div>
@@ -1337,11 +1344,10 @@
       <div class="nz-scrim center">
         <div role="dialog" aria-modal="true" aria-label="{{ ceTitle }}" class="nz-celebrate">
           <img class="nz-art nz-medal" src="{{ ceSrc }}" alt="" width="104" height="104">
-          <div style="font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--muted-foreground);text-transform:uppercase">{{ ceKicker }}</div>
-          <div class="nz-ell" style="font-size:22px;font-weight:800;max-width:100%">{{ ceTitle }}</div>
+          <div class="nz-ell" style="height:16px;line-height:16px;font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--muted-foreground);text-transform:uppercase;max-width:100%">{{ ceKicker }}</div>
+          <div class="nz-ell" style="height:30px;line-height:30px;font-size:20px;font-weight:700;max-width:100%">{{ ceTitle }}</div>
           <div class="nz-num" style="height:28px;display:flex;align-items:center;gap:6px;font-size:16px;font-weight:800;color:var(--coin-ink)"><span style="{{ ceCoinStyle }}"></span>{{ ceLine }}</div>
-          <div style="flex:1"></div>
-          <button onClick="{{ cePrimary }}" class="nz-btn">{{ cePrimaryLabel }}</button>
+          <button onClick="{{ cePrimary }}" class="nz-btn" style="margin-top:auto">{{ cePrimaryLabel }}</button>
           <button onClick="{{ ceSecondary }}" class="nz-textbtn" style="{{ ceSecondaryStyle }}">Yopish</button>
         </div>
       </div>
@@ -1364,7 +1370,7 @@
       </div>
       </sc-if>
 
-      <!-- ══ TOAST — tepada 48 px, 2.4 s, hech narsani toʻsmaydi. ══ -->
+      <!-- ══ TOAST — pastki menyu ustida 48 px, 2.4 s, sarlavhani toʻsmaydi (L3). ══ -->
       <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
         <div class="nz-toast" role="status"><span style="{{ toastCoinStyle }}"></span><span>{{ toastText }}</span></div>
       </sc-if>
@@ -2073,7 +2079,7 @@
     </div>
 
     <div class="nz-landing-stats" style="max-width:1100px;margin:0 auto;padding:24px">
-      <sc-for list="{{ landingStats }}" as="s" hint-placeholder-count="4">
+      <sc-for list="{{ landingStats }}" as="s" hint-placeholder-count="3">
         <div style="background:var(--surface);border-radius:20px;padding:20px;box-shadow:var(--shadow)">
           <div style="font-size:28px;font-weight:800;letter-spacing:-.02em">{{ s.value }}</div>
           <div style="margin-top:4px;font-size:14px;font-weight:500;color:var(--muted-foreground)">{{ s.label }}</div>
@@ -3221,6 +3227,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     this.stopGameTimer();
+    clearTimeout(this.coinTimer); clearTimeout(this.editTimer);
     document.removeEventListener("visibilitychange", this.onVis);
     document.removeEventListener("focusin", this.onFocus);
   }
@@ -3349,15 +3356,21 @@ class Component extends DCLogic {
     const from = this.state.coinsShown;
     this.setState({ coins: to });
     if (from === to) return;
-    let t0 = null;
-    const step = (ts) => {
-      if (t0 === null) t0 = ts;
-      const k = Math.min(1, (ts - t0) / 400);
-      const v = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)));
-      this.setState({ coinsShown: v });
-      if (k < 1) requestAnimationFrame(step);
+    /* 400 ms da koʻpi bilan 8 qadam (50 ms): har qadam butun ekranni qayta
+       chizadi, har kadrda (≈25 marta) chizish sust telefonda kadr
+       tushirardi (S6). Yangi chaqiruv eskisini bekor qiladi. */
+    clearTimeout(this.coinTimer);
+    if (this.reducedMotion()) { this.setState({ coinsShown: to }); return; }
+    const STEPS = 8;
+    let i = 0, last = from;
+    const step = () => {
+      i++;
+      const k = i / STEPS;
+      const v = i >= STEPS ? to : Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)));
+      if (v !== last) { last = v; this.setState({ coinsShown: v }); }
+      if (i < STEPS) this.coinTimer = setTimeout(step, 50);
     };
-    if (this.reducedMotion()) this.setState({ coinsShown: to }); else requestAnimationFrame(step);
+    this.coinTimer = setTimeout(step, 50);
   }
   reducedMotion() {
     try { return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
@@ -3369,7 +3382,11 @@ class Component extends DCLogic {
     const s = this.state, B = mod("nzBadges"), Lg = mod("nzLeague");
     const st = window.nzProgress && window.nzProgress.stats ? window.nzProgress.stats() : null;
     const levels = {};
-    ["matrix", "series", "spatial", "verbal"].forEach(t => { levels[t] = this.levelOf(t); });
+    /* Nishon uchun faqat oʻz javoblaridan daraja — oʻynalmagan tur 0 (G1). */
+    const P = window.nzProgress;
+    ["matrix", "series", "spatial", "verbal"].forEach(t => {
+      levels[t] = P && P.ownLevel ? P.ownLevel(t) : 0;
+    });
     const games = {};
     Object.keys(s.ui.games).forEach(k => { games[k] = { plays: s.ui.games[k].plays, level: s.ui.games[k].level }; });
     let best = 0;
@@ -3491,6 +3508,7 @@ class Component extends DCLogic {
     const s = this.state;
     const top = s.stack[s.stack.length - 1];
     if (top && top.name === "profileEdit" && this.editDirty()) { this.setState({ dialog: { kind: "unsavedProfile" } }); return; }
+    if (top && top.name === "profileEdit") { clearTimeout(this.editTimer); this.editTimer = null; }
     this.setState(st => ({ stack: st.stack.slice(0, -1), edit: top && top.name === "profileEdit" ? null : st.edit }));
     this.scrollTop();
   }
@@ -4831,7 +4849,10 @@ class Component extends DCLogic {
     try { gm = G.create(id, seed, level); } catch (e) { this.failed(e); return; }
     this.gm = gm;
     this.sess = null;
-    this.gOffset = 0; this.gPausedAt = null; this.gLastWall = null; this.gDispCompact = false;
+    /* Ixcham koʻrsatkich (104 px) oʻyin ochilishidanoq — intro'dan oʻyinga
+       oʻtganda maydon sakramaydi (L2). */
+    this.gOffset = 0; this.gPausedAt = null; this.gLastWall = null;
+    this.gDispCompact = !!(G.gridKindOf && G.gridKindOf(id) === "label");
     const P = window.nzProgress;
     this.wasActive = P && P.activeToday ? !!P.activeToday() : true;
     this.setState({ game: { id: id, level: level, seed: seed, v: 0, res: null, paused: false },
@@ -4936,7 +4957,7 @@ class Component extends DCLogic {
     const flagged = res.flagged === true;
     /* Yakuniy qator: bot filtri ball bermagan boʻlsa — sababi (F16/F63);
        aks holda oʻyinning yakuniy matni — u halqadagi raqamni tushuntiradi. */
-    let summary = flagged ? T("Juda tez bosildi — ball berilmadi") : "";
+    let summary = flagged ? T("Juda tez bosishlar — ball berilmadi") : "";
     if (!flagged) {
       try { const v = gm.view(); if (v && v.display && v.display.kind === "text") summary = this.L(v.display); } catch (e) {}
     }
@@ -4974,6 +4995,7 @@ class Component extends DCLogic {
      Qoralama stateʼda (edit); rasm fayli this.pendingFile da (stateʼda
      emas). Diskka faqat «Saqlash» yozadi — hammasi yoki hech narsa. */
   openEdit() {
+    clearTimeout(this.editTimer); this.editTimer = null;
     const p = profileNow(this.state.profile);
     this.pendingFile = null;
     this.setState({ edit: { username: p.username, bio: p.bio, color: p.color, avatar: p.avatar,
@@ -5030,11 +5052,16 @@ class Component extends DCLogic {
       return;
     }
     const prof = P ? P.get() : Object.assign({}, this.state.profile, { username: e.username, bio: e.bio, color: e.color, avatar: e.avatar });
-    this.setState({ profile: prof, edit: Object.assign({}, e, { saved: true, photoData: null }) });
+    const done = Object.assign({}, e, { saved: true, photoData: null });
+    this.setState({ profile: prof, edit: done });
     this.checkBadges(null);
     clearTimeout(this.editTimer);
+    /* Faqat AYNAN shu saqlangan tahrir hamon ochiq boʻlsa yopiladi: qayta
+       ochilgan «Tahrirlash» va uning qoralamasi tegilmaydi (G4). */
     this.editTimer = setTimeout(() => {
-      if (this.state.stack.length && this.state.stack[this.state.stack.length - 1].name === "profileEdit") {
+      this.editTimer = null;
+      const top = this.state.stack[this.state.stack.length - 1];
+      if (top && top.name === "profileEdit" && this.state.edit === done && done.saved) {
         this.setState(st => ({ stack: st.stack.slice(0, -1), edit: null }));
         this.scrollTop();
       }
@@ -5081,7 +5108,9 @@ class Component extends DCLogic {
   }
 
   /* ─── Doʻkon va xarid (§3.8) ────────────────────────────────────────── */
-  openBuy(itemId) { this.openSheet("buy", { item: itemId, bought: false }); }
+  /* Allaqachon olingan narsa Doʻkondan ochilsa — «Sotib olish» emas,
+     «Qoʻllash» / «✓ Tanlangan» (G2). */
+  openBuy(itemId) { this.openSheet("buy", { item: itemId, bought: false, owned: this.owns(itemId) }); }
   buyItem(itemId) {
     const W = mod("nzWallet");
     if (!W) return;
@@ -5345,13 +5374,13 @@ class Component extends DCLogic {
       name: name, sub: sub, icon: icon, open: open, done: !!q.done, open_: !q.done,
       chipLabel: q.done ? "Olindi" : "+" + (q.reward || 10),
       tileStyle: { width: "40px", height: "40px", color: "var(" + color + ")" },
-      nameStyle: { fontSize: "16px", fontWeight: 700, color: next ? "var(--primary-ink)" : "var(--foreground)" },
-      chipStyle: { display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", width: "72px", height: "28px",
+      nameStyle: { fontSize: "16px", fontWeight: 700, color: next ? "var(--primary-ink-strong)" : "var(--foreground)" },
+      chipStyle: { display: "flex", alignItems: "center", justifyContent: "center", gap: "4px", width: "64px", height: "28px",
                    flex: "none", borderRadius: "999px", fontSize: "13px", fontWeight: 800, fontVariantNumeric: "tabular-nums",
                    whiteSpace: "nowrap", overflow: "hidden",
                    background: q.done ? "var(--green)" : "var(--surface-alt)",
                    color: q.done ? "var(--green-on-fill)" : "var(--coin-ink)" },
-      rowStyle: { display: "flex", alignItems: "center", gap: "12px", width: "100%", height: "64px", flex: "none",
+      rowStyle: { display: "flex", alignItems: "center", gap: "8px", width: "100%", height: "64px", flex: "none",
                   padding: "0 16px", textAlign: "left", color: "var(--foreground)",
                   background: next ? "var(--primary-soft)" : "transparent",
                   borderTop: i ? "1px solid var(--hairline)" : "1px solid transparent" }
@@ -5396,7 +5425,7 @@ class Component extends DCLogic {
           title: this.L(g.title),
           nameStyle: Object.assign({}, nameStyle, { minWidth: 0 }),
           todayStyle: { display: isToday ? "inline-flex" : "none", alignItems: "center", height: "20px", padding: "0 8px",
-                        borderRadius: "999px", background: "var(--primary-soft)", color: "var(--primary-ink)",
+                        borderRadius: "999px", background: "var(--primary-soft)", color: "var(--primary-ink-strong)",
                         fontSize: "11px", fontWeight: 800, flex: "none", whiteSpace: "nowrap" },
           skill: sk.label,
           skillStyle: { fontSize: "13px", fontWeight: 700, color: "var(" + sk.color + ")" },
@@ -5480,10 +5509,12 @@ class Component extends DCLogic {
         chipStyle: {
           display: "flex", flexDirection: "column", justifyContent: "center", gap: "4px", minWidth: 0,
           height: "64px", padding: "0 10px", borderRadius: "var(--r-btn)",
-          background: i === lg.index ? "var(--ball)" : "var(--surface)",
+          /* Joriy plitka ikkala temada #6B3FE0 (yorugʻ --ball-ink): oq matn
+             6.15:1. Tungi --ball (#9C7BFF) oq bilan 2.8:1 edi (L5). */
+          background: i === lg.index ? "#6B3FE0" : "var(--surface)",
           color: i === lg.index ? "#fff" : i < lg.index ? "var(--foreground)" : "var(--muted-foreground)",
           boxShadow: i === lg.index ? "var(--shadow)" : "none",
-          border: "1px solid " + (i === lg.index ? "var(--ball)" : "var(--hairline)")
+          border: "1px solid " + (i === lg.index ? "#6B3FE0" : "var(--hairline)")
         }
       })),
       bestIqLabel: best ? String(best.iq) : "—",
@@ -5552,13 +5583,14 @@ class Component extends DCLogic {
       }),
       profileStats: [
         { value: ts.best ? String(ts.best.iq) : "—", label: "Eng yaxshi IQ", color: "--primary-ink" },
-        { value: fmt(ts.count), label: "Testlar", color: "--purple-ink" },
+        { value: fmt(ts.count), label: "Testlar", color: "--foreground" },
         { value: fmt(s.points), label: "Jami ball", color: "--ball-ink", ball: true },
         { value: trn("{0} kun", st ? st.longest : 0), label: "Eng uzun ketma-ketlik", color: "--green-ink" }
       ].map(x => Object.assign({}, x, {
         ballStyle: { display: x.ball ? "inline-block" : "none", width: "12px", height: "12px", borderRadius: "2px",
                      background: "var(--ball)", transform: "rotate(45deg)", margin: "0 3px", flex: "none" },
-        valStyle: { fontSize: "24px", fontWeight: 800, lineHeight: 1.2, color: "var(" + x.color + ")" }
+        /* Reyting StatTile bilan bir xil: 28/800 SG, 1.15 (L9). */
+        valStyle: { fontSize: "28px", fontWeight: 800, lineHeight: 1.15, color: "var(" + x.color + ")" }
       })),
       badgeCountLabel: (sum.earned + ownedN) + "/" + totalAll,
 
@@ -5800,7 +5832,7 @@ class Component extends DCLogic {
                        borderRadius: "999px", fontSize: "12px", fontWeight: 800, whiteSpace: "nowrap", maxWidth: "100%",
                        overflow: "hidden", fontVariantNumeric: "tabular-nums",
                        background: applied ? "var(--primary-soft)" : "var(--surface-alt)",
-                       color: applied ? "var(--primary-ink)" : own ? "var(--muted-foreground)" : "var(--coin-ink)" },
+                       color: applied ? "var(--primary-ink-strong)" : own ? "var(--muted-foreground)" : "var(--coin-ink)" },
           open: () => (x.kind === "badge" ? this.openBadge(x.e.id, true) : this.openBuy(id))
         };
       }),
@@ -6234,7 +6266,9 @@ class Component extends DCLogic {
     const showIQ = isTest && hasIQ(r);
     const types = Object.keys(r.byType || {});
     const kind = isTest ? "IQ test" : R.kind === "review" ? T(R.title) : (R.type ? typeLabel(R.type, lang) : T(R.title));
-    const chip = (on, color) => ({ visibility: on ? "visible" : "hidden", background: "var(--surface)", boxShadow: "var(--shadow)", color: color });
+    /* Yashirin chip joy egallamaydi — koʻrinadigani markazda qoladi; qator
+       baribir qatʼiy 28 px, shuning uchun hech narsa siljimaydi (L4). */
+    const chip = (on, color) => ({ display: on ? "inline-flex" : "none", background: "var(--surface)", boxShadow: "var(--shadow)", color: color });
     return {
       resultOn: true,
       resKind: kind,
@@ -6244,7 +6278,7 @@ class Component extends DCLogic {
       resSub: showIQ ? rangeLine(r) : "",
       resBallLabel: trn("+{0} ball", R.earned || 0),
       resBallChipStyle: chip(true, "var(--ball-ink)"),
-      /* Testda tanga chipi hech qachon chiqmaydi — joyi saqlanadi (§3.9). */
+      /* Testda tanga chipi hech qachon chiqmaydi; qator balandligi saqlanadi (§3.9). */
       resCoinLabel: trn("+{0} tanga", R.coins || 0),
       resCoinChipStyle: chip(!isTest && R.coins > 0, "var(--coin-ink)"),
       resRingStyle: {
@@ -6296,7 +6330,7 @@ class Component extends DCLogic {
         gScore: fmt(Number(r.score) || 0),
         gPointsLabel: trn("+{0} ball", Math.max(0, Number(r.points) || 0)),
         gCoinLabel: trn("+{0} tanga", g.coins || 0),
-        gCoinChipStyle: { visibility: g.coins > 0 ? "visible" : "hidden", background: "var(--surface)", boxShadow: "var(--shadow)", color: "var(--coin-ink)" },
+        gCoinChipStyle: { display: g.coins > 0 ? "inline-flex" : "none", background: "var(--surface)", boxShadow: "var(--shadow)", color: "var(--coin-ink)" },
         gSummary: g.summary || "",
         gRingStyle: {
           width: "184px", height: "184px", borderRadius: "999px", display: "grid", placeItems: "center", flex: "none",
@@ -6325,7 +6359,10 @@ class Component extends DCLogic {
     const fs = { 2: 30, 3: 28, 4: 24, 5: 20, 6: 18 }[cols];
     /* Faqat son/yozuvli javob tugmalari (ogʻzaki hisob) kvadrat emas —
        76 px qator: 360×640 da ham ikkinchi qator koʻrinadi (F02). */
-    const labelOnly = !!grid && grid.cells.every(c => typeof c.svg !== "string") && grid.cells.some(c => c.label);
+    /* Shakl oʻyin eʼlon qilgan grid.kind dan (boʻsh setkada ham bir xil —
+       Boshlash/Pauza'da sakramaydi, L2); eʼlon qilinmasa — eski taxmin. */
+    const labelOnly = !!grid && (grid.kind ? grid.kind === "label"
+      : grid.cells.every(c => typeof c.svg !== "string") && grid.cells.some(c => c.label));
     if (labelOnly) this.gDispCompact = true;
     const STATE_WORDS = { idle: "", lit: "yongan", ok: "toʻgʻri", bad: "xato", hidden: "yopiq", disabled: "faol emas" };
     const btns = Array.isArray(v.buttons) ? v.buttons.slice(0, 4) : [];
@@ -6543,8 +6580,14 @@ class Component extends DCLogic {
         shItemLine: trn("Balans: {0} tanga", bal),
         shItemLineStyle: { height: "18px", fontSize: "14px", fontWeight: 700, color: "var(--coin-ink)" }
       };
-      if (sh.bought) return Object.assign(base, view,
-        btn(color ? "Qoʻllash" : "Vitrinaga qoʻyish", () => this.applyItem(it.itemId)), sec("Yopish", () => this.closeSheet()));
+      if (sh.bought || sh.owned) {
+        const cur = s.edit ? s.edit.color : p.color;
+        const applied = color ? cur === it.id : this.showcaseIds().indexOf(it.id) !== -1;
+        return Object.assign(base, view,
+          applied ? btn("✓ Tanlangan", () => {}, "nz-btn", true)
+                  : btn(color ? "Qoʻllash" : "Vitrinaga qoʻyish", () => this.applyItem(it.itemId)),
+          sec("Yopish", () => this.closeSheet()));
+      }
       if (need > 0) return Object.assign(base, view,
         btn(trn("Yana {0} tanga kerak", need), () => {}, "nz-btn", true),
         sec("Tanga qanday olinadi", () => this.openSheet("coinHelp")));
@@ -6631,7 +6674,7 @@ class Component extends DCLogic {
         run: () => { storeDrop(RUN_KEY); this.startTest(); } },
       clearData: { title: "Maʼlumotlarni oʻchirish?", body: "Natijalar, ballar, tangalar, nishonlar va profil oʻchiriladi.",
         confirm: "Oʻchirish", cls: "nz-btn danger", cancel: "Bekor qilish", run: () => this.clearAll() },
-      unsavedProfile: { title: "Oʻzgarishlar saqlanmadi", body: "",
+      unsavedProfile: { title: "Oʻzgarishlar saqlanmagan", body: "",
         confirm: "Chiqish", cls: "nz-btn danger", cancel: "Qolish",
         run: () => { this.setState(st => ({ stack: st.stack.slice(0, -1), edit: null })); this.scrollTop(); } },
       cleared: { title: "Maʼlumotlar oʻchirildi", body: "", cancel: "Yopish" },
@@ -6667,7 +6710,7 @@ class Component extends DCLogic {
     const dType = types.indexOf("series") !== -1 ? "series" : types[0];
     if (IQ && dType) { try { demo = IQ.makeItem(dType, 20260925, 3); } catch (e) { demo = null; } }
     return {
-      landingBadge: "IQ test · IQ oʻyinlari · liga",
+      landingBadge: "IQ test · mashq · IQ oʻyinlari",
       landingLead: trn("{0} savollik moslashuvchan IQ test, mashq va IQ oʻyinlari.", TEST_LENGTH),
       heroTryLabel: "Brauzerda ochish",
       heroTryStyle: { padding: "16px 26px", borderRadius: "14px", background: site.bot ? "var(--surface)" : "var(--primary)",
@@ -6690,13 +6733,12 @@ class Component extends DCLogic {
       landingStats: [
         { value: String(TEST_LENGTH), label: "savollik test" },
         { value: String(types.length), label: "savol turi" },
-        { value: String(games.length), label: "IQ oʻyini" },
-        { value: String(LEAGUES.length), label: "liga darajasi" }
+        { value: String(games.length), label: "IQ oʻyini" }
       ],
       steps: [
         { title: "Testni boshlang", sub: "Qiyinlik javoblaringizga moslashadi." },
         { title: "Natijani koʻring", sub: "IQ natijasi va savol turlari boʻyicha tahlil." },
-        { title: "Mashq qiling", sub: "Har kuni mashq — ligada yuqoriga." }
+        { title: "Mashq qiling", sub: "Har kuni mashq — natijangiz oʻsishini kuzating." }
       ].map((x, i) => Object.assign({}, x, {
         num: String(i + 1),
         numStyle: {
@@ -6710,7 +6752,7 @@ class Component extends DCLogic {
         { title: "IQ test", sub: trn("{0} ta moslashuvchan savol.", TEST_LENGTH) },
         { title: "Mashq", sub: "Har bir savol turi alohida, izoh bilan." },
         { title: "IQ oʻyinlari", sub: "Xotira, diqqat va tezlik." },
-        { title: "Liga", sub: "Haftalik ballar — Boshlovchidan Olmosgacha." },
+        { title: "Saqlangan", sub: "Kerakli savollarni qayta yeching." },
         { title: "Xatolarim", sub: "Xato qilingan savollar takrori." },
         { title: "Internetsiz", sub: "Hammasi telefonda ishlaydi." }
       ].map((m, i) => Object.assign({}, m, {

@@ -141,7 +141,7 @@ har doim «IQ» yoki «natija» deb ataladi.
 | **Varaq (sheet)** | Tanlov va maʼlumot (til, tema, vaqt, rasm, xarid, nishon…) | Pastdan chiqadi, balandligi qatʼiy | — |
 | **Dialog** | Tasdiq (2 tugma) | Mavjud tasdiq varagʻi | — |
 | **Bayram kartasi** | Yangi nishon, liga koʻtarilishi, hafta yakuni | Markazdagi 300×340 karta, ostida parda | — |
-| **Toast** | Kichik xabar (masalan xush kelibsiz bonusi) | Tepada 48 px pill, 2,4 s, hech narsani toʻsmaydi | — |
+| **Toast** | Kichik xabar (masalan xush kelibsiz bonusi) | Pastki menyu ustida 48 px pill (sarlavhani toʻsmaydi), 2,4 s | — |
 
 Qoida: L1 ekrandan faqat L1 yoki varaq ochiladi. Savol yoki oʻyin boshlanganda push-stek tozalanadi. Ichki ekranlarning ichma-ichligi 1 darajadan oshmaydi.
 
@@ -1010,7 +1010,7 @@ Ishlab chiqish uchun `--lang-en` bayrogʻi darvozani majburan ochadi.
 | streak | streak |
 | Boshlovchi · Bronza · Kumush · Oltin · Platina · Olmos | Beginner · Bronze · Silver · Gold · Platinum · Diamond |
 | Kunlik vazifalar | Daily quests |
-| Xatolarim / Saqlangan | My mistakes / Saved |
+| Xatolarim / Saqlangan | Mistakes / Saved (360 px plitka; CONTRACT §17) |
 | IQ oʻyinlari / Aql oʻyini | IQ games / Brain game |
 | Doʻkon / Nishonlar / Vitrina | Shop / Badges / Showcase |
 | Sozlamalar / Eslatma | Settings / Reminder |
@@ -1249,7 +1249,7 @@ Ekranlar faqat shularni teradi. Yangi element avval eng quyi mos qatlamga qoʻsh
 - **Bosh:** IQ kartasi uch holatda ham 180 px. Vazifa qatorlari 64 px, chip 64×28 qatʼiy.
 - **Profil:** bio 42 px, vitrina 40 px.
 - **Kiritish:** har input va matn maydoni ostida 18 px yordam qatori doim bor.
-- **Natija va Oʻyin yakuni:** mukofot qatori 28 px, tanga chipi joyi koʻrinmas holda saqlanadi.
+- **Natija va Oʻyin yakuni:** mukofot qatori qatʼiy 28 px; tanga chipi boʻlmasa joy egallamaydi — qolgan chip markazda turadi, qator balandligi oʻzgarmaydi.
 - **Varaqlar** har tur uchun qatʼiy balandlikda. Xarid varagʻi uch holatda ham 380 px.
 - **Sozlamalar:** «Vaqt» qatori oʻchiq holatda xira boʻladi, yoʻqolmaydi.
 - **Morph xavfi:** runtime DOMʼni pozitsiya boʻyicha solishtiradi. Input yoki uning yordam qatori oldida shartli (`sc-if`) qoʻshni element boʻlmasligi kerak, aks holda input qayta yaratiladi va fokus yoki IME matni yoʻqoladi. Yashirish faqat `visibility` yoki shaffoflik bilan qilinadi.
@@ -1385,6 +1385,7 @@ nzProgress (qoʻshimcha): activeToday() → bool      // kunlik eslatma va strea
 
 1. i18n-ru
 2. i18n-en
+2a. `window.nzLangs` (EN darvozasi — i18n init() dagi qurilma tili aniqlashi uni koʻrishi uchun)
 3. i18n
 4. runtime
 5. feedback
@@ -1680,7 +1681,7 @@ Keyin        WP10a–f + WP5 en + WP9 /en/  → darvoza yashil → v1.2
 ## 14. Test strategiyasi
 
 1. **Modul unit testlari** (`node:test` + `node:vm`, `window`/`localStorage` taqlidi, kiritilgan `now`; mavjud naqsh):
-   - **settings:** migratsiya jadvali (`soundOn`/`notifOn` = `null`/`true`/`false`); buzilgan va yangiroq versiya → `readOnly`, ustiga yozilmaydi.
+   - **settings:** migratsiya jadvali (`soundOn`/`notifOn` = `null`/`true`/`false`); yangiroq versiya → `readOnly`, ustiga yozilmaydi; buzilgan yozuv → standartlar diskka yoziladi (G5).
    - **profile:**
      - ≥60 ta nom holati (chegaralar, `._`, band soʻzlar, leet orqali nomaqbul soʻz, kirill, tutuq);
      - bio (havola, 80 belgi, yangi qator);

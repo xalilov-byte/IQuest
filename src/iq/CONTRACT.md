@@ -36,7 +36,7 @@ Testlar `node:vm` ichida `window` taqlidi bilan yuklaydi (namuna:
 `<script>`, boshida `/* ── src/<fayl> ── */` belgisi):
 
 ```
-i18n-ru → i18n-en → i18n → runtime → feedback → notify → nzSite → settings →
+i18n-ru → i18n-en → nzLangs → i18n → runtime → feedback → notify → nzSite → settings →
 progress → catalog → icons → art → avatars → profile → wallet → badges →
 league → IQ bundle → Main (logic) → data → bootstrap
 ```
@@ -297,6 +297,7 @@ nzProgress.recordTest(result)   // diskka; tarix: testlar ≤100, mashqlar ≤30
 nzProgress.testHistory()        // [{ at, mode, iq, lo, hi, loOpen, hiOpen, flag, n, correct, reliable, byType, theta, se }] — eskidan yangiga
 nzProgress.testStats()          // { count, best } — tarix chegarasidan qat'i nazar
 nzProgress.levelFor(type)       // 1..10 — shu turdagi so'nggi javoblardan; sovuq start — umumiy EAP (pooled)
+nzProgress.ownLevel(type)       // 0 | 1..10 — FAQAT shu turdagi ≥ 8 o'z javobidan (nishonlar); kam bo'lsa 0
 nzProgress.activeToday()        // bugun faol bo'lganmi (eslatmalar, §14)
 nzProgress.markActive()         // o'yin kabi javobsiz faoliyat streak'ni yangilaydi
 ```
@@ -388,6 +389,7 @@ IQ.games.register({
   title: { uz, ru, en? }, desc: { uz, ru, en? },
   langs?: ['uz','ru'] | ['uz','ru','en'],   // §2 dagi kabi; yoʻq → ['uz','ru']
   skill: 'attention' | 'memory' | 'speed' | 'logic' | 'spatial',
+  gridKind?: 'square' | 'label',     // setka shakli (grid.kind bilan bir xil); ilova uni oʻyin ochilishidanoq biladi
   create(seed, level) → Game,        // level 1..10, deterministik (IQ.rng)
 });
 
@@ -406,7 +408,9 @@ GameView = {
   prompt:  { uz, ru, en? },
   hud:     [{ label: { uz, ru, en? }, value: string }],    // ≤ 3 ta
   display: null | { kind: 'text', uz, ru, en? } | { kind: 'svg', svg },
-  grid:    null | { cols: 2..6, cells: [{ label: string, svg?, state }] },   // ≤ 36 katak
+  grid:    null | { cols: 2..6, kind?: 'square' | 'label', cells: [{ label: string, svg?, state }] },   // ≤ 36 katak
+           // kind: 'square' — kvadrat kataklar; 'label' — son/yozuvli javob tugmalari (76 px qator).
+           // Eʼlon qilinsa HAR fazada (boʻsh setka, pauza, tanaffus) bir xil — maydon sakramaydi (§11.2).
            // state: 'idle' | 'lit' | 'ok' | 'bad' | 'hidden' | 'disabled'
   buttons: [{ id, label: { uz, ru, en? }, kind: 'primary' | 'secondary' }],    // ≤ 4 ta
   progress: 0..1,
@@ -960,12 +964,16 @@ Tanga — faqat ● va Doʻkon uchun. Test javoblari uchun tanga yoʻq.
 | streak | серия | streak |
 | Boshlovchi · Bronza · Kumush · Oltin · Platina · Olmos | Новичок · Бронза · Серебро · Золото · Платина · Алмаз | Beginner · Bronze · Silver · Gold · Platinum · Diamond |
 | Kunlik vazifalar | Ежедневные задания | Daily quests |
-| Xatolarim / Saqlangan | Мои ошибки / Сохранённые | My mistakes / Saved |
+| Xatolarim / Saqlangan | Ошибки / Закладки ¹ | Mistakes / Saved ¹ |
 | IQ oʻyinlari / Aql oʻyini | IQ-игры / Игра для ума | IQ games / Brain game |
 | Doʻkon / Nishonlar / Vitrina | Магазин / Значки / Витрина | Shop / Badges / Showcase |
 | Sozlamalar / Eslatma | Настройки / Напоминание | Settings / Reminder |
 | Oraliq | Диапазон | Range |
 | IQ natijasi | результат IQ | IQ result |
+
+¹ «Мои ошибки» / «Сохранённые» / «My mistakes» 360 px dagi Mashq plitkasiga
+sigʻmaydi (84 px) — ilova, huquqiy sahifalar va nishon matni qisqa shaklni
+ishlatadi (bir xil nom hamma joyda).
 
 Halollik taqiqlari (§6) hamma tilda amal qiladi; inglizcha roʻyxat:
 official, certified, accredited, clinical, Mensa, percentile,

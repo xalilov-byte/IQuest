@@ -149,7 +149,7 @@ function livePause(inputs, { level = 3, warm = 1300 } = {}) {
   const v = check(g, 'pauza');
   assert.equal(v.paused, true);
   assert.deepEqual(plain(v.buttons.map(b => b.id)), ['resume']);
-  assert.equal(v.prompt.en, 'Paused — the clock is stopped');
+  assert.equal(v.prompt.en, 'The clock is stopped');
   if (v.grid) assert.ok(v.grid.cells.every(c => c.state === 'hidden' && c.label === ''), 'pauzada panjara yashirin');
   const pv = JSON.stringify(v);
   g.tick(warm);                                   // ilova pauzadan keyin bir marta chizadi
@@ -586,4 +586,27 @@ test('pauza (jonli): faol vaqt to\'xtaydi, sonlar yashirinadi, keyin aynan davom
   assert.deepEqual(plain(rp.result()), plain(g.result()));
   assert.deepEqual(plain(rp.log()), plain(g.log()));
   assert.ok(g.result().durationMs < 200000, 'pauza (10 daqiqa) davomiylikka kirmaydi: ' + g.result().durationMs);
+});
+
+test('L2: Shulte jadvali hamma fazada kvadrat (\'square\') — Boshlash/Pauza da sakramaydi', () => {
+  assert.equal(G.gridKind, 'square');
+  assert.equal(IQ.games.gridKindOf(ID), 'square');
+  for (const L of LEVELS) {
+    const g = IQ.games.create(ID, seedOf(L), L);
+    const kinds = new Set(), phases = new Set();
+    const see = () => { const v = g.view(); phases.add(v.phase + (v.paused ? '/p' : '')); if (v.grid) kinds.add(v.grid.kind); };
+    see();
+    g.press('start', 0);
+    const bot = perfect(L, 300);
+    let t = 0, k = 0;
+    while (!g.done && t < 600000) {
+      t += 20; g.tick(t); see();
+      const v = g.view();
+      if (v.phase === 'input' && v.grid.cells.some(c => c.label)) { const a = bot(v, t); if (a !== null) g.tap(a, t); }
+      if (++k === 200) { g.pause(t); see(); g.resume(t + 5000); t += 5000; see(); }
+    }
+    see();
+    assert.deepEqual([...kinds], ['square'], 'L' + L + ': ' + [...phases].join(','));
+    assert.ok(phases.has('intro') && phases.has('input') && [...phases].some(p => p.endsWith('/p')), [...phases].join(','));
+  }
 });

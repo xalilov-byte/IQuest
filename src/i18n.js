@@ -80,6 +80,8 @@
        matritsa, retsept) quyidagi "ts" → "ц" qoidasiga tushadi. */
     ["TSIZ", "ТСИЗ"], ["Tsiz", "Тсиз"], ["tsiz", "тсиз"],
     ["TSIMON", "ТСИМОН"], ["tsimon", "тсимон"],
+    /* -ksiya (reaksiya, funksiya, aksiya) — ruscha -кция: "ks" → "кц". */
+    ["KSIYA", "КЦИЯ"], ["Ksiya", "Кция"], ["ksiya", "кция"],
     ["TS", "Ц"], ["Ts", "Ц"], ["ts", "ц"],
     ["YA", "Я"], ["Ya", "Я"], ["ya", "я"],
   ];
@@ -111,7 +113,7 @@
   /* t bilan tugaydigan fe'l oʻzagi + -sa/-sin (shart va buyruq mayli):
      ketsa → кетса, aytsin → айтсин (ц emas). Faqat BUTUN soʻz shu
      shaklda boʻlsa ishlaydi — "sotsial" (социал) tegilmaydi. */
-  const T_STEM = /^(ket|ayt|qayt|yet|oʻt|tut|sot|yot|bit|yut|kut|tort|eshit|koʻrsat|oʻrgat|yarat|tugat|boshlat|ishlat)(s(?:a|in)[a-zʻ]*)$/i;
+  const T_STEM = /^(ket|ayt|qayt|yet|oʻt|tut|sot|yot|bit|yut|kut|tort|eshit|koʻrsat|oʻrgat|yarat|tugat|boshlat|ishlat|toʻxtat)(s(?:a|in)[a-zʻ]*)$/i;
 
   function isVowelAt(w, i) {
     // oʻzbek unlisi: a, o, u (e va i emas — "reestr", "ideal" ruscha

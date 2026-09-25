@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   src/games/sequence.js — "Ketma-ketlik" (Korsi bloklari uslubida)
+   src/games/sequence.js — "Kataklar tartibi" (Korsi bloklari uslubida)
 
    QOIDA: kataklar BIRMA-BIR yonadi ('show'), keyin foydalanuvchi ularni
    AYNAN SHU TARTIBDA bosadi ('input'). Hammasi to'g'ri — raund
@@ -61,7 +61,7 @@
 
   const BTN_START = { id: 'start', label: T('Boshlash', 'Начать', 'Start'), kind: 'primary' };
   const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
-  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_PAUSED = T('Vaqt toʻxtatildi', 'Время остановлено', 'The clock is stopped');
   const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
   const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
   const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');
@@ -70,7 +70,7 @@
     id: 'sequence',
     skill: 'memory',
     langs: ['uz', 'ru', 'en'],
-    title: T('Ketma-ketlik', 'Порядок клеток', 'Sequence'),
+    title: T('Kataklar tartibi', 'Порядок клеток', 'Sequence'),
     desc: T('Kataklar qaysi tartibda yonganini eslab qoling va takrorlang',
             'Запомните порядок, в котором загорались клетки, и повторите его',
             'Remember the order in which the cells light up and repeat it'),
@@ -297,7 +297,7 @@
               hud: hud(),
               display: bot ? Object.assign({ kind: 'text' }, BOT) : {
                 kind: 'text',
-                uz: 'Eng uzun takrorlangan ketma-ketlik: ' + best,
+                uz: 'Eng uzun takrorlangan tartib: ' + best,
                 ru: 'Самая длинная последовательность: ' + best,
                 en: 'Longest sequence repeated: ' + best,
               },

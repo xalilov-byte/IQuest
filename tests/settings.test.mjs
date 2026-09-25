@@ -2,7 +2,7 @@
    src/settings.js — `nz-settings` tekshiruvi (ARXITEKTURA §10.3, §14)
 
    - 1.0 dan koʻchirish jadvali: soundOn/notifOn = null / true / false;
-   - buzilgan va yangiroq versiya → readOnly, diskdagi yozuv tegilmaydi;
+   - yangiroq versiya → readOnly, diskdagi yozuv tegilmaydi; buzilgan → standart diskka (G5);
    - maydonlar alohida tekshiriladi, tashqariga nusxa beriladi.
 
    Ishga tushirish:  npm test
@@ -111,17 +111,22 @@ for (const [name, text] of [
   ['v 0', '{"v":0,"sound":false}'],
   ['null', 'null'],
 ]) {
-  test(`buzilgan yozuv (${name}) → readOnly, ustiga yozilmaydi`, () => {
-    const { s, raw, io } = env({ [KEY]: text });
-    assert.equal(s.readOnly(), true);
+  test(`buzilgan yozuv (${name}) → standartlar diskka, saqlash davom etadi (G5)`, () => {
+    const { s, raw } = env({ [KEY]: text });
+    assert.equal(s.readOnly(), false, 'buzilgan yozuv ilovani abadiy faqat-xotira qoldirmaydi');
     assert.equal(s.origin(), 'corrupt');
     assert.equal(s.isOnboarded(), true, 'avval ishlatilgan — birinchi kirish qayta chiqmaydi');
+    assert.notEqual(raw(KEY), text, 'buzuq yozuv tiklangan standart bilan almashdi');
+    assert.equal(JSON.parse(raw(KEY)).v, 1);
     const g = s.set({ sound: false, remind: { on: true } });
-    assert.equal(g.sound, false, 'xotirada ishlaydi');
-    s.markTip('testIntro');
-    s.markOnboarded('1.1.0');
-    assert.equal(raw(KEY), text, 'disk tegilmagan');
-    assert.equal(io.writes, 0);
+    assert.equal(g.sound, false);
+    assert.equal(JSON.parse(raw(KEY)).sound, false, 'oʻzgarish diskda');
+    // qayta ochilganda — oddiy saqlangan yozuv
+    const again = env({ [KEY]: raw(KEY) });
+    assert.equal(again.s.origin(), 'stored');
+    assert.equal(again.s.readOnly(), false);
+    assert.equal(again.s.get().sound, false);
+    assert.equal(again.s.isOnboarded(), true);
   });
 }
 

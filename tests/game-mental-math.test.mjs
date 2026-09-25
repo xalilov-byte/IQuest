@@ -213,7 +213,7 @@ function livePause(inputs, { level = 3, warm = 1300 } = {}) {
   const v = check(g, 'pauza');
   assert.equal(v.paused, true);
   assert.deepEqual(plain(v.buttons.map(b => b.id)), ['resume']);
-  assert.equal(v.prompt.en, 'Paused — the clock is stopped');
+  assert.equal(v.prompt.en, 'The clock is stopped');
   if (v.grid) assert.ok(v.grid.cells.every(c => c.state === 'hidden' && c.label === ''), 'pauzada panjara yashirin');
   const pv = JSON.stringify(v);
   g.tick(warm);                                   // ilova pauzadan keyin bir marta chizadi
@@ -665,4 +665,37 @@ test('pauza (jonli): 60 s to\'xtaydi, ko\'rinib turgan misol almashadi va hisobg
   const rp = IQ.games.replay(ID, 9, 7, plain(h.log()));
   assert.deepEqual(plain(rp.result()), plain(h.result()));
   assert.deepEqual(plain(rp.log()), plain(h.log()));
+});
+
+test('L2: panjara shakli hamma fazada \'label\' (intro, oʻyin, feedback, pauza, tanaffus) — maydon sakramaydi', () => {
+  assert.equal(G.gridKind, 'label');
+  assert.equal(IQ.games.gridKindOf(ID), 'label');
+  for (const L of [1, 5, 10]) {
+    const g = IQ.games.create(ID, seedOf(L), L);
+    const kinds = new Set(), phases = new Set();
+    const see = () => { const v = g.view(); phases.add(v.phase + (v.paused ? '/p' : '')); if (v.grid) kinds.add(v.grid.kind); };
+    see();
+    g.press('start', 0);
+    let t = 0, k = 0;
+    while (!g.done && t < 70000) {
+      t += 100; g.tick(t); see();
+      if (++k % 7 === 0) g.tap(k % 4, t);
+      if (k === 30) { g.pause(t); see(); g.resume(t + 5000); see(); }
+    }
+    see();
+    assert.deepEqual([...kinds], ['label'], 'L' + L + ': ' + [...phases].join(','));
+    assert.ok(phases.has('intro') && phases.has('input') && [...phases].some(p => p.endsWith('/p')));
+  }
+});
+
+test('L2: validateView notoʻgʻri grid.kind ni rad etadi, register notoʻgʻri gridKind ni rad etadi', () => {
+  const g = IQ.games.create(ID, 3, 1);
+  const v = plain(g.view());
+  assert.deepEqual(plain(IQ.games.validateView(v, ID)), []);
+  v.grid.kind = 'round';
+  assert.ok(IQ.games.validateView(v, ID).some(e => /grid\.kind/.test(e)));
+  delete v.grid.kind;
+  assert.deepEqual(plain(IQ.games.validateView(v, ID)), [], 'kind ixtiyoriy');
+  assert.throws(() => IQ.games.register(Object.assign({}, G, { id: 'x-bad', gridKind: 'round' })), /gridKind/);
+  assert.equal(IQ.games.gridKindOf('yoq'), null);
 });

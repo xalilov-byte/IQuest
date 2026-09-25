@@ -77,6 +77,20 @@ test('ts → ц faqat oʻzlashmada; -siz/-simon/-sa chegarasida тс (F28, F58)'
   assert.equal(tr('politsiyachi'), 'полициячи');
 });
 
+test('T4/T5: toʻxtat + -sa → тс (ц emas); -ksiya → -кция', () => {
+  assert.equal(tr('Toʻxtatsangiz'), 'Тўхтатсангиз');
+  assert.equal(tr("to'xtatsa"), 'тўхтатса');
+  assert.equal(tr('toʻxtatsin'), 'тўхтатсин');
+  assert.equal(tr('Toʻxtatildi'), 'Тўхтатилди');
+  assert.equal(tr('reaksiya'), 'реакция');
+  assert.equal(tr('Reaksiya'), 'Реакция');
+  assert.equal(tr('funksiyasi'), 'функцияси');
+  assert.equal(tr('FUNKSIYA'), 'ФУНКЦИЯ');
+  assert.equal(tr('aksiya'), 'акция');
+  assert.equal(tr('kompensatsiya'), 'компенсация', 'ts qoidasi oʻzgarmagan');
+  assert.equal(tr('ksilofon'), 'ксилофон', 'faqat -ksiya');
+});
+
 test('e → э soʻz boshida va a/o/u/oʻ dan keyin; boshqa joyda е (F58)', () => {
   assert.equal(tr('aeroport'), 'аэропорт');
   assert.equal(tr('Aeroport'), 'Аэропорт');

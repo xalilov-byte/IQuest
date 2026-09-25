@@ -139,7 +139,7 @@ qilishingiz mumkin. IQuest bu imtihonlar yoki ularni oʻtkazuvchi
 tashkilotlar bilan bogʻliq emas.
 
 TILLAR
-Oʻzbekcha (lotin va kirill) va ruscha.
+Oʻzbekcha (lotin va kirill), ruscha va inglizcha.
 
 TUNGI REJIM
 Telefon sozlamasiga ergashadi.
@@ -169,7 +169,7 @@ uchun roʻyxatda soxta natija boʻlmaydi.
 
 IQUEST SERTIFIKATI
 Toʻliq testdan keyin IQuest.uz tomonidan beriladigan sertifikat:
-taxminiy ball, oraliq, sana, ismingiz va noyob tekshirish kodi.
+IQ natijasi, oraliq, sana, ismingiz va noyob tekshirish kodi.
 Bu IQuest testi natijasi — rasmiy yoki klinik IQ hujjati emas.
 ```
 
@@ -239,7 +239,7 @@ IQ-ТЕСТ
 организациями, которые их проводят.
 
 ЯЗЫКИ
-Узбекский (латиница и кириллица) и русский.
+Узбекский (латиница и кириллица), русский и английский.
 
 ТЁМНАЯ ТЕМА
 Следует настройке телефона.
@@ -262,13 +262,13 @@ IQuest — не клинический и не официальный IQ-тес�
 
 ```
 ЛИГА И РЕЙТИНГ
-Еженедельная лига — по очкам активности. Рейтинг — по лучшим
-проверенным результатам. Очки пересчитываются на сервере, поэтому
+Еженедельная лига — по баллам активности. Рейтинг — по лучшим
+проверенным результатам. Баллы пересчитываются на сервере, поэтому
 поддельных результатов в списке нет.
 
 СЕРТИФИКАТ IQUEST
-После полного теста — сертификат от IQuest.uz: ориентировочный балл,
-интервал, дата, ваше имя и уникальный код проверки. Это результат
+После полного теста — сертификат от IQuest.uz: результат IQ,
+диапазон, дата, ваше имя и уникальный код проверки. Это результат
 теста IQuest, а не официальный или клинический документ об IQ.
 ```
 

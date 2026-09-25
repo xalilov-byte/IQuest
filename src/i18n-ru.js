@@ -26,7 +26,7 @@
      IQ natijasi      → результат IQ     («балл IQ» EMAS — «ball» faqat liga)
      Mashq            → Тренировка       · Reyting → Рейтинг
      IQ oʻyinlari     → IQ-игры          · Aql oʻyini → игра для ума
-     Kunlik vazifalar → Задания дня      · Doʻkon → Магазин · Nishonlar → Значки
+     Kunlik vazifalar → Ежедневные задания      · Doʻkon → Магазин · Nishonlar → Значки
      Vitrina          → Витрина          · Oraliq → Диапазон
 
    TAQIQLANGAN (CONTRACT §6, Play siyosati) tarjimada ham: «официальный»,
@@ -112,7 +112,7 @@ window.nzRu = {
   "Yangidan": "Заново",
   "Bugungi mashq": "Тренировка дня",
   "IQ oʻyinlari": "IQ-игры",
-  "Kunlik vazifalar": "Задания дня",
+  "Kunlik vazifalar": "Ежедневные задания",
   "Aql oʻyini": "Игра для ума",
   "Xatolarni tuzating": "Исправьте ошибки",
   "{0} mashqi": "Тренировка: {0}",
@@ -137,7 +137,7 @@ window.nzRu = {
   "Testni toʻxtatish": "Приостановить тест",
   "Mashqdan chiqish": "Выйти из тренировки",
   "Savolni saqlash": "Сохранить вопрос",
-  "Saqlanganlardan olib tashlash": "Убрать из сохранённых",
+  "Saqlanganlardan olib tashlash": "Убрать из закладок",
   "Savol rasmi": "Изображение к вопросу",
   "Variant": "Вариант",
   "Toʻgʻri": "Верно",
@@ -169,7 +169,7 @@ window.nzRu = {
   "xato": "ошибка",
   "yopiq": "скрыта",
   "faol emas": "неактивна",
-  "Juda tez bosildi — ball berilmadi": "Слишком быстрые нажатия — баллы не начислены",
+  "Juda tez bosishlar — ball berilmadi": "Слишком быстрые нажатия — баллы не начислены",
   "Daraja": "Уровень",
 
   /* ── Profil ───────────────────────────────────────────────────────── */
@@ -179,6 +179,8 @@ window.nzRu = {
   "Hali test topshirilmagan": "Тестов ещё нет",
   "Savol turlari": "Типы вопросов",
   "Profilni tahrirlash": "Редактировать профиль",
+  /* Tahrirlash ekrani sarlavhasi (standart 88 px sarlavha, bir qator). */
+  "Tahrirlash": "Профиль",
   "Bio qoʻshing": "Добавьте био",
   "Nishonlar": "Значки",
   "Doʻkon": "Магазин",
@@ -188,7 +190,7 @@ window.nzRu = {
   "Rang": "Цвет",
   "Foydalanuvchi nomi": "Имя пользователя",
   "Bio": "Био",
-  "Oʻzgarishlar saqlanmadi": "Изменения не сохранены",
+  "Oʻzgarishlar saqlanmagan": "Изменения не сохранены",
   "Chiqish": "Выйти",
   "Qolish": "Остаться",
   "Rasm": "Фото",
@@ -273,7 +275,7 @@ window.nzRu = {
   "Yangi test boshlang.": "Начните новый тест.",
   "Xatolar yoʻq": "Ошибок нет",
   "Xato qilgan savollaringiz shu yerda toʻplanadi.": "Здесь соберутся вопросы, в которых вы ошиблись.",
-  "Saqlangan savol yoʻq": "Нет сохранённых вопросов",
+  "Saqlangan savol yoʻq": "В закладках пока пусто",
   "Mashqda xatchoʻp tugmasini bosing.": "В тренировке нажмите на закладку.",
   "Xatolik": "Ошибка",
   "Ilovani qayta oching.": "Откройте приложение заново.",
@@ -326,13 +328,12 @@ window.nzRu = {
   "savollik test": { one: "вопрос в тесте", few: "вопроса в тесте", many: "вопросов в тесте" },
   "savol turi": { one: "тип вопросов", few: "типа вопросов", many: "типов вопросов" },
   "IQ oʻyini": { one: "IQ-игра", few: "IQ-игры", many: "IQ-игр" },
-  "liga darajasi": { one: "уровень лиги", few: "уровня лиги", many: "уровней лиги" },
   "Testni boshlang": "Начните тест",
   "Qiyinlik javoblaringizga moslashadi.": "Сложность подстраивается под ваши ответы.",
   "Natijani koʻring": "Смотрите результат",
   "IQ natijasi va savol turlari boʻyicha tahlil.": "Результат IQ и разбор по типам вопросов.",
   "Mashq qiling": "Тренируйтесь",
-  "Har kuni mashq — ligada yuqoriga.": "Тренировка каждый день — выше в лиге.",
+  "Har kuni mashq — natijangiz oʻsishini kuzating.": "Тренируйтесь каждый день и следите за ростом результата.",
   "Ilovada nima bor": "Что есть в приложении",
   "{0} ta moslashuvchan savol.": {
     one: "{0} адаптивный вопрос.", few: "{0} адаптивных вопроса.", many: "{0} адаптивных вопросов.",
@@ -340,12 +341,12 @@ window.nzRu = {
   "Har bir savol turi alohida, izoh bilan.": "Каждый тип вопросов отдельно, с объяснением.",
   "Xotira, diqqat va tezlik.": "Память, внимание и скорость.",
   "Liga": "Лига",
-  "Haftalik ballar — Boshlovchidan Olmosgacha.": "Баллы за неделю — от Новичка до Алмаза.",
+  "Kerakli savollarni qayta yeching.": "Решайте нужные вопросы повторно.",
   "Xato qilingan savollar takrori.": "Повтор вопросов с ошибками.",
   "Internetsiz": "Без интернета",
   "Hammasi telefonda ishlaydi.": "Всё работает на телефоне.",
   "Bugundan boshlang": "Начните сегодня",
   "Roʻyxatdan oʻtish shart emas.": "Регистрация не нужна.",
   "Interfeys asosi:": "Основа интерфейса:",
-  "IQ test · IQ oʻyinlari · liga": "IQ-тест · IQ-игры · лига",
+  "IQ test · mashq · IQ oʻyinlari": "IQ-тест · тренировка · IQ-игры",
 };

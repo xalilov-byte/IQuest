@@ -245,6 +245,9 @@
     const today = dayKey();
     if (store.lastActiveDay === today) return null;
     const gap = daysBetween(store.lastActiveDay, today);
+    // gap < 0 → soat orqaga surilgan (qoʻlda yoki vaqt mintaqasi): streak
+    // tegilmaydi, oxirgi faol kun ham oʻzgarmaydi (G6).
+    if (gap !== null && gap < 0) return null;
     // gap === 1 → kecha ham faol, ketma-ketlik davom etadi.
     // Boshqa har qanday holatda (birinchi kun yoki uzilgan) — 1 dan.
     store.streak = (gap === 1) ? store.streak + 1 : 1;
@@ -873,6 +876,15 @@
         if (!isNum(lv)) lv = own.length ? meanRule(own) : LEVEL_DEFAULT;
       }
       return Math.max(LEVEL_MIN, Math.min(LEVEL_MAX, Math.round(lv)));
+    },
+
+    /* Faqat SHU turdagi o'z javoblaridan daraja (nishonlar uchun, G1):
+       ≥ 8 ta o'z javobi bo'lmasa — 0 (hali o'ynalmagan tur umumiy sovuq
+       start bahosi bilan «7-daraja» nishonini olmaydi). */
+    ownLevel: function (type) {
+      const own = okType(type) && iqStore.recent[type] ? iqStore.recent[type].slice(-LEVEL_WINDOW) : [];
+      if (own.length < LEVEL_OWN_MIN) return 0;
+      return Math.max(LEVEL_MIN, Math.min(LEVEL_MAX, Math.round(meanRule(own))));
     },
 
     /* Serverga yuborilmagan javoblar soni. Sinxronizatsiya kelganda

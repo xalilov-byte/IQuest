@@ -29,14 +29,16 @@
       yoqmagan eslatma «yoniq» koʻrinardi. Ruxsat faqat foydalanuvchi
       oʻzi yoqqanda soʻraladi (bootstrap.js).
 
-   3. YANGIROQ YOKI BUZILGAN MAʼLUMOT USTIGA YOZILMAYDI.
+   3. YANGIROQ MAʼLUMOT USTIGA YOZILMAYDI.
       Ilova eski versiyaga qaytarilsa diskda `v: 2` turishi mumkin.
       Uni «tushunmadim → boʻsh» deb qayta yozish yangi versiyaning
-      maʼlumotini yoʻq qilardi. Shunday holatda (va JSON buzilgan
-      boʻlsa) sozlamalar faqat XOTIRADA ishlaydi: `readOnly() === true`,
-      diskka hech narsa yozilmaydi. Foydalanuvchi bunday holatda
-      ilovadan avval foydalangan, shuning uchun birinchi kirish va
-      tiplar qayta koʻrsatilmaydi.
+      maʼlumotini yoʻq qilardi. Shunday holatda sozlamalar faqat
+      XOTIRADA ishlaydi: `readOnly() === true`, diskka hech narsa
+      yozilmaydi. BUZILGAN yozuv (JSON emas, `v` yoʻq) esa tiklab
+      boʻlmaydi — standartlar diskka yoziladi va saqlash davom etadi
+      (aks holda sozlamalar abadiy saqlanmasdi). Ikkala holatda ham
+      foydalanuvchi ilovadan avval foydalangan, shuning uchun birinchi
+      kirish va tiplar qayta koʻrsatilmaydi.
 
    `localStorage` umuman ishlamasa ham (maxfiy oyna, joy tugagan) modul
    yiqilmaydi: hammasi xotirada davom etadi.
@@ -181,8 +183,12 @@
     }
     const p = parse(text);
     let raw = p.value;
+    /* Buzilgan yozuv — tiklab boʻlmaydi: standartlar (birinchi kirish
+       oʻtilgan) DISKKA yoziladi va sozlamalar yana saqlanadi. Aks holda
+       bitta buzuq yozuv ilovani abadiy «faqat xotirada» qoldirardi (G5).
+       Faqat YANGIROQ versiya yozuvi tegilmaydi (ro). */
     if (!p.ok || !isObj(raw) || !Number.isInteger(raw.v) || raw.v < 1) {
-      store = readOnlyDefaults(); origin = 'corrupt'; ro = true; return;
+      store = readOnlyDefaults(); origin = 'corrupt'; persist(); return;
     }
     if (raw.v > V) {
       store = readOnlyDefaults(); origin = 'newer'; ro = true; return;
@@ -190,7 +196,7 @@
     let migrated = false;
     while (raw.v < V) {
       const step = MIGRATE[raw.v];
-      if (!step) { store = readOnlyDefaults(); origin = 'corrupt'; ro = true; return; }
+      if (!step) { store = readOnlyDefaults(); origin = 'corrupt'; persist(); return; }
       raw = step(raw);
       migrated = true;
     }
@@ -278,7 +284,7 @@
       commit(sane(next));
     },
 
-    /* true — diskdagi yozuv yangiroq versiyaniki yoki buzilgan:
+    /* true — diskdagi yozuv yangiroq versiyaniki:
        sozlamalar faqat shu sessiya xotirasida ishlaydi. */
     readOnly: function () { return ro; },
 

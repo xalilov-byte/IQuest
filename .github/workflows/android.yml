@@ -153,8 +153,9 @@ jobs:
         run: ./gradlew --no-daemon assembleDebug assembleRelease bundleRelease
 
       # Play siyosati (ARXITEKTURA §13, WP8): birlashtirilgan manifestda
-      # rasm/xotira/kamera ruxsatlari BO'LMASLIGI shart — rasm faqat tizim
-      # tanlagichidan. Biror plagin ularni qo'shsa, build shu yerda yiqiladi.
+      # rasm/xotira/kamera va aniq-alarm ruxsatlari BO'LMASLIGI shart — rasm
+      # faqat tizim tanlagichidan, eslatma aniq alarmsiz. Biror plagin ularni
+      # qo'shsa, build shu yerda yiqiladi.
       - name: Birlashtirilgan manifestda ortiqcha ruxsat yo'qligini tekshirish
         working-directory: android
         run: |
@@ -163,7 +164,7 @@ jobs:
           [ -n "$files" ] || { echo "::error::Birlashtirilgan release manifest topilmadi"; exit 1; }
           bad=0
           for m in $files; do
-            for p in READ_MEDIA_IMAGES READ_EXTERNAL_STORAGE CAMERA; do
+            for p in READ_MEDIA_IMAGES READ_MEDIA_VIDEO READ_MEDIA_VISUAL_USER_SELECTED READ_EXTERNAL_STORAGE WRITE_EXTERNAL_STORAGE CAMERA SCHEDULE_EXACT_ALARM USE_EXACT_ALARM; do
               if grep -q "android.permission.$p\"" "$m"; then
                 echo "::error file=$m::Taqiqlangan ruxsat: $p"; bad=1
               fi

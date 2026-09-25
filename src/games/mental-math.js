@@ -199,7 +199,7 @@
 
   const BTN_START = { id: 'start', label: T('Boshlash', 'Начать', 'Start'), kind: 'primary' };
   const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
-  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_PAUSED = T('Vaqt toʻxtatildi', 'Время остановлено', 'The clock is stopped');
   const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
   const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
   const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');
@@ -207,6 +207,7 @@
   IQ.games.register({
     id: 'mental-math', skill: 'speed',
     langs: ['uz', 'ru', 'en'],
+    gridKind: 'label',
     title: T('Ogʻzaki hisob', 'Устный счёт', 'Mental math'),
     desc: T('60 soniyada iloji boricha koʻp misol yeching', 'Решите как можно больше примеров за 60 секунд', 'Solve as many problems as you can in 60 seconds'),
     rules,
@@ -263,7 +264,9 @@
         { label: T('Toʻgʻri', 'Верно', 'Correct'), value: String(correct) },
         { label: T('Xato', 'Ошибки', 'Mistakes'), value: String(wrong) },
       ];
-      const blankGrid = state => ({ cols: 2, cells: [0, 1, 2, 3].map(() => ({ label: '', state })) });
+      /* kind: 'label' — javob tugmalari hamma fazada 76 px qator (bo'sh
+         setka ham), Boshlash/Pauza'da maydon sakramaydi (L2). */
+      const blankGrid = state => ({ cols: 2, kind: 'label', cells: [0, 1, 2, 3].map(() => ({ label: '', state })) });
       /* Ko'rinishni belgilaydigan hamma narsa: tick shu o'zgargandagina true. */
       const sig = () => [phase, paused(), holding(), qi, chosen, answered, correct, wrong,
         hud()[0].value, running() ? progress() : 0].join('|');
@@ -381,7 +384,7 @@
                   : T('Xato — toʻgʻri javob: ' + num(cq.value), 'Ошибка — верный ответ: ' + num(cq.value), 'Wrong — the answer is ' + num(cq.value)),
             hud: hud(),
             display: text(cq.text + ' = ' + (fb ? num(cq.value) : '?')),
-            grid: { cols: 2, cells },
+            grid: { cols: 2, kind: 'label', cells },
             buttons: [],
             progress: progress(),
           };

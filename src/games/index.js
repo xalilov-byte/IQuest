@@ -43,6 +43,15 @@
     && new Set(l).size === l.length);
 
   /* Oʻyin eʼlon qilgan tillar (nusxa). Nomaʼlum id → []. */
+  /* Setka shakli: 'square' — kvadrat kataklar; 'label' — faqat son/yozuvli
+     javob tugmalari (76 px qator). Oʻyin uni HAR fazada (boʻsh setkada ham)
+     bir xil beradi, ilova esa oʻyin ochilishidanoq gridKind dan biladi. */
+  const GRID_KINDS = ['square', 'label'];
+  function gridKindOf(id) {
+    const g = typeof id === 'string' ? games[id] : id;
+    return g && GRID_KINDS.indexOf(g.gridKind) !== -1 ? g.gridKind : null;
+  }
+
   function langsOf(id) {
     const g = typeof id === 'string' ? games[id] : id;
     if (!g || typeof g !== 'object') return [];
@@ -58,6 +67,7 @@
     if (!isText(g && g.desc, langs)) errs.push('desc');
     if (!g || SKILLS.indexOf(g.skill) === -1) errs.push('skill (' + SKILLS.join('|') + ')');
     if (!g || typeof g.create !== 'function') errs.push('create()');
+    if (g && g.gridKind !== undefined && GRID_KINDS.indexOf(g.gridKind) === -1) errs.push('gridKind (' + GRID_KINDS.join('|') + ')');
     if (errs.length) throw new Error('[IQ.games] noto\'g\'ri o\'yin: ' + errs.join(', '));
     games[g.id] = g;
   }
@@ -98,6 +108,7 @@
         if (CELL_STATES.indexOf(c.state) === -1) e.push('cells[' + i + '].state: ' + c.state);
         if (c.svg !== undefined && (typeof c.svg !== 'string' || c.svg.indexOf('<svg') !== 0)) e.push('cells[' + i + '].svg');
       });
+      if (g.kind !== undefined && GRID_KINDS.indexOf(g.kind) === -1) e.push('grid.kind (' + GRID_KINDS.join('|') + ')');
     }
     if (!Array.isArray(v.buttons) || v.buttons.length > 4) e.push('buttons massiv, ≤ 4');
     else v.buttons.forEach((b, i) => {
@@ -137,6 +148,8 @@
     replay,
     validateView,
     langsOf,
+    gridKindOf,
+    GRID_KINDS: GRID_KINDS.slice(),
     SKILLS,
     CONTENT_LANGS: CONTENT_LANGS.slice(),
   };

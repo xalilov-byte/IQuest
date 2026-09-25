@@ -1,7 +1,7 @@
 {
   "name": "iquest-app",
   "version": "1.1.0",
-  "description": "IQuest — IQ testlari, mantiqiy o'yinlar va sertifikat (Android, offline)",
+  "description": "IQuest — IQ test, mashq va IQ oʻyinlari (Android, offline)",
   "main": "index.js",
   "scripts": {
     "build": "node build.mjs",

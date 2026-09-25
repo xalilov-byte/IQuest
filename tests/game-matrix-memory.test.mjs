@@ -129,7 +129,7 @@ function livePause(inputs, { level = 3, warm = 1300 } = {}) {
   const v = check(g, 'pauza');
   assert.equal(v.paused, true);
   assert.deepEqual(plain(v.buttons.map(b => b.id)), ['resume']);
-  assert.equal(v.prompt.en, 'Paused — the clock is stopped');
+  assert.equal(v.prompt.en, 'The clock is stopped');
   if (v.grid) assert.ok(v.grid.cells.every(c => c.state === 'hidden' && c.label === ''), 'pauzada panjara yashirin');
   const pv = JSON.stringify(v);
   g.tick(warm);                                   // ilova pauzadan keyin bir marta chizadi

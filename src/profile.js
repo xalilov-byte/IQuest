@@ -80,7 +80,7 @@
       len: L('3–20 ta belgi', '3–20 символов', '3–20 characters'),
       start: L('Harf bilan boshlansin', 'Начните с буквы', 'Start with a letter'),
       chars: L('Faqat a–z, 0–9, nuqta va _', 'Только a–z, 0–9, точка и _', 'Only a–z, 0–9, dot and _'),
-      format: L('Nuqta va _ ketma-ket boʻlmasin', 'Точка и _ не подряд', 'No dot or _ in a row'),
+      format: L('Nuqta va _ ketma-ket boʻlmasin', 'Точка и _ не должны идти подряд', 'No consecutive dots or underscores'),
       reserved: L('Bu nomni tanlab boʻlmaydi', 'Это имя недоступно', 'This name isn’t available'),
       bad: L('Nomaqbul soʻz', 'Недопустимое слово', 'Inappropriate word'),
     },
@@ -736,9 +736,9 @@
     });
   }
 
-  async function readHead(file, E) {
+  async function readHead(file, E, bytes) {
     try {
-      const part = typeof file.slice === 'function' ? file.slice(0, 256 * 1024) : file;
+      const part = typeof file.slice === 'function' ? file.slice(0, bytes || 256 * 1024) : file;
       if (part && typeof part.arrayBuffer === 'function') return new Uint8Array(await part.arrayBuffer());
       if (E.FileReader) return new Uint8Array(await readerPromise(E, part, 'readAsArrayBuffer'));
     } catch (e) { /* bosh oʻqilmadi — dekoder hal qiladi */ }
@@ -823,13 +823,26 @@
       if (file.size > MAX_FILE) return { ok: false, err: 'size' };
       if (file.size <= 0) return { ok: false, err: 'decode' };
 
-      const head = await readHead(file, E);
-      const meta = head ? imageMeta(head) : null;
+      let head = await readHead(file, E);
+      let meta = head ? imageMeta(head) : null;
       if (meta && head.length >= 12 && (meta.type === null || meta.type === 'heic')) return { ok: false, err: 'decode' };
+      /* JPEG oʻlchami (SOF) birinchi 256 KB dan keyin boʻlishi mumkin (katta
+         EXIF/APP bloklari). Unda butun fayl (≤ MAX_FILE) qayta koʻriladi —
+         aks holda 50 MP chegarasi chetlab oʻtilardi (S1). */
+      if (meta && meta.type === 'jpeg' && !(meta.w > 0 && meta.h > 0) && file.size > head.length) {
+        const all = await readHead(file, E, MAX_FILE);
+        const m2 = all ? imageMeta(all) : null;
+        if (m2 && m2.type === 'jpeg') { head = all; meta = m2; }
+      }
       if (meta && meta.w * meta.h > MAX_PIXELS) return { ok: false, err: 'size' };
 
       const dec = await decode(file, E);
       if (!dec) return { ok: false, err: 'decode' };
+      /* Oxirgi toʻsiq: sarlavha aldasa ham dekodlangan oʻlcham tekshiriladi. */
+      if (dec.w * dec.h > MAX_PIXELS) {
+        if (dec.src && typeof dec.src.close === 'function') { try { dec.src.close(); } catch (e) { /* jim */ } }
+        return { ok: false, err: 'size' };
+      }
       try {
         const o = manualOrientation(meta, dec);
         const W = o >= 5 ? dec.h : dec.w, H = o >= 5 ? dec.w : dec.h;

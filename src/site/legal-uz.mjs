@@ -89,6 +89,10 @@ shu sayt uchun ajratilgan xotirasida) turadi. Bizga ular koʻrinmaydi.</p>
         <td>Har ochilishda qayta tanlamaslik uchun</td></tr>
   </tbody>
 </table>
+<p>Android oʻzining zaxira nusxa tizimi orqali ilova maʼlumotini shaxsiy
+Google hisobingizga saqlashi va yangi telefonda tiklashi mumkin. Bu
+Android funksiyasi: biz bu nusxani koʻrmaymiz. Uni telefon sozlamalarida
+oʻchirishingiz mumkin.</p>
 
 <h2>5. Internet</h2>
 <p><strong>Ilovaning ushbu versiyasi internetga soʻrov yubormaydi.</strong>
@@ -335,6 +339,10 @@ tanlang.</p>
       tozalash</strong> — hammasi, sozlamalar bilan birga, oʻchadi;</li>
   <li>yoki ilovani telefondan oʻchirib tashlang.</li>
 </ol>
+<p>Telefoningizda Android zaxira nusxasi yoqilgan boʻlsa, ilova
+maʼlumoti shaxsiy Google hisobingizdagi nusxada ham boʻlishi mumkin va
+yangi telefonda tiklanadi. Bu nusxani biz koʻrmaymiz; uni telefon
+sozlamalaridagi zaxira boʻlimida oʻchirishingiz mumkin.</p>
 
 <h2>Brauzerda (sayt versiyasi)</h2>
 <p>Brauzer sozlamalarida shu sayt uchun saqlangan maʼlumotni

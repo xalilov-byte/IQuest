@@ -79,7 +79,7 @@
 
   const BTN_START = { id: 'start', label: T('Boshlash', 'Начать', 'Start'), kind: 'primary' };
   const BTN_RESUME = { id: 'resume', label: T('Davom etish', 'Продолжить', 'Resume'), kind: 'primary' };
-  const P_PAUSED = T('Pauza — vaqt toʻxtatildi', 'Пауза — время остановлено', 'Paused — the clock is stopped');
+  const P_PAUSED = T('Vaqt toʻxtatildi', 'Время остановлено', 'The clock is stopped');
   const P_READY = T('Tayyorlaning…', 'Приготовьтесь…', 'Get ready…');
   const P_OVER = T('Oʻyin tugadi', 'Игра окончена', 'Game over');
   const BOT = T('Juda tez bosishlar — ball berilmadi', 'Слишком быстрые нажатия — баллы не начислены', 'Taps too fast — no points awarded');
@@ -125,6 +125,7 @@
   IQ.games.register({
     id: 'schulte', skill: 'attention',
     langs: ['uz', 'ru', 'en'],
+    gridKind: 'square',
     title: T('Shulte jadvali', 'Таблица Шульте', 'Schulte table'),
     desc: T('Sonlarni tartib bilan imkon qadar tez toping', 'Находите числа по порядку как можно быстрее', 'Find the numbers in order as fast as you can'),
     rules, order,
@@ -192,7 +193,8 @@
         else if (i === badCell && last < badUntil) state = 'bad';
         return { label: String(num), state };
       });
-      const blankGrid = state => ({ cols: cfg.side, cells: Array.from({ length: N }, () => ({ label: '', state })) });
+      /* kind: 'square' — Shulte jadvali har fazada kvadrat kataklar (L2). */
+      const blankGrid = state => ({ cols: cfg.side, kind: 'square', cells: Array.from({ length: N }, () => ({ label: '', state })) });
 
       /* HUD — hamma fazada bir xil uyalar. Vaqt: joriy (yoki tugagan)
          jadvalning faol vaqti. */
@@ -293,7 +295,7 @@
               hud: hud(),
               display: bot ? Object.assign({ kind: 'text' }, BOT)
                 : { kind: 'text', uz: 'Xato bosishlar: ' + errors, ru: 'Ошибочных нажатий: ' + errors, en: 'Wrong taps: ' + errors },
-              grid: { cols: cfg.side, cells: layouts[ti].map(num => ({ label: String(num), state: 'disabled' })) },
+              grid: { cols: cfg.side, kind: 'square', cells: layouts[ti].map(num => ({ label: String(num), state: 'disabled' })) },
               buttons: [], progress: 1,
             };
           }
@@ -312,13 +314,13 @@
                 ? T('Vaqt tugadi — ' + s.found + ' / ' + N + ' topildi', 'Время вышло — найдено ' + s.found + ' из ' + N, 'Time’s up — found ' + s.found + ' of ' + N)
                 : T('Jadval tugadi! Keyingisi hozir boshlanadi', 'Таблица пройдена! Сейчас начнётся следующая', 'Table complete! The next one starts now'),
               hud: hud(), display: null,
-              grid: { cols: cfg.side, cells: layouts[ti].map(num => ({ label: String(num), state: 'disabled' })) },
+              grid: { cols: cfg.side, kind: 'square', cells: layouts[ti].map(num => ({ label: String(num), state: 'disabled' })) },
               buttons: [], progress: progress(),
             };
           }
           return {
             phase, paused: false, prompt: rule, hud: hud(), display: null,
-            grid: { cols: cfg.side, cells: cellsView() },
+            grid: { cols: cfg.side, kind: 'square', cells: cellsView() },
             buttons: [], progress: progress(),
           };
         },

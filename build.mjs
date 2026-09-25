@@ -689,8 +689,15 @@ const LANGS = ['uz', 'uz-cyrl', 'ru'].concat(EN_ON ? ['en'] : []);
    ilovadan yashirib boʻlmaydi. Maʼlumotni RLS himoya qiladi —
    supabase/README.md §2. */
 const supaCfg = JSON.parse(read(join('supabase', 'config.json')));
-const supaSnippet = `window.nzSupabase = ${JSON.stringify({
-  url: supaCfg.url, publishableKey: supaCfg.publishableKey })};`;
+/* Mobil ilova (APK) OFFLINE: unga Supabase sozlamasi umuman joylanmaydi —
+   config.json toʻldirilsa ham APK jimgina tarmoqqa chiqa olmaydi (S3).
+   Sinxronizatsiya qoʻshilganda bu qaror ongli ravishda oʻzgartiriladi. */
+const supaSnippet = CFG.app && !CFG.landing
+  ? 'window.nzSupabase = null;'
+  : `window.nzSupabase = ${JSON.stringify({ url: supaCfg.url, publishableKey: supaCfg.publishableKey })};`;
+if (CFG.app && !CFG.landing && supaCfg.url) {
+  console.warn('[build] supabase/config.json da url bor, lekin mobil build OFFLINE — nzSupabase = null');
+}
 
 /* Saytga tegishli sozlama. Faqat OMMAVIY qiymatlar (bot nomi, domen) —
    ular baribir sahifa manbasida ko'rinadi. Aloqa manzili bu yerga
@@ -749,6 +756,24 @@ const viewport = CFG.admin
 
 const title = CFG.admin ? 'IQuest — admin' : 'IQuest';
 
+/* Content-Security-Policy (S2). Hamma skript va uslub ichki (inline),
+   rasmlar data: URI, shriftlar yonidagi ./fonts/ dan. Tarmoq: mobilda
+   HECH QAYERGA; saytda faqat Supabase (url berilgan boʻlsa). Admin
+   panel CSP siz (ish quroli, alohida domen). */
+const supaOrigin = (() => { try { return supaCfg.url ? new URL(supaCfg.url).origin : ''; } catch (e) { return ''; } })();
+const CSP = CFG.admin ? '' : [
+  "default-src 'none'",
+  "script-src 'unsafe-inline'",
+  "style-src 'unsafe-inline'",
+  'img-src data:',
+  "font-src 'self'",
+  'connect-src ' + (CFG.landing && supaOrigin ? supaOrigin : "'none'"),
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join('; ');
+const cspMeta = CSP ? `<meta http-equiv="Content-Security-Policy" content="${CSP}">\n` : '';
+
 /* Skriptlar tartibi — ARXITEKTURA §10.5. Har biri alohida <script>:
    bitta moduldagi yuklanish xatosi qolganlarini toʻxtatmaydi. Boshidagi
    belgi (/* ── src/… ── *\/) tartibni build testida va devtoolsʼda
@@ -756,6 +781,9 @@ const title = CFG.admin ? 'IQuest — admin' : 'IQuest';
 const SCRIPTS = [
   ['src/i18n-ru.js',  read(join(SRC, 'i18n-ru.js'))],
   ['src/i18n-en.js',  optional('i18n-en.js')],
+  /* Darvoza i18n.js DAN OLDIN: init() dagi detect() qurilma tili 'en'
+     ni koʻrsin (nzSite keyinroq keladi, G3). */
+  ['nzLangs',         `window.nzLangs = ${JSON.stringify(LANGS)};`],
   ['src/i18n.js',     i18n],
   ['src/runtime.js',  runtime],
   ['src/feedback.js', feedback],
@@ -785,7 +813,7 @@ const html = `<!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="${viewport}">
+${cspMeta}<meta name="viewport" content="${viewport}">
 <meta name="theme-color" content="#F5F3FF">
 <meta name="color-scheme" content="light dark">
 <title>${title}</title>

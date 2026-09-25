@@ -6,7 +6,7 @@
    (ARXITEKTURA §8.4, pages.mjs → legalReady).
 
    Atamalar — ARXITEKTURA §8.5 glossariysi: points, coins, streak,
-   Beginner … Diamond, Daily quests, My mistakes / Saved, IQ games,
+   Beginner … Diamond, Daily quests, Mistakes / Saved, IQ games,
    Shop / Badges / Showcase, Settings, Range.
    Uslub: rasmiy, qisqartmalarsiz, apostrofsiz (lintPage tekshiradi).
    §6 taqiqlari: official, certified, accredited, Mensa, percentile,
@@ -91,13 +91,16 @@ version, in the browser storage for this site). We cannot see it.</p>
     <tr><td>Unfinished test</td>
         <td>To resume the test where you left off if the app
             closes</td></tr>
-    <tr><td>The My mistakes and Saved lists</td>
+    <tr><td>The Mistakes and Saved lists</td>
         <td>To solve those questions again</td></tr>
     <tr><td>Language, theme, sound, vibration and reminder
             settings</td>
         <td>So you do not have to choose them again each time</td></tr>
   </tbody>
 </table>
+<p>Android may back up app data to your own Google account and restore it
+on a new phone. This is an Android feature: we do not have access to this
+backup. You can turn it off in your phone settings.</p>
 
 <h2>5. Internet</h2>
 <p><strong>This version of the app makes no network requests.</strong>
@@ -329,7 +332,7 @@ Delete</strong></p>
       records;</li>
   <li>points, weekly points, league history and your streak;</li>
   <li>coins, purchases, daily quests and badges;</li>
-  <li>the My mistakes and Saved lists and the answer log.</li>
+  <li>the Mistakes and Saved lists and the answer log.</li>
 </ul>
 <p>What stays: language, theme, sound and reminder settings, and a note
 that you have finished the introduction (so the welcome bonus is not
@@ -341,6 +344,10 @@ given again). To delete these too, use one of the methods below.</p>
       deletes everything, including settings;</li>
   <li>or uninstall the app.</li>
 </ol>
+<p>If Android backup is turned on for your phone, app data may also be
+kept in a backup in your own Google account and restored on a new phone.
+We do not have access to this backup; you can delete it in the backup
+section of your phone settings.</p>
 
 <h2>In a browser (web version)</h2>
 <p>In your browser settings, clear the data stored for this site.</p>

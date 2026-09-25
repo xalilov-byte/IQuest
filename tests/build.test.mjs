@@ -79,7 +79,7 @@ const addMethod = (dir, code) => edit(dir, 'src/Main.dc.html', s => {
 });
 
 const V11 = ['i18n-en', 'settings', 'catalog', 'icons', 'art', 'avatars', 'profile', 'wallet', 'badges', 'league'];
-const ORDER = ['src/i18n-ru.js', 'src/i18n-en.js', 'src/i18n.js', 'src/runtime.js', 'src/feedback.js',
+const ORDER = ['src/i18n-ru.js', 'src/i18n-en.js', 'nzLangs', 'src/i18n.js', 'src/runtime.js', 'src/feedback.js',
                'src/notify.js', 'nzSite', 'src/settings.js', 'src/progress.js', 'src/catalog.js',
                'src/icons.js', 'src/art.js', 'src/avatars.js', 'src/profile.js', 'src/wallet.js',
                'src/badges.js', 'src/league.js', 'IQ bundle', 'Main (logic)', 'src/data.js', 'src/bootstrap.js'];
@@ -280,6 +280,36 @@ test('EN darvozasi: bitta shart buzilsa yopiq (build yiqilmaydi)', opts, () => {
   }
 });
 
+/* G3: ingliz tilidagi qurilma birinchi ochilishda en ni oladi — buning uchun
+   window.nzLangs i18n.js DAN OLDIN turadi (nzSite keyinroq keladi). */
+test('EN darvozasi ochiq: en qurilma birinchi ochilishda en ni oladi (nzLangs i18n.js dan oldin)', opts, async () => {
+  const vm = await import('node:vm');
+  const run = (html, language) => {
+    const store = {};
+    const ctx = { navigator: { language }, localStorage: { getItem: k => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); } },
+                  document: { documentElement: { setAttribute() {} } } };
+    ctx.window = ctx;
+    vm.createContext(ctx);
+    for (const name of ['src/i18n-ru.js', 'src/i18n-en.js', 'nzLangs', 'src/i18n.js']) {
+      const head = `<script>\n/* ── ${name} ── */\n`;
+      const i = html.indexOf(head);
+      assert.ok(i !== -1, name + ' skripti yoʻq');
+      vm.runInContext(html.slice(i + head.length, html.indexOf('\n</script>', i)), ctx, { filename: name });
+    }
+    return ctx.nzI18n.get();
+  };
+  const open = build(gateFixture());
+  assert.equal(open.status, 0, open.out);
+  assert.equal(run(open.html, 'en-US'), 'en');
+  assert.equal(run(open.html, 'ru-RU'), 'ru');
+  assert.equal(run(open.html, 'uz-Latn-UZ'), 'uz');
+  const shut = gateFixture();
+  put(shut, 'src/site/pages.mjs', 'export function legalReady() { return false; }\n');
+  const closed = build(shut);
+  assert.equal(closed.status, 0, closed.out);
+  assert.equal(run(closed.html, 'en-US'), 'uz', 'darvoza yopiq — en yoʻq');
+});
+
 test('EN darvozasi: allPages zaxirasi en yo\'llarini taniydi; --lang-en majburan ochadi', opts, () => {
   let dir = gateFixture();
   put(dir, 'src/site/pages.mjs', 'export function allPages() { return [{ lang: "en", slug: "shartlar" }, ' +
@@ -302,4 +332,25 @@ test('uchala build (mobile, web, admin) haqiqiy daraxtda yig\'iladi', opts, () =
     assert.equal(r.status, 0, `${t}: ${r.out}`);
     assert.equal(nzSite(r.html).version, '1.1.0');
   }
+});
+
+/* S2/S3: mobil build CSP bilan va Supabase sozlamasisiz (offline). */
+test('S2/S3: mobil build — CSP meta (tarmoq yoʻq), nzSupabase = null hatto config toʻla boʻlsa ham', opts, () => {
+  const dir = sandbox();
+  put(dir, 'supabase/config.json', JSON.stringify({ url: 'https://abc.supabase.co', publishableKey: 'pk_test' }));
+  const r = build(dir);
+  assert.equal(r.status, 0, r.out);
+  const m = /<meta http-equiv="Content-Security-Policy" content="([^"]+)">/.exec(r.html);
+  assert.ok(m, 'CSP meta yoʻq');
+  const csp = m[1];
+  for (const d of ["default-src 'none'", "script-src 'unsafe-inline'", "style-src 'unsafe-inline'", 'img-src data:',
+                   "font-src 'self'", "connect-src 'none'", "object-src 'none'", "base-uri 'none'", "form-action 'none'"]) {
+    assert.ok(csp.includes(d), 'CSP da yoʻq: ' + d);
+  }
+  assert.ok(r.html.indexOf(m[0]) < r.html.indexOf('<style>'), 'CSP uslub va skriptlardan oldin');
+  assert.match(r.html, /window\.nzSupabase = null;/);
+  assert.doesNotMatch(r.html, /abc\.supabase\.co|pk_test/, 'kalit APK ga kirmaydi');
+  const w = build(dir, ['--target=web']);
+  assert.equal(w.status, 0, w.out);
+  assert.match(w.html, /connect-src https:\/\/abc\.supabase\.co/, 'sayt faqat Supabase ga ulanadi');
 });
