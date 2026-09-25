@@ -3,14 +3,14 @@
 
    Og'zaki savol qo'lda yoziladi, shuning uchun bu yerda ikki narsa
    tekshiriladi:
-     1. KONTENT (JSON) — sxema, ikki til mosligi, variantlar takrorlanmasligi,
+     1. KONTENT (JSON) — sxema, uch til (uz, ru, en) mosligi, variantlar takrorlanmasligi,
         darajalar qamrovi, to'g'ri javob indeksining taqsimoti, imlo
         qoidalari (oʻ/gʻ — ʻ bilan, tutuq — ʼ bilan). Bir ma'nolilikni kod
         tekshira olmaydi — buni odam qiladi (`reviewed`). Lekin odam
         ko'rishidan oldin mexanik xatolar shu yerda ushlanadi.
      2. GENERATOR — deterministiklik, validateItem, to'g'ri javob o'rnining
-        tekisligi, aralashtirishda uz/ru variantlar bir-biridan
-        ajralib ketmasligi.
+        tekisligi, aralashtirishda uz/ru/en variantlar bir-biridan
+        ajralib ketmasligi, `langs` va `en` (ARXITEKTURA §8).
 
    Build faylni `window.IQ_VERBAL` sifatida bundle'ga qo'yadi; test ham
    xuddi shunday: JSON diskdan o'qiladi va vm muhitida window.IQ_VERBAL ga
@@ -67,15 +67,24 @@ function uniformBad(positions, k, tol = 0.04) {
   return bad;
 }
 
-/* "Ortiqchasini top" stimuli — variantlar ko'rsatilgan tartibda. */
-const joinList = opts => opts.join(opts.some(o => o.includes(',') || o.includes(' — ')) ? '; ' : ', ');
+/* "Ortiqchasini top" stimuli — variantlar ro'yxati EMAS (u ekranda ikki
+   marta chiqardi), qoida jumlasi: tur (so'z / juftlik) va variantlar soniga
+   qarab bittadan. Juftlik: uz/ru — "a — b", en — "a : b". */
+const ODD_STIM = {
+  w4: { uz: 'Uchtasining umumiy belgisi bor.', ru: 'У трёх из них есть общий признак.', en: 'Three of them have something in common.' },
+  w5: { uz: 'Toʻrttasining umumiy belgisi bor.', ru: 'У четырёх из них есть общий признак.', en: 'Four of them have something in common.' },
+  p5: { uz: 'Toʻrt juftlikda bogʻlanish bir xil.', ru: 'В четырёх парах связь одинаковая.', en: 'Four pairs are linked in the same way.' },
+};
+const isPairs = it => it.uz.options.every(o => o.includes(' — '));
+const oddStim = it => ODD_STIM[(isPairs(it) ? 'p' : 'w') + it.uz.options.length];
+const LANGS = ['uz', 'ru', 'en'];
 
 /* Solishtirish uchun normallash: katta-kichik harf, bo'shliq, apostrof turlari. */
 const norm = s => s.toLowerCase().replace(/[ʻʼ'’`‘]/g, "'").replace(/\s+/g, ' ').trim();
 
 /* ══ KONTENT ═══════════════════════════════════════════════════════════ */
 
-test('kontent: sxema — kalitlar, turlar, darajalar, ikki til, variantlar soni, correct', () => {
+test('kontent: sxema — kalitlar, turlar, darajalar, uch til, variantlar soni, correct', () => {
   assert.equal(DATA.version, 1);
   assert.ok(Array.isArray(ITEMS));
   assert.ok(ITEMS.length >= 120, 'kamida 120 ta savol: ' + ITEMS.length);
@@ -87,7 +96,7 @@ test('kontent: sxema — kalitlar, turlar, darajalar, ikki til, variantlar soni,
     keys.add(it.key);
     assert.ok(KINDS.includes(it.kind), where + ': kind ' + it.kind);
     assert.ok(Number.isInteger(it.level) && it.level >= 1 && it.level <= 10, where + ': level');
-    for (const lang of ['uz', 'ru']) {
+    for (const lang of LANGS) {
       const s = it[lang];
       assert.ok(s && typeof s.prompt === 'string' && s.prompt.trim(), where + ': ' + lang + '.prompt');
       assert.ok(typeof s.stimulus === 'string' && s.stimulus.trim(), where + ': ' + lang + '.stimulus');
@@ -97,11 +106,17 @@ test('kontent: sxema — kalitlar, turlar, darajalar, ikki til, variantlar soni,
       assert.ok(typeof it.explain[lang] === 'string' && it.explain[lang].trim(), where + ': explain.' + lang);
     }
     assert.equal(it.uz.options.length, it.ru.options.length, where + ': uz va ru variantlar soni bir xil');
+    assert.equal(it.en.options.length, it.uz.options.length, where + ': en va uz variantlar soni bir xil');
     assert.ok(Number.isInteger(it.correct) && it.correct >= 0 && it.correct < it.uz.options.length,
       where + ': correct indeks');
     assert.equal(it.reviewed, false, where + ': odam ko\'rmaguncha reviewed: false');
+    assert.equal(it.reviewed_en, false, where + ': inglizchani odam ko\'rmaguncha reviewed_en: false');
     assert.deepEqual(Object.keys(it).sort(),
-      ['correct', 'explain', 'key', 'kind', 'level', 'reviewed', 'ru', 'uz'], where + ': ortiqcha/yetishmagan maydon');
+      ['correct', 'en', 'explain', 'key', 'kind', 'level', 'reviewed', 'reviewed_en', 'ru', 'uz'], where + ': ortiqcha/yetishmagan maydon');
+    assert.deepEqual(Object.keys(it.explain).sort(), ['en', 'ru', 'uz'], where + ': explain tillari');
+    for (const lang of LANGS) {
+      assert.deepEqual(Object.keys(it[lang]).sort(), ['options', 'prompt', 'stimulus'], where + ': ' + lang + ' maydonlari');
+    }
   }
   /* Kalitlar ketma-ket (v001, v002, …): kalit qayta ishlatilmaydi, lekin
      o'rtasida teshik ham qolmasin — o'chirilgan savol "reviewed" orqali
@@ -110,16 +125,16 @@ test('kontent: sxema — kalitlar, turlar, darajalar, ikki til, variantlar soni,
   nums.forEach((n, i) => assert.equal(n, i + 1, 'kalitlar ketma-ket: v' + String(i + 1).padStart(3, '0')));
 });
 
-test('kontent: bir savol ichida variantlar takrorlanmaydi (har ikki tilda) va stimulda javob yo\'q', () => {
+test('kontent: bir savol ichida variantlar takrorlanmaydi (har uch tilda) va stimulda javob yo\'q', () => {
   for (const it of ITEMS) {
-    for (const lang of ['uz', 'ru']) {
+    for (const lang of LANGS) {
       const o = it[lang].options.map(norm);
       assert.equal(new Set(o).size, o.length, it.key + ': ' + lang + ' variantlari takrorlangan: ' + o.join(' | '));
     }
     /* O'xshatishda javob stimulda allaqachon turgan bo'lmasin
        ("A : B = C : ?" va javob — C). */
     if (it.kind === 'analogy') {
-      for (const lang of ['uz', 'ru']) {
+      for (const lang of LANGS) {
         const terms = it[lang].stimulus.split(/\s*[:=]\s*/).map(norm);
         assert.ok(!terms.includes(norm(it[lang].options[it.correct])), it.key + ': javob stimulda bor');
       }
@@ -160,8 +175,20 @@ test('kontent: to\'g\'ri javob indeksi JSON\'da ham qiyshiq emas', () => {
   }
 });
 
-test('kontent: til va imlo — uz lotinda (oʻ/gʻ — ʻ, tutuq — ʼ), ru kirillda, tinish belgilari', () => {
-  const texts = it => ['uz', 'ru'].map(lang => [lang,
+/* en ga oʻzbekcha/ruscha matn sizib oʻtmasin: tez-tez uchraydigan
+   oʻzbekcha soʻzlar (butun soʻz sifatida). */
+const UZ_WORDS = /\b(va|emas|bilan|esa|lekin|demak|qaysi|kerak|boʻl\w*|soʻz|juftlik|ortiqcha|yoki|hamma|barcha)\b/i;
+
+test('kontent: savol matni qisqa — prompt ≤ 60 belgi (har tilda)', () => {
+  const long = [];
+  for (const it of ITEMS) for (const lang of LANGS) {
+    if (it[lang].prompt.length > 60) long.push(it.key + ' ' + lang + ' (' + it[lang].prompt.length + '): ' + it[lang].prompt);
+  }
+  assert.deepEqual(long, []);
+});
+
+test('kontent: til va imlo — uz lotinda (oʻ/gʻ — ʻ, tutuq — ʼ), ru kirillda, en ASCII, tinish belgilari', () => {
+  const texts = it => LANGS.map(lang => [lang,
     [it[lang].prompt, it[lang].stimulus, ...it[lang].options, it.explain[lang]]]);
   for (const it of ITEMS) {
     for (const [lang, arr] of texts(it)) {
@@ -176,6 +203,10 @@ test('kontent: til va imlo — uz lotinda (oʻ/gʻ — ʻ, tutuq — ʼ), ru kir
           assert.ok(!/['’‘`]/.test(s), 'uz matnda oddiy apostrof — oʻ/gʻ uchun ʻ, tutuq uchun ʼ: ' + w);
           assert.ok(!/[^oOgG]ʻ/.test(s), 'ʻ faqat o/g dan keyin: ' + w);
           assert.ok(!/[oOgG]ʼ/.test(s), 'oʼ/gʼ — ʻ bo\'lishi kerak: ' + w);
+        } else if (lang === 'en') {
+          assert.ok(/^[\x20-\x7e]+$/.test(s), 'en matnda ASCII bo\'lmagan belgi (kirill, ʻ, —, «»): ' + w);
+          assert.ok(!UZ_WORDS.test(s), 'en matnda oʻzbekcha soʻz: ' + w);
+          assert.ok(!/  |\s'|'\s/.test(s.replace(/s' /g, '')), 'en: apostrof atrofida bo\'shliq: ' + w);
         } else {
           assert.ok(!/[a-z]/i.test(s), 'ru matnda lotin harfi: ' + w);
           assert.ok(!/[ʻʼ'’]/.test(s), 'ru matnda apostrof: ' + w);
@@ -191,18 +222,40 @@ test('kontent: til va imlo — uz lotinda (oʻ/gʻ — ʻ, tutuq — ʼ), ru kir
   }
 });
 
-test('kontent: tur shakllari — o\'xshatish "A : B = C : ?", ortiqcha — stimul variantlardan', () => {
+test('kontent: tur shakllari — o\'xshatish "A : B = C : ?", ortiqcha — stimul qoida jumlasi (variantlar takrori emas)', () => {
   for (const it of ITEMS) {
     if (it.kind === 'analogy') {
-      for (const lang of ['uz', 'ru']) {
+      for (const lang of LANGS) {
         assert.match(it[lang].stimulus, /^[^:=]+ : [^:=]+ = [^:=]+ : \?$/, it.key + ' ' + lang + ': ' + it[lang].stimulus);
       }
     }
     if (it.kind === 'odd') {
-      for (const lang of ['uz', 'ru']) {
-        assert.equal(it[lang].stimulus, joinList(it[lang].options), it.key + ' ' + lang + ': stimul = variantlar ro\'yxati');
+      const want = oddStim(it);
+      assert.ok(want, it.key + ': ortiqcha savol shakli (so\'z 4/5 yoki juftlik 5)');
+      for (const lang of LANGS) {
+        assert.equal(it[lang].stimulus, want[lang], it.key + ' ' + lang + ': stimul — qoida jumlasi');
+        /* Stimulda hech bir variant so'zi yo'q — ro'yxat ekranda ikki marta chiqmaydi. */
+        for (const o of it[lang].options) assert.ok(!norm(it[lang].stimulus).includes(norm(o)), it.key + ' ' + lang + ': stimulda variant: ' + o);
       }
+      /* Juftlik — hamma tilda juftlik. */
+      assert.ok(it.ru.options.every(o => o.includes(' — ')) === isPairs(it), it.key + ': ru juftlik shakli');
+      assert.ok(it.en.options.every(o => / : /.test(o)) === isPairs(it), it.key + ': en juftlik shakli "a : b"');
     }
+  }
+});
+
+test('kontent: en — moslashtirilgan, uz/ru dan ko\'chirilmagan; uz — kirillga o\'girishga xavfsiz imlo', () => {
+  for (const it of ITEMS) {
+    assert.notEqual(it.en.prompt, it.uz.prompt, it.key + ': en.prompt = uz');
+    assert.notEqual(it.explain.en, it.explain.uz, it.key + ': explain.en = uz');
+    assert.ok(it.en.options.some((o, i) => o !== it.uz.options[i]), it.key + ': en variantlar uz dan ko\'chirilgan');
+    /* uz → uz-cyrl avtomatik (src/i18n.js): unli + "e" (aeroport → аеропорт)
+       va morfema chegarasidagi "ts" (itsimon → ицимон) buziladi. "ts" faqat
+       ц bilan yoziladigan ma'lum so'zlarda. */
+    const uz = [it.uz.prompt, it.uz.stimulus, ...it.uz.options, it.explain.uz].join(' ');
+    assert.ok(!/[aeiouAEIOU]e|[oO]ʻe/.test(uz), it.key + ': uz da unli + e: ' + (uz.match(/\S*([aeiou]|oʻ)e\S*/i) || [])[0]);
+    const ts = (uz.match(/\S*ts\S*/gi) || []).filter(w => !/politsiya|retsept|trapetsiya|shprits/i.test(w));
+    assert.deepEqual(ts, [], it.key + ': uz da "ts"');
   }
 });
 
@@ -211,11 +264,11 @@ test('kontent: izoh to\'g\'ri javobni aytadi (tur bo\'yicha)', () => {
      Qo'shimchalar (suzmoq → suzib, плавать → плаванием) tufayli so'zning
      3 harfli boshi qidiriladi.
      Bu izoh boshqa savoldan ko'chirib qo'yilmaganini ushlaydi. */
-  const stem = w => norm(w).replace(/[«»"]/g, '').split(/[\s—-]+/).filter(x => x.length >= 3)
+  const stem = w => norm(w).replace(/[«»"]/g, '').split(/[\s—:-]+/).filter(x => x.length >= 3)
     .map(x => x.slice(0, x.length <= 4 ? x.length - 1 : 3));
   const miss = [];
   for (const it of ITEMS) {
-    for (const lang of ['uz', 'ru']) {
+    for (const lang of LANGS) {
       const ans = it[lang].options[it.correct];
       const ex = norm(it.explain[lang]);
       const st = stem(ans);
@@ -238,11 +291,46 @@ function getCorpus() {
   return corpus;
 }
 
-test('ro\'yxatdan o\'tgan: IQ.types() da "verbal", label uz/ru', () => {
+test('ro\'yxatdan o\'tgan: IQ.types() da "verbal", label uz/ru/en, langs', () => {
   assert.ok(IQ.types().includes('verbal'));
   assert.equal(G.type, 'verbal');
   assert.equal(G.label.uz, 'Ogʻzaki mantiq');
-  assert.equal(G.label.ru, 'Вербальная логика');
+  assert.equal(G.label.ru, 'Словесная логика');
+  assert.equal(G.label.en, 'Verbal reasoning');
+  /* Hamma yozuvda en bor — 'en' e'lon qilinadi (ARXITEKTURA §8.4). */
+  assert.deepEqual(plain(G.langs), ['uz', 'ru', 'en']);
+  if (typeof IQ.langsOf === 'function') assert.deepEqual(plain(IQ.langsOf('verbal')), ['uz', 'ru', 'en']);
+});
+
+test('en "hammasi yoki hech narsa": bitta yozuvda en yo\'q/buzuq bo\'lsa — langs uz/ru, hovuz va ID o\'zgarmaydi', () => {
+  const cut = (mut) => {
+    const items = JSON.parse(JSON.stringify(ITEMS));
+    mut(items.find(it => it.key === 'v010'));
+    return realm({ version: 1, items });
+  };
+  const variants = [
+    it => { delete it.en; },
+    it => { it.en = null; },
+    it => { it.en.options.pop(); },
+    it => { it.en.prompt = ''; },
+    it => { delete it.explain.en; },
+  ];
+  for (const mut of variants) {
+    const iq = cut(mut);
+    const g = iq.generator('verbal');
+    assert.deepEqual(plain(g.langs), ['uz', 'ru'], String(mut));
+    for (const L of LEVELS) {
+      for (let s = 0; s < 40; s++) {
+        const a = plain(g.generate(seedOf(s), L)), b = plain(G.generate(seedOf(s), L));
+        /* Tilga bog'liq filtrlash yo'q: yozuv va javob o'rni bir xil. */
+        assert.equal(a.key, b.key);
+        assert.equal(a.correct, b.correct);
+        assert.deepEqual(a.options.map(o => o.uz), b.options.map(o => o.uz));
+        assert.deepEqual(plain(iq.validateItem(a)), [], a.id);
+        if (a.key === 'v010') assert.ok(!('en' in a.prompt) && a.options.every(o => !('en' in o)), 'buzuq en ishlatilmaydi');
+      }
+    }
+  }
 });
 
 test('window.IQ_VERBAL bo\'lmasa (yoki bo\'sh bo\'lsa) — tur ro\'yxatdan o\'tmaydi', () => {
@@ -266,16 +354,17 @@ test('minglab urug\' × har daraja: validateItem bo\'sh, shakl va manbaga moslik
       assert.equal(src.level, L, 'har darajada yozuv bor — boshqa darajadan olinmaydi');
       assert.equal(it.b, IQ.levelToB(L));
       assert.equal(it.options.length, src.uz.options.length);
-      assert.deepEqual(plain(it.prompt), { uz: src.uz.prompt, ru: src.ru.prompt });
+      assert.deepEqual(plain(it.prompt), { uz: src.uz.prompt, ru: src.ru.prompt, en: src.en.prompt });
       assert.deepEqual(plain(it.explain), src.explain);
-      assert.equal(it.stimulus.kind, 'text');
-      it.options.forEach(o => assert.equal(o.kind, 'text'));
+      assert.deepEqual(plain(it.stimulus), { kind: 'text', uz: src.uz.stimulus, ru: src.ru.stimulus, en: src.en.stimulus });
+      it.options.forEach(o => { assert.equal(o.kind, 'text'); assert.ok(o.en && o.en.trim()); });
+      /* en variantlar ham takrorlanmaydi (validateItem en ni tekshirmasligi mumkin). */
+      assert.equal(new Set(it.options.map(o => norm(o.en))).size, it.options.length, it.id + ': en variantlar');
       if (src.kind === 'odd') {
-        assert.equal(it.stimulus.uz, joinList(it.options.map(o => o.uz)), 'ortiqcha: stimul ko\'rsatilgan tartibda');
-        assert.equal(it.stimulus.ru, joinList(it.options.map(o => o.ru)));
-      } else {
-        assert.equal(it.stimulus.uz, src.uz.stimulus);
-        assert.equal(it.stimulus.ru, src.ru.stimulus);
+        /* Ro'yxat ekranda bir marta: stimulda variantlar yo'q. */
+        for (const lang of LANGS) {
+          it.options.forEach(o => assert.ok(!norm(it.stimulus[lang]).includes(norm(o[lang])), it.id + ' ' + lang));
+        }
       }
     }
   }
@@ -291,11 +380,13 @@ test('aralashtirish uz/ru juftligini buzmaydi, to\'g\'ri javob o\'sha variantda 
         const j = src.uz.options.indexOf(o.uz);
         assert.ok(j >= 0, it.id + ': uz variant manbada yo\'q');
         assert.equal(o.ru, src.ru.options[j], it.id + ': ' + i + '-o\'rinda uz va ru boshqa-boshqa variant');
+        assert.equal(o.en, src.en.options[j], it.id + ': ' + i + '-o\'rinda uz va en boshqa-boshqa variant');
         seen.add(j);
       });
       assert.equal(seen.size, src.uz.options.length, it.id + ': hamma variant bir martadan');
       assert.equal(it.options[it.correct].uz, src.uz.options[src.correct], it.id + ': correct (uz)');
       assert.equal(it.options[it.correct].ru, src.ru.options[src.correct], it.id + ': correct (ru)');
+      assert.equal(it.options[it.correct].en, src.en.options[src.correct], it.id + ': correct (en)');
     }
   }
 });

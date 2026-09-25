@@ -18,8 +18,20 @@
      · darajadagi yozuvlardan birini tanlaydi (IQ.rng — deterministik);
      · variantlar tartibini aralashtiradi. JSON'da to'g'ri javob qayerda
        turgani ahamiyatsiz: foydalanuvchi ko'radigan o'rin urug'ga bog'liq
-       va tekis taqsimlangan (shartnoma §2, 3-band). uz va ru variantlar
-       BIRGA aralashtiriladi — til almashtirilganda javob o'rni o'zgarmaydi.
+       va tekis taqsimlangan (shartnoma §2, 3-band). uz, ru va en variantlar
+       BITTA perm bilan aralashtiriladi — til almashtirilganda javob o'rni
+       o'zgarmaydi.
+
+   Tillar (shartnoma §2, ARXITEKTURA §8): `en` — ixtiyoriy. Yozuvning `en`
+   qismi buzuq bo'lsa (variantlar soni boshqa, bo'sh satr) u ishlatilmaydi,
+   yozuv esa uz/ru bilan qoladi — hovuz TILGA BOG'LIQ EMAS (aks holda bir
+   xil `verbal:level:seed` turli tilda turli savol bo'lardi). `langs` ga
+   'en' faqat HAMMA yozuvda to'g'ri `en` bo'lsa qo'shiladi ("hammasi yoki
+   hech narsa", §8.4).
+
+   "Ortiqchasini top" savolida stimul variantlar ro'yxati EMAS (u ekranda
+   ikki marta chiqardi): JSON'dagi qisqa qoida jumlasi ("Toʻrttasining
+   umumiy belgisi bor.") — hamma turdagi kabi stimul JSON'dan olinadi.
 
    Darajada yozuv bo'lmasa — eng yaqin darajadagisi olinadi (teng bo'lsa
    pastrog'i). Bunda b yozuvning haqiqiy darajasiga qarab ±0.75 ichida
@@ -30,9 +42,9 @@
    ortiqcha maydonga qaramaydi.
 
    DIQQAT (server qayta tekshiruvi, §10): `verbal:${level}:${seed}` qaysi
-   yozuvga tushishi darajadagi yozuvlar ro'yxatiga bog'liq. Yozuv qo'shish
-   yoki o'chirish eski urug'larni boshqa savolga olib boradi — kontent
-   o'zgarsa `engine` versiyasi ham o'zgarishi kerak.
+   yozuvga tushishi darajadagi yozuvlar ro'yxatiga bog'liq. Yozuv qo'shish,
+   o'chirish yoki darajasini o'zgartirish eski urug'larni boshqa savolga
+   olib boradi — kontent o'zgarsa `engine` versiyasi ham o'zgarishi kerak.
 
    To'liq shartnoma: src/iq/CONTRACT.md
    ───────────────────────────────────────────────────────────────────── */
@@ -58,15 +70,18 @@
       && Number.isInteger(it.correct) && it.correct >= 0 && it.correct < it.uz.options.length
       && it.explain && str(it.explain.uz) && str(it.explain.ru);
   }
+  /* `en` ixtiyoriy: bor va to'g'ri bo'lsagina ishlatiladi. */
+  const hasEn = it => side(it.en) && it.en.options.length === it.uz.options.length && str(it.explain.en);
 
   /* Darajalar bo'yicha hovuz. Kalit bo'yicha saralanadi: JSON'dagi tartib
      o'zgarsa ham urug' → yozuv bog'lanishi o'zgarmasin. */
   const byLevel = {};
   for (let L = LEVEL_MIN; L <= LEVEL_MAX; L++) byLevel[L] = [];
-  DATA.items.filter(usable)
-    .sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
-    .forEach(it => byLevel[it.level].push(it));
-  if (!Object.keys(byLevel).some(L => byLevel[L].length)) return;
+  const all = DATA.items.filter(usable)
+    .sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  all.forEach(it => byLevel[it.level].push(it));
+  if (!all.length) return;
+  const ALL_EN = all.every(hasEn);
 
   /* Eng yaqin bo'sh bo'lmagan daraja (teng masofada — pastrog'i). */
   function poolFor(level) {
@@ -77,13 +92,10 @@
     return [];
   }
 
-  /* "Ortiqchasini top" savolida stimul — variantlarning o'zi. Ular
-     KO'RSATILGAN tartibda qayta yig'iladi, aks holda ro'yxat bir tartibda,
-     tugmalar boshqa tartibda turib odamni chalg'itadi. Juftliklar
-     ("ota — o'g'il") yoki vergulli variant bo'lsa ajratgich — "; ". */
-  const joinList = opts => opts.join(opts.some(o => o.indexOf(',') >= 0 || o.indexOf(' — ') >= 0) ? '; ' : ', ');
-
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+
+  /* Matn obyekti: en faqat yozuvda to'g'ri en bo'lsa qo'shiladi. */
+  const txt = (uz, ru, en, withEn) => (withEn ? { uz, ru, en } : { uz, ru });
 
   function generate(seed, level) {
     const r = IQ.rng(seed);
@@ -91,16 +103,11 @@
     const pool = poolFor(lv);
     const src = pool[r.int(pool.length)];
     const k = src.uz.options.length;
+    const en = hasEn(src);
 
     /* perm[i] — ko'rsatiladigan i-o'rindagi variantning JSON'dagi indeksi.
-       uz va ru bitta perm bilan: ikkala til doim bir-biriga mos. */
+       uz, ru va en bitta perm bilan: hamma til doim bir-biriga mos. */
     const perm = r.shuffle(Array.from({ length: k }, (_, i) => i));
-    const uzOpts = perm.map(i => src.uz.options[i]);
-    const ruOpts = perm.map(i => src.ru.options[i]);
-
-    const stimulus = src.kind === 'odd'
-      ? { kind: 'text', uz: joinList(uzOpts), ru: joinList(ruOpts) }
-      : { kind: 'text', uz: src.uz.stimulus, ru: src.ru.stimulus };
 
     /* Yozuv boshqa darajadan olingan bo'lsa, b shunga qarab suriladi
        (±0.75 — shartnoma chegarasi). */
@@ -111,18 +118,21 @@
       type: 'verbal',
       level,
       b,
-      prompt: { uz: src.uz.prompt, ru: src.ru.prompt },
-      stimulus,
-      options: perm.map((_, i) => ({ kind: 'text', uz: uzOpts[i], ru: ruOpts[i] })),
+      prompt: txt(src.uz.prompt, src.ru.prompt, en && src.en.prompt, en),
+      stimulus: Object.assign({ kind: 'text' }, txt(src.uz.stimulus, src.ru.stimulus, en && src.en.stimulus, en)),
+      options: perm.map(i => Object.assign({ kind: 'text' },
+        txt(src.uz.options[i], src.ru.options[i], en && src.en.options[i], en))),
       correct: perm.indexOf(src.correct),
-      explain: { uz: src.explain.uz, ru: src.explain.ru },
+      explain: txt(src.explain.uz, src.explain.ru, en && src.explain.en, en),
       key: src.key,
     };
   }
 
   IQ.register({
     type: 'verbal',
-    label: { uz: 'Ogʻzaki mantiq', ru: 'Вербальная логика' },
+    /* ru: 'Словесная логика' — 'Вербальная логика' 360 px da kesilardi (F52). */
+    label: { uz: 'Ogʻzaki mantiq', ru: 'Словесная логика', en: 'Verbal reasoning' },
+    langs: ALL_EN ? ['uz', 'ru', 'en'] : ['uz', 'ru'],
     generate,
     /* Test uchun: darajadagi hovuz (nusxa emas — o'zgartirmang). */
     pool: level => poolFor(clamp(Math.round(level), LEVEL_MIN, LEVEL_MAX)),
