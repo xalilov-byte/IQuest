@@ -14,9 +14,14 @@ foydalanuvchiga ko'rinmaydi.
 
 **Barcha qismlar uchun yagona kelishuv — `src/iq/CONTRACT.md`.** API,
 fayl egaligi va, eng muhimi, **halollik qoidalari** (§6) o'sha yerda.
-Qisqasi: ball har doim "taxminiy" va oraliq bilan; "IQ oshiradi",
-"rasmiy", "sertifikatlangan", "Mensa", "klinik", persentil — yo'q;
-test va natija har doim bepul.
+Qisqasi: natija — katta IQ raqami va bitta "Oraliq a–b" qatori; ilova
+ICHIDA "taxminiy" / "klinik emas" kabi rad qilish matni yo'q — u
+Foydalanish shartlarida (`/shartlar/`, egasi qarori №2). "IQ oshiradi",
+"rasmiy", "sertifikatlangan", "Mensa", "klinik", persentil — hech
+qayerda yo'q; test va natija har doim bepul.
+
+**v1.1 arxitekturasi — `ARXITEKTURA.md`** (navigatsiya, profil, tanga
+va nishonlar, sozlamalar, brend). Ziddiyat bo'lsa CONTRACT ustun.
 
 ---
 
@@ -36,8 +41,12 @@ iquest/
 │  ├─ games/            ← aql o'yinlari (Schulte, n-back, ketma-ketlik…)
 │  ├─ cert/             ← sertifikat (keyingi versiya, faqat server bilan)
 │  ├─ progress.js       ← qurilma xotirasi: ball, streak, test tarixi
+│  ├─ settings.js, profile.js, avatars.js   ← sozlamalar, profil (v1.1)
+│  ├─ wallet.js, badges.js, league.js, catalog.js ← tanga, nishonlar, liga, Do'kon (v1.1)
+│  ├─ icons.js, art.js  ← glif reyestri, qalqon/medalyon rasmlari (v1.1)
+│  ├─ notify.js, feedback.js ← eslatmalar, ovoz va tebranish
 │  ├─ runtime.js        ← kichik render (sc-if / sc-for / {{ }}), morph
-│  ├─ i18n.js, i18n-ru.js ← o'zbek (lotin/kirill) va rus
+│  ├─ i18n.js, i18n-ru.js, i18n-en.js ← o'zbek (lotin/kirill), rus, ingliz (v1.2)
 │  ├─ shell.css         ← maketni qurilma ekraniga moslash (§5)
 │  ├─ bootstrap.js      ← tema, Android "orqaga" tugmasi, status bar
 │  └─ site/             ← saytning matn sahifalari (maxfiylik va h.k.)
@@ -48,12 +57,36 @@ iquest/
 ├─ site.config.json     ← domen, aloqa, bot nomi — bitta joyda
 ├─ version.json         ← versionCode / versionName — yagona manba
 ├─ android/             ← Android Studio loyihasi
-├─ resources/           ← ikonka, splash va OG rasm manbalari
-├─ tools/               ← sayt yig'uvchi, ikonka / OG / Play grafika generatori
-├─ supabase/            ← server qismi (hozir ATAYLAB ulanmagan, §8)
+├─ resources/           ← ikonka, splash, OG rasm manbalari
+│  └─ brand/            ← logo, bannerlar, Play grafikasi (MANIFEST.json, PREVIEW.jpg)
+├─ tools/               ← sayt yig'uvchi; brand.html + mkbrand / mkicons / mkplay / mkog
+├─ supabase/            ← server qismi (hozir ATAYLAB ulanmagan, §9)
 ├─ PLAY.md              ← Play Console paketi (matnlar, Data safety)
 └─ .github/workflows/   ← GitHub'da avtomatik APK/AAB yig'ish va testlar
 ```
+
+### «X qayerda?» — ekran → modul → mantiq → kalit (ARXITEKTURA §10.7)
+
+| Foydalanuvchi joyi | Main'dagi modul | Mantiq fayli | `localStorage` kaliti |
+|---|---|---|---|
+| Bosh | `valsHome` | `wallet.js` (vazifalar), `progress.js` | `nz-wallet`, `nz-iq-ui` |
+| Mashq | `valsPractice` | `iq/*`, `games/*` | `nz-iq-ui` |
+| Reyting | `valsLeague` | `league.js`, Main `LEAGUES` | `nz-iq-ui`, `nz-league` |
+| Profil | `valsProfile` | `profile.js`, `badges.js` | `nz-profile` |
+| Profilni tahrirlash | `valsProfileEdit` | `profile.js`, `avatars.js`, `catalog.js` | `nz-profile`, `nz-avatar-img` |
+| Nishonlar | `valsBadges` | `badges.js`, `catalog.js` | `nz-badges`, `nz-wallet` |
+| Do'kon | `valsShop` | `wallet.js`, `catalog.js` | `nz-wallet` |
+| Sozlamalar | `valsSettings` | `settings.js`, `notify.js`, `feedback.js` | `nz-settings` |
+| Birinchi kirish | `valsOnboard` | `settings.js`, `profile.js` | `nz-settings` |
+| Bayram, toast, varaqlar | `valsCelebrate`, `valsSheet` | — (faqat state) | — |
+| Savol, natija, o'yin | `valsRun`, `valsResult`, `valsGame` | `iq/session.js`, `iq/score.js` | `nz-iq-run`, `nz-iq-tests` |
+| Ilova qobig'i | — | `bootstrap.js` (tema, "orqaga", bildirishnoma bosilishi) | `nz-lang`, `nz-theme` |
+| Brend va ikonkalar | — | `tools/brand.html` | — (fayllar `resources/brand/`) |
+
+"Ma'lumotlarni o'chirish" `nz-progress`, `nz-attempts`, `nz-iq-tests`,
+`nz-iq-ui`, `nz-iq-run`, `nz-profile`, `nz-avatar-img`, `nz-wallet`,
+`nz-badges`, `nz-league` ni o'chiradi; `nz-lang`, `nz-theme`,
+`nz-settings` qoladi (ARXITEKTURA §10.6).
 
 ### IQ yadrosi — `src/iq/`
 
@@ -75,9 +108,10 @@ To'rt tur: **matritsa** (Raven uslubidagi 3×3), **son qatorlari**,
 
 Baholash (`score.js`): Rasch modeli, EAP baho, `100 + 15·θ` shkalasi
 va 90% oraliq. Savollar hali katta guruhda **me'yorlanmagan**, shuning
-uchun natija ekranida doim "taxminiy" so'zi, oraliq va rad qilish
-matni turadi; savol kam bo'lsa (`reliable: false`) IQ raqami umuman
-ko'rsatilmaydi.
+uchun IQ raqami **har doim oraliq bilan** ko'rsatiladi ("Oraliq 97–119");
+bu cheklov va rad qilish matni to'liq Foydalanish shartlarida yozilgan
+(CONTRACT §6.1–6.2). Savol kam bo'lsa (`reliable: false`) IQ raqami
+umuman ko'rsatilmaydi — faqat to'g'ri javoblar soni.
 
 ### Aql o'yinlari — `src/games/`
 
@@ -151,8 +185,9 @@ bot hali yo'q, shuning uchun `telegramBot` bo'sh — Telegram tugmalari
 ko'rsatilmaydi.
 
 `npm run og` — havola ko'rinishidagi rasmni (`resources/og.jpg`) qayta
-yasaydi. U bir marta yasalib repoda saqlanadi, chunki yasash uchun
-brauzer kerak va uni har build'da ishga tushirish CI'ni sekinlashtiradi.
+yasaydi (brend manbasidan, pastdagi "Brend" bo'limi). Rastr fayllar
+(`og.jpg`, ikonkalar, bannerlar) bir marta yasalib repoda saqlanadi:
+yasash uchun brauzer kerak, CI esa brauzersiz ishlaydi.
 
 ---
 
@@ -261,7 +296,7 @@ Versiya **faqat `version.json` da** — `build.gradle` o'sha fayldan
 o'qiydi:
 
 ```json
-{ "versionCode": 2, "versionName": "1.0.1" }
+{ "versionCode": 3, "versionName": "1.1.1" }
 ```
 
 `versionCode` HAR SAFAR +1 (Play bir xil yoki kichik raqamni rad
@@ -306,18 +341,28 @@ shu CSS boshqaradi.)
 ### "Orqaga" tugmasi
 
 Standart holatda WebView'da orqaga bosilsa ilova darhol yopiladi.
-Bu yerda orqaga tugmasi ilovaning o'z ierarxiyasi bo'yicha yuradi
-(`src/bootstrap.js`):
+Bu yerda `src/bootstrap.js` faqat `app.onBack()` ni chaqiradi, holat
+nomlarini esa faqat Main biladi. Tartib qat'iy (ARXITEKTURA §2.3):
 
 ```
-ochiq oyna (drawer / tasdiq)           → yopiladi
-test ketyapti                          → testdan chiqadi
-tab ≠ Bosh                             → Bosh ekranga qaytadi
-Bosh ekranda                           → "Chiqish uchun yana bosing" → chiqadi
+ 1. dialog                         → yopiladi
+ 2. varaq (sheet)                  → yopiladi
+ 3. bayram kartasi                 → "Davom etish" bilan bir xil
+ 4. birinchi kirish                → oldingi qadam (0-qadamda: "yana bosing";
+                                     qayta ko'rishda 1-qadamdan → Sozlamalar)
+ 5. savoldagi "Izoh" varag'i       → yopiladi
+ 6. o'yin                          → chiqadi
+ 7. test yoki mashq                → chiqish tasdig'i
+ 8. natija                         → yopiladi
+ 9. push-stek (Sozlamalar, Profilni tahrirlash, Nishonlar, Do'kon)
+                                   → bitta ekran orqaga; saqlanmagan profil
+                                     o'zgarishi bo'lsa "unsavedProfile" dialogi
+10. tab ≠ Bosh                     → Bosh
+11. Bosh                           → false → "Chiqish uchun yana bosing"
 ```
 
-Yangi ekran (masalan o'yin) qo'shilganda uning chiqish qadami ham shu
-zanjirga qo'shiladi — aks holda "orqaga" ilovani yopib yuboradi.
+Yangi ekran qo'shilganda uning qadami ham shu zanjirga (Main'dagi
+`onBack`) qo'shiladi — aks holda "orqaga" ilovani yopib yuboradi.
 Test ilova yopilgandan keyin davom ettirilishi uchun sessiyada
 `IQ.session.snapshot()` / `restore()` bor (CONTRACT §3).
 
@@ -341,11 +386,14 @@ android/app/src/main/res/values/strings.xml  → package_name, custom_url_scheme
 **Ilova nomi** — `strings.xml` → `app_name` va `capacitor.config.json`
 → `appName` ("IQuest").
 
-**Ikonka** — `tools/icon.html` ni tahrirlang, keyin `npm run icons`
-(Playwright + Chromium kerak; natija `resources/*.png` va
-`android/app/src/main/res/mipmap-*`, `drawable-*`). Belgi — qalin "IQ"
-monogrammasi; tibbiy/klinik ishoralar (miya, xoch, stetoskop) ataylab
-ishlatilmagan.
+**Ikonka** — manba `tools/brand.html`, keyin `npm run icons`
+(= `node tools/mkicons.mjs`; Playwright + Chromium kerak). Natija:
+`resources/icon-*.png` va `android/app/src/main/res/` — adaptiv ikonka
+(to'liq 108dp qatlamlar), Android 13 **mavzuli ikonka** (`<monochrome>`),
+bildirishnoma kichik ikonkasi `drawable-*/ic_stat_iquest.png`
+(`capacitor.config.json` → `LocalNotifications.smallIcon`).
+`npx capacitor-assets generate` ni **ishlatmang**: u `<monochrome>` ni
+o'chiradi (CI buni ushlaydi). Batafsil — pastdagi "Brend" bo'limi.
 
 ---
 
@@ -372,9 +420,59 @@ ushlaydi (CONTRACT §2).
 (woff2). Google Fonts havolasi yo'q — internetsiz ham shriftlar to'g'ri
 ko'rinadi.
 
+**Ikonkalar litsenziyasi.** `src/icons.js` va `tools/brand.html` dagi
+ba'zi gliflar [Lucide](https://lucide.dev) yo'llaridan moslashtirilgan
+(ISC litsenziyasi — bepul, atribusiya bilan).
+
+**Nazariy merosi: `QUESTIONS` va `src/data.js`.** Main'dagi `QUESTIONS`
+massivi va `src/data.js` (bazadan savol olish, `nz-questions` keshi,
+`sign`/`image` maydonlari) Nazariy'dan qolgan qatlam. IQuest savollari
+**generatorlardan** keladi (`src/iq/gen/`, `content/verbal.json`), yo'l
+belgisi rasmlari (.jpg) va savollar banki ilovada yo'q; `supabase/config.json`
+bo'sh bo'lgani uchun `data.js` tarmoqqa chiqmaydi.
+
 ---
 
-## 8. Keyingi versiya: server (hozir YO'Q)
+## 8. Brend (ARXITEKTURA §12)
+
+Yagona manba — **`tools/brand.html`**: belgi, so'z belgisi (harflar
+shriftdan konturga aylantiriladi), naqsh, qoliplar, matnlar (uz/ru/en)
+va aktivlar reyestri. Ko'rish: `node tools/mkbrand.mjs --serve`.
+
+| Buyruq | Nima qiladi |
+|---|---|
+| `npm run brand` (`node tools/mkbrand.mjs`) | `resources/brand/**`: logo (SVG + PDF + PNG), Instagram, Telegram, Facebook, YouTube, X, Play sarlavha rasmi, OG — `_uz`, `_ru`; `--lang=uz,ru,en` bilan `_en` ham. `MANIFEST.json` (fayl, o'lcham, til, sha256), `PREVIEW.jpg` (hammasi bitta varaqda). Har matn halollik lintidan o'tadi |
+| `npm run brand:daily` (`--daily --date=YYYY-MM-DD --lang=uz`) | «Kun savoli» posti: sanadan urug' → haqiqiy generator savoli, javob ikkinchi slaydda (`resources/brand/daily/<sana>/`) |
+| `npm run icons` (`node tools/mkicons.mjs`) | Launcher, mavzuli va bildirishnoma ikonkalari, splash manbalari |
+| `npm run play:assets` (`node tools/mkplay.mjs`) | Play ekran suratlari 1080×1920, har til 6 ta — **haqiqiy** ilovadan |
+| `npm run og` | faqat OG rasm |
+
+**Palitra:** Tun `#14121F` · Indigo `#2B2270` · Oltin `#FFA726` (yorug'
+fonda so'z belgisidagi «IQ» `#E8890C`) · Ko'k `#3D5EFF` · Binafsha
+`#8552F0` · Qog'oz `#F5F3FF`. Naqsh — 12 px nuqtali setka, oq 15%.
+Shior: «Mantiqni mashq qiling» / «Тренируйте логику» / «Train your logic».
+
+**Belgi:** oltin geometrik «IQ» monogrammasi indigo plitkada; Q dumi —
+«quest», oldinga yo'l. Bo'sh joy har tomondan 8 birlik (100 birlikli
+setkada; SVG fayllarda shu zaxira bor). Eng kichik: belgi 20 px,
+gorizontal lokap 96 px eni; ≤32 px da kichik variant (halqa 18, dum 13).
+Lokaplar: gorizontal, vertikal, faqat belgi — qorong'i, yorug', oq, qora.
+
+**Taqiqlar** (CONTRACT §6, ARXITEKTURA §12.4, §16-2): miya, stetoskop,
+xoch, dafna, «rasmiy» muhr, «IQ 150» kabi raqam; liga, reyting,
+sertifikat (server bo'lmaguncha); «rasmiy/official», Mensa, «IQ
+oshiradi», raqamli va'da; soxta foydalanuvchi soni yoki sharh; chat
+skrinshotlari. Banner kartalari faqat haqiqiy narsadan: qat'iy urug'li
+generator matritsasi, tanga va nishon medalyoni, `www/` dan olingan
+ilova surati (bo'lmasa telefon kartasi chizilmaydi). Domen
+`site.config.json` da tasdiqlanmaguncha bannerlarda yozilmaydi.
+
+Aktivlar repoga commit qilinadi; CI ularni yasamaydi. UI o'zgarsa:
+`npm run build && npm run brand && npm run play:assets`.
+
+---
+
+## 9. Keyingi versiya: server (hozir YO'Q)
 
 `supabase/config.json` **ataylab bo'sh**: bu loyiha Nazariy'dan nusxa
 olingan va o'sha mahsulotning bazasiga hech qachon yozmasligi kerak.

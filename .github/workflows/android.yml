@@ -96,6 +96,24 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
+      # Brend resurslari (ARXITEKTURA §12.2): mavzuli ikonka va bildirishnoma
+      # ikonkasi repoda turadi (tools/mkicons.mjs yozadi, CI brauzersiz).
+      # Kimdir `npx capacitor-assets generate` ni ishga tushirsa <monochrome>
+      # o'chib ketadi — shu yerda ushlanadi.
+      - name: Ikonka resurslarini tekshirish
+        run: |
+          set -e
+          R=android/app/src/main/res
+          for f in ic_launcher.xml ic_launcher_round.xml; do
+            grep -q '<monochrome' "$R/mipmap-anydpi-v26/$f" || { echo "::error::$f da <monochrome> yo'q (node tools/mkicons.mjs)"; exit 1; }
+          done
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            test -f "$R/mipmap-$d/ic_launcher_monochrome.png" || { echo "::error::mipmap-$d/ic_launcher_monochrome.png yo'q"; exit 1; }
+            test -f "$R/drawable-$d/ic_stat_iquest.png" || { echo "::error::drawable-$d/ic_stat_iquest.png yo'q"; exit 1; }
+          done
+          grep -q '"smallIcon": "ic_stat_iquest"' capacitor.config.json || { echo "::error::capacitor.config.json: LocalNotifications.smallIcon yo'q"; exit 1; }
+          echo "Ikonkalar joyida."
+
       - name: Imzo kalitini tayyorlash (secret bo'lsa)
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -133,6 +151,27 @@ jobs:
           IQUEST_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           IQUEST_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew --no-daemon assembleDebug assembleRelease bundleRelease
+
+      # Play siyosati (ARXITEKTURA §13, WP8): birlashtirilgan manifestda
+      # rasm/xotira/kamera ruxsatlari BO'LMASLIGI shart — rasm faqat tizim
+      # tanlagichidan. Biror plagin ularni qo'shsa, build shu yerda yiqiladi.
+      - name: Birlashtirilgan manifestda ortiqcha ruxsat yo'qligini tekshirish
+        working-directory: android
+        run: |
+          set -e
+          files=$(find app/build/intermediates -name AndroidManifest.xml -path '*merged_manifest*' | grep -i release || true)
+          [ -n "$files" ] || { echo "::error::Birlashtirilgan release manifest topilmadi"; exit 1; }
+          bad=0
+          for m in $files; do
+            for p in READ_MEDIA_IMAGES READ_EXTERNAL_STORAGE CAMERA; do
+              if grep -q "android.permission.$p\"" "$m"; then
+                echo "::error file=$m::Taqiqlangan ruxsat: $p"; bad=1
+              fi
+            done
+          done
+          echo "── Ruxsatlar ($(echo "$files" | head -1)) ──"
+          grep -o 'android.permission.[A-Z_]*' $(echo "$files" | head -1) | sort -u
+          exit $bad
 
       - name: Yig'ilgan fayllarni ko'rsatish
         working-directory: android

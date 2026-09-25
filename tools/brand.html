@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<title>IQuest — brend manbasi</title>
+<!--
+  IQUEST BRENDI — YAGONA MANBA (ARXITEKTURA.md §12)
+
+  Bu sahifadan hamma narsa yasaladi: logo (SVG/PDF/PNG), ilova ikonkasi
+  qatlamlari, bildirishnoma ikonkasi, splash, ijtimoiy tarmoq bannerlari,
+  Play sarlavha rasmi, OG rasm va «Kun savoli» posti.
+
+    node tools/mkbrand.mjs            → resources/brand/**  + MANIFEST.json
+    node tools/mkbrand.mjs --serve    → shu sahifani brauzerda ko'rish
+    node tools/mkicons.mjs            → android/app/src/main/res/** ikonkalari
+
+  Sahifa HTTP orqali ochiladi (mkbrand o'zi kichik server ko'taradi):
+  shriftlar node_modules/@fontsource dan, savol generatorlari src/iq dan,
+  ilova ekran suratlari resources/brand/_shots dan o'qiladi. file:// da
+  Chromium shriftlarni to'sadi.
+
+  URL: brand.html?id=<aktiv>&lang=uz|ru|en  — faqat shu aktiv ko'rinadi.
+       brand.html                         — hamma aktivlar ro'yxati (ko'rik).
+
+  ── BELGI (o'zgarmaydi, §12.1) ─────────────────────────────────────────
+  100 birlikli setka. I: x8 y21 w16 h58 r3. Halqa: markaz (63,50), r21,
+  chiziq 16. Dum: (60,64)→(92,86), chiziq 15, uchlari yumaloq. ≤32 px
+  uchun kichik variant: halqa 18, dum 13. Oltin #FFA726, indigo gradient
+  #2B2270 → #14121F ustida. Miya, xoch, dafna, «rasmiy» muhr, raqam YO'Q.
+
+  ── SO'Z BELGISI ───────────────────────────────────────────────────────
+  «IQuest», Space Grotesk 700, tracking −0.02em. Harflar shriftdan
+  KONTURGA aylantiriladi (pastdagi woff tahlilchisi) — SVG fayllar
+  shriftsiz ham bir xil ko'rinadi. «IQ» oltin, «uest» qorong'i fonda
+  #F4F2FF, yorug' fonda #1C1B29. Yorug' fonda oltin chuqurroq (#E8890C):
+  #FFA726 oq ustida 1.9:1 — harf ko'rinmay qoladi.
+
+  ── HALOLLIK (§12.4, CONTRACT §6) ──────────────────────────────────────
+  Matnlar faqat T lug'atida. Liga, reyting, sertifikat, «rasmiy», Mensa,
+  «IQ oshiradi», raqamli va'da, soxta foydalanuvchi soni — YO'Q.
+  mkbrand har aktivning matnini halollik lintidan o'tkazadi.
+-->
+<style>
+@font-face{font-family:Manrope;font-weight:500;src:url(../node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Manrope;font-weight:500;src:url(../node_modules/@fontsource/manrope/files/manrope-latin-ext-500-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Manrope;font-weight:500;src:url(../node_modules/@fontsource/manrope/files/manrope-cyrillic-500-normal.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Manrope;font-weight:500;src:url(../node_modules/@fontsource/manrope/files/manrope-cyrillic-ext-500-normal.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:Manrope;font-weight:700;src:url(../node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Manrope;font-weight:700;src:url(../node_modules/@fontsource/manrope/files/manrope-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Manrope;font-weight:700;src:url(../node_modules/@fontsource/manrope/files/manrope-cyrillic-700-normal.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Manrope;font-weight:700;src:url(../node_modules/@fontsource/manrope/files/manrope-cyrillic-ext-700-normal.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:Manrope;font-weight:800;src:url(../node_modules/@fontsource/manrope/files/manrope-latin-800-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Manrope;font-weight:800;src:url(../node_modules/@fontsource/manrope/files/manrope-latin-ext-800-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Manrope;font-weight:800;src:url(../node_modules/@fontsource/manrope/files/manrope-cyrillic-800-normal.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Manrope;font-weight:800;src:url(../node_modules/@fontsource/manrope/files/manrope-cyrillic-ext-800-normal.woff2) format('woff2');unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:'Space Grotesk';font-weight:700;src:url(../node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Space Grotesk';font-weight:700;src:url(../node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+:root{
+  --night:#14121F; --indigo:#2B2270; --gold:#FFA726; --gold-deep:#E8890C;
+  --blue:#3D5EFF; --purple:#8552F0; --paper:#F5F3FF; --ink:#1C1B29;
+  --snow:#F4F2FF; --muted:#A9A4C8; --surface:#1E1B2E; --surface-2:#262239;
+}
+*{box-sizing:border-box;margin:0}
+html,body{background:#0c0b12}
+body{font-family:Manrope,system-ui,sans-serif;color:var(--snow);-webkit-font-smoothing:antialiased}
+section{position:relative;overflow:hidden;display:none}
+body.one section.on{display:block}
+body.all section{display:block;margin:24px;outline:1px solid #333}
+body.one{background:transparent}
+
+/* ── Fon ──────────────────────────────────────────────────────────── */
+.bg{position:absolute;inset:0;background:var(--night)}
+.bg .g1,.bg .g2,.bg .g3{position:absolute;border-radius:50%}
+.bg .g1{background:radial-gradient(circle,rgba(61,94,255,.42),rgba(61,94,255,0) 62%)}
+.bg .g2{background:radial-gradient(circle,rgba(133,82,240,.36),rgba(133,82,240,0) 62%)}
+.bg .g3{background:radial-gradient(circle,rgba(43,34,112,.9),rgba(43,34,112,0) 70%)}
+/* 12 px nuqtali setka, oq 15% — ilovadagi matritsa tili. Chetga qarab so'nadi. */
+.dots{position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.15) 1.3px,transparent 1.7px);
+  background-size:12px 12px;background-position:6px 6px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 70% 45%,#000 20%,transparent 85%);}
+
+/* ── Matn bloki ───────────────────────────────────────────────────── */
+.txt{position:absolute;display:flex;flex-direction:column;align-items:flex-start;z-index:3}
+.txt.center{align-items:center;text-align:center}
+.lock{display:block}
+.tag{font-weight:800;letter-spacing:-.035em;line-height:1.02;color:var(--snow);text-wrap:balance}
+.sub{font-weight:600;color:var(--muted);letter-spacing:-.005em;line-height:1.3}
+.chips{display:flex;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;font-weight:800;color:var(--snow);
+  background:rgba(244,242,255,.08);border:1px solid rgba(244,242,255,.12);border-radius:999px}
+.chip i{display:inline-block;border-radius:50%;background:var(--gold);flex:none}
+.url{font-weight:700;color:var(--gold);letter-spacing:.01em}
+
+/* ── Kartalar to'plami (1000×800 ichki koordinata) ──────────────────── */
+.cluster{position:absolute;width:1000px;height:800px;transform-origin:0 0;z-index:2}
+.card{position:absolute;border-radius:36px;box-shadow:0 40px 80px rgba(0,0,0,.45),0 8px 20px rgba(0,0,0,.25)}
+.card.matrix{background:#fff;padding:26px}
+.card.matrix img{display:block;width:100%;height:auto}
+.card.medal{background:linear-gradient(160deg,#262239,#1a1729);border:1px solid rgba(244,242,255,.10)}
+.phone{position:absolute;border-radius:54px;background:#0b0a10;padding:12px;
+  box-shadow:0 50px 100px rgba(0,0,0,.55),0 0 0 2px rgba(244,242,255,.10) inset}
+.phone .scr{width:100%;height:100%;border-radius:44px;overflow:hidden;background:#1E1B2E}
+.phone img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+
+/* ── Kun savoli ───────────────────────────────────────────────────── */
+.dq{position:absolute;inset:0;display:flex;flex-direction:column}
+.dq>*{flex:none}
+.dq .top{display:flex;align-items:center;justify-content:space-between}
+.dq .kick{font-weight:800;color:var(--gold);letter-spacing:.02em;text-transform:uppercase}
+.dq .q{font-weight:800;letter-spacing:-.02em;line-height:1.18;color:var(--snow)}
+.dq .stim{background:#fff;border-radius:32px;display:flex;align-items:center;justify-content:center;color:var(--ink);flex:1 1 0;min-height:0}
+.dq .stim img{display:block;height:100%;width:100%;object-fit:contain}
+.dq .opts{display:grid;flex:none;justify-content:center}
+.dq .opt{background:#fff;overflow:hidden;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink);position:relative}
+.dq .opt img{display:block;width:80%;height:80%;object-fit:contain}
+.dq .opt b{font-family:Manrope;font-weight:800;letter-spacing:-.01em}
+.dq .opt .l{position:absolute;left:14px;top:12px;font-weight:800;color:#6A6580;font-size:22px}
+.dq .opt.ok{outline:6px solid #4CC38A;outline-offset:-6px}
+.dq .opt.dim{opacity:.35}
+.dq .exp{background:rgba(244,242,255,.07);border:1px solid rgba(244,242,255,.12);border-radius:24px;color:var(--snow);font-weight:600;line-height:1.4}
+.dq .foot{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-weight:700}
+</style></head>
+<body>
+
+<!-- ═════════════════════ AKTIVLAR REYESTRI ═════════════════════════════
+     data-id     — fayl nomining boshi: <group>/<id>-<w>x<h>[-<lang>].<fmt>
+     data-group  — resources/brand/<group>/
+     data-langs  — matnli aktivlarda til variantlari (en v1.2 da yoqiladi)
+     data-fmt    — png | jpg (alfa yo'q) | png-alpha (shaffof) | svg
+     data-tpl    — qaysi qolip chizadi (pastdagi TPL)
+     data-safe   — x,y,w,h: matn turishi shart bo'lgan zona
+     data-noicon — ikonka va logo emas: mkicons o'qimaydi
+     ═════════════════════════════════════════════════════════════════════ -->
+
+<!-- Logo: SVG master + PNG ko'rinish + PDF (mkbrand logo() orqali) -->
+<section data-id="iquest-horizontal-dark"      data-group="logo" data-tpl="logo" data-v="horizontal:dark"></section>
+<section data-id="iquest-horizontal-light"     data-group="logo" data-tpl="logo" data-v="horizontal:light"></section>
+<section data-id="iquest-horizontal-mono-white" data-group="logo" data-tpl="logo" data-v="horizontal:white"></section>
+<section data-id="iquest-horizontal-mono-black" data-group="logo" data-tpl="logo" data-v="horizontal:black"></section>
+<section data-id="iquest-stacked-dark"         data-group="logo" data-tpl="logo" data-v="stacked:dark"></section>
+<section data-id="iquest-stacked-light"        data-group="logo" data-tpl="logo" data-v="stacked:light"></section>
+<section data-id="iquest-stacked-mono-white"   data-group="logo" data-tpl="logo" data-v="stacked:white"></section>
+<section data-id="iquest-stacked-mono-black"   data-group="logo" data-tpl="logo" data-v="stacked:black"></section>
+<section data-id="iquest-mark"                 data-group="logo" data-tpl="logo" data-v="mark:dark"></section>
+<section data-id="iquest-mark-mono-white"      data-group="logo" data-tpl="logo" data-v="mark:white"></section>
+<section data-id="iquest-mark-mono-black"      data-group="logo" data-tpl="logo" data-v="mark:black"></section>
+<section data-id="iquest-monogram-gold"        data-group="logo" data-tpl="logo" data-v="monogram:gold"></section>
+<section data-id="iquest-monogram-white"       data-group="logo" data-tpl="logo" data-v="monogram:white"></section>
+<section data-id="iquest-monogram-black"       data-group="logo" data-tpl="logo" data-v="monogram:black"></section>
+
+<!-- Google Play -->
+<section data-id="icon"            data-group="play" data-w="512"  data-h="512"  data-fmt="png"  data-tpl="icon-only"></section>
+<section data-id="feature-graphic" data-group="play" data-w="1024" data-h="500"  data-fmt="jpg"  data-tpl="wide" data-langs="uz,ru,en" data-safe="56,40,912,420"></section>
+
+<!-- Instagram -->
+<section data-id="avatar"     data-group="instagram" data-w="1080" data-h="1080" data-fmt="png" data-tpl="avatar"></section>
+<section data-id="post"       data-group="instagram" data-w="1080" data-h="1080" data-fmt="png" data-tpl="square" data-langs="uz,ru,en" data-safe="80,80,920,920"></section>
+<section data-id="portrait"   data-group="instagram" data-w="1080" data-h="1350" data-fmt="png" data-tpl="portrait" data-langs="uz,ru,en" data-safe="80,90,920,1170"></section>
+<section data-id="story"      data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="story" data-langs="uz,ru,en" data-safe="90,250,900,1330"></section>
+<section data-id="highlight-test"   data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="matrix"></section>
+<section data-id="highlight-mashq"  data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="dumbbell"></section>
+<section data-id="highlight-oyinlar" data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="puzzle"></section>
+<section data-id="highlight-yangiliklar" data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="sparkle"></section>
+<section data-id="highlight-yordam" data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="help"></section>
+
+<!-- Telegram -->
+<section data-id="avatar"      data-group="telegram" data-w="640"  data-h="640" data-fmt="png" data-tpl="avatar"></section>
+<section data-id="post"        data-group="telegram" data-w="1280" data-h="720" data-fmt="png" data-tpl="wide" data-langs="uz,ru,en" data-safe="72,60,1136,600"></section>
+<section data-id="bot-description" data-group="telegram" data-w="640" data-h="360" data-fmt="png" data-tpl="mini" data-langs="uz,ru,en" data-safe="36,30,568,300"></section>
+
+<!-- Facebook: asosiy mazmun markazdagi 1640×624 tasmada, yonlardan 160 px -->
+<section data-id="avatar" data-group="facebook" data-w="720"  data-h="720" data-fmt="png" data-tpl="avatar"></section>
+<section data-id="cover"  data-group="facebook" data-w="1640" data-h="924" data-fmt="png" data-tpl="wide" data-langs="uz,ru,en" data-safe="200,190,1240,544"></section>
+
+<!-- YouTube: hamma matn markazdagi 1546×423 xavfsiz zonada -->
+<section data-id="avatar"    data-group="youtube" data-w="800"  data-h="800"  data-fmt="png" data-tpl="avatar"></section>
+<section data-id="banner"    data-group="youtube" data-w="2560" data-h="1440" data-fmt="png" data-tpl="ytbanner" data-langs="uz,ru,en" data-safe="507,508,1546,423"></section>
+<section data-id="watermark" data-group="youtube" data-w="150"  data-h="150"  data-fmt="png-alpha" data-tpl="watermark"></section>
+<section data-id="thumbnail" data-group="youtube" data-w="1280" data-h="720"  data-fmt="png" data-tpl="thumb" data-langs="uz,ru,en" data-safe="64,56,1152,608"></section>
+
+<!-- X: pastki chap 420×200 avatar uchun bo'sh -->
+<section data-id="avatar" data-group="x" data-w="400"  data-h="400" data-fmt="png" data-tpl="avatar"></section>
+<section data-id="header" data-group="x" data-w="1500" data-h="500" data-fmt="png" data-tpl="xheader" data-langs="uz,ru,en" data-safe="470,60,970,380"></section>
+<section data-id="post"   data-group="x" data-w="1600" data-h="900" data-fmt="png" data-tpl="wide" data-langs="uz,ru,en" data-safe="90,80,1420,740"></section>
+
+<!-- Veb -->
+<section data-id="og" data-group="web" data-w="1200" data-h="630" data-fmt="jpg" data-tpl="wide" data-langs="uz,ru,en" data-safe="64,56,1072,518"></section>
+
+<!-- «Kun savoli» — faqat --daily bilan (sana argumentdan, Date.now yo'q) -->
+<section data-id="kun-savoli"        data-group="daily" data-w="1080" data-h="1080" data-fmt="png" data-tpl="daily" data-daily="q" data-langs="uz,ru,en"></section>
+<section data-id="kun-savoli-answer" data-group="daily" data-w="1080" data-h="1080" data-fmt="png" data-tpl="daily" data-daily="a" data-langs="uz,ru,en"></section>
+<section data-id="kun-savoli-story"        data-group="daily" data-w="1080" data-h="1920" data-fmt="png" data-tpl="daily" data-daily="q" data-langs="uz,ru,en"></section>
+<section data-id="kun-savoli-story-answer" data-group="daily" data-w="1080" data-h="1920" data-fmt="png" data-tpl="daily" data-daily="a" data-langs="uz,ru,en"></section>
+
+<!-- Ilova ikonkasi qatlamlari (mkicons.mjs o'qiydi, resources/brand ga yozilmaydi) -->
+<section data-id="icon-only"   data-group="_icons" data-w="1024" data-h="1024" data-fmt="png" data-tpl="icon-only"></section>
+<section data-id="icon-legacy" data-group="_icons" data-w="1024" data-h="1024" data-fmt="png-alpha" data-tpl="icon-legacy"></section>
+<section data-id="icon-round"  data-group="_icons" data-w="1024" data-h="1024" data-fmt="png-alpha" data-tpl="icon-round"></section>
+<section data-id="icon-fg"     data-group="_icons" data-w="1080" data-h="1080" data-fmt="png-alpha" data-tpl="adaptive" data-layer="fg"></section>
+<section data-id="icon-bg"     data-group="_icons" data-w="1080" data-h="1080" data-fmt="png" data-tpl="adaptive" data-layer="bg"></section>
+<section data-id="icon-mono"   data-group="_icons" data-w="1080" data-h="1080" data-fmt="png-alpha" data-tpl="adaptive" data-layer="mono"></section>
+<section data-id="stat"        data-group="_icons" data-w="960"  data-h="960"  data-fmt="png-alpha" data-tpl="stat"></section>
+<section data-id="splash"      data-group="_icons" data-w="2732" data-h="2732" data-fmt="png" data-tpl="splash"></section>
+
+<script src="../src/iq/rng.js"></script>
+<script src="../src/iq/index.js"></script>
+<script src="../src/iq/gen/matrix.js"></script>
+<script src="../src/iq/gen/series.js"></script>
+<script src="../src/iq/gen/spatial.js"></script>
+<script>
+'use strict';
+/* ═════════════════════════════ MATNLAR ═══════════════════════════════
+   Har bir so'z do'kon va'dasi (CONTRACT §6). Faqat v1.1 da haqiqatan
+   bor narsa: test, mashq, IQ o'yinlari, bepul, internetsiz, reklamasiz.
+   Liga, reyting, sertifikat — egasi qarori bo'yicha HOZIR YO'Q (§16-2). */
+const T = {
+  uz: { tag: 'Mantiqni mashq qiling', sub: 'IQ test, mashq va IQ oʻyinlari',
+        chips: ['Bepul', 'Internetsiz', 'Reklamasiz'],
+        thumb: 'Bu matritsani yecha olasizmi?', daily: 'Kun savoli', answer: 'Javob',
+        next: 'Javob — keyingi slaydda', why: 'Nima uchun' },
+  ru: { tag: 'Тренируйте логику', sub: 'IQ-тест, тренировка и IQ-игры',
+        chips: ['Бесплатно', 'Без интернета', 'Без рекламы'],
+        thumb: 'Сможете решить эту матрицу?', daily: 'Вопрос дня', answer: 'Ответ',
+        next: 'Ответ — на следующем слайде', why: 'Почему' },
+  en: { tag: 'Train your logic', sub: 'IQ test, practice and IQ games',
+        chips: ['Free', 'Works offline', 'No ads'],
+        thumb: 'Can you solve this matrix?', daily: 'Question of the day', answer: 'Answer',
+        next: 'Answer on the next slide', why: 'Why' },
+};
+
+const C = { night: '#14121F', indigo: '#2B2270', gold: '#FFA726', goldDeep: '#E8890C',
+            blue: '#3D5EFF', purple: '#8552F0', paper: '#F5F3FF', ink: '#1C1B29',
+            snow: '#F4F2FF', white: '#FFFFFF', black: '#000000' };
+
+/* Banner kartalari uchun QAT'IY urug'lar: bir xil urug' → aynan bir xil
+   haqiqiy savol (generator deterministik, CONTRACT §2). */
+const HERO_MATRIX = { type: 'matrix', seed: 31415, level: 4 };
+
+/* ═══════════════════════════ BELGI (§12.1) ════════════════════════════ */
+function monogram(color, small) {
+  return `<rect x="8" y="21" width="16" height="58" rx="3" fill="${color}"/>` +
+    `<circle cx="63" cy="50" r="21" fill="none" stroke="${color}" stroke-width="${small ? 18 : 16}"/>` +
+    `<path d="M60 64L92 86" fill="none" stroke="${color}" stroke-width="${small ? 13 : 15}" stroke-linecap="round"/>`;
+}
+/* Monogramma 100 setkada; plitkada 0.6 masshtab, (20,18) — I va halqa
+   massasi markazda, dum pastga tortgani uchun 2 birlik yuqorida. */
+const TILE_R = 22;
+let uid = 0;
+function tile(x, y, size, mode) {
+  // mode: dark | light (gradient + oltin), white | black (bir rangli, belgi o'yilgan)
+  const s = size / 100, id = 'q' + (++uid);
+  const inner = `<g transform="translate(${x + 20 * s} ${y + 18 * s}) scale(${0.6 * s})">`;
+  if (mode === 'white' || mode === 'black') {
+    const col = mode === 'white' ? C.white : C.black;
+    return `<defs><mask id="${id}m" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${size}" height="${size}">` +
+      `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="#fff"/>${inner}${monogram('#000')}</g></mask></defs>` +
+      `<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${TILE_R * s}" fill="${col}" mask="url(#${id}m)"/>`;
+  }
+  const edge = mode === 'dark'
+    ? `<rect x="${x + 0.4 * s}" y="${y + 0.4 * s}" width="${size - 0.8 * s}" height="${size - 0.8 * s}" rx="${(TILE_R - 0.4) * s}" fill="none" stroke="#F4F2FF" stroke-opacity=".14" stroke-width="${0.8 * s}"/>`
+    : '';
+  return `<defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs>` +
+    `<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${TILE_R * s}" fill="url(#${id}g)"/>${edge}` +
+    `${inner}${monogram(C.gold)}</g>`;
+}
+
+/* ═══════════════ SO'Z BELGISI: woff → kontur (shriftsiz SVG) ═══════════
+   WOFF 1.0 = sfnt jadvallari, har biri zlib bilan siqilgan. TrueType
+   glyf konturlari (kvadratik Bezye) SVG yo'liga aylantiriladi. Harflar
+   orasidagi masofa (kerning + tracking) brauzerning o'zidan o'lchanadi —
+   ya'ni natija ekrandagi matn bilan aynan bir xil. */
+const WM_TEXT = 'IQuest', WM_TRACK = -0.02;
+let FONT = null, WM = null;
+async function inflate(u8) {
+  const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+async function loadFont(url) {
+  const buf = await (await fetch(url)).arrayBuffer();
+  const dv = new DataView(buf);
+  if (dv.getUint32(0) !== 0x774F4646) throw new Error('woff emas: ' + url);
+  const tables = {};
+  for (let i = 0, n = dv.getUint16(12); i < n; i++) {
+    const o = 44 + i * 20;
+    const tag = String.fromCharCode(dv.getUint8(o), dv.getUint8(o + 1), dv.getUint8(o + 2), dv.getUint8(o + 3));
+    const off = dv.getUint32(o + 4), comp = dv.getUint32(o + 8), orig = dv.getUint32(o + 12);
+    let u8 = new Uint8Array(buf, off, comp);
+    if (comp < orig) u8 = await inflate(u8);
+    tables[tag] = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  }
+  const head = tables.head, os2 = tables['OS/2'];
+  const f = { t: tables, upm: head.getUint16(18), locFmt: head.getInt16(50),
+              cap: os2 && os2.getUint16(0) >= 2 ? os2.getInt16(88) : 700 };
+  // cmap format 4 (Windows Unicode BMP)
+  const cm = tables.cmap; let sub = null;
+  for (let i = 0, n = cm.getUint16(2); i < n; i++) {
+    const p = cm.getUint16(4 + i * 8), e = cm.getUint16(6 + i * 8), off = cm.getUint32(8 + i * 8);
+    if (cm.getUint16(off) === 4 && ((p === 3 && e === 1) || p === 0)) { sub = off; break; }
+  }
+  f.gid = ch => {
+    const c = ch.codePointAt(0), seg2 = cm.getUint16(sub + 6);
+    const end = sub + 14, start = end + seg2 + 2, delta = start + seg2, ro = delta + seg2;
+    for (let i = 0; i < seg2; i += 2) {
+      if (cm.getUint16(end + i) < c) continue;
+      if (cm.getUint16(start + i) > c) return 0;
+      const r = cm.getUint16(ro + i), d = cm.getInt16(delta + i);
+      if (!r) return (c + d) & 0xffff;
+      const g = cm.getUint16(ro + i + r + 2 * (c - cm.getUint16(start + i)));
+      return g ? (g + d) & 0xffff : 0;
+    }
+    return 0;
+  };
+  const loca = tables.loca;
+  f.loc = g => f.locFmt ? [loca.getUint32(g * 4), loca.getUint32(g * 4 + 4)] : [loca.getUint16(g * 2) * 2, loca.getUint16(g * 2 + 2) * 2];
+  return f;
+}
+/* Glif → konturlar [[{x,y,on}]] (kompozit glif ham) */
+function glyphContours(f, g, m = [1, 0, 0, 1, 0, 0]) {
+  const [a, b] = f.loc(g); if (a === b) return [];
+  const gl = f.t.glyf; let p = a;
+  const nc = gl.getInt16(p); p += 10;
+  const tf = (x, y) => ({ x: m[0] * x + m[2] * y + m[4], y: m[1] * x + m[3] * y + m[5] });
+  if (nc >= 0) {
+    const ends = []; for (let i = 0; i < nc; i++) { ends.push(gl.getUint16(p)); p += 2; }
+    p += 2 + gl.getUint16(p);
+    const n = nc ? ends[nc - 1] + 1 : 0, flags = [];
+    while (flags.length < n) { const fl = gl.getUint8(p++); flags.push(fl); if (fl & 8) { let r = gl.getUint8(p++); while (r--) flags.push(fl); } }
+    const xs = [], ys = []; let v = 0;
+    for (const fl of flags) { if (fl & 2) { const d = gl.getUint8(p++); v += fl & 16 ? d : -d; } else if (!(fl & 16)) { v += gl.getInt16(p); p += 2; } xs.push(v); }
+    v = 0;
+    for (const fl of flags) { if (fl & 4) { const d = gl.getUint8(p++); v += fl & 32 ? d : -d; } else if (!(fl & 32)) { v += gl.getInt16(p); p += 2; } ys.push(v); }
+    const out = []; let s = 0;
+    for (const e of ends) { const c = []; for (let i = s; i <= e; i++) c.push(Object.assign(tf(xs[i], ys[i]), { on: !!(flags[i] & 1) })); out.push(c); s = e + 1; }
+    return out;
+  }
+  let out = [], more = true;
+  while (more) {
+    const fl = gl.getUint16(p), cg = gl.getUint16(p + 2); p += 4;
+    let dx, dy;
+    if (fl & 1) { dx = gl.getInt16(p); dy = gl.getInt16(p + 2); p += 4; } else { dx = gl.getInt8(p); dy = gl.getInt8(p + 1); p += 2; }
+    let sm = [1, 0, 0, 1];
+    const f2 = o => gl.getInt16(o) / 16384;
+    if (fl & 8) { const s = f2(p); sm = [s, 0, 0, s]; p += 2; }
+    else if (fl & 0x40) { sm = [f2(p), 0, 0, f2(p + 2)]; p += 4; }
+    else if (fl & 0x80) { sm = [f2(p), f2(p + 2), f2(p + 4), f2(p + 6)]; p += 8; }
+    const cm2 = [m[0] * sm[0] + m[2] * sm[1], m[1] * sm[0] + m[3] * sm[1], m[0] * sm[2] + m[2] * sm[3], m[1] * sm[2] + m[3] * sm[3],
+                 m[0] * dx + m[2] * dy + m[4], m[1] * dx + m[3] * dy + m[5]];
+    out = out.concat(glyphContours(f, cg, cm2));
+    more = !!(fl & 0x20);
+  }
+  return out;
+}
+const r2 = v => Math.round(v * 100) / 100;
+function contourPath(c, X, Y) {
+  // Kvadratik TrueType kontur: ketma-ket ikki off-nuqta orasida yashirin on-nuqta.
+  const n = c.length; if (!n) return '';
+  let st = c.findIndex(q => q.on), pts;
+  if (st < 0) { const a = c[0], b = c[1]; pts = [{ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, on: true }, ...c.slice(1), c[0]]; st = 0; }
+  else pts = c.slice(st).concat(c.slice(0, st));
+  let d = `M${r2(X(pts[0].x))} ${r2(Y(pts[0].y))}`;
+  for (let i = 1; i <= pts.length; i++) {
+    const q = pts[i % pts.length], prev = pts[i - 1];
+    if (q.on) { if (prev.on) d += `L${r2(X(q.x))} ${r2(Y(q.y))}`; }
+    else {
+      const nx = pts[(i + 1) % pts.length];
+      const e = nx.on ? nx : { x: (q.x + nx.x) / 2, y: (q.y + nx.y) / 2 };
+      d += `Q${r2(X(q.x))} ${r2(Y(q.y))} ${r2(X(e.x))} ${r2(Y(e.y))}`;
+      if (nx.on) i++;
+    }
+  }
+  return d + 'Z';
+}
+/* Harf o'rinlari brauzerdan: shrift o'lchami = unitsPerEm px, ya'ni 1 px = 1 birlik. */
+async function buildWordmark() {
+  FONT = await loadFont('../node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff');
+  await document.fonts.load(`700 ${FONT.upm}px "Space Grotesk"`, WM_TEXT);
+  const sp = document.createElement('span');
+  sp.style.cssText = `position:absolute;left:0;top:0;white-space:pre;font:700 ${FONT.upm}px "Space Grotesk";letter-spacing:${WM_TRACK}em;font-kerning:normal`;
+  sp.textContent = WM_TEXT; document.body.appendChild(sp);
+  const base = sp.getBoundingClientRect().left, xs = [];
+  for (let i = 0; i < WM_TEXT.length; i++) {
+    const r = document.createRange(); r.setStart(sp.firstChild, i); r.setEnd(sp.firstChild, i + 1);
+    xs.push(r.getBoundingClientRect().left - base);
+  }
+  sp.remove();
+  const glyphs = [...WM_TEXT].map((ch, i) => {
+    const g = FONT.gid(ch), cs = glyphContours(FONT, g).map(c => c.map(q => ({ x: q.x + xs[i], y: q.y, on: q.on })));
+    return { ch, cs };
+  });
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const gl of glyphs) for (const c of gl.cs) for (const q of c) { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); y0 = Math.min(y0, q.y); y1 = Math.max(y1, q.y); }
+  WM = { glyphs, x0, x1, y0, y1, cap: FONT.cap, upm: FONT.upm };
+}
+/* So'z belgisi: chap-ink x, tayanch chiziq y, bosh harf balandligi capH */
+function wordmark(x, baseline, capH, colIQ, colRest) {
+  const s = capH / WM.cap, X = v => x + (v - WM.x0) * s, Y = v => baseline - v * s;
+  const d = (from, to) => WM.glyphs.slice(from, to).map(g => g.cs.map(c => contourPath(c, X, Y)).join('')).join('');
+  return { svg: `<path fill="${colIQ}" d="${d(0, 2)}"/><path fill="${colRest}" d="${d(2)}"/>`,
+           w: (WM.x1 - WM.x0) * s, top: baseline - WM.y1 * s, bottom: baseline - WM.y0 * s };
+}
+const WM_COL = { dark: [C.gold, C.snow], light: [C.goldDeep, C.ink], white: [C.white, C.white], black: [C.black, C.black] };
+
+/* ═══════════════ LOKAPLAR (§12.1): bo'sh joy har tomondan 8 birlik ═════ */
+const PAD = 8;
+function logo(kind, mode) {
+  let body, W, H;
+  if (kind === 'mark') {
+    W = H = 100 + 2 * PAD; body = tile(PAD, PAD, 100, mode);
+  } else if (kind === 'monogram') {
+    // Belgi o'zi (plitkasiz): ink chegarasi x8..99.5, y21..93.5
+    const col = mode === 'gold' ? C.gold : mode === 'white' ? C.white : C.black;
+    W = 91.5 + 2 * PAD; H = 72.5 + 2 * PAD;
+    body = `<g transform="translate(${PAD - 8} ${PAD - 21})">${monogram(col)}</g>`;
+  } else if (kind === 'horizontal') {
+    // belgi + 0.4×belgi balandligi oraliq + so'z belgisi (bosh harf = 0.44 belgi)
+    const cap = 44, base = PAD + 50 + cap / 2 + 2;
+    const wm = wordmark(PAD + 100 + 40, base, cap, ...WM_COL[mode]);
+    W = PAD + 140 + wm.w + PAD; H = 100 + 2 * PAD;
+    body = tile(PAD, PAD, 100, mode) + wm.svg;
+  } else { // stacked
+    const cap = 40, wm0 = wordmark(0, 0, cap, '#000', '#000');
+    W = Math.max(100, wm0.w) + 2 * PAD;
+    const base = PAD + 100 + 30 + cap;
+    const wm = wordmark((W - wm0.w) / 2, base, cap, ...WM_COL[mode]);
+    H = Math.ceil(wm.bottom) + PAD;
+    body = tile((W - 100) / 2, PAD, 100, mode) + wm.svg;
+  }
+  W = r2(W); H = r2(H);
+  return { w: W, h: H, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W * 4}" height="${H * 4}">${body}</svg>` };
+}
+window.brandLogo = (kind, mode) => logo(kind, mode);
+
+/* ═══════════════════════════ GLIFLAR (24×24) ══════════════════════════
+   Lucide uslubidagi (ISC) chiziqli gliflar — ilovadagi §9.4 ma'nolari. */
+const GLYPH = {
+  matrix: '<rect x="3" y="3" width="5" height="5" rx="1"/><rect x="9.5" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/><rect x="3" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="16" y="9.5" width="5" height="5" rx="1"/><rect x="3" y="16" width="5" height="5" rx="1"/><rect x="9.5" y="16" width="5" height="5" rx="1"/><path d="M17.2 17.3a1.4 1.4 0 0 1 2.6.7c0 .9-1.3 1.2-1.3 1.9"/><path d="M18.5 21h.01"/>',
+  dumbbell: '<path d="M14.4 14.4 9.6 9.6"/><path d="M18.66 21.51a2 2 0 1 1-2.83-2.83l-1.77 1.77a2 2 0 1 1-2.83-2.83l6.37-6.37a2 2 0 1 1 2.83 2.83l-1.77 1.77a2 2 0 1 1 2.83 2.83z"/><path d="m21.5 21.5-1.4-1.4"/><path d="M3.9 3.9 2.5 2.5"/><path d="M6.4 12.77a2 2 0 1 1-2.83-2.83l1.77-1.77a2 2 0 1 1-2.83-2.83l2.83-2.83a2 2 0 1 1 2.83 2.83l1.77-1.77a2 2 0 1 1 2.83 2.83z"/>',
+  puzzle: '<path d="M15.39 4.39a1 1 0 0 0 1.68-.47 2.5 2.5 0 1 1 3.01 3.01 1 1 0 0 0-.47 1.68l1.68 1.68a2.4 2.4 0 0 1 0 3.42l-1.61 1.61a1 1 0 0 1-1.61-.37 2.5 2.5 0 1 0-3.21 3.21 1 1 0 0 1 .37 1.61l-1.61 1.61a2.4 2.4 0 0 1-3.42 0l-1.68-1.68a1 1 0 0 0-1.68.47 2.5 2.5 0 1 1-3.01-3.01 1 1 0 0 0 .47-1.68l-1.68-1.68a2.4 2.4 0 0 1 0-3.42L4.6 8.5a1 1 0 0 1 1.61.37 2.5 2.5 0 1 0 3.21-3.21 1 1 0 0 1-.37-1.61l1.61-1.61a2.4 2.4 0 0 1 3.42 0z"/>',
+  sparkle: '<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/>',
+  help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+};
+const glyph = (name, size, color, sw = 2) =>
+  `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" style="display:block">${GLYPH[name]}</svg>`;
+
+/* ═════════════════════════ KARTALAR (§12.4) ═══════════════════════════ */
+let HERO = null;
+function heroMatrix() {
+  if (HERO) return HERO;
+  if (!window.IQ || typeof IQ.makeItem !== 'function') throw new Error('src/iq yuklanmadi — generator kerak (soxta matritsa chizilmaydi)');
+  const it = IQ.makeItem(HERO_MATRIX.type, HERO_MATRIX.seed, HERO_MATRIX.level);
+  if (!it.stimulus || it.stimulus.kind !== 'svg') throw new Error('matritsa stimuli SVG emas');
+  return (HERO = it);
+}
+/* Tanga va nishon medalyoni: olti burchak + oq glif, oltin halqa (§9.4). */
+function medalSVG(size) {
+  const hex = (r, cx, cy) => Array.from({ length: 6 }, (_, i) => {
+    const a = Math.PI / 180 * (60 * i - 90); return `${r2(cx + r * Math.cos(a))},${r2(cy + r * Math.sin(a))}`; }).join(' ');
+  return `<svg viewBox="0 0 280 220" width="${size}" height="${size * 220 / 280}" style="display:block">
+    <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C7BFF"/><stop offset="1" stop-color="#6B3FE0"/></linearGradient>
+    <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC45C"/><stop offset="1" stop-color="#FFA726"/></linearGradient></defs>
+    <polygon points="${hex(78, 112, 110)}" fill="#E0A100"/>
+    <polygon points="${hex(66, 112, 110)}" fill="url(#mg)"/>
+    <polygon points="${Array.from({ length: 10 }, (_, i) => { const a = Math.PI / 5 * i - Math.PI / 2, r = i % 2 ? 15 : 34; return `${r2(112 + r * Math.cos(a))},${r2(113 + r * Math.sin(a))}`; }).join(' ')}" fill="#fff" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="206" cy="160" r="44" fill="#C77700"/><circle cx="206" cy="156" r="44" fill="url(#cg)"/>
+    <circle cx="206" cy="156" r="30" fill="none" stroke="#2A1B00" stroke-opacity=".28" stroke-width="5"/>
+    <circle cx="206" cy="156" r="11" fill="#2A1B00" fill-opacity=".30"/></svg>`;
+}
+function shotURL(lang, theme) { return `../resources/brand/_shots/question-${theme}-${lang}.png`; }
+/* Kartalar to'plami 1000×800 ichki koordinatada, kerakli qutiga sig'diriladi. */
+function cluster(box, lang, opt = {}) {
+  const it = heroMatrix();
+  const theme = opt.theme || 'dark';
+  const sc = Math.min(box.w / 1000, box.h / 800);
+  const x = box.x + (box.w - 1000 * sc) * (opt.ax ?? 0.5), y = box.y + (box.h - 800 * sc) * (opt.ay ?? 0.5);
+  return `<div class="cluster" style="left:${x}px;top:${y}px;transform:scale(${sc})">
+    <div class="card medal" style="left:120px;top:70px;width:300px;height:236px;transform:rotate(-5deg);display:grid;place-items:center">${medalSVG(250)}</div>
+    <div class="phone" data-shot style="left:585px;top:60px;width:380px;height:657px;transform:rotate(4deg)"><div class="scr"><img src="${shotURL(lang, theme)}" alt=""></div></div>
+    <div class="card matrix" style="left:250px;top:300px;width:420px;transform:rotate(-7deg)"><img src="${IQ.svgSrc(it.stimulus.svg)}" alt=""></div>
+  </div>`;
+}
+
+/* ═════════════════════════ QOLIPLAR (TPL) ═════════════════════════════ */
+function bgHTML(w, h, glow = [0.72, 0.4]) {
+  const m = Math.max(w, h);
+  return `<div class="bg">
+    <div class="g3" style="width:${m * 1.4}px;height:${m * 1.4}px;left:${w * glow[0] - m * .7}px;top:${h * glow[1] - m * .7}px"></div>
+    <div class="g1" style="width:${m * .95}px;height:${m * .95}px;left:${-m * .3}px;top:${-m * .38}px"></div>
+    <div class="g2" style="width:${m * .8}px;height:${m * .8}px;left:${w - m * .45}px;top:${h - m * .42}px"></div>
+  </div><div class="dots"></div>`;
+}
+function lockupImg(height, mode = 'dark', kind = 'horizontal') {
+  const L = logo(kind, mode);
+  const k = height / L.h;
+  return `<div class="lock" style="width:${r2(L.w * k)}px;height:${height}px">${L.svg.replace(/width="[^"]+" height="[^"]+"/, `width="${r2(L.w * k)}" height="${height}"`)}</div>`;
+}
+function textBlock(lang, s, o = {}) {
+  // s — asosiy o'lcham (tagline px). Hamma o'lchamlar undan.
+  const t = T[lang];
+  const chips = o.chips === false ? '' : `<div class="chips" style="gap:${s * .16}px;margin-top:${s * .6}px;flex-wrap:nowrap">${t.chips.map(c =>
+      `<span class="chip" style="font-size:${s * .25}px;padding:${s * .14}px ${s * .24}px;gap:${s * .12}px;white-space:nowrap"><i style="width:${s * .1}px;height:${s * .1}px"></i>${c}</span>`).join('')}</div>`;
+  const url = SITE.url ? `<div class="url" style="font-size:${s * .3}px;margin-top:${s * .5}px">${SITE.url}</div>` : '';
+  return `<div class="lock-wrap" style="margin-left:${-s * .1}px">${lockupImg(o.lock || s * 1.35)}</div>
+    <div class="tag" style="font-size:${s}px;margin-top:${s * (o.gap || .55)}px;max-width:${o.maxw || 99999}px">${t.tag}</div>
+    ${o.sub === false ? '' : `<div class="sub" style="font-size:${s * .38}px;margin-top:${s * .3}px">${t.sub}</div>`}
+    ${chips}${url}`;
+}
+const SITE = { url: '' };
+
+const TPL = {
+  logo(sec) {
+    const [kind, mode] = sec.dataset.v.split(':');
+    const L = logo(kind, mode);
+    const scale = kind === 'mark' || kind === 'monogram' ? 1024 / Math.max(L.w, L.h) : 1600 / L.w;
+    const W = Math.round(L.w * scale), H = Math.round(L.h * scale);
+    sec.dataset.w = W; sec.dataset.h = H; sec.dataset.fmt = 'png-alpha';
+    sec.innerHTML = L.svg.replace(/width="[^"]+" height="[^"]+"/, `width="${W}" height="${H}" style="display:block"`);
+  },
+  'icon-only'(sec, w) {
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs>
+      <rect width="100" height="100" fill="url(#ig)"/><g transform="translate(20 18) scale(.6)">${monogram(C.gold)}</g></svg>`;
+  },
+  'icon-legacy'(sec, w) {  // API 24–25: yumaloq kvadrat, chetda 4% zaxira
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block">${tile(4, 4, 92, 'light')}</svg>`;
+  },
+  'icon-round'(sec, w) {
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs>
+      <circle cx="50" cy="50" r="46" fill="url(#rg)"/><g transform="translate(${50 - 50 * .56} ${50 - 50 * .56 - 1.1}) scale(.56)">${monogram(C.gold)}</g></svg>`;
+  },
+  /* Adaptiv ikonka: 108 birlikli qatlam, ko'rinadigan qism markazdagi 72,
+     xavfsiz zona 66 diametrli doira. Belgi 0.432 masshtabda — eski
+     ikonkadagi (ko'rinadigan maydonning 60%) bilan bir xil, uzoq nuqtasi
+     markazdan 27.6 birlik (< 33). Monoxrom qatlam aynan shu geometriya. */
+  adaptive(sec, w) {
+    const k = .432, ox = 54 - 50 * k, oy = 54 - 50 * k - 1.44, layer = sec.dataset.layer;
+    const mono = `<g transform="translate(${ox} ${oy}) scale(${k})">${monogram(layer === 'mono' ? '#fff' : C.gold)}</g>`;
+    const bg = `<defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs><rect width="108" height="108" fill="url(#ag)"/>`;
+    sec.innerHTML = `<svg viewBox="0 0 108 108" width="${w}" height="${w}" style="display:block">${layer === 'bg' ? bg : mono}</svg>`;
+  },
+  /* Bildirishnoma ikonkasi: 24dp, jonli maydon 20×20, oq siluet, kichik variant. */
+  stat(sec, w) {
+    const k = 20 / 91.5, ox = 12 - 53.75 * k, oy = 12 - 57.25 * k;
+    sec.innerHTML = `<svg viewBox="0 0 24 24" width="${w}" height="${w}" style="display:block"><g transform="translate(${r2(ox)} ${r2(oy)}) scale(${r2(k * 1e4) / 1e4})">${monogram('#fff', true)}</g></svg>`;
+  },
+  splash(sec, w) {
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><rect width="100" height="100" fill="${C.night}"/><g transform="translate(41 40) scale(.18)">${monogram(C.gold)}</g></svg>`;
+  },
+  avatar(sec, w) {  // doira ichida xavfsiz: belgi eni 56%
+    const k = .56 * 100 / 91.5, ox = 50 - 53.75 * k, oy = 50 - 50 * k;
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient>
+      <radialGradient id="vr" cx=".3" cy=".22" r=".7"><stop offset="0" stop-color="${C.blue}" stop-opacity=".35"/><stop offset="1" stop-color="${C.blue}" stop-opacity="0"/></radialGradient></defs>
+      <rect width="100" height="100" fill="url(#vg)"/><rect width="100" height="100" fill="url(#vr)"/>
+      <g transform="translate(${r2(ox)} ${r2(oy)}) scale(${r2(k * 1e4) / 1e4})">${monogram(C.gold, w <= 32)}</g></svg>`;
+  },
+  watermark(sec, w) {
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block">${tile(4, 4, 92, 'dark')}</svg>`;
+  },
+  highlight(sec, w, h) {  // glif markazdagi 420 px doira ichida
+    const g = sec.dataset.glyph;
+    sec.innerHTML = bgHTML(w, h, [.5, .5]) + `<div style="position:absolute;left:${w / 2 - 210}px;top:${h / 2 - 210}px;width:420px;height:420px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%,#3a2f8f,#241d5c 70%);box-shadow:0 0 0 2px rgba(255,167,38,.35) inset;display:grid;place-items:center">${glyph(g, 220, C.gold, 1.9)}</div>`;
+  },
+  wide(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    const s = Math.round(sh * .135);
+    const tw = sw * .52;
+    sec.innerHTML = bgHTML(w, h) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${tw}px;justify-content:center">${textBlock(lang, s, { maxw: tw })}</div>` +
+      cluster({ x: sx + sw * .5, y: sy - sh * .04, w: sw * .5, h: sh * 1.08 }, lang, { ax: .9 });
+  },
+  xheader(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    const s = 58;
+    sec.innerHTML = bgHTML(w, h, [.6, .3]) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .55}px;justify-content:center">${textBlock(lang, s, { chips: false })}</div>` +
+      cluster({ x: sx + sw * .54, y: 0, w: sw * .46, h: h }, lang, { ax: .5 });
+  },
+  mini(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    sec.innerHTML = bgHTML(w, h) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .56}px;justify-content:center">${textBlock(lang, 34, { chips: false, sub: false, lock: 42 })}</div>` +
+      cluster({ x: sx + sw * .5, y: sy - 20, w: sw * .56, h: sh + 40 }, lang, { ax: 1 });
+  },
+  square(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    sec.innerHTML = bgHTML(w, h, [.5, .75]) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;width:${sw}px">${textBlock(lang, 92, { chips: false, maxw: sw })}</div>` +
+      cluster({ x: sx - 40, y: sy + sh * .43, w: sw + 80, h: sh * .6 }, lang, { ay: 1 });
+  },
+  portrait(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    sec.innerHTML = bgHTML(w, h, [.5, .75]) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;width:${sw}px">${textBlock(lang, 96, { maxw: sw })}</div>` +
+      cluster({ x: sx - 40, y: sy + sh * .44, w: sw + 80, h: sh * .58 }, lang, { ay: 1 });
+  },
+  story(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    sec.innerHTML = bgHTML(w, h, [.5, .6]) +
+      `<div class="txt center" style="left:${sx}px;top:${sy + 40}px;width:${sw}px">${textBlock(lang, 104, { chips: false, maxw: sw })}</div>` +
+      cluster({ x: sx - 60, y: sy + 560, w: sw + 120, h: 700 }, lang) +
+      `<div class="txt center" style="left:${sx - 40}px;top:${sy + sh - 110}px;width:${sw + 80}px"><div class="chips" style="gap:14px;justify-content:center;flex-wrap:nowrap">${T[lang].chips.map(c =>
+        `<span class="chip" style="font-size:29px;padding:15px 24px;gap:12px;white-space:nowrap"><i style="width:11px;height:11px"></i>${c}</span>`).join('')}</div></div>`;
+  },
+  ytbanner(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    sec.innerHTML = bgHTML(w, h, [.62, .5]) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .56}px;justify-content:center">${textBlock(lang, 108, { maxw: sw * .56 })}</div>` +
+      cluster({ x: sx + sw * .54, y: sy - 230, w: sw * .5, h: sh + 460 }, lang, { ax: .6 });
+  },
+  thumb(sec, w, h, lang) {
+    const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
+    const it = heroMatrix();
+    sec.innerHTML = bgHTML(w, h, [.7, .5]) +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .5}px;justify-content:space-between">
+         ${lockupImg(64)}<div class="tag" style="font-size:78px;line-height:1.05">${T[lang].thumb}</div><div></div></div>
+       <div class="card matrix" style="position:absolute;left:${sx + sw - sh + 50}px;top:${sy + 30}px;width:${sh - 60}px;transform:rotate(-3deg)"><img src="${IQ.svgSrc(it.stimulus.svg)}" alt=""></div>`;
+  },
+  daily(sec, w, h, lang) { DAILY.render(sec, w, h, lang); },
+};
+
+/* ═══════════════ «KUN SAVOLI» (§12.4): haqiqiy savol, sana urug'i ═════ */
+const DAILY = {
+  // sana → urug' (FNV-1a), tur va daraja — hammasi sanadan, Date.now yo'q
+  pick(date) {
+    let hsh = 2166136261;
+    for (const ch of 'iquest-daily-' + date) { hsh ^= ch.charCodeAt(0); hsh = Math.imul(hsh, 16777619) >>> 0; }
+    const day = Math.floor(Date.parse(date + 'T00:00:00Z') / 864e5);
+    const types = ['matrix', 'series', 'spatial'].filter(t => IQ.generator && IQ.generator(t));
+    const type = types[day % types.length], level = 3 + (day % 4);
+    for (let k = 0; k < 20; k++) {
+      try { return { type, level, seed: (hsh + k) >>> 0, item: IQ.makeItem(type, (hsh + k) >>> 0, level) }; } catch (e) {}
+    }
+    throw new Error('kun savoli yasalmadi');
+  },
+  render(sec, w, h, lang) {
+    const date = Q.get('date');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) throw new Error('--date=YYYY-MM-DD kerak');
+    const { item } = DAILY.pick(date), t = T[lang], ans = sec.dataset.daily === 'a';
+    const tx = v => (v && (v[lang] || v.uz)) || '';
+    const tall = h > w, pad = 72, L = 'ABCDEF';
+    const n = item.options.length;
+    // Kvadrat postda variantlar bitta qatorda, storyda 3 ustun (katak o'lchami qat'iy).
+    const cols = tall ? (n <= 4 ? n : 3) : n, gap = tall ? 20 : 16;
+    const cell = Math.min(tall ? (ans ? 190 : 250) : 190, Math.floor((w - 2 * pad - (cols - 1) * gap) / cols));
+    const opt = (o, i) => {
+      const cls = ans ? (i === item.correct ? ' ok' : ' dim') : '';
+      const inner = o.kind === 'svg' ? `<img src="${IQ.svgSrc(o.svg)}" alt="">` : `<b style="font-size:${tall ? 52 : 44}px">${tx(o)}</b>`;
+      return `<div class="opt${cls}" style="width:${cell}px;height:${cell}px">${inner}<span class="l">${L[i]}</span></div>`;
+    };
+    const stim = item.stimulus.kind === 'svg'
+      ? `<img src="${IQ.svgSrc(item.stimulus.svg)}" alt="">`
+      : `<div style="font:800 ${tall ? 64 : 56}px 'Space Grotesk',Manrope;letter-spacing:-.01em;padding:0 32px;text-align:center">${tx(item.stimulus)}</div>`;
+    sec.innerHTML = bgHTML(w, h, [.5, .5]) + `<div class="dq" style="height:${h}px;padding:${tall ? '250px' : pad + 'px'} ${pad}px ${tall ? '340px' : pad + 'px'};gap:${tall ? 36 : 26}px">
+      <div class="top">${lockupImg(tall ? 64 : 54)}<span class="kick" style="font-size:${tall ? 32 : 28}px">${ans ? t.answer : t.daily} · ${date}</span></div>
+      <div class="q" style="font-size:${tall ? 50 : 42}px">${tx(item.prompt)}</div>
+      <div class="stim" style="padding:24px">${stim}</div>
+      <div class="opts" style="grid-template-columns:repeat(${cols},${cell}px);gap:${gap}px">${item.options.map(opt).join('')}</div>
+      ${ans ? `<div class="exp" style="font-size:${tall ? 28 : 26}px;padding:${tall ? 24 : 20}px ${tall ? 28 : 26}px"><b style="color:var(--gold)">${t.why}: </b>${tx(item.explain)}</div>`
+            : `<div class="foot" style="font-size:${tall ? 30 : 24}px"><span>${t.next} →</span></div>`}
+    </div>`;
+  },
+};
+
+/* ═════════════════════════════ ISHGA TUSHIRISH ═════════════════════════ */
+const Q = new URLSearchParams(location.search);
+window.brandInfo = () => [...document.querySelectorAll('section')].map(s => ({
+  id: s.dataset.id, group: s.dataset.group, w: +s.dataset.w || 0, h: +s.dataset.h || 0,
+  fmt: s.dataset.fmt || 'png', tpl: s.dataset.tpl, langs: (s.dataset.langs || '').split(',').filter(Boolean),
+  daily: !!s.dataset.daily, logo: s.dataset.tpl === 'logo', v: s.dataset.v || '' }));
+
+async function render(sec, lang) {
+  const w = +sec.dataset.w, h = +sec.dataset.h;
+  if (w && h) { sec.style.width = w + 'px'; sec.style.height = h + 'px'; }
+  TPL[sec.dataset.tpl](sec, w, h, lang);
+  if (!w || !h) { sec.style.width = sec.dataset.w + 'px'; sec.style.height = sec.dataset.h + 'px'; }
+  sec.lang = lang;
+  // Rasm yuklanishini kutish; ilova surati yo'q bo'lsa telefon kartasi olib tashlanadi
+  // (soxta ekran chizilmaydi) va mkbrand ogohlantiradi.
+  const imgs = [...sec.querySelectorAll('img')];
+  await Promise.all(imgs.map(im => im.complete && im.naturalWidth ? 0 : new Promise(r => { im.onload = r; im.onerror = r; })));
+  for (const im of imgs) if (!im.naturalWidth) {
+    const ph = im.closest('[data-shot]');
+    if (ph) { ph.remove(); (window.__warn = window.__warn || []).push('ilova surati yoʻq: ' + im.getAttribute('src')); }
+    else throw new Error('rasm yuklanmadi: ' + im.src.slice(0, 80));
+  }
+}
+
+(async () => {
+  try {
+    SITE.url = Q.get('url') || '';
+    await buildWordmark();
+    await document.fonts.ready;
+    const id = Q.get('id'), group = Q.get('group'), lang = Q.get('lang') || 'uz';
+    document.documentElement.lang = lang;
+    if (id) {
+      const sec = [...document.querySelectorAll('section')].find(s => s.dataset.id === id && (!group || s.dataset.group === group));
+      if (!sec) throw new Error('aktiv topilmadi: ' + group + '/' + id);
+      document.body.className = 'one'; sec.classList.add('on');
+      await render(sec, lang);
+    } else {
+      document.body.className = 'all';
+      for (const sec of document.querySelectorAll('section')) {
+        if (sec.dataset.daily && !Q.get('date')) continue;
+        try { await render(sec, lang); } catch (e) { sec.textContent = e.message; }
+        sec.style.zoom = Math.min(1, 520 / (+sec.dataset.w || 520));
+      }
+    }
+    await document.fonts.ready;
+    window.__ready = true;
+  } catch (e) {
+    window.__error = String(e && e.stack || e);
+    window.__ready = true;
+  }
+})();
+</script>
+</body></html>

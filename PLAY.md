@@ -17,19 +17,25 @@ savolni yo'q qiladi. Ayniqsa Data safety: u maxfiylik siyosati bilan
 >
 > | Mumkin | Mumkin EMAS |
 > |---|---|
-> | "taxminiy IQ", har doim **oraliq** bilan | oraliqsiz yolg'iz raqam |
+> | IQ raqami har doim **oraliq** bilan ("IQ 108, oraliq 100–116"); "taxminiy" / rad qilish matni faqat MUHIM bandida va Foydalanish shartlarida | oraliqsiz yolg'iz raqam; ilova ICHIDA "taxminiy", "klinik emas" kabi yozuvlar (CONTRACT §6, qaror №2) |
 > | "mantiqiy fikrlashni mashq qiling", "natijangiz o'sishini kuzating" | "IQ'ingizni X ballga oshiring", "aqlliroq bo'ling" |
 > | "IQuest.uz tomonidan berilgan sertifikat" (keyingi versiya) | "rasmiy", "sertifikatlangan/akkreditatsiyalangan test", "Mensa", "klinik" |
-> | "akademik litsey va boshqa qabul testlaridagi mantiqiy topshiriqlar turini mashq qilish" | "DTM'ga tayyorlaydi" (DTM'da mantiq bo'limi **yo'q**) |
+> | "akademik litsey va boshqa qabul testlaridagi mantiqiy topshiriqlar turini mashq qilish" | "DTM'ga tayyorlaydi", ruscha "подготовка / готовит к (экзамену, ДТМ)" (DTM'da mantiq bo'limi **yo'q**) |
 > | — | persentil, "aholining X% idan aqlliroq" (norm yo'q) |
 > | — | sog'liq da'volari: diqqat buzilishi, demensiya, xotira kasalligi |
 > | test va natija **bepul** | natijani pul/obuna ortiga yashirish |
 >
 > Yana bir qoida: do'kon matni va skrinshotlarda faqat **shu versiyada
-> haqiqatan ishlaydigan** narsa. Liga, reyting va sertifikat server
-> tekshiruvini talab qiladi (CONTRACT §10) va v1 da **yo'q** — ular
-> uchun matn §2.4 da tayyor turadi, lekin ishga tushmaguncha
-> ishlatilmaydi.
+> haqiqatan ishlaydigan** narsa.
+>
+> **Liga, reyting, sertifikat — egasi qarori (ARXITEKTURA §16-2).**
+> Ilovada **mahalliy** haftalik liga bor (Boshdagi liga kartasi, Reyting
+> tabidagi zinapoya; boshqa foydalanuvchilar yo'q). Lekin server paydo
+> bo'lmaguncha do'kon matni, bannerlar va reklamada liga, reyting va
+> sertifikat **tilga olinmaydi**; Play skrinshotlari haqiqiy UI, ammo
+> **Reyting tabi ishlatilmaydi**. Server liga jadvali, umumiy reyting va
+> IQuest sertifikati (CONTRACT §10) — v2; ular uchun matn §2.4 / §3.4 da
+> tayyor turadi.
 
 ---
 
@@ -40,20 +46,21 @@ savolni yo'q qiladi. Ayniqsa Data safety: u maxfiylik siyosati bilan
 | AAB yig'iladi | ✅ `npm run aab` / CI (`IQuest-release.aab`) |
 | Paket nomi `uz.iquest.app` | ✅ birinchi yuklashdan keyin o'zgarmaydi |
 | `targetSdk` 36, `minSdk` 24 | ✅ |
-| Ortiqcha ruxsat yo'q | ✅ faqat `INTERNET` (+ bildirishnoma) |
+| Ortiqcha ruxsat yo'q | ✅ faqat `INTERNET` (+ bildirishnoma). `READ_MEDIA_IMAGES`, `READ_EXTERNAL_STORAGE`, `CAMERA` manifestda `tools:node="remove"`, CI birlashtirilgan manifestni tekshiradi |
 | `SCHEDULE_EXACT_ALARM` olib tashlangan | ✅ manifestda `tools:node="remove"` |
-| Ikonka (IQ monogramma) | ✅ `tools/icon.html` → `resources/` → `android/.../res` |
-| Maxfiylik siyosati (ochiq URL) | ❌ sahifa matni hali **Nazariy** uchun (`src/site/pages.mjs`) — IQuest'ga qayta yozilishi va hosting kerak |
-| Ma'lumotni o'chirish sahifasi | ⚠️ sahifa bor, matni tekshirilishi va **hosting** kerak |
+| Ikonka (IQ monogramma) | ✅ `tools/brand.html` → `npm run icons` → `android/.../res`: adaptiv (108dp), Android 13 mavzuli (`<monochrome>`), bildirishnoma `ic_stat_iquest` |
+| Maxfiylik siyosati (ochiq URL) | ⚠️ matn IQuest uchun yozilgan (`src/site/pages.mjs`) — faqat **hosting** va domen qoldi |
+| Ma'lumotni o'chirish sahifasi | ⚠️ matn tayyor — **hosting** kerak |
 | Aloqa manzili | ❌ `site.config.json` → `contactEmail` (hozir PLACEHOLDER) |
 | Domen `iquest.uz` | ❌ `domainConfirmed: false` |
 | Do'kon matnlari | ✅ pastda (uz + ru) |
-| Grafik materiallar | ⚠️ `npm run play:assets` — ikonka va sarlavha rasmi tayyor; ekran suratlari UI tugagach olinadi |
+| Grafik materiallar | ✅ ikonka 512 va sarlavha rasmi (uz, ru) — `npm run brand` → `resources/brand/play/`. ⚠️ ekran suratlari (1080×1920, har til 6 ta) UI tugagach `npm run play:assets` |
 | Imzo kaliti | ❌ **siz yaratasiz** (§6) |
 | Ishlamaydigan to'lov oqimi | ✅ mobil build'dan **kesilgan** |
 | Savollar | ✅ generatorlar (matritsa, son qatori, fazoviy) — tugamaydi; ⚠️ og'zaki savollar `reviewed: false` |
-| Natija ekranida rad qilish matni | ⚠️ UI'da borligini tekshiring (CONTRACT §6.2) |
-| Liga, reyting, sertifikat | ⏳ **keyingi versiya** (server kerak) |
+| Natija ekrani | ✅ katta IQ raqami + bitta xira "Oraliq a–b" qatori (CONTRACT §6.1). Ilovada rad qilish matni **yo'q** (qaror №2) — u `/shartlar/` da, Profil/Sozlamalardan havola |
+| Liga | ✅ ilovada mahalliy haftalik liga; ⛔ do'kon matni va bannerlarda tilga olinmaydi (§16-2) |
+| Server reyting, sertifikat | ⏳ **v2** (server kerak) |
 
 ---
 
@@ -68,7 +75,7 @@ IQuest — IQ test va mantiq
 ### Qisqa tavsif (80 belgigacha)
 
 ```
-Mantiqiy fikrlashni sinang: IQ test va aql o'yinlari. Internetsiz, bepul.
+Mantiqiy fikrlashni sinang: IQ test va aql oʻyinlari. Internetsiz, bepul.
 ```
 
 > ⚠ **Chiqarishdan oldin tavsifni build bilan solishtiring.** Quyida
@@ -81,71 +88,71 @@ Mantiqiy fikrlashni sinang: IQ test va aql o'yinlari. Internetsiz, bepul.
 ### To'liq tavsif (4000 belgigacha)
 
 ```
-IQuest — mantiqiy fikrlash topshiriqlari va aql o'yinlari ilovasi.
-Qisqa IQ test yeching, natijangizni taxminiy ball va oraliq ko'rinishida
-oling, keyin kuchsiz tomoningizni mashq qiling.
+IQuest — mantiqiy fikrlash topshiriqlari va aql oʻyinlari ilovasi.
+Qisqa IQ test yeching, IQ natijangizni oraliq bilan oling, keyin
+kuchsiz tomoningizni mashq qiling.
 
 IQ TEST
-Savollar javoblaringizga qarab moslashadi: to'g'ri javobdan keyin
+Savollar javoblaringizga qarab moslashadi: toʻgʻri javobdan keyin
 qiyinroq, xatodan keyin osonroq savol keladi. Shuning uchun har kimga
-o'z darajasiga yaqin savollar tushadi.
+oʻz darajasiga yaqin savollar tushadi.
 
-TO'RT XIL TOPSHIRIQ
-• Matritsalar — 3×3 jadvaldagi qonuniyatni topib, bo'sh katakni to'ldiring.
+TOʻRT XIL TOPSHIRIQ
+• Matritsalar — 3×3 jadvaldagi qonuniyatni topib, boʻsh katakni toʻldiring.
 • Son qatorlari — keyingi sonni toping.
-• Fazoviy tafakkur — shaklni aqlda aylantiring, yetishmagan bo'lakni toping.
-• Og'zaki mantiq — analogiya, ortiqchasini topish, tushunchalar.
+• Fazoviy tafakkur — shaklni aqlda aylantiring, yetishmagan boʻlakni toping.
+• Ogʻzaki mantiq — analogiya, ortiqchasini topish, tushunchalar.
 
 NATIJA — HALOL
-Natija "taxminiy IQ" va oraliq bilan ko'rsatiladi, masalan: 108 (100–116).
-Qaysi turdagi topshiriqlar yaxshi, qaysilari qiyinroq bo'lgani ham
-ko'rinadi. Savol kam bo'lsa, ilova raqam o'ylab topmaydi — faqat
-to'g'ri javoblar sonini ko'rsatadi.
+Natija IQ raqami va oraliq bilan koʻrsatiladi, masalan: IQ 108, oraliq 100–116.
+Qaysi turdagi topshiriqlar yaxshi, qaysilari qiyinroq boʻlgani ham
+koʻrinadi. Savol kam boʻlsa, ilova raqam oʻylab topmaydi — faqat
+toʻgʻri javoblar sonini koʻrsatadi.
 
 MASHQ VA IZOHLAR
-Har bir tur bo'yicha alohida mashq. Daraja sizga moslashadi. Har
+Har bir tur boʻyicha alohida mashq. Daraja sizga moslashadi. Har
 javobdan keyin qoida tushuntiriladi — nima uchun aynan shu javob.
 
-AQL O'YINLARI
-Xotira, diqqat va tezlik uchun qisqa o'yinlar: har biri 1–2 daqiqa.
-Natijangiz o'sishini kuzatib borasiz.
+AQL OʻYINLARI
+Xotira, diqqat va tezlik uchun qisqa oʻyinlar: har biri 1–2 daqiqa.
+Natijangiz oʻsishini kuzatib borasiz.
 
 SAVOLLAR TUGAMAYDI
-Matritsa, son qatori va fazoviy topshiriqlar telefoningizning o'zida
+Matritsa, son qatori va fazoviy topshiriqlar telefoningizning oʻzida
 yaratiladi, shuning uchun har safar yangi savol chiqadi — javoblarni
-yodlab olib bo'lmaydi.
+yodlab olib boʻlmaydi.
 
 INTERNETSIZ ISHLAYDI
-Hammasi ilovaning ichida. Metroda, yo'lda, internet yo'q joyda ham
+Hammasi ilovaning ichida. Metroda, yoʻlda, internet yoʻq joyda ham
 ishlaydi.
 
-REKLAMA VA HISOB YO'Q
-Reklama yo'q. Ro'yxatdan o'tish shart emas — ochasiz va boshlaysiz.
-Ilova sizdan ism, telefon raqami yoki boshqa shaxsiy ma'lumot
-so'ramaydi, analitika tizimi ham yo'q. Natijalaringiz faqat
+REKLAMA VA HISOB YOʻQ
+Reklama yoʻq. Roʻyxatdan oʻtish shart emas — ochasiz va boshlaysiz.
+Ilova sizdan ism, telefon raqami yoki boshqa shaxsiy maʼlumot
+soʻramaydi, analitika tizimi ham yoʻq. Natijalaringiz faqat
 telefoningizda saqlanadi.
 
 QABUL TESTLARIGA MASHQ
-Akademik litsey, ijod maktablari kabi ba'zi qabul testlarida mantiqiy
-topshiriqlar bo'limi bor. IQuest'da shu turdagi topshiriqlarni mashq
-qilishingiz mumkin. IQuest bu imtihonlar yoki ularni o'tkazuvchi
-tashkilotlar bilan bog'liq emas.
+Akademik litsey, ijod maktablari kabi baʼzi qabul testlarida mantiqiy
+topshiriqlar boʻlimi bor. IQuestʼda shu turdagi topshiriqlarni mashq
+qilishingiz mumkin. IQuest bu imtihonlar yoki ularni oʻtkazuvchi
+tashkilotlar bilan bogʻliq emas.
 
 TILLAR
-O'zbekcha (lotin va kirill) va ruscha.
+Oʻzbekcha (lotin va kirill) va ruscha.
 
 TUNGI REJIM
 Telefon sozlamasiga ergashadi.
 
 MUHIM
 IQuest — klinik yoki rasmiy IQ testi emas va hech qanday tashkilot
-tomonidan tasdiqlanmagan. Savollar hali katta guruhda me'yorlanmagan,
-shuning uchun natija taxminiy va faqat o'zingizni kuzatish uchun.
+tomonidan tasdiqlanmagan. Savollar hali katta guruhda meʼyorlanmagan,
+shuning uchun natija taxminiy va faqat oʻzingizni kuzatish uchun.
 Mashq qilgan topshiriq turlaringizda natija oshishi tabiiy — bu umumiy
 aqliy qobiliyat oshdi degani emas.
 
 Savol yoki izohda xato topsangiz yozing — bunday xabarlar navbatdan
-tashqari ko'riladi.
+tashqari koʻriladi.
 ```
 
 ### 2.4. Keyingi versiya uchun tayyor matn — HOZIR ISHLATILMAYDI
@@ -156,12 +163,12 @@ Bir vaqtda Data safety (§4.2) va maxfiylik siyosati ham yangilanadi.
 
 ```
 LIGA VA REYTING
-Haftalik liga — faollik ballari bo'yicha. Reyting — tekshirilgan eng
-yaxshi natijalar bo'yicha. Ballar serverda qayta hisoblanadi, shuning
-uchun ro'yxatda soxta natija bo'lmaydi.
+Haftalik liga — faollik ballari boʻyicha. Reyting — tekshirilgan eng
+yaxshi natijalar boʻyicha. Ballar serverda qayta hisoblanadi, shuning
+uchun roʻyxatda soxta natija boʻlmaydi.
 
 IQUEST SERTIFIKATI
-To'liq testdan keyin IQuest.uz tomonidan beriladigan sertifikat:
+Toʻliq testdan keyin IQuest.uz tomonidan beriladigan sertifikat:
 taxminiy ball, oraliq, sana, ismingiz va noyob tekshirish kodi.
 Bu IQuest testi natijasi — rasmiy yoki klinik IQ hujjati emas.
 ```
@@ -186,8 +193,8 @@ IQuest — IQ тест и логика
 
 ```
 IQuest — приложение с задачами на логическое мышление и играми для ума.
-Пройдите короткий IQ-тест, получите результат в виде ориентировочного
-балла с интервалом и тренируйте то, что даётся труднее.
+Пройдите короткий IQ-тест, получите результат IQ с диапазоном и
+тренируйте то, что даётся труднее.
 
 IQ-ТЕСТ
 Вопросы подстраиваются под ваши ответы: после верного — сложнее, после
@@ -200,8 +207,8 @@ IQ-ТЕСТ
 • Вербальная логика — аналогии, лишнее слово, понятия.
 
 ЧЕСТНЫЙ РЕЗУЛЬТАТ
-Результат показывается как «ориентировочный IQ» с интервалом, например:
-108 (100–116). Видно, какие типы заданий получаются лучше, а какие
+Результат — число IQ и диапазон, например: IQ 108, диапазон 100–116.
+Видно, какие типы заданий получаются лучше, а какие
 сложнее. Если вопросов мало, приложение не придумывает число — только
 показывает количество верных ответов.
 
@@ -225,7 +232,7 @@ IQ-ТЕСТ
 спрашивает имя, телефон или другие личные данные, аналитики тоже нет.
 Результаты хранятся только на вашем телефоне.
 
-ПОДГОТОВКА К ВСТУПИТЕЛЬНЫМ ТЕСТАМ
+ЗАДАНИЯ КАК ВО ВСТУПИТЕЛЬНЫХ ТЕСТАХ
 В некоторых вступительных тестах (например, в академические лицеи и
 творческие школы) есть раздел логических заданий. В IQuest можно
 тренировать задания такого типа. IQuest не связан с этими экзаменами и
@@ -289,7 +296,9 @@ savollar APK ichida (`content/verbal.json`). Server sozlamasi
 (`supabase/config.json`) **ataylab bo'sh** — `src/data.js` bo'sh
 sozlama bilan tarmoqqa chiqmaydi. Ball, streak, test tarixi va
 javoblar **faqat qurilmada** (`localStorage`, `nz-progress`).
-`INTERNET` ruxsati Capacitor WebView uchun standart; bildirishnoma —
+Profil nomi, bio va rasm (v1.1) ham **faqat qurilmada** saqlanadi va
+hech qayerga yuborilmaydi; rasm tizim tanlagichidan olinadi (galereya
+ruxsati so'ralmaydi). `INTERNET` ruxsati Capacitor WebView uchun standart; bildirishnoma —
 qurilmaning o'zida rejalashtiriladigan kunlik eslatma, u ham hech
 narsa yubormaydi.
 
@@ -349,7 +358,7 @@ yig'ish yo'qligi uchun bu yerda xavf past.
 da'vosi yo'q. Games → Puzzle ham mumkin, lekin unda IARC anketasi
 o'yin sifatida to'ldiriladi.)
 
-**Teglar:** IQ test, mantiq, logika, aql o'yinlari, boshqotirma, тест IQ.
+**Teglar:** IQ test, mantiq, logika, aql oʻyinlari, boshqotirma, тест IQ.
 
 ---
 
@@ -390,7 +399,7 @@ va Play uni qabul qilmaydi.
 shart** (Play bir xil yoki kichik raqamni rad etadi).
 
 ```json
-{ "versionCode": 1, "versionName": "1.0.0" }
+{ "versionCode": 2, "versionName": "1.1.0" }
 ```
 
 `android/app/build.gradle` shu fayldan o'qiydi, ya'ni ikki joyda
@@ -420,17 +429,21 @@ tahrirlash kerak emas.
 - [x] Paket nomi `uz.iquest.app`, ilova nomi "IQuest"
 - [x] Ortiqcha ruxsat yo'q
 - [x] Ishlamaydigan to'lov oqimi mobil build'dan kesilgan
-- [x] Ikonka (IQ monogramma), splash, OG rasm
+- [x] Ikonka (IQ monogramma), mavzuli ikonka, bildirishnoma ikonkasi, splash, OG rasm
+- [x] Brend to'plami: logo (SVG/PDF), ijtimoiy tarmoq bannerlari, Play sarlavha rasmi — `npm run brand` (`resources/brand/MANIFEST.json`)
+- [x] Birlashtirilgan manifestda `READ_MEDIA_IMAGES`, `READ_EXTERNAL_STORAGE`, `CAMERA` yo'q (CI tekshiradi)
 - [x] Do'kon matnlari (uz + ru), §6 qoidalari bilan tekshirilgan
-- [ ] Maxfiylik siyosati, shartlar, aloqa, ma'lumotni o'chirish
-      sahifalari **IQuest uchun** qayta yozilgan (`src/site/pages.mjs`,
-      `tools/mksite.mjs` — hozir Nazariy matni)
-- [ ] Natija ekranida: "Taxminiy IQ", oraliq va rad qilish matni
-      (CONTRACT §6.1–6.2); `reliable: false` da raqam yo'q
+- [x] Maxfiylik siyosati, shartlar, aloqa, ma'lumotni o'chirish
+      sahifalari **IQuest uchun** yozilgan (`src/site/pages.mjs`) —
+      faqat hosting, `contactEmail` va domen qoldi
+- [x] Natija ekranida: katta IQ raqami + "Oraliq a–b" (CONTRACT §6.1);
+      ilovada "taxminiy" / rad qilish matni YO'Q (§6.2 → `/shartlar/`);
+      `reliable: false` da raqam yo'q
 - [ ] `npm test` yashil (generatorlar, baholash, o'yinlar)
-- [ ] Ekran suratlari yangi UI'dan (`npm run play:assets`), ko'z bilan
-      tekshirilgan: liga, reyting, sertifikat va oraliqsiz IQ raqami
-      suratga tushmagan
+- [ ] Ekran suratlari yangi UI'dan (`npm run play:assets`, 1080×1920,
+      uz va ru uchun 6 tadan), ko'z bilan tekshirilgan: Reyting tabi,
+      sertifikat va oraliqsiz IQ raqami suratga tushmagan
+- [ ] Banner telefon kartasi yangi UI bilan: `npm run brand` qayta
 
 ---
 
@@ -445,8 +458,8 @@ tahrirlash kerak emas.
 3. Keyin Production.
 
 Test davri og'zaki savollarni ko'rib chiqish va natija matnlarini
-sinovchilarda tekshirish uchun eng qulay vaqt: "taxminiy" va oraliq
-odamlarga tushunarlimi, rad qilish matni ko'rinadimi.
+sinovchilarda tekshirish uchun eng qulay vaqt: IQ raqami va "Oraliq"
+qatori odamlarga tushunarlimi, raqamni qanday talqin qilishadi.
 
 ---
 
@@ -457,6 +470,8 @@ odamlarga tushunarlimi, rad qilish matni ko'rinadimi.
 | AAB (Play'ga yuklanadi) | CI → `iquest-android` → `IQuest-release.aab` |
 | APK (qo'lda sinash) | CI → `iquest-android` → `IQuest-debug.apk` (yoki Release `sinov-…`) |
 | Sayt | CI → `iquest-sayt` → `dist/site/` |
-| Ikonka, sarlavha rasmi, suratlar | `resources/play/` (`npm run play:assets`) |
-| Ikonka manbasi | `tools/icon.html` (`npm run icons`) |
+| Play ikonka 512, sarlavha rasmi (uz, ru) | `resources/brand/play/` (`npm run brand`) |
+| Play ekran suratlari 1080×1920 | `resources/brand/play/screenshot-*` (`npm run play:assets`) |
+| Logo, ijtimoiy tarmoq bannerlari | `resources/brand/**`, ro'yxat — `MANIFEST.json`, ko'rik — `PREVIEW.jpg` |
+| Brend manbasi | `tools/brand.html` (`npm run brand`, `npm run icons`) |
 | Havola ko'rinishi rasmi | `resources/og.jpg` (`npm run og`) |
