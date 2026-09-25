@@ -1,0 +1,4323 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "key": "v001",
+      "kind": "analogy",
+      "level": 1,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Qush : uchmoq = baliq : ?",
+        "options": [
+          "suzmoq",
+          "suv",
+          "yugurmoq",
+          "ovlamoq"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Птица : летать = рыба : ?",
+        "options": [
+          "плавать",
+          "вода",
+          "бегать",
+          "ловить"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Qush uchib harakatlanadi, baliq esa suzib. «Suv» — baliq yashaydigan joy, harakatlanish usuli emas.",
+        "ru": "Птица передвигается полётом, рыба — плаванием. «Вода» — это место, где живёт рыба, а не способ передвижения."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v002",
+      "kind": "analogy",
+      "level": 1,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kun : tun = oq : ?",
+        "options": [
+          "kulrang",
+          "qora",
+          "yorugʻ",
+          "qor"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "День : ночь = белый : ?",
+        "options": [
+          "серый",
+          "чёрный",
+          "светлый",
+          "снег"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Kun va tun — qarama-qarshi tushunchalar, oqning qarama-qarshisi — qora. Kulrang oq bilan qora oraligʻida turadi, u qarama-qarshi emas.",
+        "ru": "День и ночь — противоположности, противоположность белого — чёрный. Серый находится между белым и чёрным, это не противоположность."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v003",
+      "kind": "analogy",
+      "level": 1,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Ruchka : yozmoq = qaychi : ?",
+        "options": [
+          "qogʻoz",
+          "oʻtkir",
+          "kesmoq",
+          "tikmoq"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Ручка : писать = ножницы : ?",
+        "options": [
+          "бумага",
+          "острый",
+          "резать",
+          "шить"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Ruchka bilan yoziladi, qaychi bilan kesiladi: narsa va uning vazifasi. «Qogʻoz» — qaychi kesadigan narsa, uning vazifasi emas.",
+        "ru": "Ручка нужна, чтобы писать, ножницы — чтобы резать: предмет и его назначение. «Бумага» — то, что режут, а не назначение ножниц."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v004",
+      "kind": "analogy",
+      "level": 1,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Sigir : buzoq = ot : ?",
+        "options": [
+          "toy",
+          "qoʻzi",
+          "eshak",
+          "egar"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Корова : телёнок = лошадь : ?",
+        "options": [
+          "жеребёнок",
+          "ягнёнок",
+          "осёл",
+          "седло"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Buzoq — sigirning bolasi, toy — otning bolasi. Qoʻzi ham hayvon bolasi, lekin u qoʻyning bolasi.",
+        "ru": "Телёнок — детёныш коровы, жеребёнок — детёныш лошади. Ягнёнок — тоже детёныш, но овцы."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v005",
+      "kind": "analogy",
+      "level": 1,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Koʻz : koʻrmoq = quloq : ?",
+        "options": [
+          "gapirmoq",
+          "bosh",
+          "eshitmoq",
+          "tovush"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Глаз : видеть = ухо : ?",
+        "options": [
+          "говорить",
+          "голова",
+          "слышать",
+          "звук"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Koʻz bilan koʻramiz, quloq bilan eshitamiz. «Tovush» — quloq eshitadigan narsa, quloqning vazifasi emas.",
+        "ru": "Глазами видят, ушами слышат. «Звук» — то, что слышат, а не действие уха."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v006",
+      "kind": "odd",
+      "level": 1,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "sabzi, olma, nok, oʻrik",
+        "options": [
+          "sabzi",
+          "olma",
+          "nok",
+          "oʻrik"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "морковь, яблоко, груша, абрикос",
+        "options": [
+          "морковь",
+          "яблоко",
+          "груша",
+          "абрикос"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Olma, nok va oʻrik — mevalar, sabzi esa sabzavot. Oʻrikning danagi borligi uni ortiqcha qilmaydi: u ham meva.",
+        "ru": "Яблоко, груша и абрикос — фрукты, а морковь — овощ. Косточка у абрикоса не делает его лишним: он тоже фрукт."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v007",
+      "kind": "odd",
+      "level": 1,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "qizil, katta, koʻk, yashil",
+        "options": [
+          "qizil",
+          "katta",
+          "koʻk",
+          "yashil"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "красный, большой, синий, зелёный",
+        "options": [
+          "красный",
+          "большой",
+          "синий",
+          "зелёный"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Qizil, koʻk va yashil — ranglar, «katta» esa oʻlchamni bildiradi.",
+        "ru": "Красный, синий и зелёный — цвета, а «большой» обозначает размер."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v008",
+      "kind": "odd",
+      "level": 1,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "stul, stol, shkaf, non",
+        "options": [
+          "stul",
+          "stol",
+          "shkaf",
+          "non"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "стул, стол, шкаф, хлеб",
+        "options": [
+          "стул",
+          "стол",
+          "шкаф",
+          "хлеб"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Stul, stol va shkaf — mebel, non esa oziq-ovqat. Stol ustida non turishi mumkin, lekin non mebel emas.",
+        "ru": "Стул, стол и шкаф — мебель, а хлеб — еда. Хлеб может лежать на столе, но мебелью он не становится."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v009",
+      "kind": "category",
+      "level": 1,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "mushuk, it, sigir",
+        "options": [
+          "daraxt",
+          "echki",
+          "tosh",
+          "stol"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "кошка, собака, корова",
+        "options": [
+          "дерево",
+          "коза",
+          "камень",
+          "стол"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Mushuk, it va sigir — uy hayvonlari, echki ham. Daraxt ham tirik, lekin u oʻsimlik, hayvon emas.",
+        "ru": "Кошка, собака и корова — домашние животные, коза тоже. Дерево тоже живое, но это растение, а не животное."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v010",
+      "kind": "category",
+      "level": 1,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "dushanba, seshanba, juma",
+        "options": [
+          "oylar",
+          "fasllar",
+          "hafta kunlari",
+          "bayramlar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "понедельник, вторник, пятница",
+        "options": [
+          "месяцы",
+          "времена года",
+          "дни недели",
+          "праздники"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Dushanba, seshanba va juma — hafta kunlarining nomlari. Oylar ham vaqtga oid, lekin ular yanvar, fevral kabi nomlanadi.",
+        "ru": "Понедельник, вторник и пятница — названия дней недели. Месяцы тоже связаны со временем, но это январь, февраль и так далее."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v011",
+      "kind": "relation",
+      "level": 1,
+      "uz": {
+        "prompt": "Kim pastroq?",
+        "stimulus": "Anvar Sardordan baland.",
+        "options": [
+          "Sardor",
+          "Anvar",
+          "Ikkalasining boʻyi bir xil",
+          "Aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кто ниже ростом?",
+        "stimulus": "Анвар выше Сардора.",
+        "options": [
+          "Сардор",
+          "Анвар",
+          "Они одного роста",
+          "Определить нельзя"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Anvar Sardordan baland boʻlsa, Sardor Anvardan past. Buni aniqlash uchun berilgan gapning oʻzi yetarli.",
+        "ru": "Если Анвар выше Сардора, значит, Сардор ниже Анвара. Для этого достаточно данного утверждения."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v012",
+      "kind": "relation",
+      "level": 1,
+      "uz": {
+        "prompt": "Bugun haftaning qaysi kuni?",
+        "stimulus": "Kecha dushanba edi.",
+        "options": [
+          "yakshanba",
+          "chorshanba",
+          "dushanba",
+          "seshanba"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой сегодня день недели?",
+        "stimulus": "Вчера был понедельник.",
+        "options": [
+          "воскресенье",
+          "среда",
+          "понедельник",
+          "вторник"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Kecha dushanba boʻlsa, bugun undan keyingi kun — seshanba. Yakshanba esa dushanbadan oldingi kun.",
+        "ru": "Если вчера был понедельник, сегодня следующий день — вторник. Воскресенье — это день перед понедельником."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v013",
+      "kind": "relation",
+      "level": 1,
+      "uz": {
+        "prompt": "Gʻildirak qaysi narsaning qismi boʻla oladi?",
+        "stimulus": "gʻildirak",
+        "options": [
+          "daraxt",
+          "velosiped",
+          "daryo",
+          "kitob"
+        ]
+      },
+      "ru": {
+        "prompt": "Частью чего может быть колесо?",
+        "stimulus": "колесо",
+        "options": [
+          "дерево",
+          "велосипед",
+          "река",
+          "книга"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Velosipedning gʻildiragi bor — gʻildirak uning qismi. Daraxt, daryo va kitobda gʻildirak boʻlmaydi.",
+        "ru": "У велосипеда есть колёса — колесо его часть. У дерева, реки и книги колёс нет."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v014",
+      "kind": "analogy",
+      "level": 2,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Shifokor : shifoxona = oʻqituvchi : ?",
+        "options": [
+          "dars",
+          "oʻquvchi",
+          "maktab",
+          "kitob"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Врач : больница = учитель : ?",
+        "options": [
+          "урок",
+          "ученик",
+          "школа",
+          "книга"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Shifokor shifoxonada, oʻqituvchi maktabda ishlaydi. «Oʻquvchi» — ish joyi emas, oʻqituvchi bilan ishlaydigan odam.",
+        "ru": "Врач работает в больнице, учитель — в школе. «Ученик» — не место работы, а человек, с которым работает учитель."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v015",
+      "kind": "analogy",
+      "level": 2,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Non : novvoy = kiyim : ?",
+        "options": [
+          "doʻkon",
+          "gazmol",
+          "sotuvchi",
+          "tikuvchi"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Хлеб : пекарь = одежда : ?",
+        "options": [
+          "магазин",
+          "ткань",
+          "продавец",
+          "портной"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Novvoy non tayyorlaydi, tikuvchi kiyim tikadi: mahsulot va uni yaratuvchi. Sotuvchi kiyimni sotadi, lekin uni tikmaydi.",
+        "ru": "Пекарь печёт хлеб, портной шьёт одежду: изделие и тот, кто его создаёт. Продавец одежду продаёт, но не шьёт."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v016",
+      "kind": "analogy",
+      "level": 2,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Qalam : qogʻoz = boʻr : ?",
+        "options": [
+          "doska",
+          "oq",
+          "oʻqituvchi",
+          "sinf"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Карандаш : бумага = мел : ?",
+        "options": [
+          "доска",
+          "белый",
+          "учитель",
+          "класс"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Qalam bilan qogʻozga, boʻr bilan doskaga yoziladi. «Oq» — boʻrning rangi, yoziladigan yuza emas.",
+        "ru": "Карандашом пишут на бумаге, мелом — на доске. «Белый» — цвет мела, а не поверхность для письма."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v017",
+      "kind": "analogy",
+      "level": 2,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Yoz : issiq = qish : ?",
+        "options": [
+          "yil",
+          "bahor",
+          "sovuq",
+          "iliq"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Лето : жара = зима : ?",
+        "options": [
+          "год",
+          "весна",
+          "холод",
+          "тепло"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Yozda havo issiq, qishda — sovuq: fasl va unga xos havo. «Iliq» sovuqning teskarisi, qishga xos emas.",
+        "ru": "Летом жара, зимой холод: время года и характерная для него погода. «Тепло» — противоположность холода, зиме оно не свойственно."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v018",
+      "kind": "odd",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "ruchka, qaychi, qalam, flomaster",
+        "options": [
+          "ruchka",
+          "qaychi",
+          "qalam",
+          "flomaster"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "ручка, ножницы, карандаш, фломастер",
+        "options": [
+          "ручка",
+          "ножницы",
+          "карандаш",
+          "фломастер"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Ruchka, qalam va flomaster bilan yoziladi yoki chiziladi, qaychi bilan esa kesiladi.",
+        "ru": "Ручкой, карандашом и фломастером пишут или рисуют, а ножницами режут."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v019",
+      "kind": "odd",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "Oʻzbekiston, Toshkent, Samarqand, Buxoro",
+        "options": [
+          "Oʻzbekiston",
+          "Toshkent",
+          "Samarqand",
+          "Buxoro"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "Узбекистан, Ташкент, Самарканд, Бухара",
+        "options": [
+          "Узбекистан",
+          "Ташкент",
+          "Самарканд",
+          "Бухара"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Toshkent, Samarqand va Buxoro — shaharlar, Oʻzbekiston esa davlat. Toshkent poytaxt boʻlsa ham, u shahar.",
+        "ru": "Ташкент, Самарканд и Бухара — города, а Узбекистан — страна. То, что Ташкент — столица, не делает его лишним: это тоже город."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v020",
+      "kind": "odd",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "ikki, toʻrt, yetti, olti",
+        "options": [
+          "ikki",
+          "toʻrt",
+          "yetti",
+          "olti"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "два, четыре, семь, шесть",
+        "options": [
+          "два",
+          "четыре",
+          "семь",
+          "шесть"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Ikki, toʻrt va olti — juft sonlar, yetti — toq son.",
+        "ru": "Два, четыре и шесть — чётные числа, а семь — нечётное."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v021",
+      "kind": "category",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "sabzi, piyoz, kartoshka",
+        "options": [
+          "mevalar",
+          "sabzavotlar",
+          "ziravorlar",
+          "donlar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "морковь, лук, картофель",
+        "options": [
+          "фрукты",
+          "овощи",
+          "пряности",
+          "злаки"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Sabzi, piyoz va kartoshka — sabzavotlar. Mevalar — olma, nok kabilar, bular esa meva emas.",
+        "ru": "Морковь, лук и картофель — овощи. Фрукты — это яблоки, груши и тому подобное, а здесь их нет."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v022",
+      "kind": "category",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "skripka, dutor, pianino",
+        "options": [
+          "nota",
+          "qoʻshiq",
+          "gitara",
+          "sahna"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "скрипка, дутар, пианино",
+        "options": [
+          "нота",
+          "песня",
+          "гитара",
+          "сцена"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Skripka, dutor va pianino — cholgʻu asboblari, gitara ham. Nota musiqa bilan bogʻliq, lekin u asbob emas, yozuv belgisi.",
+        "ru": "Скрипка, дутар и пианино — музыкальные инструменты, гитара тоже. Нота связана с музыкой, но это не инструмент, а знак записи."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v023",
+      "kind": "category",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "yanvar, mart, may",
+        "options": [
+          "dushanba",
+          "bahor",
+          "ertalab",
+          "iyul"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "январь, март, май",
+        "options": [
+          "понедельник",
+          "весна",
+          "утро",
+          "июль"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Yanvar, mart va may — oylarning nomlari, iyul ham oy. Bahor ham vaqtga oid, lekin u fasl, oy emas.",
+        "ru": "Январь, март и май — названия месяцев, июль тоже месяц. Весна тоже связана со временем, но это время года, а не месяц."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v024",
+      "kind": "relation",
+      "level": 2,
+      "uz": {
+        "prompt": "Kim eng kichik?",
+        "stimulus": "Madina Kamoladan katta. Kamola Zarinadan katta.",
+        "options": [
+          "Kamola",
+          "Zarina",
+          "Madina",
+          "Aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кто младше всех?",
+        "stimulus": "Мадина старше Камолы. Камола старше Зарины.",
+        "options": [
+          "Камола",
+          "Зарина",
+          "Мадина",
+          "Определить нельзя"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Yoshi boʻyicha: Madina, Kamola, Zarina. Eng kichigi — Zarina. Kamola Madinadan kichik, lekin Zarinadan katta.",
+        "ru": "По возрасту: Мадина, Камола, Зарина. Младше всех Зарина. Камола младше Мадины, но старше Зарины."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v025",
+      "kind": "relation",
+      "level": 2,
+      "uz": {
+        "prompt": "Ertadan keyingi kun haftaning qaysi kuni?",
+        "stimulus": "Bugun juma.",
+        "options": [
+          "shanba",
+          "dushanba",
+          "yakshanba",
+          "payshanba"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой день недели будет послезавтра?",
+        "stimulus": "Сегодня пятница.",
+        "options": [
+          "суббота",
+          "понедельник",
+          "воскресенье",
+          "четверг"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Ertaga shanba, ertadan keyingi kun esa yakshanba. Shanba — faqat ertangi kun.",
+        "ru": "Завтра суббота, а послезавтра — воскресенье. Суббота — это только завтра."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v026",
+      "kind": "relation",
+      "level": 2,
+      "uz": {
+        "prompt": "Qaysi soʻz maʼnosi boʻyicha shu soʻzga qarama-qarshi?",
+        "stimulus": "keng",
+        "options": [
+          "uzun",
+          "kichik",
+          "tor",
+          "chuqur"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово противоположно по смыслу данному?",
+        "stimulus": "широкий",
+        "options": [
+          "длинный",
+          "маленький",
+          "узкий",
+          "глубокий"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "«Keng»ning qarama-qarshisi — «tor» (keng koʻcha — tor koʻcha). «Kichik» esa «katta»ning qarama-qarshisi.",
+        "ru": "Противоположность слова «широкий» — «узкий» (широкая улица — узкая улица). «Маленький» — противоположность слова «большой»."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v027",
+      "kind": "analogy",
+      "level": 3,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Ot : otxona = sigir : ?",
+        "options": [
+          "sut",
+          "pichan",
+          "buzoq",
+          "molxona"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Лошадь : конюшня = корова : ?",
+        "options": [
+          "молоко",
+          "сено",
+          "телёнок",
+          "коровник"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Otxona — ot saqlanadigan bino, molxona — sigir saqlanadigan bino. Pichan — sigirning ozuqasi, uning joyi emas.",
+        "ru": "Конюшня — помещение для лошадей, коровник — для коров. Сено — корм коровы, а не место, где её держат."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v028",
+      "kind": "analogy",
+      "level": 3,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kitob : kutubxona = rasm : ?",
+        "options": [
+          "rassom",
+          "ramka",
+          "muzey",
+          "boʻyoq"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Книга : библиотека = картина : ?",
+        "options": [
+          "художник",
+          "рамка",
+          "музей",
+          "краска"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Kitoblar kutubxonada, rasmlar muzeyda saqlanadi va koʻrsatiladi. Rassom rasmni chizadi, lekin u rasm saqlanadigan joy emas.",
+        "ru": "Книги хранят в библиотеке, картины — в музее. Художник пишет картину, но это не место, где её хранят."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v029",
+      "kind": "analogy",
+      "level": 3,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Soniya : daqiqa = daqiqa : ?",
+        "options": [
+          "soat",
+          "sutka",
+          "soniya",
+          "vaqt"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Секунда : минута = минута : ?",
+        "options": [
+          "час",
+          "сутки",
+          "секунда",
+          "время"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Bir daqiqada 60 soniya, bir soatda 60 daqiqa: har safar 60 marta katta keyingi birlik. Sutka ham katta birlik, lekin unda 1440 daqiqa bor.",
+        "ru": "В минуте 60 секунд, в часе 60 минут: каждый раз следующая единица, в 60 раз больше. Сутки — тоже бо́льшая единица, но в них 1440 минут."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v030",
+      "kind": "analogy",
+      "level": 3,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Oʻqituvchi : oʻquvchi = murabbiy : ?",
+        "options": [
+          "stadion",
+          "hakam",
+          "sportchi",
+          "musobaqa"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Учитель : ученик = тренер : ?",
+        "options": [
+          "стадион",
+          "судья",
+          "спортсмен",
+          "соревнование"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Oʻqituvchi oʻquvchini oʻqitadi, murabbiy sportchini mashq qildiradi. Hakam ham sportda ishlaydi, lekin murabbiy uni tayyorlamaydi.",
+        "ru": "Учитель учит ученика, тренер тренирует спортсмена. Судья тоже связан со спортом, но тренер его не готовит."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v031",
+      "kind": "analogy",
+      "level": 3,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Barg : daraxt = pat : ?",
+        "options": [
+          "uya",
+          "uchmoq",
+          "tuxum",
+          "qush"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Лист : дерево = перо : ?",
+        "options": [
+          "гнездо",
+          "летать",
+          "яйцо",
+          "птица"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Barg — daraxtning qismi, pat — qushning qismi. Uya qushga tegishli, lekin u qush tanasining qismi emas.",
+        "ru": "Лист — часть дерева, перо — часть птицы. Гнездо связано с птицей, но это не часть её тела."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v032",
+      "kind": "odd",
+      "level": 3,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "doira, kvadrat, uchburchak, beshburchak",
+        "options": [
+          "doira",
+          "kvadrat",
+          "uchburchak",
+          "beshburchak"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "круг, квадрат, треугольник, пятиугольник",
+        "options": [
+          "круг",
+          "квадрат",
+          "треугольник",
+          "пятиугольник"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Kvadrat, uchburchak va beshburchakning burchaklari bor, doirada esa burchak yoʻq. Uchburchakning burchagi kamroq, lekin baribir bor.",
+        "ru": "У квадрата, треугольника и пятиугольника есть углы, у круга их нет. У треугольника углов меньше, но они есть."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v033",
+      "kind": "odd",
+      "level": 3,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "oʻqituvchi, shifokor, muhandis, talaba",
+        "options": [
+          "oʻqituvchi",
+          "shifokor",
+          "muhandis",
+          "talaba"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "учитель, врач, инженер, студент",
+        "options": [
+          "учитель",
+          "врач",
+          "инженер",
+          "студент"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Oʻqituvchi, shifokor va muhandis — kasblar, talaba esa hali oʻqiyotgan odam: bu kasb emas.",
+        "ru": "Учитель, врач и инженер — профессии, а студент ещё учится: это не профессия."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v034",
+      "kind": "odd",
+      "level": 3,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "metr, santimetr, kilometr, kilogramm",
+        "options": [
+          "metr",
+          "santimetr",
+          "kilometr",
+          "kilogramm"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "метр, сантиметр, километр, килограмм",
+        "options": [
+          "метр",
+          "сантиметр",
+          "километр",
+          "килограмм"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Metr, santimetr va kilometr — uzunlik birliklari, kilogramm — massa birligi. «Kilometr» soʻzidagi «kilo» uni massa birligiga aylantirmaydi.",
+        "ru": "Метр, сантиметр и километр — единицы длины, килограмм — единица массы. Приставка «кило» в слове «километр» не делает его единицей массы."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v035",
+      "kind": "category",
+      "level": 3,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "Amudaryo, Sirdaryo, Zarafshon",
+        "options": [
+          "Everest",
+          "Sahroi Kabir",
+          "Nil",
+          "Baykal"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "Амударья, Сырдарья, Зарафшан",
+        "options": [
+          "Эверест",
+          "Сахара",
+          "Нил",
+          "Байкал"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Amudaryo, Sirdaryo va Zarafshon — daryolar, Nil ham daryo. Baykal ham suv havzasi, lekin u koʻl.",
+        "ru": "Амударья, Сырдарья и Зарафшан — реки, Нил тоже река. Байкал тоже водоём, но это озеро."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v036",
+      "kind": "category",
+      "level": 3,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "uy, maktab, kasalxona",
+        "options": [
+          "binolar",
+          "shaharlar",
+          "xonalar",
+          "koʻchalar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "дом, школа, больница",
+        "options": [
+          "здания",
+          "города",
+          "комнаты",
+          "улицы"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Uy, maktab va kasalxona — binolar. Ularning ichida xonalar bor, lekin binoning oʻzi xona emas.",
+        "ru": "Дом, школа и больница — здания. Внутри них есть комнаты, но само здание комнатой не является."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v037",
+      "kind": "relation",
+      "level": 3,
+      "uz": {
+        "prompt": "Bu kishi sizga kim boʻladi?",
+        "stimulus": "otangizning otasi",
+        "options": [
+          "bobo",
+          "amaki",
+          "aka",
+          "buvi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем вам приходится этот человек?",
+        "stimulus": "отец вашего отца",
+        "options": [
+          "дедушка",
+          "дядя",
+          "брат",
+          "бабушка"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Otaning otasi — bobo. Amaki — otaning aka-ukasi, otasi emas.",
+        "ru": "Отец отца — дедушка. Дядя — это брат отца, а не его отец."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v038",
+      "kind": "relation",
+      "level": 3,
+      "uz": {
+        "prompt": "Qaysi xulosa toʻgʻri?",
+        "stimulus": "Hamma mushuklar — hayvon. Momiq — mushuk.",
+        "options": [
+          "Hamma hayvonlar — mushuk",
+          "Momiq — hayvon",
+          "Momiq — it",
+          "Aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой вывод верен?",
+        "stimulus": "Все кошки — животные. Мурка — кошка.",
+        "options": [
+          "Все животные — кошки",
+          "Мурка — животное",
+          "Мурка — собака",
+          "Определить нельзя"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Momiq — mushuk, hamma mushuklar esa hayvon, demak Momiq ham hayvon. «Hamma hayvonlar — mushuk» degan gap berilmagan: it ham hayvon, lekin mushuk emas.",
+        "ru": "Мурка — кошка, а все кошки — животные, значит, Мурка — животное. Утверждения «все животные — кошки» нет: собака тоже животное, но не кошка."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v039",
+      "kind": "relation",
+      "level": 3,
+      "uz": {
+        "prompt": "Eng pastda nima yotibdi?",
+        "stimulus": "Kitob daftarning ustida yotibdi. Daftar gazetaning ustida yotibdi.",
+        "options": [
+          "daftar",
+          "gazeta",
+          "kitob",
+          "aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Что лежит в самом низу?",
+        "stimulus": "Книга лежит на тетради. Тетрадь лежит на газете.",
+        "options": [
+          "тетрадь",
+          "газета",
+          "книга",
+          "определить нельзя"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Yuqoridan pastga: kitob, daftar, gazeta. Daftar oʻrtada: u kitobdan pastda, lekin gazetadan yuqorida.",
+        "ru": "Сверху вниз: книга, тетрадь, газета. Тетрадь посередине: она ниже книги, но выше газеты."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v040",
+      "kind": "analogy",
+      "level": 4,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Yozuvchi : kitob = bastakor : ?",
+        "options": [
+          "qoʻshiqchi",
+          "musiqa",
+          "konsert",
+          "pianino"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Писатель : книга = композитор : ?",
+        "options": [
+          "певец",
+          "музыка",
+          "концерт",
+          "пианино"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Yozuvchi kitob yaratadi, bastakor — musiqa. Qoʻshiqchi musiqani ijro etadi, lekin uni bastakor yaratadi.",
+        "ru": "Писатель создаёт книгу, композитор — музыку. Певец исполняет музыку, но создаёт её композитор."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v041",
+      "kind": "analogy",
+      "level": 4,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kitob : qogʻoz = koʻylak : ?",
+        "options": [
+          "tugma",
+          "tikuvchi",
+          "shkaf",
+          "gazmol"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Книга : бумага = рубашка : ?",
+        "options": [
+          "пуговица",
+          "портной",
+          "шкаф",
+          "ткань"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Kitob qogʻozdan, koʻylak gazmoldan qilinadi: buyum va uning materiali. Tugma — koʻylakning qismi, lekin u asosiy material emas.",
+        "ru": "Книгу делают из бумаги, рубашку — из ткани: вещь и её материал. Пуговица — часть рубашки, но не основной материал."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v042",
+      "kind": "analogy",
+      "level": 4,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Yomgʻir : soyabon = sovuq : ?",
+        "options": [
+          "qor",
+          "palto",
+          "qish",
+          "muz"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Дождь : зонт = холод : ?",
+        "options": [
+          "снег",
+          "пальто",
+          "зима",
+          "лёд"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Soyabon yomgʻirdan, palto sovuqdan himoya qiladi. Qor va muz sovuq bilan birga keladi, lekin undan saqlamaydi.",
+        "ru": "Зонт защищает от дождя, пальто — от холода. Снег и лёд бывают в холод, но от него не защищают."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v043",
+      "kind": "analogy",
+      "level": 4,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Termometr : harorat = tarozi : ?",
+        "options": [
+          "uzunlik",
+          "vaqt",
+          "tezlik",
+          "ogʻirlik"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Термометр : температура = весы : ?",
+        "options": [
+          "длина",
+          "время",
+          "скорость",
+          "вес"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Termometr haroratni, tarozi ogʻirlikni oʻlchaydi. Uzunlik chizgʻich bilan, vaqt soat bilan oʻlchanadi.",
+        "ru": "Термометр измеряет температуру, весы — вес. Длину измеряют линейкой, время — часами."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v044",
+      "kind": "odd",
+      "level": 4,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "Merkuriy, Venera, Mars, Oy",
+        "options": [
+          "Merkuriy",
+          "Venera",
+          "Mars",
+          "Oy"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "Меркурий, Венера, Марс, Луна",
+        "options": [
+          "Меркурий",
+          "Венера",
+          "Марс",
+          "Луна"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Merkuriy, Venera va Mars — Quyosh atrofida aylanadigan sayyoralar, Oy esa Yerning yoʻldoshi. Merkuriy juda kichik boʻlsa ham, u sayyora.",
+        "ru": "Меркурий, Венера и Марс — планеты, вращающиеся вокруг Солнца, а Луна — спутник Земли. Меркурий очень мал, но это тоже планета."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v045",
+      "kind": "odd",
+      "level": 4,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "koʻz, quloq, tirsak, burun",
+        "options": [
+          "koʻz",
+          "quloq",
+          "tirsak",
+          "burun"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "глаз, ухо, локоть, нос",
+        "options": [
+          "глаз",
+          "ухо",
+          "локоть",
+          "нос"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Koʻz, quloq va burun — sezgi aʼzolari (koʻrish, eshitish, hid bilish), tirsak esa qoʻlning boʻgʻimi. Hammasi tananing qismi, lekin tirsak sezgi aʼzosi emas.",
+        "ru": "Глаз, ухо и нос — органы чувств (зрение, слух, обоняние), а локоть — сустав руки. Всё это части тела, но локоть не орган чувств."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v046",
+      "kind": "odd",
+      "level": 4,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "boʻri, qoʻy, echki, sigir",
+        "options": [
+          "boʻri",
+          "qoʻy",
+          "echki",
+          "sigir"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "волк, овца, коза, корова",
+        "options": [
+          "волк",
+          "овца",
+          "коза",
+          "корова"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Qoʻy, echki va sigir — uy hayvonlari, boʻri esa yovvoyi hayvon. Sigir boshqalardan katta, lekin u ham uy hayvoni.",
+        "ru": "Овца, коза и корова — домашние животные, а волк — дикий. Корова крупнее остальных, но она тоже домашняя."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v047",
+      "kind": "category",
+      "level": 4,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "bugʻdoy, arpa, makkajoʻxori",
+        "options": [
+          "paxta",
+          "kartoshka",
+          "olma",
+          "sholi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "пшеница, ячмень, кукуруза",
+        "options": [
+          "хлопок",
+          "картофель",
+          "яблоко",
+          "рис"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Bugʻdoy, arpa va makkajoʻxori — donli ekinlar, sholi ham. Paxta ham dalada ekiladi, lekin u don uchun emas, tola uchun ekiladi.",
+        "ru": "Пшеница, ячмень и кукуруза — зерновые культуры, рис тоже. Хлопок тоже растят в поле, но ради волокна, а не зерна."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v048",
+      "kind": "category",
+      "level": 4,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "kilogramm, gramm, tonna",
+        "options": [
+          "litr",
+          "metr",
+          "soat",
+          "sentner"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "килограмм, грамм, тонна",
+        "options": [
+          "литр",
+          "метр",
+          "час",
+          "центнер"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Kilogramm, gramm va tonna — massa birliklari, sentner (100 kg) ham. Litr — hajm birligi: bir litr turli narsaning ogʻirligi har xil.",
+        "ru": "Килограмм, грамм и тонна — единицы массы, центнер (100 кг) тоже. Литр — единица объёма: литр разных веществ весит по-разному."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v049",
+      "kind": "relation",
+      "level": 4,
+      "uz": {
+        "prompt": "Qaysi xulosa toʻgʻri?",
+        "stimulus": "Agar yomgʻir yogʻsa, yoʻl hoʻl boʻladi. Yomgʻir yogʻdi.",
+        "options": [
+          "Yoʻl hoʻl",
+          "Yoʻl quruq",
+          "Yomgʻir toʻxtadi",
+          "Aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой вывод верен?",
+        "stimulus": "Если идёт дождь, дорога становится мокрой. Дождь пошёл.",
+        "options": [
+          "Дорога мокрая",
+          "Дорога сухая",
+          "Дождь закончился",
+          "Определить нельзя"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Qoida: yomgʻir yogʻsa — yoʻl hoʻl. Yomgʻir yogʻdi, demak yoʻl hoʻl. «Aniqlab boʻlmaydi» notoʻgʻri: shart bajarilgan, xulosa qoidadan toʻgʻridan-toʻgʻri kelib chiqadi.",
+        "ru": "Правило: если идёт дождь — дорога мокрая. Дождь пошёл, значит, дорога мокрая. «Определить нельзя» неверно: условие выполнено, и вывод прямо следует из правила."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v050",
+      "kind": "relation",
+      "level": 4,
+      "uz": {
+        "prompt": "Kim eng tez yuguradi?",
+        "stimulus": "Jasur Nodirdan tezroq yuguradi, lekin Sardordan sekinroq.",
+        "options": [
+          "Jasur",
+          "Sardor",
+          "Nodir",
+          "Aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кто бегает быстрее всех?",
+        "stimulus": "Джасур бегает быстрее Нодира, но медленнее Сардора.",
+        "options": [
+          "Джасур",
+          "Сардор",
+          "Нодир",
+          "Определить нельзя"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Tezlik boʻyicha: Sardor, Jasur, Nodir. Jasur Nodirdan tez, lekin Sardordan sekin — u oʻrtada.",
+        "ru": "По скорости: Сардор, Джасур, Нодир. Джасур быстрее Нодира, но медленнее Сардора — он посередине."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v051",
+      "kind": "relation",
+      "level": 4,
+      "uz": {
+        "prompt": "Bu kishi sizga kim boʻladi?",
+        "stimulus": "onangizning opasi",
+        "options": [
+          "xola",
+          "buvi",
+          "opa",
+          "jiyan"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем вам приходится этот человек?",
+        "stimulus": "старшая сестра вашей мамы",
+        "options": [
+          "тётя",
+          "бабушка",
+          "сестра",
+          "племянница"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Onaning opa-singlisi — xola. Buvi — onaning onasi, opasi emas.",
+        "ru": "Сестра мамы — тётя. Бабушка — это мама мамы, а не её сестра."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v052",
+      "kind": "relation",
+      "level": 4,
+      "uz": {
+        "prompt": "Endi qaysi tomonga qarab turibsiz?",
+        "stimulus": "Siz shimolga qarab turibsiz. Keyin oʻngga burildingiz.",
+        "options": [
+          "gʻarbga",
+          "sharqqa",
+          "janubga",
+          "shimolga"
+        ]
+      },
+      "ru": {
+        "prompt": "Куда вы теперь смотрите?",
+        "stimulus": "Вы стоите лицом на север. Затем вы повернули направо.",
+        "options": [
+          "на запад",
+          "на восток",
+          "на юг",
+          "на север"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Shimolga qaraganingizda oʻng qoʻlingiz sharq tomonda boʻladi, demak oʻngga burilgach sharqqa qaraysiz. Gʻarb — chap tomonda.",
+        "ru": "Когда вы смотрите на север, правая рука указывает на восток, поэтому после поворота направо вы смотрите на восток. Запад — слева."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v053",
+      "kind": "analogy",
+      "level": 5,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kasallik : shifokor = yongʻin : ?",
+        "options": [
+          "tutun",
+          "suv",
+          "oʻt oʻchiruvchi",
+          "politsiyachi",
+          "oʻrmon"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Болезнь : врач = пожар : ?",
+        "options": [
+          "дым",
+          "вода",
+          "пожарный",
+          "полицейский",
+          "лес"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Shifokor kasallikka, oʻt oʻchiruvchi yongʻinga qarshi kurashadi. Suv yongʻinni oʻchiradi, lekin u kasb egasi emas, vosita.",
+        "ru": "Врач борется с болезнью, пожарный — с пожаром. Вода тушит огонь, но это средство, а не человек этой профессии."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v054",
+      "kind": "analogy",
+      "level": 5,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Harf : soʻz = nota : ?",
+        "options": [
+          "pianino",
+          "qoʻshiqchi",
+          "ovoz",
+          "kuy",
+          "daftar"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Буква : слово = нота : ?",
+        "options": [
+          "пианино",
+          "певец",
+          "голос",
+          "мелодия",
+          "тетрадь"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Harflardan soʻz, notalardan kuy tuziladi. Pianinoda kuy chalinadi, lekin pianino notalardan tuzilmaydi.",
+        "ru": "Из букв складывается слово, из нот — мелодия. На пианино играют мелодию, но само пианино из нот не состоит."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v055",
+      "kind": "analogy",
+      "level": 5,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Ertalab : nonushta = kechqurun : ?",
+        "options": [
+          "tushlik",
+          "uyqu",
+          "choy",
+          "oshxona",
+          "kechki ovqat"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Утро : завтрак = вечер : ?",
+        "options": [
+          "обед",
+          "сон",
+          "чай",
+          "кухня",
+          "ужин"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Ertalab nonushta, kechqurun kechki ovqat qilinadi: kun qismi va shu paytdagi ovqat. Tushlik — kunduzgi ovqat.",
+        "ru": "Утром завтракают, вечером ужинают: время суток и приём пищи в это время. Обед бывает днём."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v056",
+      "kind": "analogy",
+      "level": 5,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Qurgʻoqchilik : suv = ochlik : ?",
+        "options": [
+          "chanqoq",
+          "qashshoqlik",
+          "ovqat",
+          "kasallik",
+          "issiqlik"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Засуха : вода = голод : ?",
+        "options": [
+          "жажда",
+          "бедность",
+          "еда",
+          "болезнь",
+          "жара"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Qurgʻoqchilik — suv yetishmasligi, ochlik — ovqat yetishmasligi. Chanqoq ham yetishmovchilik, lekin u ham suvga tegishli.",
+        "ru": "Засуха — нехватка воды, голод — нехватка еды. Жажда — тоже нехватка, но опять воды."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v057",
+      "kind": "odd",
+      "level": 5,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "chap tomon, sharq, gʻarb, shimol, janub",
+        "options": [
+          "chap tomon",
+          "sharq",
+          "gʻarb",
+          "shimol",
+          "janub"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "левая сторона, восток, запад, север, юг",
+        "options": [
+          "левая сторона",
+          "восток",
+          "запад",
+          "север",
+          "юг"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Sharq, gʻarb, shimol va janub — dunyo tomonlari: ular kim qayoqqa qarab turganiga bogʻliq emas. Chap tomon esa odam burilganda oʻzgaradi.",
+        "ru": "Восток, запад, север и юг — стороны света: они не зависят от того, куда смотрит человек. Левая сторона меняется, когда человек поворачивается."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v058",
+      "kind": "odd",
+      "level": 5,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "Afrika, Osiyo, Yevropa, Antarktida, Tinch okeani",
+        "options": [
+          "Afrika",
+          "Osiyo",
+          "Yevropa",
+          "Antarktida",
+          "Tinch okeani"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "Африка, Азия, Европа, Антарктида, Тихий океан",
+        "options": [
+          "Африка",
+          "Азия",
+          "Европа",
+          "Антарктида",
+          "Тихий океан"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Afrika, Osiyo, Yevropa va Antarktida — dunyo qismlari (qitʼalar), Tinch okeani esa okean. Antarktidada odamlar doimiy yashamaydi, lekin u ham dunyo qismi.",
+        "ru": "Африка, Азия, Европа и Антарктида — части света, а Тихий океан — океан. В Антарктиде люди постоянно не живут, но это тоже часть света."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v059",
+      "kind": "odd",
+      "level": 5,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "tovuq, oʻrdak, gʻoz, quyon, kurka",
+        "options": [
+          "tovuq",
+          "oʻrdak",
+          "gʻoz",
+          "quyon",
+          "kurka"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "курица, утка, гусь, кролик, индейка",
+        "options": [
+          "курица",
+          "утка",
+          "гусь",
+          "кролик",
+          "индейка"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Tovuq, oʻrdak, gʻoz va kurka — parrandalar (qushlar), quyon esa sutemizuvchi. Oʻrdak va gʻoz suvda suzadi, lekin ular ham qush.",
+        "ru": "Курица, утка, гусь и индейка — домашние птицы, а кролик — млекопитающее. Утка и гусь плавают, но они тоже птицы."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v060",
+      "kind": "category",
+      "level": 5,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "yurak, jigar, oʻpka",
+        "options": [
+          "buyrak",
+          "tirsak",
+          "barmoq",
+          "tizza",
+          "soch"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "сердце, печень, лёгкие",
+        "options": [
+          "почка",
+          "локоть",
+          "палец",
+          "колено",
+          "волосы"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Yurak, jigar va oʻpka — tananing ichki aʼzolari, buyrak ham. Tirsak ham tananing qismi, lekin u tashqi qism, ichki aʼzo emas.",
+        "ru": "Сердце, печень и лёгкие — внутренние органы, почка тоже. Локоть — тоже часть тела, но внешняя, а не внутренний орган."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v061",
+      "kind": "category",
+      "level": 5,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "qahva, choy, kakao",
+        "options": [
+          "mevalar",
+          "shirinliklar",
+          "ichimliklar",
+          "ziravorlar",
+          "sabzavotlar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "кофе, чай, какао",
+        "options": [
+          "фрукты",
+          "сладости",
+          "напитки",
+          "пряности",
+          "овощи"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Qahva, choy va kakao — ichimliklar. Kakaodan shokolad ham qilinadi, lekin qahva va choy shirinlik emas.",
+        "ru": "Кофе, чай и какао — напитки. Из какао делают и шоколад, но кофе и чай сладостями не являются."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v062",
+      "kind": "relation",
+      "level": 5,
+      "uz": {
+        "prompt": "Soʻzlar oʻylab topilgan — faqat mantiqqa tayaning. Qaysi xulosa albatta toʻgʻri?",
+        "stimulus": "Barcha glorlar — trimlar. Barcha trimlar — zeplar.",
+        "options": [
+          "Barcha glorlar — zeplar",
+          "Barcha zeplar — glorlar",
+          "Barcha trimlar — glorlar",
+          "Hech bir glor zep emas",
+          "Barcha zeplar — trimlar"
+        ]
+      },
+      "ru": {
+        "prompt": "Слова выдуманы — опирайтесь только на логику. Какой вывод обязательно верен?",
+        "stimulus": "Все глоры — тримы. Все тримы — зепы.",
+        "options": [
+          "Все глоры — зепы",
+          "Все зепы — глоры",
+          "Все тримы — глоры",
+          "Ни один глор не зеп",
+          "Все зепы — тримы"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Har bir glor trim, har bir trim esa zep, demak har bir glor — zep. Teskarisi («Barcha zeplar — glorlar») kelib chiqmaydi: zeplar orasida glor boʻlmaganlari ham boʻlishi mumkin.",
+        "ru": "Каждый глор — трим, а каждый трим — зеп, значит, каждый глор — зеп. Обратное («все зепы — глоры») не следует: среди зепов могут быть и не глоры."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v063",
+      "kind": "relation",
+      "level": 5,
+      "uz": {
+        "prompt": "Bugun haftaning qaysi kuni?",
+        "stimulus": "Uch kun oldin shanba edi.",
+        "options": [
+          "seshanba",
+          "dushanba",
+          "chorshanba",
+          "yakshanba",
+          "payshanba"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой сегодня день недели?",
+        "stimulus": "Три дня назад была суббота.",
+        "options": [
+          "вторник",
+          "понедельник",
+          "среда",
+          "воскресенье",
+          "четверг"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Shanbadan keyin: yakshanba (1), dushanba (2), seshanba (3). Dushanba — shanbadan atigi ikki kun keyin.",
+        "ru": "После субботы: воскресенье (1), понедельник (2), вторник (3). Понедельник — всего через два дня после субботы."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v064",
+      "kind": "relation",
+      "level": 5,
+      "uz": {
+        "prompt": "Bu kishi sizga kim boʻladi?",
+        "stimulus": "akangizning oʻgʻli",
+        "options": [
+          "nevara",
+          "uka",
+          "jiyan",
+          "amakivachcha",
+          "oʻgʻil"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем вам приходится этот человек?",
+        "stimulus": "сын вашего старшего брата",
+        "options": [
+          "внук",
+          "младший брат",
+          "племянник",
+          "двоюродный брат",
+          "сын"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Aka-uka yoki opa-singilning farzandi — jiyan. Amakivachcha — amakining farzandi, u siz bilan bir avlodda, jiyan esa bir avlod pastda.",
+        "ru": "Сын брата или сестры — племянник. Двоюродный брат — сын дяди, он из вашего поколения, а племянник — на поколение младше."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v065",
+      "kind": "relation",
+      "level": 5,
+      "uz": {
+        "prompt": "Orqadan hisoblaganda Ali nechanchi?",
+        "stimulus": "Besh bola navbatda turibdi. Ali — oldindan uchinchi.",
+        "options": [
+          "ikkinchi",
+          "uchinchi",
+          "toʻrtinchi",
+          "beshinchi",
+          "birinchi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой Али по счёту, если считать сзади?",
+        "stimulus": "Пятеро детей стоят в очереди. Али — третий спереди.",
+        "options": [
+          "второй",
+          "третий",
+          "четвёртый",
+          "пятый",
+          "первый"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Alidan oldinda 2 bola, jami 5 ta, demak uning orqasida 5 − 1 − 2 = 2 bola. Orqadan hisoblaganda u uchinchi. «Ikkinchi» — orqadagi bolalar sonini oʻrin deb olish xatosi.",
+        "ru": "Перед Али 2 ребёнка, всего 5, значит, за ним 5 − 1 − 2 = 2 ребёнка. Сзади он третий. «Второй» — ошибка: число детей за ним принято за его место."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v066",
+      "kind": "analogy",
+      "level": 6,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kompas : yoʻnalish = soat : ?",
+        "options": [
+          "strelka",
+          "bilak",
+          "daqiqa",
+          "qoʻngʻiroq",
+          "vaqt"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Компас : направление = часы : ?",
+        "options": [
+          "стрелка",
+          "запястье",
+          "минута",
+          "звонок",
+          "время"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Kompas yoʻnalishni, soat vaqtni koʻrsatadi. Strelka ikkalasida ham bor, lekin u koʻrsatiladigan narsa emas, asbobning qismi. Daqiqa esa vaqtning faqat bir birligi.",
+        "ru": "Компас показывает направление, часы — время. Стрелка есть у обоих, но это часть прибора, а не то, что он показывает. Минута — лишь одна из единиц времени."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v067",
+      "kind": "analogy",
+      "level": 6,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kapitan : kema = uchuvchi : ?",
+        "options": [
+          "samolyot",
+          "aeroport",
+          "osmon",
+          "styuardessa",
+          "chipta"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Капитан : корабль = пилот : ?",
+        "options": [
+          "самолёт",
+          "аэропорт",
+          "небо",
+          "стюардесса",
+          "билет"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Kapitan kemani, uchuvchi samolyotni boshqaradi. Aeroport ham uchuvchi bilan bogʻliq, lekin uni boshqarib boʻlmaydi.",
+        "ru": "Капитан управляет кораблём, пилот — самолётом. Аэропорт тоже связан с пилотом, но им не управляют."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v068",
+      "kind": "analogy",
+      "level": 6,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Urugʻ : daraxt = tuxum : ?",
+        "options": [
+          "uya",
+          "qush",
+          "poʻchoq",
+          "tuxum sarigʻi",
+          "qanot"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Семя : дерево = яйцо : ?",
+        "options": [
+          "гнездо",
+          "птица",
+          "скорлупа",
+          "желток",
+          "крыло"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Urugʻdan daraxt, tuxumdan qush oʻsib chiqadi. Uya — tuxum qoʻyiladigan joy, undan hech narsa oʻsib chiqmaydi.",
+        "ru": "Из семени вырастает дерево, из яйца — птица. Гнездо — место, куда кладут яйца, из него ничего не вырастает."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v069",
+      "kind": "analogy",
+      "level": 6,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Savol : javob = muammo : ?",
+        "options": [
+          "sabab",
+          "yechim",
+          "qiyinchilik",
+          "xato",
+          "vazifa"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Вопрос : ответ = проблема : ?",
+        "options": [
+          "причина",
+          "решение",
+          "трудность",
+          "ошибка",
+          "задача"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Savolga javob beriladi, muammoga yechim topiladi. «Sabab» muammoni tushuntiradi, lekin uni hal qilmaydi.",
+        "ru": "На вопрос дают ответ, для проблемы находят решение. «Причина» объясняет проблему, но не решает её."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v070",
+      "kind": "odd",
+      "level": 6,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "gʻisht, sement, qum, bolgʻa, taxta",
+        "options": [
+          "gʻisht",
+          "sement",
+          "qum",
+          "bolgʻa",
+          "taxta"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "кирпич, цемент, песок, молоток, доска",
+        "options": [
+          "кирпич",
+          "цемент",
+          "песок",
+          "молоток",
+          "доска"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Gʻisht, sement, qum va taxta — qurilish materiallari: ular binoning oʻziga kiradi. Bolgʻa — asbob: u bilan ishlanadi, lekin u binoga kirmaydi.",
+        "ru": "Кирпич, цемент, песок и доски — строительные материалы: они становятся частью здания. Молоток — инструмент: им работают, но в здание он не входит."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v071",
+      "kind": "odd",
+      "level": 6,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "sut, tuxum, pishloq, sariyogʻ, qaymoq",
+        "options": [
+          "sut",
+          "tuxum",
+          "pishloq",
+          "sariyogʻ",
+          "qaymoq"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "молоко, яйцо, сыр, сливочное масло, сливки",
+        "options": [
+          "молоко",
+          "яйцо",
+          "сыр",
+          "сливочное масло",
+          "сливки"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Sut, pishloq, sariyogʻ va qaymoq — sut mahsulotlari, tuxum esa sutdan olinmaydi. Sariyogʻ nomida «yogʻ» bor, lekin u ham sutdan tayyorlanadi.",
+        "ru": "Молоко, сыр, сливочное масло и сливки — молочные продукты, а яйцо из молока не получают. Сливочное масло называется «маслом», но его тоже делают из молока."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v072",
+      "kind": "odd",
+      "level": 6,
+      "uz": {
+        "prompt": "Qaysi juftlik ortiqcha? Qolgan juftliklarda soʻzlar bir xil bogʻlangan.",
+        "stimulus": "shifokor — bemor; oʻqituvchi — oʻquvchi; sotuvchi — xaridor; haydovchi — yoʻlovchi; ota — oʻgʻil",
+        "options": [
+          "shifokor — bemor",
+          "oʻqituvchi — oʻquvchi",
+          "sotuvchi — xaridor",
+          "haydovchi — yoʻlovchi",
+          "ota — oʻgʻil"
+        ]
+      },
+      "ru": {
+        "prompt": "Какая пара лишняя? В остальных парах слова связаны одинаково.",
+        "stimulus": "врач — пациент; учитель — ученик; продавец — покупатель; водитель — пассажир; отец — сын",
+        "options": [
+          "врач — пациент",
+          "учитель — ученик",
+          "продавец — покупатель",
+          "водитель — пассажир",
+          "отец — сын"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Toʻrt juftlikda birinchisi ikkinchisiga xizmat koʻrsatadi: davolaydi, oʻqitadi, sotadi, olib boradi. «Ota — oʻgʻil» — qarindoshlik, xizmat emas.",
+        "ru": "В четырёх парах первый оказывает услугу второму: лечит, учит, продаёт, везёт. «Отец — сын» — это родство, а не услуга."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v073",
+      "kind": "category",
+      "level": 6,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "oltin, kumush, mis",
+        "options": [
+          "olmos",
+          "shisha",
+          "temir",
+          "marmar",
+          "yogʻoch"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "золото, серебро, медь",
+        "options": [
+          "алмаз",
+          "стекло",
+          "железо",
+          "мрамор",
+          "дерево"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Oltin, kumush va mis — metallar, temir ham. Olmos ham qimmatbaho, lekin u metall emas, tosh.",
+        "ru": "Золото, серебро и медь — металлы, железо тоже. Алмаз тоже драгоценный, но это камень, а не металл."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v074",
+      "kind": "category",
+      "level": 6,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "arra, bolgʻa, ombur",
+        "options": [
+          "mebel",
+          "materiallar",
+          "idishlar",
+          "asboblar",
+          "mashinalar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "пила, молоток, плоскогубцы",
+        "options": [
+          "мебель",
+          "материалы",
+          "посуда",
+          "инструменты",
+          "машины"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Arra, bolgʻa va ombur — qoʻl asboblari. Materiallar (taxta, mix) — ular bilan ishlanadigan narsalar, asbobning oʻzi emas.",
+        "ru": "Пила, молоток и плоскогубцы — ручные инструменты. Материалы (доски, гвозди) — это то, что ими обрабатывают, а не сами инструменты."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v075",
+      "kind": "relation",
+      "level": 6,
+      "uz": {
+        "prompt": "Qaysi xulosa toʻgʻri?",
+        "stimulus": "Agar doʻkon ochiq boʻlsa, uning chirogʻi yonib turadi. Chiroq yonmayapti.",
+        "options": [
+          "Doʻkon ochiq",
+          "Doʻkon yopiq",
+          "Doʻkon ertaga ochiladi",
+          "Doʻkonda hech kim yoʻq",
+          "Aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой вывод верен?",
+        "stimulus": "Если магазин открыт, в нём горит свет. Свет не горит.",
+        "options": [
+          "Магазин открыт",
+          "Магазин закрыт",
+          "Магазин откроется завтра",
+          "В магазине никого нет",
+          "Определить нельзя"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Doʻkon ochiq boʻlsa, chiroq yonardi. Chiroq yonmayapti, demak doʻkon ochiq emas — yopiq. «Aniqlab boʻlmaydi» notoʻgʻri: qoidadan teskari xulosa ham chiqadi — chiroq yonmasa, doʻkon ochiq emas.",
+        "ru": "Если бы магазин был открыт, свет бы горел. Свет не горит, значит, магазин не открыт — он закрыт. «Определить нельзя» неверно: из правила следует и обратный вывод — нет света, значит, магазин не открыт."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v076",
+      "kind": "relation",
+      "level": 6,
+      "uz": {
+        "prompt": "Madina bilan Kamolaning yoshi qanday farq qiladi?",
+        "stimulus": "Madina Zarinadan 2 yosh katta. Zarina Kamoladan 3 yosh kichik.",
+        "options": [
+          "Kamola Madinadan 1 yosh katta",
+          "Madina Kamoladan 1 yosh katta",
+          "Ular tengdosh",
+          "Kamola Madinadan 5 yosh katta",
+          "Madina Kamoladan 5 yosh katta"
+        ]
+      },
+      "ru": {
+        "prompt": "Как соотносится возраст Мадины и Камолы?",
+        "stimulus": "Мадина на 2 года старше Зарины. Зарина на 3 года младше Камолы.",
+        "options": [
+          "Камола старше Мадины на 1 год",
+          "Мадина старше Камолы на 1 год",
+          "Они ровесницы",
+          "Камола старше Мадины на 5 лет",
+          "Мадина старше Камолы на 5 лет"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Zarina 10 yoshda deylik: unda Madina 12 yoshda, Kamola 13 yoshda. Demak Kamola Madinadan 1 yosh katta. «5 yosh» — 2 va 3 ni qoʻshib yuborish xatosi.",
+        "ru": "Пусть Зарине 10 лет: тогда Мадине 12, а Камоле 13. Значит, Камола старше Мадины на 1 год. «5 лет» — ошибка, когда 2 и 3 просто складывают."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v077",
+      "kind": "relation",
+      "level": 6,
+      "uz": {
+        "prompt": "Bu kishi sizga kim boʻladi?",
+        "stimulus": "onangizning akasining qizi",
+        "options": [
+          "jiyan",
+          "togʻavachcha",
+          "singil",
+          "xola",
+          "nevara"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем вам приходится этот человек?",
+        "stimulus": "дочь брата вашей мамы",
+        "options": [
+          "племянница",
+          "двоюродная сестра",
+          "младшая сестра",
+          "тётя",
+          "внучка"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Onaning akasi — togʻa, togʻaning qizi — togʻavachcha: u siz bilan bir avlodda. Jiyan esa aka-uka yoki opa-singilning farzandi — bir avlod pastda.",
+        "ru": "Брат мамы — ваш дядя, его дочь — ваша двоюродная сестра, она из вашего поколения. Племянница — дочь брата или сестры, она на поколение младше."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v078",
+      "kind": "relation",
+      "level": 6,
+      "uz": {
+        "prompt": "Boshlagan joyingizga nisbatan qayerdasiz?",
+        "stimulus": "Siz shimolga 2 km, keyin sharqqa 2 km, keyin janubga 2 km yurdingiz.",
+        "options": [
+          "2 km gʻarbda",
+          "2 km sharqda",
+          "2 km shimolda",
+          "boshlagan joyda",
+          "4 km sharqda"
+        ]
+      },
+      "ru": {
+        "prompt": "Где вы находитесь относительно начальной точки?",
+        "stimulus": "Вы прошли 2 км на север, затем 2 км на восток, затем 2 км на юг.",
+        "options": [
+          "в 2 км к западу",
+          "в 2 км к востоку",
+          "в 2 км к северу",
+          "в начальной точке",
+          "в 4 км к востоку"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Shimolga va janubga yurilgan 2 km bir-birini yoʻqqa chiqaradi, faqat sharqqa 2 km qoladi. Boshlagan joyga qaytish uchun gʻarbga ham 2 km yurish kerak edi.",
+        "ru": "Два километра на север и два на юг взаимно уничтожаются, остаются 2 км на восток. Чтобы вернуться в начальную точку, нужно было бы пройти ещё 2 км на запад."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v079",
+      "kind": "analogy",
+      "level": 7,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Yongʻin : kul = yomgʻir : ?",
+        "options": [
+          "bulut",
+          "koʻlmak",
+          "soyabon",
+          "momaqaldiroq",
+          "osmon"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Пожар : пепел = дождь : ?",
+        "options": [
+          "туча",
+          "лужа",
+          "зонт",
+          "гром",
+          "небо"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Yongʻindan keyin kul, yomgʻirdan keyin koʻlmak qoladi: hodisa va undan qoladigan iz. Bulut — yomgʻirning sababi, oqibati emas.",
+        "ru": "После пожара остаётся пепел, после дождя — лужа: явление и его след. Туча — причина дождя, а не его последствие."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v080",
+      "kind": "analogy",
+      "level": 7,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Nota : musiqa = retsept : ?",
+        "options": [
+          "oshpaz",
+          "oshxona",
+          "mahsulot",
+          "qozon",
+          "taom"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Ноты : музыка = рецепт : ?",
+        "options": [
+          "повар",
+          "кухня",
+          "продукт",
+          "казан",
+          "блюдо"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Notaga qarab musiqa chalinadi, retseptga qarab taom tayyorlanadi: yozma koʻrsatma va uning natijasi. Oshpaz retseptdan foydalanadi, lekin u natija emas.",
+        "ru": "По нотам исполняют музыку, по рецепту готовят блюдо: письменная инструкция и её результат. Повар пользуется рецептом, но он не результат."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v081",
+      "kind": "analogy",
+      "level": 7,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Gʻisht : bino = hujayra : ?",
+        "options": [
+          "yadro",
+          "organizm",
+          "mikroskop",
+          "vitamin",
+          "oqsil"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Кирпич : здание = клетка : ?",
+        "options": [
+          "ядро",
+          "организм",
+          "микроскоп",
+          "витамин",
+          "белок"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Bino gʻishtlardan, organizm hujayralardan tuziladi. Yadro esa hujayraning ichidagi qism — munosabat teskari.",
+        "ru": "Здание состоит из кирпичей, организм — из клеток. Ядро — часть клетки, то есть отношение обратное."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v082",
+      "kind": "analogy",
+      "level": 7,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Iliq : issiq = salqin : ?",
+        "options": [
+          "iliq",
+          "muz",
+          "sovuq",
+          "qish",
+          "shamol"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Тёплый : горячий = прохладный : ?",
+        "options": [
+          "тёплый",
+          "лёд",
+          "холодный",
+          "зима",
+          "ветер"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "«Issiq» — «iliq»ning kuchaygan darajasi, «sovuq» — «salqin»ning kuchaygan darajasi. Muz ham sovuq, lekin u daraja emas, narsa.",
+        "ru": "«Горячий» — усиленная степень «тёплого», «холодный» — усиленная степень «прохладного». Лёд тоже холодный, но это предмет, а не степень."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v083",
+      "kind": "analogy",
+      "level": 7,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Rejissyor : aktyorlar = dirijyor : ?",
+        "options": [
+          "tomoshabinlar",
+          "notalar",
+          "musiqachilar",
+          "tayoqcha",
+          "sahna"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Режиссёр : актёры = дирижёр : ?",
+        "options": [
+          "зрители",
+          "ноты",
+          "музыканты",
+          "палочка",
+          "сцена"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Rejissyor aktyorlarni, dirijyor musiqachilarni boshqaradi. Tayoqcha — dirijyorning asbobi, u boshqaradigan odamlar emas.",
+        "ru": "Режиссёр руководит актёрами, дирижёр — музыкантами. Палочка — инструмент дирижёра, а не люди, которыми он руководит."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v084",
+      "kind": "odd",
+      "level": 7,
+      "uz": {
+        "prompt": "Qaysi juftlik ortiqcha? Qolgan juftliklarda soʻzlar bir xil bogʻlangan.",
+        "stimulus": "katta — kichik; baland — past; issiq — sovuq; tez — sekin; chiroyli — goʻzal",
+        "options": [
+          "katta — kichik",
+          "baland — past",
+          "issiq — sovuq",
+          "tez — sekin",
+          "chiroyli — goʻzal"
+        ]
+      },
+      "ru": {
+        "prompt": "Какая пара лишняя? В остальных парах слова связаны одинаково.",
+        "stimulus": "большой — маленький; высокий — низкий; горячий — холодный; быстрый — медленный; красивый — прекрасный",
+        "options": [
+          "большой — маленький",
+          "высокий — низкий",
+          "горячий — холодный",
+          "быстрый — медленный",
+          "красивый — прекрасный"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Toʻrt juftlikda soʻzlar maʼnosi qarama-qarshi, «chiroyli — goʻzal»da esa maʼnodosh (sinonim).",
+        "ru": "В четырёх парах слова противоположны по смыслу, а «красивый — прекрасный» — близкие по смыслу слова (синонимы)."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v085",
+      "kind": "odd",
+      "level": 7,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "sher, yoʻlbars, qoplon, boʻri, silovsin",
+        "options": [
+          "sher",
+          "yoʻlbars",
+          "qoplon",
+          "boʻri",
+          "silovsin"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "лев, тигр, леопард, волк, рысь",
+        "options": [
+          "лев",
+          "тигр",
+          "леопард",
+          "волк",
+          "рысь"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Sher, yoʻlbars, qoplon va silovsin — mushuksimonlar oilasi, boʻri esa itsimonlarga kiradi. Silovsin boshqalardan kichik, lekin u ham mushuksimon.",
+        "ru": "Лев, тигр, леопард и рысь — кошачьи, а волк относится к псовым. Рысь меньше остальных, но она тоже из кошачьих."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v086",
+      "kind": "odd",
+      "level": 7,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "jasur, saxiy, halol, mehribon, baland",
+        "options": [
+          "jasur",
+          "saxiy",
+          "halol",
+          "mehribon",
+          "baland"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "смелый, щедрый, честный, добрый, высокий",
+        "options": [
+          "смелый",
+          "щедрый",
+          "честный",
+          "добрый",
+          "высокий"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Jasur, saxiy, halol va mehribon — xarakter sifatlari, «baland» esa tashqi koʻrinishni (boʻyni) bildiradi.",
+        "ru": "Смелый, щедрый, честный и добрый — черты характера, а «высокий» описывает внешность (рост)."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v087",
+      "kind": "category",
+      "level": 7,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "Merkuriy, Venera, Yer",
+        "options": [
+          "Oy",
+          "Quyosh",
+          "Pluton",
+          "Galley kometasi",
+          "Mars"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "Меркурий, Венера, Земля",
+        "options": [
+          "Луна",
+          "Солнце",
+          "Плутон",
+          "комета Галлея",
+          "Марс"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Merkuriy, Venera va Yer — Quyosh atrofidagi sayyoralar, Mars ham. Pluton 2006-yildan beri sayyora emas, mitti sayyora hisoblanadi.",
+        "ru": "Меркурий, Венера и Земля — планеты, вращающиеся вокруг Солнца, Марс тоже. Плутон с 2006 года считается не планетой, а карликовой планетой."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v088",
+      "kind": "category",
+      "level": 7,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "sheʼr, hikoya, roman",
+        "options": [
+          "kitoblar",
+          "mualliflar",
+          "adabiy asarlar",
+          "gazetalar",
+          "harflar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "стихотворение, рассказ, роман",
+        "options": [
+          "книги",
+          "авторы",
+          "литературные произведения",
+          "газеты",
+          "буквы"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Sheʼr, hikoya va roman — adabiy asarlar. «Kitoblar» emas: bitta sheʼr yoki hikoya odatda alohida kitob boʻlmaydi, u kitob yoki jurnal ichida chiqadi.",
+        "ru": "Стихотворение, рассказ и роман — литературные произведения. Не «книги»: отдельное стихотворение или рассказ обычно не является книгой, а печатается в книге или журнале."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v089",
+      "kind": "relation",
+      "level": 7,
+      "uz": {
+        "prompt": "Qaysi xulosa albatta toʻgʻri?",
+        "stimulus": "Baʼzi quyonlar oq. Barcha quyonlar — hayvon.",
+        "options": [
+          "Barcha hayvonlar oq",
+          "Barcha quyonlar oq",
+          "Hech bir hayvon oq emas",
+          "Baʼzi hayvonlar oq",
+          "Barcha oq narsalar — quyon"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой вывод обязательно верен?",
+        "stimulus": "Некоторые кролики белые. Все кролики — животные.",
+        "options": [
+          "Все животные белые",
+          "Все кролики белые",
+          "Ни одно животное не белое",
+          "Некоторые животные белые",
+          "Всё белое — кролики"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Oq quyonlar bor va ular hayvon, demak baʼzi hayvonlar oq. «Barcha quyonlar oq» kelib chiqmaydi: faqat baʼzilari oq deyilgan.",
+        "ru": "Белые кролики есть, и они животные, значит, некоторые животные белые. «Все кролики белые» не следует: сказано только о некоторых."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v090",
+      "kind": "relation",
+      "level": 7,
+      "uz": {
+        "prompt": "Chapdan ikkinchi qaysi kitob?",
+        "stimulus": "Javonda toʻrtta kitob bir qatorda turibdi. Qizil kitob koʻk kitobdan chapda. Yashil kitob qizil kitobdan chapda. Sariq kitob eng oʻngda.",
+        "options": [
+          "koʻk",
+          "qizil",
+          "yashil",
+          "sariq",
+          "aniqlab boʻlmaydi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какая книга вторая слева?",
+        "stimulus": "На полке в ряд стоят четыре книги. Красная книга левее синей. Зелёная книга левее красной. Жёлтая книга стоит крайней справа.",
+        "options": [
+          "синяя",
+          "красная",
+          "зелёная",
+          "жёлтая",
+          "определить нельзя"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Chapdan oʻngga: yashil, qizil, koʻk, sariq. Sariq eng oʻngda, qolgan uchtasining tartibi shartlardan aniq chiqadi, shuning uchun «aniqlab boʻlmaydi» notoʻgʻri.",
+        "ru": "Слева направо: зелёная, красная, синяя, жёлтая. Жёлтая крайняя справа, порядок остальных трёх однозначно следует из условий, поэтому «определить нельзя» неверно."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v091",
+      "kind": "relation",
+      "level": 7,
+      "uz": {
+        "prompt": "Sardor Anvarga kim boʻladi?",
+        "stimulus": "Anvarning otasi — Sardorning oʻgʻli.",
+        "options": [
+          "bobosi",
+          "otasi",
+          "amakisi",
+          "akasi",
+          "nevarasi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем Сардор приходится Анвару?",
+        "stimulus": "Отец Анвара — сын Сардора.",
+        "options": [
+          "дедушкой",
+          "отцом",
+          "дядей",
+          "братом",
+          "внуком"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Sardorning oʻgʻli — Anvarning otasi, demak Sardor — Anvarning otasining otasi, yaʼni bobosi. «Otasi» — bir boʻgʻinni tashlab ketish xatosi.",
+        "ru": "Сын Сардора — отец Анвара, значит, Сардор — отец его отца, то есть дедушка. «Отцом» — ошибка, при которой пропускают одно поколение."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v092",
+      "kind": "relation",
+      "level": 7,
+      "uz": {
+        "prompt": "Shu oyning 15-sanasi haftaning qaysi kuni?",
+        "stimulus": "Oyning 1-sanasi dushanba.",
+        "options": [
+          "seshanba",
+          "yakshanba",
+          "dushanba",
+          "chorshanba",
+          "juma"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой день недели будет 15-го числа этого месяца?",
+        "stimulus": "Первое число месяца — понедельник.",
+        "options": [
+          "вторник",
+          "воскресенье",
+          "понедельник",
+          "среда",
+          "пятница"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "15-sana 1-sanadan 14 kun keyin keladi, 14 kun esa roppa-rosa 2 hafta, demak yana dushanba. «Seshanba» — 15 kun qoʻshib yuborish xatosi.",
+        "ru": "15-е число наступает через 14 дней после 1-го, а 14 дней — ровно 2 недели, значит, снова понедельник. «Вторник» — ошибка, когда прибавляют 15 дней."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v093",
+      "kind": "analogy",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Muallif : asar = ixtirochi : ?",
+        "options": [
+          "ixtiro",
+          "patent",
+          "olim",
+          "laboratoriya",
+          "muhandis"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Автор : произведение = изобретатель : ?",
+        "options": [
+          "изобретение",
+          "патент",
+          "учёный",
+          "лаборатория",
+          "инженер"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Muallif asar yaratadi, ixtirochi — ixtiro. Patent — ixtironi tasdiqlaydigan hujjat, ixtironing oʻzi emas.",
+        "ru": "Автор создаёт произведение, изобретатель — изобретение. Патент — документ, подтверждающий изобретение, а не само изобретение."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v094",
+      "kind": "analogy",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Galaktika : yulduz = oʻrmon : ?",
+        "options": [
+          "hayvon",
+          "barg",
+          "oʻtloq",
+          "ovchi",
+          "daraxt"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Галактика : звезда = лес : ?",
+        "options": [
+          "животное",
+          "лист",
+          "поляна",
+          "охотник",
+          "дерево"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Galaktika koʻplab yulduzlardan, oʻrmon koʻplab daraxtlardan iborat. Hayvonlar oʻrmonda yashaydi, lekin oʻrmon ulardan tashkil topmaydi.",
+        "ru": "Галактика состоит из множества звёзд, лес — из множества деревьев. Животные живут в лесу, но лес из них не состоит."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v095",
+      "kind": "analogy",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Qoʻrqoq : jasorat = johil : ?",
+        "options": [
+          "qoʻrquv",
+          "bilim",
+          "maktab",
+          "dangasalik",
+          "olim"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Трус : смелость = невежда : ?",
+        "options": [
+          "страх",
+          "знания",
+          "школа",
+          "лень",
+          "учёный"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Qoʻrqoqqa jasorat, johilga bilim yetishmaydi. «Olim» — johilning qarama-qarshisi, lekin u odam, yetishmaydigan xususiyat emas.",
+        "ru": "Трусу не хватает смелости, невежде — знаний. «Учёный» — противоположность невежды, но это человек, а не недостающее качество."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v096",
+      "kind": "analogy",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Tomir : qon = quvur : ?",
+        "options": [
+          "suv",
+          "kran",
+          "metall",
+          "yurak",
+          "nasos"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Кровеносный сосуд : кровь = труба : ?",
+        "options": [
+          "вода",
+          "кран",
+          "металл",
+          "сердце",
+          "насос"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Tomir boʻylab qon, quvur boʻylab suv oqadi. Nasos suvni haydaydi (yurak kabi), lekin quvur ichida oqadigan narsa emas.",
+        "ru": "По сосуду течёт кровь, по трубе — вода. Насос качает воду (как сердце), но сам по трубе не течёт."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v097",
+      "kind": "analogy",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kutubxona : kitob = arxiv : ?",
+        "options": [
+          "tarix",
+          "arxivchi",
+          "bino",
+          "hujjat",
+          "muzey"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Библиотека : книга = архив : ?",
+        "options": [
+          "история",
+          "архивариус",
+          "здание",
+          "документ",
+          "музей"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Kutubxonada kitoblar, arxivda hujjatlar saqlanadi. Tarix hujjatlardan oʻrganiladi, lekin arxivda tarixning oʻzi emas, hujjatlar turadi.",
+        "ru": "В библиотеке хранят книги, в архиве — документы. Историю изучают по документам, но хранятся в архиве именно документы."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v098",
+      "kind": "analogy",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Oy : Yer = Yer : ?",
+        "options": [
+          "Quyosh",
+          "Mars",
+          "Oy",
+          "Somon yoʻli",
+          "osmon"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Луна : Земля = Земля : ?",
+        "options": [
+          "Солнце",
+          "Марс",
+          "Луна",
+          "Млечный Путь",
+          "небо"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Oy Yer atrofida, Yer esa Quyosh atrofida aylanadi. Somon yoʻli — Quyosh tizimi joylashgan galaktika: Yer uning ichida, lekin toʻgʻridan-toʻgʻri Quyosh atrofida aylanadi.",
+        "ru": "Луна вращается вокруг Земли, Земля — вокруг Солнца. Млечный Путь — галактика, в которой находится Солнечная система: Земля внутри неё, но обращается непосредственно вокруг Солнца."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v099",
+      "kind": "odd",
+      "level": 8,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "kamalak, shamol, chaqmoq, tuman, zilzila",
+        "options": [
+          "kamalak",
+          "shamol",
+          "chaqmoq",
+          "tuman",
+          "zilzila"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "радуга, ветер, молния, туман, землетрясение",
+        "options": [
+          "радуга",
+          "ветер",
+          "молния",
+          "туман",
+          "землетрясение"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Kamalak, shamol, chaqmoq va tuman — havoda (atmosferada) yuz beradigan hodisalar, zilzila esa yer ostida yuz beradi.",
+        "ru": "Радуга, ветер, молния и туман — явления в воздухе (в атмосфере), а землетрясение происходит под землёй."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v100",
+      "kind": "odd",
+      "level": 8,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "tomoshabin, yozuvchi, shoir, rassom, haykaltarosh",
+        "options": [
+          "tomoshabin",
+          "yozuvchi",
+          "shoir",
+          "rassom",
+          "haykaltarosh"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "зритель, писатель, поэт, художник, скульптор",
+        "options": [
+          "зритель",
+          "писатель",
+          "поэт",
+          "художник",
+          "скульптор"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Yozuvchi, shoir, rassom va haykaltarosh asar yaratadi, tomoshabin esa uni koʻradi, lekin yaratmaydi.",
+        "ru": "Писатель, поэт, художник и скульптор создают произведения, а зритель их смотрит, но не создаёт."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v101",
+      "kind": "odd",
+      "level": 8,
+      "uz": {
+        "prompt": "Qaysi juftlik ortiqcha? Qolgan juftliklarda soʻzlar bir xil bogʻlangan.",
+        "stimulus": "barg — daraxt; olma — nok; gʻildirak — mashina; sahifa — kitob; barmoq — qoʻl",
+        "options": [
+          "barg — daraxt",
+          "olma — nok",
+          "gʻildirak — mashina",
+          "sahifa — kitob",
+          "barmoq — qoʻl"
+        ]
+      },
+      "ru": {
+        "prompt": "Какая пара лишняя? В остальных парах слова связаны одинаково.",
+        "stimulus": "лист — дерево; яблоко — груша; колесо — машина; страница — книга; палец — рука",
+        "options": [
+          "лист — дерево",
+          "яблоко — груша",
+          "колесо — машина",
+          "страница — книга",
+          "палец — рука"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Toʻrt juftlikda birinchisi ikkinchisining qismi. Olma nokning qismi emas — ikkalasi bir guruhdagi narsa (meva).",
+        "ru": "В четырёх парах первое — часть второго. Яблоко не часть груши — это два предмета из одной группы (фрукты)."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v102",
+      "kind": "category",
+      "level": 8,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "ogʻirlik, uzunlik, harorat",
+        "options": [
+          "metr",
+          "termometr",
+          "tezlik",
+          "issiq",
+          "kilogramm"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "вес, длина, температура",
+        "options": [
+          "метр",
+          "термометр",
+          "скорость",
+          "жара",
+          "килограмм"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Ogʻirlik, uzunlik va harorat — oʻlchanadigan kattaliklar, tezlik ham. Metr va kilogramm — kattalik emas, ularning oʻlchov birliklari.",
+        "ru": "Вес, длина и температура — измеряемые величины, скорость тоже. Метр и килограмм — не величины, а единицы измерения."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v103",
+      "kind": "category",
+      "level": 8,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "ertak, doston, afsona",
+        "options": [
+          "roman",
+          "gazeta",
+          "lugʻat",
+          "maqol",
+          "maqola"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "сказка, эпос, легенда",
+        "options": [
+          "роман",
+          "газета",
+          "словарь",
+          "пословица",
+          "статья"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Ertak, doston va afsona — xalq ogʻzaki ijodi: muallifi nomaʼlum, ogʻizdan ogʻizga oʻtib kelgan. Maqol ham shunday. Roman ham badiiy asar, lekin uni aniq bir yozuvchi yozadi.",
+        "ru": "Сказка, эпос и легенда — устное народное творчество: автор неизвестен, они передавались из уст в уста. Пословица тоже. Роман — художественное произведение, но у него есть конкретный автор."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v104",
+      "kind": "relation",
+      "level": 8,
+      "uz": {
+        "prompt": "Soʻzlar oʻylab topilgan — faqat mantiqqa tayaning. Qaysi xulosa albatta toʻgʻri?",
+        "stimulus": "Hech bir glor trim emas. Barcha zeplar — glorlar.",
+        "options": [
+          "Barcha trimlar — zeplar",
+          "Baʼzi zeplar — trimlar",
+          "Hech bir zep trim emas",
+          "Barcha zeplar — trimlar",
+          "Barcha glorlar — zeplar"
+        ]
+      },
+      "ru": {
+        "prompt": "Слова выдуманы — опирайтесь только на логику. Какой вывод обязательно верен?",
+        "stimulus": "Ни один глор не трим. Все зепы — глоры.",
+        "options": [
+          "Все тримы — зепы",
+          "Некоторые зепы — тримы",
+          "Ни один зеп не трим",
+          "Все зепы — тримы",
+          "Все глоры — зепы"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Har bir zep — glor, glorlar orasida esa trim yoʻq, demak zeplar orasida ham trim yoʻq. «Barcha glorlar — zeplar» — berilgan gapning teskarisi, u kelib chiqmaydi.",
+        "ru": "Каждый зеп — глор, а среди глоров тримов нет, значит, и среди зепов тримов нет. «Все глоры — зепы» — обращение данного утверждения, оно не следует."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v105",
+      "kind": "relation",
+      "level": 8,
+      "uz": {
+        "prompt": "Navbatda oldindan uchinchi kim turibdi?",
+        "stimulus": "Besh kishi navbatda turibdi. Nodir Jasurdan oldinda, Jasur Sardordan oldinda. Dilnoza Nodirdan oldinda. Anvar eng oxirida.",
+        "options": [
+          "Nodir",
+          "Sardor",
+          "Dilnoza",
+          "Jasur",
+          "Anvar"
+        ]
+      },
+      "ru": {
+        "prompt": "Кто стоит третьим от начала очереди?",
+        "stimulus": "Пять человек стоят в очереди. Нодир стоит впереди Джасура, Джасур — впереди Сардора. Дилноза стоит впереди Нодира. Анвар — последний.",
+        "options": [
+          "Нодир",
+          "Сардор",
+          "Дилноза",
+          "Джасур",
+          "Анвар"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Oldindan: Dilnoza, Nodir, Jasur, Sardor, Anvar. Uchinchi — Jasur. Nodir ikkinchi: undan oldinda Dilnoza turibdi.",
+        "ru": "С начала очереди: Дилноза, Нодир, Джасур, Сардор, Анвар. Третий — Джасур. Нодир второй: перед ним стоит Дилноза."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v106",
+      "kind": "relation",
+      "level": 8,
+      "uz": {
+        "prompt": "Zarina Kamolaga kim boʻladi?",
+        "stimulus": "Kamolaning onasi — Zarinaning yagona qizi.",
+        "options": [
+          "onasi",
+          "xolasi",
+          "opasi",
+          "buvisi",
+          "qizi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем Зарина приходится Камоле?",
+        "stimulus": "Мама Камолы — единственная дочь Зарины.",
+        "options": [
+          "мамой",
+          "тётей",
+          "сестрой",
+          "бабушкой",
+          "дочерью"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Zarinaning qizi — Kamolaning onasi, demak Zarina — Kamolaning onasining onasi, yaʼni buvisi. «Xolasi» boʻlishi uchun Zarina onaning opa-singlisi boʻlishi kerak edi.",
+        "ru": "Дочь Зарины — мама Камолы, значит, Зарина — мама её мамы, то есть бабушка. Чтобы быть тётей, Зарина должна была бы быть сестрой мамы."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v107",
+      "kind": "relation",
+      "level": 8,
+      "uz": {
+        "prompt": "Ikki kundan keyin haftaning qaysi kuni boʻladi?",
+        "stimulus": "Ikki kun oldin juma edi.",
+        "options": [
+          "dushanba",
+          "chorshanba",
+          "yakshanba",
+          "seshanba",
+          "shanba"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой день недели будет через два дня?",
+        "stimulus": "Два дня назад была пятница.",
+        "options": [
+          "понедельник",
+          "среда",
+          "воскресенье",
+          "вторник",
+          "суббота"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Ikki kun oldin juma boʻlsa, bugun yakshanba. Yakshanbadan ikki kun keyin — seshanba. «Yakshanba» — bugungi kun, soʻralgani emas.",
+        "ru": "Если два дня назад была пятница, сегодня воскресенье. Через два дня после воскресенья — вторник. «Воскресенье» — это сегодня, а не искомый день."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v108",
+      "kind": "analogy",
+      "level": 9,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Kamtar : maqtanchoq = saxiy : ?",
+        "options": [
+          "xasis",
+          "boy",
+          "mehribon",
+          "kambagʻal",
+          "halol"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Скромный : хвастливый = щедрый : ?",
+        "options": [
+          "жадный",
+          "богатый",
+          "добрый",
+          "бедный",
+          "честный"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Kamtar va maqtanchoq — xarakter boʻyicha qarama-qarshi, saxiyning qarama-qarshisi — xasis. «Kambagʻal» — boyning qarama-qarshisi: bu pul miqdori, xarakter emas.",
+        "ru": "Скромный и хвастливый — противоположные черты характера, противоположность щедрого — жадный. «Бедный» — противоположность богатого: это о деньгах, а не о характере."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v109",
+      "kind": "analogy",
+      "level": 9,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Tashxis : shifokor = hukm : ?",
+        "options": [
+          "advokat",
+          "qonun",
+          "guvoh",
+          "sudya",
+          "jarima"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Диагноз : врач = приговор : ?",
+        "options": [
+          "адвокат",
+          "закон",
+          "свидетель",
+          "судья",
+          "штраф"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Tashxisni shifokor qoʻyadi, hukmni sudya chiqaradi. Advokat ham sudda qatnashadi, lekin hukm chiqarmaydi.",
+        "ru": "Диагноз ставит врач, приговор выносит судья. Адвокат тоже участвует в суде, но приговор не выносит."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v110",
+      "kind": "analogy",
+      "level": 9,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Eroziya : tosh = zang : ?",
+        "options": [
+          "suv",
+          "rang",
+          "oltin",
+          "vaqt",
+          "temir"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Эрозия : камень = ржавчина : ?",
+        "options": [
+          "вода",
+          "цвет",
+          "золото",
+          "время",
+          "железо"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Eroziya toshni, zang temirni asta-sekin yemiradi. Suv zangga sabab boʻladi, lekin zang uni yemirmaydi. Oltin esa zanglamaydi.",
+        "ru": "Эрозия постепенно разрушает камень, ржавчина — железо. Вода вызывает ржавчину, но ржавчина её не разрушает. Золото вообще не ржавеет."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v111",
+      "kind": "analogy",
+      "level": 9,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Mikroskop : kichik = teleskop : ?",
+        "options": [
+          "katta",
+          "yulduz",
+          "uzoq",
+          "yaqin",
+          "osmon"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Микроскоп : маленький = телескоп : ?",
+        "options": [
+          "большой",
+          "звезда",
+          "далёкий",
+          "близкий",
+          "небо"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Mikroskop koʻz ilgʻamaydigan darajada kichik narsalarni, teleskop juda uzoqdagi narsalarni koʻrsatadi. «Katta» emas: yulduzlar katta, lekin ularni uzoqligi sababli koʻra olmaymiz.",
+        "ru": "Микроскоп показывает то, что слишком мало для глаза, телескоп — то, что слишком далеко. Не «большой»: звёзды огромны, но мы не видим их из-за расстояния."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v112",
+      "kind": "odd",
+      "level": 9,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "kvadrat, romb, trapetsiya, toʻgʻri toʻrtburchak, parallelogramm",
+        "options": [
+          "kvadrat",
+          "romb",
+          "trapetsiya",
+          "toʻgʻri toʻrtburchak",
+          "parallelogramm"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "квадрат, ромб, трапеция, прямоугольник, параллелограмм",
+        "options": [
+          "квадрат",
+          "ромб",
+          "трапеция",
+          "прямоугольник",
+          "параллелограмм"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Kvadrat, romb, toʻgʻri toʻrtburchak va parallelogrammda qarama-qarshi tomonlar juft-juft parallel — ularning hammasi parallelogramm. Trapetsiyada faqat bir juft tomon parallel. Kvadrat eng «maxsus» boʻlsa ham, u ham parallelogramm.",
+        "ru": "У квадрата, ромба, прямоугольника и параллелограмма противоположные стороны попарно параллельны — все они параллелограммы. У трапеции параллельна только одна пара сторон. Квадрат самый «особый», но и он параллелограмм."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v113",
+      "kind": "odd",
+      "level": 9,
+      "uz": {
+        "prompt": "Qaysi juftlik ortiqcha? Qolgan juftliklarda soʻzlar bir xil bogʻlangan.",
+        "stimulus": "urugʻ — oʻsimlik; tuxum — qush; gʻumbak — kapalak; qoʻzi — qoʻy; barg — daraxt",
+        "options": [
+          "urugʻ — oʻsimlik",
+          "tuxum — qush",
+          "gʻumbak — kapalak",
+          "qoʻzi — qoʻy",
+          "barg — daraxt"
+        ]
+      },
+      "ru": {
+        "prompt": "Какая пара лишняя? В остальных парах слова связаны одинаково.",
+        "stimulus": "семя — растение; яйцо — птица; куколка — бабочка; ягнёнок — овца; лист — дерево",
+        "options": [
+          "семя — растение",
+          "яйцо — птица",
+          "куколка — бабочка",
+          "ягнёнок — овца",
+          "лист — дерево"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Toʻrt juftlikda birinchisi vaqt oʻtib ikkinchisiga aylanadi. Barg hech qachon daraxtga aylanmaydi — u daraxtning qismi.",
+        "ru": "В четырёх парах первое со временем становится вторым. Лист никогда не станет деревом — это часть дерева."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v114",
+      "kind": "odd",
+      "level": 9,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "ixtiro, kashfiyot, takrorlash, yangilik, ijod",
+        "options": [
+          "ixtiro",
+          "kashfiyot",
+          "takrorlash",
+          "yangilik",
+          "ijod"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "изобретение, открытие, повторение, новшество, творчество",
+        "options": [
+          "изобретение",
+          "открытие",
+          "повторение",
+          "новшество",
+          "творчество"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Ixtiro, kashfiyot, yangilik va ijod — yangi narsaning paydo boʻlishi, takrorlash esa bor narsani qaytarish.",
+        "ru": "Изобретение, открытие, новшество и творчество — появление чего-то нового, а повторение — воспроизведение уже существующего."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v115",
+      "kind": "category",
+      "level": 9,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "termometr, barometr, spidometr",
+        "options": [
+          "termos",
+          "mikrofon",
+          "teleskop",
+          "kalkulyator",
+          "tarozi"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "термометр, барометр, спидометр",
+        "options": [
+          "термос",
+          "микрофон",
+          "телескоп",
+          "калькулятор",
+          "весы"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Termometr, barometr va spidometr — oʻlchov asboblari (harorat, bosim, tezlik), tarozi ham (ogʻirlik). Termosning nomi termometrga oʻxshaydi, lekin u hech narsani oʻlchamaydi — issiqni saqlaydi.",
+        "ru": "Термометр, барометр и спидометр — измерительные приборы (температура, давление, скорость), весы тоже (вес). Термос похож по названию, но ничего не измеряет — он сохраняет тепло."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v116",
+      "kind": "category",
+      "level": 9,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "yoʻlbars, kit, koʻrshapalak",
+        "options": [
+          "sutemizuvchilar",
+          "suvda yashovchilar",
+          "baliqlar",
+          "qushlar",
+          "sudralib yuruvchilar"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "тигр, кит, летучая мышь",
+        "options": [
+          "млекопитающие",
+          "водные животные",
+          "рыбы",
+          "птицы",
+          "пресмыкающиеся"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Yoʻlbars, kit va koʻrshapalak bolasini sut bilan boqadi — ular sutemizuvchilar. Kit suvda yashaydi, lekin baliq emas; koʻrshapalak uchadi, lekin qush emas.",
+        "ru": "Тигр, кит и летучая мышь выкармливают детёнышей молоком — это млекопитающие. Кит живёт в воде, но не рыба; летучая мышь летает, но не птица."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v117",
+      "kind": "category",
+      "level": 9,
+      "uz": {
+        "prompt": "Qaysi soʻz shu guruhga kiradi?",
+        "stimulus": "gipoteza, tajriba, xulosa",
+        "options": [
+          "afsona",
+          "kuzatish",
+          "mish-mish",
+          "sheʼr",
+          "reklama"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово относится к этой же группе?",
+        "stimulus": "гипотеза, эксперимент, вывод",
+        "options": [
+          "миф",
+          "наблюдение",
+          "слух",
+          "стихотворение",
+          "реклама"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Gipoteza, tajriba va xulosa — ilmiy tadqiqot bosqichlari, kuzatish ham. Afsona ham biror narsani tushuntiradi, lekin u tekshirilmaydi.",
+        "ru": "Гипотеза, эксперимент и вывод — этапы научного исследования, наблюдение тоже. Миф тоже что-то объясняет, но его не проверяют."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v118",
+      "kind": "relation",
+      "level": 9,
+      "uz": {
+        "prompt": "Soʻzlar oʻylab topilgan — faqat mantiqqa tayaning. Qaysi xulosa albatta toʻgʻri?",
+        "stimulus": "Barcha plimlar — dorlar. Baʼzi dorlar — ketlar.",
+        "options": [
+          "Bu xulosalarning hech biri albatta toʻgʻri emas",
+          "Baʼzi plimlar — ketlar",
+          "Barcha ketlar — plimlar",
+          "Hech bir plim ket emas",
+          "Barcha dorlar — plimlar"
+        ]
+      },
+      "ru": {
+        "prompt": "Слова выдуманы — опирайтесь только на логику. Какой вывод обязательно верен?",
+        "stimulus": "Все плимы — доры. Некоторые доры — кеты.",
+        "options": [
+          "Ни один из этих выводов не обязательно верен",
+          "Некоторые плимы — кеты",
+          "Все кеты — плимы",
+          "Ни один плим не кет",
+          "Все доры — плимы"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Ketlar dorlarning plim boʻlmagan qismida ham, plimlar orasida ham boʻlishi mumkin — berilganlar buni hal qilmaydi. Shuning uchun «Baʼzi plimlar — ketlar» ham, «Hech bir plim ket emas» ham albatta toʻgʻri emas.",
+        "ru": "Кеты могут оказаться как среди плимов, так и среди доров, которые не плимы, — условия этого не решают. Поэтому ни «некоторые плимы — кеты», ни «ни один плим не кет» не обязательно верны."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v119",
+      "kind": "relation",
+      "level": 9,
+      "uz": {
+        "prompt": "Boʻyi boʻyicha (eng balanddan boshlab) uchinchi kim?",
+        "stimulus": "Anvar Jasurdan baland, lekin Nodirdan past. Sardor hammadan baland. Dilnoza Jasurdan past.",
+        "options": [
+          "Jasur",
+          "Anvar",
+          "Nodir",
+          "Sardor",
+          "Dilnoza"
+        ]
+      },
+      "ru": {
+        "prompt": "Кто третий по росту, если считать от самого высокого?",
+        "stimulus": "Анвар выше Джасура, но ниже Нодира. Сардор выше всех. Дилноза ниже Джасура.",
+        "options": [
+          "Джасур",
+          "Анвар",
+          "Нодир",
+          "Сардор",
+          "Дилноза"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Balanddan pastga: Sardor, Nodir, Anvar, Jasur, Dilnoza. Uchinchi — Anvar. Nodir ikkinchi: undan faqat Sardor baland.",
+        "ru": "От самого высокого: Сардор, Нодир, Анвар, Джасур, Дилноза. Третий — Анвар. Нодир второй: выше него только Сардор."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v120",
+      "kind": "relation",
+      "level": 9,
+      "uz": {
+        "prompt": "Rasmdagi bola Sardorga kim boʻladi?",
+        "stimulus": "Sardor rasmga ishora qilib dedi: «Bu bola — otamning yagona oʻgʻlining oʻgʻli».",
+        "options": [
+          "oʻgʻli",
+          "jiyani",
+          "nevarasi",
+          "ukasi",
+          "amakivachchasi"
+        ]
+      },
+      "ru": {
+        "prompt": "Кем мальчик на фото приходится Сардору?",
+        "stimulus": "Сардор показал на фото и сказал: «Этот мальчик — сын единственного сына моего отца».",
+        "options": [
+          "сыном",
+          "племянником",
+          "внуком",
+          "младшим братом",
+          "двоюродным братом"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Sardor — oʻgʻil bola, otasining yagona oʻgʻli esa Sardorning oʻzi. Demak rasmdagi bola — Sardorning oʻgʻli. «Jiyani» boʻlishi uchun Sardorning aka yoki ukasi boʻlishi kerak edi, lekin otasining oʻgʻli bitta.",
+        "ru": "Сардор — мужчина, а единственный сын его отца — он сам. Значит, мальчик на фото — сын Сардора. Чтобы быть племянником, мальчику нужен был бы брат Сардора, но сын у отца один."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v121",
+      "kind": "relation",
+      "level": 9,
+      "uz": {
+        "prompt": "Bugun haftaning qaysi kuni?",
+        "stimulus": "Ertadan keyingi kundan uch kun oldingi kun seshanba edi.",
+        "options": [
+          "seshanba",
+          "payshanba",
+          "dushanba",
+          "juma",
+          "chorshanba"
+        ]
+      },
+      "ru": {
+        "prompt": "Какой сегодня день недели?",
+        "stimulus": "За три дня до послезавтрашнего дня был вторник.",
+        "options": [
+          "вторник",
+          "четверг",
+          "понедельник",
+          "пятница",
+          "среда"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Ertadan keyingi kun — bugun + 2, undan 3 kun oldin — bugun − 1, yaʼni kecha. Kecha seshanba boʻlsa, bugun chorshanba. «Seshanba» — kechagi kun, bugungi emas.",
+        "ru": "Послезавтра — это сегодня + 2, за три дня до него — сегодня − 1, то есть вчера. Если вчера был вторник, сегодня среда. «Вторник» — это вчера, а не сегодня."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v122",
+      "kind": "analogy",
+      "level": 10,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Toʻgʻon : suv toshqini = emlash : ?",
+        "options": [
+          "shifokor",
+          "kasallik",
+          "dori",
+          "shprits",
+          "immunitet"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Плотина : наводнение = прививка : ?",
+        "options": [
+          "врач",
+          "болезнь",
+          "лекарство",
+          "шприц",
+          "иммунитет"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Toʻgʻon suv toshqinining, emlash kasallikning oldini oladi. Immunitet — emlashning natijasi (himoya), oldi olinadigan narsa emas; dori esa boshlangan kasallikni davolaydi.",
+        "ru": "Плотина предотвращает наводнение, прививка — болезнь. Иммунитет — результат прививки (защита), а не то, что предотвращают; лекарство же лечит уже начавшуюся болезнь."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v123",
+      "kind": "analogy",
+      "level": 10,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Parvarish : oʻsimlik = tarbiya : ?",
+        "options": [
+          "maktab",
+          "ota-ona",
+          "odob",
+          "oʻqituvchi",
+          "bola"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Уход : растение = воспитание : ?",
+        "options": [
+          "школа",
+          "родители",
+          "воспитанность",
+          "учитель",
+          "ребёнок"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Parvarish oʻsimlikka, tarbiya bolaga qaratiladi: harakat va u qaratilgan kim. «Odob» — tarbiyaning natijasi, tarbiyalanadigan kishi emas.",
+        "ru": "Уход направлен на растение, воспитание — на ребёнка: действие и тот, на кого оно направлено. «Воспитанность» — результат воспитания, а не тот, кого воспитывают."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v124",
+      "kind": "analogy",
+      "level": 10,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Ehtiyotkorlik : xavfsizlik = mashq : ?",
+        "options": [
+          "murabbiy",
+          "sport zali",
+          "musobaqa",
+          "mahorat",
+          "vaqt"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Осторожность : безопасность = тренировка : ?",
+        "options": [
+          "тренер",
+          "спортзал",
+          "соревнование",
+          "мастерство",
+          "время"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Ehtiyotkorlik xavfsizlikka, mashq mahoratga olib keladi: harakat va uning foydali natijasi. Musobaqa mashqdan keyin keladi, lekin u mashqning natijasi emas, sinov.",
+        "ru": "Осторожность ведёт к безопасности, тренировка — к мастерству: действие и его полезный результат. Соревнование бывает после тренировок, но это не их результат, а испытание."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v125",
+      "kind": "analogy",
+      "level": 10,
+      "uz": {
+        "prompt": "Ikkala juftlikda bogʻlanish bir xil boʻlishi kerak. Soʻroq belgisi oʻrniga qaysi soʻz keladi?",
+        "stimulus": "Pul : savdo = til : ?",
+        "options": [
+          "soʻz",
+          "grammatika",
+          "muloqot",
+          "tarjimon",
+          "alifbo"
+        ]
+      },
+      "ru": {
+        "prompt": "Связь в обеих парах должна быть одинаковой. Какое слово должно стоять вместо знака вопроса?",
+        "stimulus": "Деньги : торговля = язык : ?",
+        "options": [
+          "слово",
+          "грамматика",
+          "общение",
+          "переводчик",
+          "алфавит"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Pul — savdoning vositasi, til — muloqotning vositasi. «Soʻz» tilning bir qismi (tanga pulning qismi boʻlgani kabi), vosita xizmat qiladigan jarayon emas.",
+        "ru": "Деньги — средство торговли, язык — средство общения. «Слово» — часть языка (как монета — часть денег), а не процесс, которому служит средство."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v126",
+      "kind": "odd",
+      "level": 10,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "gipoteza, taxmin, faraz, isbot, versiya",
+        "options": [
+          "gipoteza",
+          "taxmin",
+          "faraz",
+          "isbot",
+          "versiya"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "гипотеза, догадка, предположение, доказательство, версия",
+        "options": [
+          "гипотеза",
+          "догадка",
+          "предположение",
+          "доказательство",
+          "версия"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Gipoteza, taxmin, faraz va versiya — hali tasdiqlanmagan fikrlar, isbot esa fikrni tasdiqlaydi.",
+        "ru": "Гипотеза, догадка, предположение и версия — ещё не подтверждённые мысли, а доказательство мысль подтверждает."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v127",
+      "kind": "odd",
+      "level": 10,
+      "uz": {
+        "prompt": "Qaysi juftlik ortiqcha? Qolgan juftliklarda soʻzlar bir xil bogʻlangan.",
+        "stimulus": "dushanba — seshanba; yomgʻir — koʻlmak; ishqalanish — issiqlik; zilzila — vayronalar; ekish — hosil",
+        "options": [
+          "dushanba — seshanba",
+          "yomgʻir — koʻlmak",
+          "ishqalanish — issiqlik",
+          "zilzila — vayronalar",
+          "ekish — hosil"
+        ]
+      },
+      "ru": {
+        "prompt": "Какая пара лишняя? В остальных парах слова связаны одинаково.",
+        "stimulus": "понедельник — вторник; дождь — лужа; трение — тепло; землетрясение — разрушения; посев — урожай",
+        "options": [
+          "понедельник — вторник",
+          "дождь — лужа",
+          "трение — тепло",
+          "землетрясение — разрушения",
+          "посев — урожай"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Toʻrt juftlikda birinchisi ikkinchisini keltirib chiqaradi (sabab — oqibat). Dushanba seshanbadan oldin keladi, lekin uni keltirib chiqarmaydi — bu faqat ketma-ketlik.",
+        "ru": "В четырёх парах первое вызывает второе (причина — следствие). Понедельник идёт перед вторником, но не вызывает его — это лишь последовательность."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v128",
+      "kind": "odd",
+      "level": 10,
+      "uz": {
+        "prompt": "Qaysi soʻz ortiqcha? Qolganlarini bitta umumiy belgi birlashtiradi.",
+        "stimulus": "yashirmoq, oshkor qilmoq, bekitmoq, pinhon tutmoq, sir saqlamoq",
+        "options": [
+          "yashirmoq",
+          "oshkor qilmoq",
+          "bekitmoq",
+          "pinhon tutmoq",
+          "sir saqlamoq"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое слово лишнее? Остальные объединяет один общий признак.",
+        "stimulus": "прятать, раскрывать, скрывать, утаивать, хранить в тайне",
+        "options": [
+          "прятать",
+          "раскрывать",
+          "скрывать",
+          "утаивать",
+          "хранить в тайне"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Toʻrt ibora yashirishni bildiradi, «oshkor qilmoq» esa aksincha — maʼlum qilish.",
+        "ru": "Четыре выражения означают скрывать, а «раскрывать» — наоборот, делать известным."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v129",
+      "kind": "category",
+      "level": 10,
+      "uz": {
+        "prompt": "Qaysi tushuncha bularning hammasini birlashtiradi?",
+        "stimulus": "bugʻlanish, erish, muzlash",
+        "options": [
+          "moddaning holati oʻzgarishi",
+          "kimyoviy reaksiyalar",
+          "ob-havo hodisalari",
+          "issiqlik manbalari",
+          "suv turlari"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое понятие объединяет их все?",
+        "stimulus": "испарение, плавление, замерзание",
+        "options": [
+          "изменения агрегатного состояния",
+          "химические реакции",
+          "погодные явления",
+          "источники тепла",
+          "виды воды"
+        ]
+      },
+      "correct": 0,
+      "explain": {
+        "uz": "Bugʻlanish, erish va muzlash — moddaning bir holatdan (qattiq, suyuq, gaz) boshqasiga oʻtishi. Bu kimyoviy reaksiya emas: muz eriganda ham suv suvligicha qoladi.",
+        "ru": "Испарение, плавление и замерзание — переход вещества из одного состояния (твёрдое, жидкое, газ) в другое. Это не химическая реакция: тающий лёд остаётся водой."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v130",
+      "kind": "relation",
+      "level": 10,
+      "uz": {
+        "prompt": "Jasur kim haqida gapiryapti?",
+        "stimulus": "Jasur rasmni koʻrsatib dedi: «Mening aka-ukam ham, opa-singlim ham yoʻq. Lekin bu odamning otasi — mening otamning oʻgʻli».",
+        "options": [
+          "oʻzi haqida",
+          "otasi haqida",
+          "oʻgʻli haqida",
+          "jiyani haqida",
+          "ukasi haqida"
+        ]
+      },
+      "ru": {
+        "prompt": "О ком говорит Джасур?",
+        "stimulus": "Джасур показал на фото и сказал: «У меня нет ни братьев, ни сестёр. Но отец этого человека — сын моего отца».",
+        "options": [
+          "о себе",
+          "о своём отце",
+          "о своём сыне",
+          "о своём племяннике",
+          "о своём младшем брате"
+        ]
+      },
+      "correct": 2,
+      "explain": {
+        "uz": "Jasurning aka-ukasi yoʻq, demak otasining oʻgʻli — Jasurning oʻzi. Rasmdagi odamning otasi — Jasur, yaʼni u Jasurning oʻgʻli. «Oʻzi haqida» deb oʻylash — bir boʻgʻinni tashlab ketish xatosi.",
+        "ru": "Братьев у Джасура нет, значит, сын его отца — он сам. Отец человека на фото — Джасур, то есть это его сын. Ответ «о себе» — ошибка, при которой пропускают одно поколение."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v131",
+      "kind": "relation",
+      "level": 10,
+      "uz": {
+        "prompt": "Kim oxirgi boʻlib keldi?",
+        "stimulus": "Besh doʻst yugurish musobaqasida qatnashdi. Bekzod Dilnozadan keyin, lekin Alidan oldin marraga keldi. Eldor Bekzoddan keyin keldi, lekin oxirgi emas. Ali ham oxirgi emas. Beshinchi ishtirokchi — Farida.",
+        "options": [
+          "Ali",
+          "Farida",
+          "Eldor",
+          "Dilnoza",
+          "Bekzod"
+        ]
+      },
+      "ru": {
+        "prompt": "Кто финишировал последним?",
+        "stimulus": "Пятеро друзей участвовали в забеге. Бекзод финишировал позже Дилнозы, но раньше Али. Элдор финишировал после Бекзода, но не последним. Али тоже не последний. Пятая участница — Фарида.",
+        "options": [
+          "Али",
+          "Фарида",
+          "Элдор",
+          "Дилноза",
+          "Бекзод"
+        ]
+      },
+      "correct": 1,
+      "explain": {
+        "uz": "Dilnoza va Bekzod Alidan oldin kelgan, demak ular oxirgi emas. Ali va Eldor ham oxirgi emas — shartda aytilgan. Qoladi faqat Farida. U haqida alohida gap yoʻqligi javobni noaniq qilmaydi: qolgan toʻrttasi chiqarib tashlandi.",
+        "ru": "Дилноза и Бекзод финишировали раньше Али, значит, они не последние. Али и Элдор тоже не последние — это сказано в условии. Остаётся только Фарида. То, что о ней ничего не сказано, не делает ответ неопределённым: остальные четверо исключены."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v132",
+      "kind": "relation",
+      "level": 10,
+      "uz": {
+        "prompt": "1-fevral haftaning qaysi kuni?",
+        "stimulus": "Shu yil 1-yanvar seshanba kuni.",
+        "options": [
+          "payshanba",
+          "shanba",
+          "seshanba",
+          "chorshanba",
+          "juma"
+        ]
+      },
+      "ru": {
+        "prompt": "Каким днём недели будет 1 февраля?",
+        "stimulus": "В этом году 1 января — вторник.",
+        "options": [
+          "четверг",
+          "суббота",
+          "вторник",
+          "среда",
+          "пятница"
+        ]
+      },
+      "correct": 4,
+      "explain": {
+        "uz": "Yanvarda 31 kun bor, 1-fevral 1-yanvardan 31 kun keyin. 31 = 4 hafta + 3 kun, seshanbadan 3 kun keyin — juma. «Payshanba» — oyni 30 kun deb hisoblash xatosi.",
+        "ru": "В январе 31 день, 1 февраля наступает через 31 день после 1 января. 31 = 4 недели + 3 дня, через 3 дня после вторника — пятница. «Четверг» — ошибка, когда в месяце считают 30 дней."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v133",
+      "kind": "relation",
+      "level": 10,
+      "uz": {
+        "prompt": "Pul qaysi qutida?",
+        "stimulus": "Uchta quti bor: qizil, koʻk va yashil. Pul faqat bittasida. Quyidagi uch gapdan faqat bittasi rost: 1) Pul qizil qutida. 2) Pul koʻk qutida emas. 3) Pul qizil qutida emas.",
+        "options": [
+          "qizil qutida",
+          "yashil qutida",
+          "aniqlab boʻlmaydi",
+          "koʻk qutida",
+          "hech birida"
+        ]
+      },
+      "ru": {
+        "prompt": "В какой коробке деньги?",
+        "stimulus": "Есть три коробки: красная, синяя и зелёная. Деньги лежат только в одной из них. Из трёх утверждений верно только одно: 1) Деньги в красной коробке. 2) Деньги не в синей коробке. 3) Деньги не в красной коробке.",
+        "options": [
+          "в красной",
+          "в зелёной",
+          "определить нельзя",
+          "в синей",
+          "ни в одной"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Qizilda boʻlsa, 1- va 2-gap rost — ikkita. Yashilda boʻlsa, 2- va 3-gap rost — ikkita. Koʻkda boʻlsa, faqat 3-gap rost — shart bajariladi. Demak pul koʻk qutida.",
+        "ru": "Если в красной, верны 1-е и 2-е утверждения — два. Если в зелёной, верны 2-е и 3-е — тоже два. Если в синей, верно только 3-е — условие выполнено. Значит, деньги в синей коробке."
+      },
+      "reviewed": false
+    },
+    {
+      "key": "v134",
+      "kind": "relation",
+      "level": 10,
+      "uz": {
+        "prompt": "Qaysi gap albatta toʻgʻri?",
+        "stimulus": "Barcha talabalar imtihon topshirdi. Imtihon topshirganlarning baʼzilari aʼlo baho oldi. Aziz aʼlo baho olmadi.",
+        "options": [
+          "Aziz talaba emas",
+          "Aziz imtihon topshirmagan",
+          "Hech bir talaba aʼlo baho olmagan",
+          "Agar Aziz talaba boʻlsa, u imtihon topshirgan",
+          "Barcha talabalar aʼlo baho olgan"
+        ]
+      },
+      "ru": {
+        "prompt": "Какое утверждение обязательно верно?",
+        "stimulus": "Все студенты сдавали экзамен. Некоторые из сдававших получили «отлично». Азиз не получил «отлично».",
+        "options": [
+          "Азиз — не студент",
+          "Азиз не сдавал экзамен",
+          "Ни один студент не получил «отлично»",
+          "Если Азиз — студент, то он сдавал экзамен",
+          "Все студенты получили «отлично»"
+        ]
+      },
+      "correct": 3,
+      "explain": {
+        "uz": "Barcha talabalar imtihon topshirgan, demak Aziz talaba boʻlsa, u ham topshirgan. Aziz aʼlo olmagani uning talaba emasligini isbotlamaydi: aʼloni faqat baʼzilar olgan.",
+        "ru": "Все студенты сдавали экзамен, значит, если Азиз студент, он тоже сдавал. То, что Азиз не получил «отлично», не доказывает, что он не студент: «отлично» получили лишь некоторые."
+      },
+      "reviewed": false
+    }
+  ]
+}
