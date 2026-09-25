@@ -25,35 +25,69 @@
   const CELL_STATES = ['idle', 'lit', 'ok', 'bad', 'hidden', 'disabled'];
   const SKILLS = ['attention', 'memory', 'speed', 'logic', 'spatial'];
 
-  const isText = v => v && typeof v.uz === 'string' && v.uz !== '' && typeof v.ru === 'string' && v.ru !== '';
+  /* Kontent tillari (CONTRACT §2, §9): uz va ru — doim, en — oʻyin
+     langs da eʼlon qilsa. */
+  const CONTENT_LANGS = ['uz', 'ru', 'en'];
+  const BASE_LANGS = ['uz', 'ru'];
+
+  /* Matn obyekti {uz, ru, en?}. en ixtiyoriy, lekin BOR boʻlsa — boʻsh
+     boʻlmagan satr; langs da 'en' boʻlsa — majburiy. */
+  const isText = (v, langs) => !!v && typeof v.uz === 'string' && v.uz !== ''
+    && typeof v.ru === 'string' && v.ru !== ''
+    && (v.en === undefined ? !(langs && langs.indexOf('en') !== -1)
+                           : typeof v.en === 'string' && v.en.trim() !== '');
+
+  const langsOk = l => l === undefined || (Array.isArray(l)
+    && BASE_LANGS.every(x => l.indexOf(x) !== -1)
+    && l.every(x => CONTENT_LANGS.indexOf(x) !== -1)
+    && new Set(l).size === l.length);
+
+  /* Oʻyin eʼlon qilgan tillar (nusxa). Nomaʼlum id → []. */
+  function langsOf(id) {
+    const g = typeof id === 'string' ? games[id] : id;
+    if (!g || typeof g !== 'object') return [];
+    return (Array.isArray(g.langs) ? g.langs : BASE_LANGS).slice();
+  }
 
   function register(g) {
     const errs = [];
     if (!g || typeof g.id !== 'string' || !/^[a-z][a-z0-9-]*$/.test(g.id)) errs.push('id');
-    if (!isText(g && g.title)) errs.push('title');
-    if (!isText(g && g.desc)) errs.push('desc');
+    const langs = g && langsOk(g.langs) ? g.langs : undefined;
+    if (g && !langsOk(g.langs)) errs.push('langs ([\'uz\',\'ru\'] yoki [\'uz\',\'ru\',\'en\'])');
+    if (!isText(g && g.title, langs)) errs.push('title');
+    if (!isText(g && g.desc, langs)) errs.push('desc');
     if (!g || SKILLS.indexOf(g.skill) === -1) errs.push('skill (' + SKILLS.join('|') + ')');
     if (!g || typeof g.create !== 'function') errs.push('create()');
     if (errs.length) throw new Error('[IQ.games] noto\'g\'ri o\'yin: ' + errs.join(', '));
     games[g.id] = g;
   }
 
-  /* GameView shaklini tekshiradi. Bo'sh ro'yxat — to'g'ri. */
-  function validateView(v) {
+  /* GameView shaklini tekshiradi. Bo'sh ro'yxat — to'g'ri.
+     game — ixtiyoriy: oʻyin id si (yoki tillar massivi). Berilsa, oʻyin
+     eʼlon qilgan tillar boʻyicha tekshiriladi (en eʼlon qilingan boʻlsa
+     hamma matnda en shart). Berilmasa — eski xulq, en ixtiyoriy. */
+  function validateView(v, game) {
     const e = [];
+    let langs = null;
+    if (Array.isArray(game)) langs = game;
+    else if (game !== undefined && game !== null) {
+      if (!games[game]) return ['nomaʼlum oʻyin: ' + game];
+      langs = langsOf(game);
+    }
+    const need = langs && langs.indexOf('en') !== -1 ? 'uz/ru/en' : 'uz/ru';
     if (!v || typeof v !== 'object') return ['view obyekt emas'];
     if (PHASES.indexOf(v.phase) === -1) e.push('phase: ' + v.phase);
-    if (!isText(v.prompt)) e.push('prompt uz/ru');
+    if (!isText(v.prompt, langs)) e.push('prompt ' + need);
     if (!Array.isArray(v.hud) || v.hud.length > 3) e.push('hud massiv, ≤ 3');
     else v.hud.forEach((h, i) => {
-      if (!isText(h.label) || typeof h.value !== 'string') e.push('hud[' + i + ']');
+      if (!isText(h.label, langs) || typeof h.value !== 'string') e.push('hud[' + i + ']');
     });
     if (v.display !== null && v.display !== undefined) {
       const d = v.display;
       if (d.kind === 'svg') {
         if (typeof d.svg !== 'string' || d.svg.indexOf('<svg') !== 0) e.push('display.svg');
         else if (/<script|\son\w+\s*=|<foreignObject|href\s*=\s*["'](?!#)/i.test(d.svg)) e.push('display.svg xavfli');
-      } else if (d.kind !== 'text' || !isText(d)) e.push('display');
+      } else if (d.kind !== 'text' || !isText(d, langs)) e.push('display');
     }
     if (v.grid !== null && v.grid !== undefined) {
       const g = v.grid;
@@ -67,7 +101,7 @@
     }
     if (!Array.isArray(v.buttons) || v.buttons.length > 4) e.push('buttons massiv, ≤ 4');
     else v.buttons.forEach((b, i) => {
-      if (typeof b.id !== 'string' || !isText(b.label) || ['primary', 'secondary'].indexOf(b.kind) === -1) e.push('buttons[' + i + ']');
+      if (typeof b.id !== 'string' || !isText(b.label, langs) || ['primary', 'secondary'].indexOf(b.kind) === -1) e.push('buttons[' + i + ']');
     });
     if (!(typeof v.progress === 'number' && v.progress >= 0 && v.progress <= 1)) e.push('progress 0..1');
     return e;
@@ -102,6 +136,8 @@
     create,
     replay,
     validateView,
+    langsOf,
     SKILLS,
+    CONTENT_LANGS: CONTENT_LANGS.slice(),
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,12 +1,15 @@
 {
   "name": "iquest-app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "IQuest — IQ testlari, mantiqiy o'yinlar va sertifikat (Android, offline)",
   "main": "index.js",
   "scripts": {
     "build": "node build.mjs",
     "test": "node --test 'tests/**/*.test.mjs'",
+    "test:strict": "IQ_STRICT=1 node --test 'tests/**/*.test.mjs'",
     "build:web": "node build.mjs --target=web",
+    "build:strict": "node build.mjs --strict",
+    "build:en": "node build.mjs --lang-en",
     "build:admin": "node build.mjs --target=admin",
     "site": "node tools/mksite.mjs",
     "build:all": "npm run build && npm run build:web && npm run build:admin && npm run site",
@@ -14,9 +17,11 @@
     "open": "npx cap open android",
     "apk": "npm run sync && cd android && ./gradlew assembleRelease",
     "aab": "npm run sync && cd android && ./gradlew bundleRelease",
-    "icons": "node tools/mkicons.mjs && npx capacitor-assets generate --android",
+    "icons": "node tools/mkicons.mjs",
     "og": "node tools/mkog.mjs",
-    "play:assets": "node tools/mkplay.mjs"
+    "play:assets": "node tools/mkplay.mjs",
+    "brand": "node tools/mkbrand.mjs",
+    "brand:daily": "node tools/mkbrand.mjs --daily --lang=uz"
   },
   "keywords": [],
   "author": "",

@@ -6,6 +6,12 @@
      node build.mjs --target=web       → dist/web/   (sayt)
      node build.mjs --target=admin     → dist/admin/ (admin panel)
 
+   Bayroqlar:
+     --strict   (yoki IQ_STRICT=1) — reliz nomzodi (WP11): v1.1 ning hamma
+                modul fayli va NEED markerlari BOʻLISHI shart.
+     --lang-en  — EN darvozasini majburan ochadi (faqat ishlab chiqish;
+                CONTRACT §15).
+
    Dizayn fayli TAHRIR QILINMAYDI. Bu skript uning nusxasini olib,
    maqsadga kerak bo'lmagan qatlamlarni KESIB TASHLAYDI va qolganini
    qurilma ekraniga moslaydi.
@@ -26,9 +32,24 @@
 
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync,
          existsSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
+import { pathToFileURL } from 'url';
+import vm from 'vm';
 
 const SRC = 'src';
+
+const ARGS = process.argv.slice(2);
+/* STRICT — integratsiya rejimi. Parallel ish paytida (WP1–WP10) yangi
+   modullar hali yoʻq boʻlishi mumkin: oddiy build ularni oʻtkazib
+   yuboradi. Reliz nomzodida esa yoʻq modul — xato. */
+const STRICT = ARGS.indexOf('--strict') !== -1 || process.env.IQ_STRICT === '1';
+const FORCE_EN = ARGS.indexOf('--lang-en') !== -1;
+/* SOCIAL_ON — ijtimoiy qatlam (doʻstlar, chat, guruhlar, inbox) faqat
+   backend bilan (v2, ARXITEKTURA §11). false turganda build uning nomlari
+   va yozuvlari bundleʼda YOʻQLIGINI tekshiradi (CONTRACT §16): serverni
+   talab qiladigan narsa ishlamaguncha ilovada umuman koʻrinmaydi —
+   «tez kunda» ham, oʻchiq tugma ham yoʻq. */
+const SOCIAL_ON = false;
 
 /* ── 0. Maqsad (target) ──────────────────────────────────────────────── */
 /* mobile — foydalanuvchi ilovasi (APK). Admin va landing kesiladi.
@@ -47,7 +68,7 @@ const TARGETS = {
   admin:  { out: 'dist/admin', app: false, admin: true,  landing: false, shell: 'shell-admin.css' },
 };
 
-const targetArg = process.argv.slice(2).find(a => a.startsWith('--target='));
+const targetArg = ARGS.find(a => a.startsWith('--target='));
 const TARGET = targetArg ? targetArg.slice('--target='.length) : 'mobile';
 const CFG = TARGETS[TARGET];
 if (!CFG) {
@@ -133,8 +154,12 @@ function blockEnd(code, openIdx) {
    Nima uchun kerak: nom qidirilganda izoh va satr yolg'on moslik beradi.
    Ikki haqiqiy misol — manba faylning "fayl xaritasi" izohida valsManage
    sanab o'tilgan, MONTHS_UZ satrida esa "may" oyi bor; ikkalasi ham kod
-   emas, lekin oddiy qidiruv ularni topib, tekshiruvni bekorga yiqitadi. */
-function codeOnly(code) {
+   emas, lekin oddiy qidiruv ularni topib, tekshiruvni bekorga yiqitadi.
+
+   keepStrings — satrlar saqlanadi, faqat izohlar tozalanadi: foydalanuvchi
+   koʻradigan matn (masalan SOCIAL tekshiruvi) satrda yashaydi, izohda
+   esa «v2 da Doʻstlar tabi» kabi rejalar yozilishi mumkin va zararsiz. */
+function codeOnly(code, keepStrings) {
   let out = '', st = 'code';
   const blank = c => (c === '\n' ? '\n' : ' ');
   for (let i = 0; i < code.length; i++) {
@@ -148,9 +173,9 @@ function codeOnly(code) {
     }
     else if (st === 'dq' || st === 'sq') {
       const quote = st === 'dq' ? '"' : "'";
-      if (c === '\\') { out += '  '; i++; }
+      if (c === '\\') { out += keepStrings ? c + (n || '') : '  '; i++; }
       else if (c === quote) { out += c; st = 'code'; }
-      else out += blank(c);
+      else out += keepStrings ? c : blank(c);
     }
     else if (st === 'lc') { out += blank(c); if (c === '\n') st = 'code'; }
     else if (st === 'bc') { out += blank(c); if (c === '*' && n === '/') { out += ' '; i++; st = 'code'; } }
@@ -409,15 +434,29 @@ for (const [family, slug, weights, subsets] of FONTS) {
 }
 
 /* ── 6. index.html ───────────────────────────────────────────────────── */
-const runtime = readFileSync(join(SRC, 'runtime.js'), 'utf8');
-const feedback = readFileSync(join(SRC, 'feedback.js'), 'utf8');
-const notify = readFileSync(join(SRC, 'notify.js'), 'utf8');
+const read = p => readFileSync(p, 'utf8');
+const runtime = read(join(SRC, 'runtime.js'));
+const feedback = read(join(SRC, 'feedback.js'));
+const notify = read(join(SRC, 'notify.js'));
 /* progress.js dizayn mantiqidan OLDIN qo'yilishi shart: sinf o'z
    boshlang'ich holatini window.nzProgress'dan o'qiydi, ya'ni u shu
    paytda allaqachon mavjud bo'lishi kerak. */
-const progress = readFileSync(join(SRC, 'progress.js'), 'utf8');
-const i18n = readFileSync(join(SRC, 'i18n.js'), 'utf8');
-const data = readFileSync(join(SRC, 'data.js'), 'utf8');
+const progress = read(join(SRC, 'progress.js'));
+const i18n = read(join(SRC, 'i18n.js'));
+const data = read(join(SRC, 'data.js'));
+
+/* ── v1.1 modullari (ARXITEKTURA §10.5, CONTRACT §1) ─────────────────
+   Paketlar parallel yoziladi, shuning uchun fayl hali yoʻq boʻlishi
+   mumkin: build uni OʻTKAZIB YUBORADI, Main esa modulni `window.nzX`
+   borligini tekshirib ishlatadi (yoʻq modulning funksiyasi yashirin).
+   --strict da yoʻq fayl — xato (reliz nomzodida hammasi boʻlishi shart). */
+const V11_MODULES = ['i18n-en.js', 'settings.js', 'catalog.js', 'icons.js', 'art.js',
+                     'avatars.js', 'profile.js', 'wallet.js', 'badges.js', 'league.js'];
+const absent = V11_MODULES.filter(f => !existsSync(join(SRC, f)));
+if (STRICT && absent.length) {
+  throw new Error(`[build] --strict: v1.1 modullari yoʻq: ${absent.map(f => 'src/' + f).join(', ')}`);
+}
+const optional = f => existsSync(join(SRC, f)) ? read(join(SRC, f)) : null;
 
 /* ── IQ yadrosi va savol generatorlari ────────────────────────────────
    Tartib muhim: rng → index (reyestr) → score → session → gen/*.
@@ -434,14 +473,14 @@ const IQ_GENS = readdirSync(join(SRC, 'iq', 'gen'))
      bo'lmaydi. */
   .filter(f => f.endsWith('.js') && (f !== 'demo.js' || process.env.IQ_DEMO === '1'))
   .sort();
-/* Og'zaki savollar — qo'lda yozilgan kontent (uz + ru). Generator emas,
-   ma'lumot: content/verbal.json. U bundle'ga window.IQ_VERBAL sifatida
-   joylanadi va gen/verbal.js shundan o'qiydi. Fayl bo'lmasa — og'zaki
-   tur shunchaki ro'yxatdan o'tmaydi, ilova qolgan turlar bilan ishlaydi. */
+/* Og'zaki savollar — qo'lda yozilgan kontent (uz + ru + en). Generator
+   emas, ma'lumot: content/verbal.json. U bundle'ga window.IQ_VERBAL
+   sifatida joylanadi va gen/verbal.js shundan o'qiydi. Fayl bo'lmasa —
+   og'zaki tur shunchaki ro'yxatdan o'tmaydi, ilova qolgan turlar bilan
+   ishlaydi. */
 const VERBAL_PATH = join('content', 'verbal.json');
-const verbalSnippet = existsSync(VERBAL_PATH)
-  ? `window.IQ_VERBAL = ${JSON.stringify(JSON.parse(readFileSync(VERBAL_PATH, 'utf8')))};\n`
-  : '';
+const verbalJson = existsSync(VERBAL_PATH) ? JSON.parse(read(VERBAL_PATH)) : null;
+const verbalSnippet = verbalJson ? `window.IQ_VERBAL = ${JSON.stringify(verbalJson)};\n` : '';
 /* O'yinlar (src/games/) va sertifikat (src/cert/) — xuddi shu qoida:
    avval reyestr (games/index.js), keyin o'yinlar alifbo tartibida;
    demo faqat IQ_DEMO=1 bilan. Papka bo'lmasa — bo'sh. */
@@ -455,25 +494,210 @@ const GAME_FILES = existsSync(join(GAMES_DIR, 'index.js'))
   ? [join(GAMES_DIR, 'index.js')].concat(listJs(GAMES_DIR, 'index.js')) : [];
 const CERT_FILES = listJs(CERT_DIR, null);
 
-const iqBundle = verbalSnippet + IQ_CORE.map(f => join(SRC, 'iq', f))
+const IQ_PARTS = IQ_CORE.map(f => join(SRC, 'iq', f))
   .concat(IQ_GENS.map(f => join(SRC, 'iq', 'gen', f)))
   .concat(GAME_FILES, CERT_FILES)
-  .map(p => `/* ── ${p} ── */\n` + readFileSync(p, 'utf8'))
+  .map(p => [p, read(p)]);
+const iqBundle = verbalSnippet + IQ_PARTS
+  .map(([p, code]) => `/* ── ${p} ── */\n` + code)
   .join('\n');
+
+/* ── EN darvozasi — «hammasi yoki hech narsa» (ARXITEKTURA §8.4,
+   CONTRACT §15) ───────────────────────────────────────────────────────
+   Ingliz tili til tanlovida faqat 4 shartning HAMMASI bajarilganda
+   chiqadi. Bittasi bajarilmasa — build yiqilmaydi, English shunchaki
+   taklif qilinmaydi va sabablar ogohlantirish sifatida yoziladi. Yarim
+   inglizcha ilova (tarjimasiz tugmalar, oʻzbekcha savollar) foydalanuvchiga
+   yetib bormasligi kerak. */
+const nonEmpty = s => typeof s === 'string' && s.trim() !== '';
+
+/* Brauzer taqlidi — faqat maʼlumot va reyestr fayllari uchun (DOM yoʻq). */
+function sandbox() {
+  const store = new Map();
+  const ctx = {
+    console,
+    setTimeout, clearTimeout,
+    navigator: { language: 'uz' },
+    localStorage: {
+      getItem: k => (store.has(k) ? store.get(k) : null),
+      setItem: (k, v) => { store.set(k, String(v)); },
+      removeItem: k => { store.delete(k); },
+    },
+  };
+  ctx.window = ctx;
+  return vm.createContext(ctx);
+}
+
+const siteCfg = JSON.parse(read('site.config.json'));
+
+async function enGate() {
+  const why = [];
+
+  /* 1. UI lugʻati: tools/i18n-extract.mjs boʻyicha nzEn da yetishmayotgan
+        kalit 0 ta. */
+  const enFile = join(SRC, 'i18n-en.js');
+  let nzEn = null;
+  if (!existsSync(enFile)) why.push('src/i18n-en.js yoʻq');
+  else {
+    try {
+      const ctx = sandbox();
+      vm.runInContext(read(enFile), ctx, { filename: enFile, timeout: 10000 });
+      nzEn = ctx.nzEn;
+    } catch (e) { why.push(`src/i18n-en.js yuklanmadi: ${e.message}`); }
+    if (!why.length && (!nzEn || typeof nzEn !== 'object')) why.push('src/i18n-en.js window.nzEn ni bermadi');
+  }
+  if (nzEn && typeof nzEn === 'object') {
+    const ex = join('tools', 'i18n-extract.mjs');
+    if (!existsSync(ex)) why.push('tools/i18n-extract.mjs yoʻq');
+    else {
+      try {
+        const mod = await import(pathToFileURL(resolve(ex)).href);
+        const api = Object.assign({}, mod.default || {}, mod);
+        const has = k => {
+          if (!Object.prototype.hasOwnProperty.call(nzEn, k)) return false;
+          const v = nzEn[k];
+          return nonEmpty(v) || (!!v && typeof v === 'object' && nonEmpty(v.one) && nonEmpty(v.other));
+        };
+        /* Afzal API — coverage({ root, langs }) (WP5): missing.en — lugʻatda
+           yoʻq satrlar, triplets.missingEn — {uz, ru, en} obyektlarida
+           (katalog, nishonlar, avatarlar) en yoʻq joylar. Zaxira:
+           missing(dict, 'en') yoki extract() (satrlar roʻyxati/xaritasi). */
+        let miss = null;
+        if (typeof api.coverage === 'function') {
+          const cov = await api.coverage({ root: resolve('.'), langs: ['en'] });
+          const tri = (cov.triplets && cov.triplets.missingEn) || [];
+          miss = ((cov.missing && cov.missing.en) || [])
+            .concat(tri.map(t => `${t.file || '?'}:${t.line || '?'} ${t.uz || ''} (en yoʻq)`));
+        } else if (typeof api.missing === 'function') miss = await api.missing(nzEn, 'en');
+        else if (typeof api.extract === 'function') {
+          const ex = await api.extract({ root: resolve('.') });
+          const keys = ex instanceof Map ? [...ex.keys()]
+            : ex && ex.strings instanceof Map ? [...ex.strings.keys()]
+            : Array.isArray(ex) ? ex.map(k => (typeof k === 'string' ? k : k && k.key)) : [];
+          miss = keys.filter(k => k && !has(k));
+        } else why.push('tools/i18n-extract.mjs da coverage(), missing() yoki extract() yoʻq');
+        if (miss && !Array.isArray(miss)) why.push('i18n-extract missing() massiv qaytarmadi');
+        else if (miss && miss.length) {
+          why.push(`nzEn da ${miss.length} ta kalit yetishmaydi (masalan: ${JSON.stringify(miss[0])})`);
+        }
+      } catch (e) { why.push(`tools/i18n-extract.mjs ishlamadi: ${e.message}`); }
+    }
+  }
+
+  /* 2. Bundleʼdagi HAR generator va HAR oʻyin langs da 'en' ni eʼlon
+        qilgan. Bundle node:vm da fayl-fayl yuklanadi (qaysi biri
+        yiqilganini bilish uchun). Eʼlon bilan cheklanmay, har tur/daraja
+        uchun bittadan savol va har oʻyinning boshlangʻich koʻrinishi
+        tekshiriladi — validateItem/validateView en ni talab qiladi. */
+  const ctx = sandbox();
+  if (verbalSnippet) vm.runInContext(verbalSnippet, ctx, { filename: VERBAL_PATH });
+  for (const [p, code] of IQ_PARTS) {
+    try { vm.runInContext(code, ctx, { filename: p, timeout: 10000 }); }
+    catch (e) { why.push(`${p} yuklanmadi: ${e.message}`); }
+  }
+  const IQ = ctx.IQ;
+  if (!IQ || typeof IQ.types !== 'function') why.push('IQ reyestri yuklanmadi');
+  else {
+    const langsOf = t => (IQ.langsOf ? IQ.langsOf(t) : ((IQ.generator(t) || {}).langs || ['uz', 'ru']));
+    const types = IQ.types();
+    if (!types.length) why.push('bundleʼda savol generatori yoʻq');
+    for (const t of types) {
+      if (langsOf(t).indexOf('en') === -1) { why.push(`generator "${t}": langs da 'en' yoʻq`); continue; }
+      for (let lv = 1; lv <= 10; lv++) {
+        let err = null;
+        for (let k = 0; k < 20; k++) {
+          try { IQ.makeItem(t, (0x9E3779B9 ^ (lv * 7919 + k * 104729)) >>> 0, lv); err = null; break; }
+          catch (e) { err = e; }
+        }
+        if (err) { why.push(`generator "${t}" ${lv}-daraja: ${err.message}`); break; }
+      }
+    }
+    const G = IQ.games;
+    const games = G && typeof G.list === 'function' ? G.list() : [];
+    if (!games.length) why.push('bundleʼda oʻyin yoʻq');
+    for (const g of games) {
+      const langs = G.langsOf ? G.langsOf(g.id) : (g.langs || ['uz', 'ru']);
+      if (langs.indexOf('en') === -1) { why.push(`oʻyin "${g.id}": langs da 'en' yoʻq`); continue; }
+      for (const lv of [1, 5, 10]) {
+        try {
+          const e = G.validateView(G.create(g.id, 20260925 + lv, lv).view(), g.id);
+          if (e.length) { why.push(`oʻyin "${g.id}" ${lv}-daraja: ${e.join('; ')}`); break; }
+        } catch (e) { why.push(`oʻyin "${g.id}" ${lv}-daraja: ${e.message}`); break; }
+      }
+    }
+  }
+
+  /* 3. content/verbal.json dagi HAR yozuvda en va explain.en. Qisman
+        en taqiqlangan: ID qaysi yozuvga tushishi roʻyxatga bogʻliq. */
+  if (verbalJson) {
+    const items = Array.isArray(verbalJson.items) ? verbalJson.items : [];
+    const ok = it => {
+      const en = it && it.en, uz = (it && it.uz) || {};
+      return !!en && nonEmpty(en.prompt)
+        && (!nonEmpty(uz.stimulus) || nonEmpty(en.stimulus))
+        && Array.isArray(en.options) && Array.isArray(uz.options)
+        && en.options.length === uz.options.length && en.options.every(nonEmpty)
+        && !!it.explain && nonEmpty(it.explain.en);
+    };
+    const bad = items.filter(it => !ok(it));
+    if (!items.length) why.push('content/verbal.json da yozuv yoʻq');
+    else if (bad.length) {
+      why.push(`content/verbal.json: ${bad.length}/${items.length} yozuvda en yoki explain.en yoʻq ` +
+               `(masalan ${bad[0] && bad[0].key})`);
+    }
+  }
+
+  /* 4. Sayt: /en/shartlar/ va /en/maxfiylik/. Rad qilish matni faqat
+        Shartlarda yashaydi — ingliz tili yoqilishidan OLDIN majburiy. */
+  const pagesFile = join(SRC, 'site', 'pages.mjs');
+  if (!existsSync(pagesFile)) why.push('src/site/pages.mjs yoʻq');
+  else {
+    try {
+      const mod = await import(pathToFileURL(resolve(pagesFile)).href);
+      if (typeof mod.legalReady === 'function') {
+        if (!(await mod.legalReady(siteCfg, 'en'))) why.push('sayt: legalReady(cfg, \'en\') — /en/ huquqiy sahifalar tayyor emas');
+      } else {
+        const fn = mod.allPages || mod.pages;
+        const list = typeof fn === 'function' ? await fn(siteCfg) : [];
+        const clean = x => String(x).replace(/^\/+|\/+$/g, '').replace(/\/index\.html$/, '');
+        const paths = new Set();
+        for (const pg of list || []) {
+          if (!pg) continue;
+          if (pg.path) paths.add(clean(pg.path));
+          if (pg.slug) {
+            const sl = clean(pg.slug);
+            paths.add(sl);
+            if (pg.lang && pg.lang !== 'uz' && sl.indexOf(pg.lang + '/') !== 0) paths.add(pg.lang + '/' + sl);
+          }
+        }
+        for (const need of ['en/shartlar', 'en/maxfiylik']) {
+          if (!paths.has(need)) why.push(`sayt: /${need}/ sahifasi yoʻq`);
+        }
+      }
+    } catch (e) { why.push(`src/site/pages.mjs oʻqilmadi: ${e.message}`); }
+  }
+
+  return why;
+}
+
+const enWhy = await enGate();
+const EN_ON = FORCE_EN || enWhy.length === 0;
+const LANGS = ['uz', 'uz-cyrl', 'ru'].concat(EN_ON ? ['en'] : []);
 
 /* Supabase sozlamalari (URL va publishable kalit) bundle'ga joylanadi.
    Ular ommaviy: publishable kalit ataylab klient uchun va uni mobil
    ilovadan yashirib boʻlmaydi. Maʼlumotni RLS himoya qiladi —
    supabase/README.md §2. */
-const supaCfg = JSON.parse(readFileSync(join('supabase', 'config.json'), 'utf8'));
+const supaCfg = JSON.parse(read(join('supabase', 'config.json')));
 const supaSnippet = `window.nzSupabase = ${JSON.stringify({
   url: supaCfg.url, publishableKey: supaCfg.publishableKey })};`;
 
 /* Saytga tegishli sozlama. Faqat OMMAVIY qiymatlar (bot nomi, domen) —
    ular baribir sahifa manbasida ko'rinadi. Aloqa manzili bu yerga
    qo'yilmaydi: u faqat matn sahifalarida kerak va spam yig'uvchilarga
-   ilova bundle'ida taqdim etishning hojati yo'q. */
-const siteCfg = JSON.parse(readFileSync('site.config.json', 'utf8'));
+   ilova bundle'ida taqdim etishning hojati yo'q. Ilovaga faqat u
+   TAYYORMI-yoʻqmi kerak (contactReady — Sozlamalardagi «Aloqa» qatori). */
+const VERSION = JSON.parse(read('version.json'));
 /* startView — ilova qaysi ekrandan boshlanadi.
 
    Bu sayt uchun MUHIM: saytning bosh sahifasi (/) landing bo'lishi
@@ -491,20 +715,30 @@ const siteCfg = JSON.parse(readFileSync('site.config.json', 'utf8'));
    sozlama orqali uzatiladi va matn almashtirish kerak emas. */
 /* siteUrl — huquqiy sahifalar (maxfiylik, shartlar, aloqa) manzili.
    Saytda ular shu domenning o'zida, ya'ni nisbiy havola yetadi
-   ("maxfiylik/"); APK ichida esa sahifalar yo'q — to'liq domen. */
-const siteSnippet = `window.nzSite = ${JSON.stringify({
+   ("maxfiylik/"); APK ichida esa sahifalar yo'q — to'liq domen.
+   version — Sozlamalar ostidagi «IQuest 1.1.0» (version.json).
+   contactReady / playUrl — «Aloqa» va «Ilovani baholash» qatorlari
+   qiymat tayyor boʻlmaguncha yashiriladi (oʻlik havola yoʻq).
+   langs — taklif qilinadigan tillar: 'en' faqat EN darvozasi ochiq
+   boʻlsa (src/i18n.js buni dangasa oʻqiydi). */
+const NZ_SITE = {
   telegramBot: siteCfg.telegramBot || '',
   siteUrl: CFG.landing ? '' : 'https://' + (siteCfg.domain || 'iquest.uz') + '/',
-  startView: CFG.admin ? 'admin' : CFG.landing ? 'landing' : 'app' })};`;
-const ruDict = readFileSync(join(SRC, 'i18n-ru.js'), 'utf8');
-const shellCss = readFileSync(join(SRC, CFG.shell), 'utf8');
-const bootstrap = readFileSync(join(SRC, 'bootstrap.js'), 'utf8');
+  startView: CFG.admin ? 'admin' : CFG.landing ? 'landing' : 'app',
+  version: String(VERSION.versionName || ''),
+  contactReady: !!siteCfg.contactEmail && !/PLACEHOLDER/.test(siteCfg.contactEmail),
+  playUrl: siteCfg.playUrl || '',
+  langs: LANGS,
+};
+const siteSnippet = `window.nzSite = ${JSON.stringify(NZ_SITE)};`;
+const shellCss = read(join(SRC, CFG.shell));
+const bootstrap = read(join(SRC, 'bootstrap.js'));
 
 /* Admin qatlami FAQAT admin build'iga kiradi. Foydalanuvchi ilovasi va
    sayt uni umuman ko'rmaydi — Faza 0 dagi ajratishning davomi. */
 const adminScripts = CFG.admin
-  ? `<script>\n${readFileSync(join(SRC, 'admin-api.js'), 'utf8')}\n</script>\n` +
-    `<script>\n${readFileSync(join(SRC, 'admin-boot.js'), 'utf8')}\n</script>`
+  ? `<script>\n${read(join(SRC, 'admin-api.js'))}\n</script>\n` +
+    `<script>\n${read(join(SRC, 'admin-boot.js'))}\n</script>`
   : '';
 
 /* Admin panel — klaviatura bilan ishlanadigan, matn nusxalanadigan ish
@@ -514,6 +748,38 @@ const viewport = CFG.admin
   : 'width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover';
 
 const title = CFG.admin ? 'IQuest — admin' : 'IQuest';
+
+/* Skriptlar tartibi — ARXITEKTURA §10.5. Har biri alohida <script>:
+   bitta moduldagi yuklanish xatosi qolganlarini toʻxtatmaydi. Boshidagi
+   belgi (/* ── src/… ── *\/) tartibni build testida va devtoolsʼda
+   koʻrish uchun. null — fayl hali yoʻq (oʻtkazib yuboriladi). */
+const SCRIPTS = [
+  ['src/i18n-ru.js',  read(join(SRC, 'i18n-ru.js'))],
+  ['src/i18n-en.js',  optional('i18n-en.js')],
+  ['src/i18n.js',     i18n],
+  ['src/runtime.js',  runtime],
+  ['src/feedback.js', feedback],
+  ['src/notify.js',   notify],
+  ['nzSite',          siteSnippet],
+  ['src/settings.js', optional('settings.js')],
+  ['src/progress.js', progress],
+  ['src/catalog.js',  optional('catalog.js')],
+  ['src/icons.js',    optional('icons.js')],
+  ['src/art.js',      optional('art.js')],
+  ['src/avatars.js',  optional('avatars.js')],
+  ['src/profile.js',  optional('profile.js')],
+  ['src/wallet.js',   optional('wallet.js')],
+  ['src/badges.js',   optional('badges.js')],
+  ['src/league.js',   optional('league.js')],
+  ['IQ bundle',       iqBundle],
+  ['Main (logic)',    logic],
+  ['src/data.js',     supaSnippet + '\n' + data],
+  ['src/bootstrap.js', bootstrap],
+].filter(([, code]) => code !== null);
+
+const scriptsHtml = SCRIPTS
+  .map(([name, code]) => `<script>\n/* ── ${name} ── */\n${code}\n</script>`)
+  .join('\n');
 
 const html = `<!DOCTYPE html>
 <html lang="uz">
@@ -535,40 +801,7 @@ ${shellCss}</style>
 <template id="nz-tpl">
 ${markup}
 </template>
-<script>
-${ruDict}
-</script>
-<script>
-${i18n}
-</script>
-<script>
-${runtime}
-</script>
-<script>
-${feedback}
-</script>
-<script>
-${notify}
-</script>
-<script>
-${siteSnippet}
-</script>
-<script>
-${progress}
-</script>
-<script>
-${iqBundle}
-</script>
-<script>
-${logic}
-</script>
-<script>
-${supaSnippet}
-${data}
-</script>
-<script>
-${bootstrap}
-</script>
+${scriptsHtml}
 ${adminScripts}
 </body>
 </html>
@@ -584,6 +817,21 @@ if (CFG.admin) NEED.push('valsManage', 'Admin panel');
    o'zgaradi (bu loyiha Nazariy'dan olingan va u yerda sarlavha matni
    tekshirilardi), bosh blok esa har doim bo'lishi kerak. */
 if (CFG.landing) NEED.push('nz-landing-hero', 'nz-landing-h1');
+NEED.push('window.nzSite = ', 'IQ.langsOf = langsOf');
+
+/* v1.1 ekran modullari (ARXITEKTURA §10.7, CONTRACT §16). Main ularni
+   bosqichma-bosqich oladi (WP7 U1–U5), shuning uchun oddiy build'da
+   marker faqat MANBADA bor bo'lsa talab qilinadi — kesish uni tushirib
+   qo'ymasligi uchun. --strict da manbada ham bo'lishi shart. Admin
+   build'da foydalanuvchi ekranlari yo'q. */
+const V11_NEED = ['valsSettings', 'valsShop', 'valsBadges', 'valsProfileEdit', 'valsOnboard'];
+if (CFG.app) {
+  const lacking = V11_NEED.filter(name => src.indexOf(name) === -1);
+  if (STRICT && lacking.length) {
+    throw new Error(`[build] --strict: src/Main.dc.html da yo'q: ${lacking.join(', ')} (CONTRACT §16)`);
+  }
+  for (const name of V11_NEED) if (lacking.indexOf(name) === -1) NEED.push(name);
+}
 
 /* Pul qatlami (Nazariy'ning taqlid to'lov oqimi) HECH QAYSI build'da
    bo'lmasligi kerak — na kodda, na markup'da. Manbadan olib tashlangan;
@@ -596,6 +844,35 @@ if (CFG.landing) NEED.push('nz-landing-hero', 'nz-landing-h1');
     if (new RegExp(`\\b${bad}\\b`).test(logicCode) || markup.indexOf(bad) !== -1) {
       throw new Error(`[build] "${bad}" ${TARGET} build'ida topildi — to'lov qatlami ` +
                       `IQuest'da yo'q (CONTRACT §6.6)`);
+    }
+  }
+}
+
+/* Ijtimoiy qatlam (SOCIAL) — backend (v2) bo'lmaguncha HECH QAYSI
+   build'da yo'q (CONTRACT §16, ARXITEKTURA §0.1-6, §11.3): chat, guruh,
+   do'stlar, inbox, «tez kunda», o'chiq tugma. MONEY_NAMES bilan bir xil
+   tartib: nomlar — yalang'och kodda, yozuvlar — markup'da va kod
+   SATRLARIDA (izohlarda «v2 da Do'stlar tabi» kabi reja zararsiz). */
+if (!SOCIAL_ON) {
+  const SOCIAL_NAMES = ['valsFriends', 'valsChat', 'valsGroups', 'valsInbox',
+                        'REPORT_KINDS', 'MEMBER_KINDS'];
+  for (const bad of SOCIAL_NAMES) {
+    if (new RegExp(`\\b${bad}\\b`).test(logicCode) || markup.indexOf(bad) !== -1) {
+      throw new Error(`[build] "${bad}" ${TARGET} build'ida topildi — ijtimoiy qatlam ` +
+                      `faqat backend bilan (SOCIAL_ON=false, CONTRACT §16)`);
+    }
+  }
+  /* Yozuvlar faqat foydalanuvchi ilovasi build'larida tekshiriladi: admin
+     panelda eski savol banki matnlari («… qaysi guruhga kiradi?») bor va
+     u foydalanuvchiga ko'rinmaydi. */
+  const SOCIAL_TEXT = [/do[ʻ'‘’`]st/i, /\bsuhbat/i, /\bchat\b/i, /\bguruh(lar)?\b/i,
+                       /tez kunda/i, /coming soon/i];
+  const logicText = codeOnly(logic, true);
+  for (const re of CFG.app ? SOCIAL_TEXT : []) {
+    const m = re.exec(markup) || re.exec(logicText);
+    if (m) {
+      throw new Error(`[build] ijtimoiy/«tez kunda» yozuvi "${m[0]}" ${TARGET} build'ida topildi — ` +
+                      `serverni talab qiladigan narsa ishlamaguncha ko'rinmaydi (CONTRACT §16)`);
     }
   }
 }
@@ -648,3 +925,12 @@ console.log(`maqsad: ${TARGET} → ${OUT}/`);
 console.log(`${OUT}/index.html — ${kb(html.length)}`);
 console.log(`${OUT}/fonts     — ${fontCount} ta woff2`);
 if (removed.length) console.log(`kesildi        — admin qatlami (${removed.length} ta nom)`);
+if (absent.length) console.log(`oʻtkazildi     — hali yoʻq v1.1 modullari: ${absent.join(', ')}`);
+console.log(`versiya        — ${NZ_SITE.version} (versionCode ${VERSION.versionCode})`);
+console.log(`tillar         — ${LANGS.join(', ')}`);
+if (FORCE_EN) console.log('⚠ EN darvozasi --lang-en bilan MAJBURAN ochildi — faqat ishlab chiqish uchun');
+else if (enWhy.length) {
+  console.log(`⚠ EN darvozasi yopiq (${enWhy.length} ta sabab) — English taklif qilinmaydi:`);
+  for (const w of enWhy.slice(0, 12)) console.log('  · ' + w);
+  if (enWhy.length > 12) console.log(`  · … yana ${enWhy.length - 12} ta`);
+}

@@ -35,6 +35,12 @@ jobs:
       - name: Bog'liqliklar
         run: npm ci
 
+      # tests/build.test.mjs build'ni os.tmpdir() dagi nusxada yuritadi
+      # (EN darvozasi, SOCIAL himoyasi, skript tartibi, nzSite).
+      # tests/api-surface.test.mjs CONTRACT dagi <!-- api --> bloklarini
+      # modullar bilan solishtiradi. Integratsiyada (WP11) bu qadam
+      # `npm run test:strict` ga, build esa `--strict` ga o'tadi — yo'q
+      # modul yoki marker o'tkazib yuborilmaydi.
       - name: Testlar
         run: npm test
 
@@ -43,4 +49,5 @@ jobs:
         # sayt build'idan admin qatlamini kesadi va o'z tekshiruvini
         # qiladi. Kesilgan nom qolgan kodda ishlatilsa build yiqiladi —
         # ya'ni bu qadam kesish teshigini ham ushlaydi.
+        # EN darvozasi yopiq bo'lsa build yiqilmaydi, sabablarni yozadi.
         run: npm run build:all
