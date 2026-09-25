@@ -9,12 +9,18 @@
      dist/site/
        index.html              landing + brauzerdagi ilova (bitta fayl)
        maxfiylik/index.html    maxfiylik siyosati   ← Play MAJBURIY
-       shartlar/index.html     foydalanish shartlari
+       shartlar/index.html     foydalanish shartlari (TOʻLIQ rad qilish matni)
        aloqa/index.html        aloqa                ← Play MAJBURIY
-       malumot-ochirish/…      ma'lumotni o'chirish ← Play MAJBURIY
-       manifest.webmanifest    telefonga o'rnatish (PWA)
+       malumot-ochirish/…      maʼlumotni oʻchirish ← Play MAJBURIY
+       ru/<slug>/index.html    xuddi shu 4 sahifa ruscha   (v1.1)
+       en/<slug>/index.html    xuddi shu 4 sahifa inglizcha (EN darvozasi, §8.4)
+       manifest.webmanifest    telefonga oʻrnatish (PWA)
        sitemap.xml, robots.txt
        fonts/, *.jpg, ikonkalar
+
+   Ilova huquqiy havolani tilga qarab ochadi (ARXITEKTURA §7.1):
+   uz/uz-cyrl → /<slug>/, ru → /ru/<slug>/, en → /en/<slug>/.
+   Matnlar va manzil sxemasi — src/site/pages.mjs.
 
    NIMA UCHUN MATN SAHIFALARI ALOHIDA: ilova bundle'i ~0.5 MB. Maxfiylik
    siyosatini o'qish uchun odam (yoki Play Console tekshiruvchisi) butun
@@ -29,7 +35,8 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { execFileSync } from 'child_process';
-import { pages } from '../src/site/pages.mjs';
+import { SITE_LANGS, CHROME, allPages, sitePath, lintPage, lintChrome }
+  from '../src/site/pages.mjs';
 
 const OUT = 'dist/site';
 const cfg = JSON.parse(readFileSync('site.config.json', 'utf8'));
@@ -49,6 +56,21 @@ if (/PLACEHOLDER/.test(cfg.contactEmail)) {
 }
 if (!cfg.telegramBot) {
   warn.push('telegramBot bo\'sh — landing\'dagi "Telegramda ochish" tugmasi olib tashlanadi');
+}
+if (!cfg.publisherLegal) {
+  warn.push('publisherLegal bo\'sh — maxfiylik siyosatida ilova egasi sifatida "' +
+            (cfg.publisher || cfg.appName || 'IQuest') + '" ko\'rsatiladi (Play dasturchi ' +
+            'ma\'lumotini talab qiladi)');
+}
+
+/* Matn sahifalari ilovani yig'ishdan OLDIN tekshiriladi (tez yiqilsin):
+   imlo (oʻ/gʻ — ʻ, tutuq — ʼ), til aralashmasi, Shartlardagi to'liq rad
+   qilish matni (CONTRACT §6.2), ichki havolalar. Bu bizning o'z
+   matnimiz — xato bo'lsa build YIQILADI. */
+const built = allPages(cfg);
+const textErrors = built.flatMap(lintPage).concat(SITE_LANGS.flatMap(lintChrome));
+if (textErrors.length) {
+  throw new Error('[mksite] matn sahifalarida xato:\n  ' + textErrors.join('\n  '));
 }
 
 const SITE = cfg.domainConfirmed ? 'https://' + cfg.domain : null;
@@ -77,9 +99,42 @@ copyDir('dist/web', OUT);
 /* Matn qisqa va halol (src/iq/CONTRACT.md §6): "rasmiy",
    "sertifikatlangan", persentil, "IQ oshiradi" va'dasi yo'q. */
 const APP = cfg.appName || 'IQuest';
-const TITLE = `${APP} — IQ test, mashq va aql o‘yinlari`;
-const DESC = '30 savollik moslashuvchan IQ test, savol turlari bo‘yicha mashq ' +
-             'va aql o‘yinlari. Internetsiz ishlaydi, ro‘yxatdan o‘tish shart emas.';
+
+/* Test uzunligi ilovadagi bilan bir xil bo'lsin (Main.dc.html →
+   TEST_LENGTH). Topilmasa raqamsiz yoziladi — noto'g'ri raqamdan yaxshi. */
+const TEST_LEN = (() => {
+  try {
+    const m = readFileSync('src/Main.dc.html', 'utf8').match(/const TEST_LENGTH\s*=\s*(\d+)\s*;/);
+    return m ? m[1] : '';
+  } catch (e) { return ''; }
+})();
+
+/* Landing matni ilovadagi nom bilan bir xil: «IQ oʻyinlari» (CONTRACT
+   §6.7). Imlo: oʻ/gʻ — ʻ (U+02BB). */
+const TITLE = `${APP} — IQ test, mashq va IQ oʻyinlari`;
+const DESC = (TEST_LEN ? `${TEST_LEN} savollik moslashuvchan IQ test` : 'Moslashuvchan IQ test') +
+             ', savol turlari boʻyicha mashq va IQ oʻyinlari. ' +
+             'Internetsiz ishlaydi, roʻyxatdan oʻtish shart emas.';
+
+/* Brauzer yorlig'idagi sarlavha ilova tiliga ergashadi: landing tilni
+   ilovadan oladi (nz-lang), <title> esa statik. i18n.js <html data-lang>
+   ni o'rnatadi — shu atribut kuzatiladi. 'en' faqat EN darvozasi
+   ochilganda uchraydi. */
+const TITLES = {
+  'uz': TITLE,
+  'uz-cyrl': `${APP} — IQ тест, машқ ва IQ ўйинлари`,
+  'ru': `${APP} — IQ-тест, тренировка и IQ-игры`,
+  'en': `${APP} — IQ test, practice and IQ games`,
+};
+for (const [l, t] of Object.entries(TITLES)) {
+  const errs = lintTextSafe(l, t);
+  if (errs) throw new Error('[mksite] landing sarlavhasi (' + l + '): ' + errs);
+}
+function lintTextSafe(l, t) {
+  if (/[‘’'`]/.test(t)) return 'notoʻgʻri apostrof';
+  if (l === 'uz' && /[\u0400-\u04FF]/.test(t)) return 'kirill harfi';
+  return '';
+}
 
 /* Havola ko'rinishidagi rasm (Telegram, WhatsApp, ijtimoiy tarmoq).
    tools/mkog.mjs bilan yasaladi. Fayl yo'q bo'lsa og:image YOZILMAYDI —
@@ -109,7 +164,7 @@ const head = [
   SITE && hasOg ? `<meta property="og:image" content="${SITE}/og.jpg">` : null,
   SITE && hasOg ? `<meta property="og:image:width" content="1200">` : null,
   SITE && hasOg ? `<meta property="og:image:height" content="630">` : null,
-  hasOg ? `<meta property="og:image:alt" content="${APP} — IQ test va aql o‘yinlari">` : null,
+  hasOg ? `<meta property="og:image:alt" content="${APP} — IQ test va IQ oʻyinlari">` : null,
 ].filter(Boolean).join('\n');
 
 /* Faqat <title> almashtiriladi — qolgan head o'z joyida qoladi.
@@ -122,25 +177,48 @@ index = index.replace('<title>IQuest</title>', head);
 
 /* JS o'chirilgan brauzer (va JS ishlatmaydigan indekslovchi) bo'sh
    ekran ko'rmasligi kerak. Bu marketing matni emas — sahifaning
-   mazmuni matn ko'rinishida. */
+   mazmuni matn ko'rinishida va uch tildagi huquqiy sahifalarga havola. */
+const legalLinks = lang => ['maxfiylik', 'shartlar', 'aloqa']
+  .map(slug => `<a href="${sitePath(lang, slug)}">${pageTitle(lang, slug)}</a>`).join(' · ');
+function pageTitle(lang, slug) {
+  return built.find(p => p.lang === lang && p.slug === slug).title;
+}
 const noscript = `
 <noscript>
 <div style="max-width:680px;margin:0 auto;padding:48px 24px;font:500 16px/1.6 Manrope,system-ui,sans-serif">
 <h1 style="font-size:32px;font-weight:800;letter-spacing:-.02em">${APP}</h1>
-<p>30 savollik moslashuvchan IQ test, savol turlari bo‘yicha mashq va aql
-o‘yinlari. Ilova internetsiz ham to‘liq ishlaydi.</p>
+<p>${DESC}</p>
 <p><strong>Ilovadan foydalanish uchun JavaScript yoqilishi kerak.</strong></p>
-<p><a href="maxfiylik/">Maxfiylik siyosati</a> ·
-<a href="shartlar/">Foydalanish shartlari</a> ·
-<a href="aloqa/">Aloqa</a></p>
+<p lang="uz">${legalLinks('uz')}</p>
+<p lang="ru">${legalLinks('ru')}</p>
+<p lang="en">${legalLinks('en')}</p>
 </div>
 </noscript>
 `;
 index = index.replace('<div id="nz-root"></div>', '<div id="nz-root"></div>' + noscript);
 
+const titleScript = `<script>
+(function () {
+  var T = ${JSON.stringify(TITLES)};
+  function apply() {
+    var l = document.documentElement.getAttribute('data-lang') || 'uz';
+    if (T[l] && document.title !== T[l]) document.title = T[l];
+  }
+  apply();
+  try {
+    new MutationObserver(apply).observe(document.documentElement,
+      { attributes: true, attributeFilter: ['data-lang'] });
+  } catch (e) {}
+})();
+</script>
+`;
+const bodyEnd = index.lastIndexOf('</body>');
+if (bodyEnd === -1) throw new Error('[mksite] dist/web/index.html da </body> topilmadi');
+index = index.slice(0, bodyEnd) + titleScript + index.slice(bodyEnd);
+
 writeFileSync(join(OUT, 'index.html'), index);
 
-/* ── 4. Matn sahifalari ─────────────────────────────────────────────── */
+/* ── 4. Matn sahifalari (uz · ru · en) ──────────────────────────────── */
 const CSS = `
 :root{color-scheme:light dark;
 --bg:#F5F3FF;--surface:#fff;--fg:#1C1B29;--muted:#6E6985;
@@ -155,16 +233,21 @@ font:400 17px/1.65 Manrope,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 .wrap{max-width:720px;margin:0 auto;padding:0 20px}
 header{border-bottom:1px solid var(--line)}
 header .wrap{display:flex;align-items:center;justify-content:space-between;
-gap:16px;padding-block:18px;flex-wrap:wrap}
+gap:12px 20px;padding-block:16px;flex-wrap:wrap}
 .brand{font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--fg);text-decoration:none}
-nav{display:flex;gap:18px;flex-wrap:wrap;font-size:15px;font-weight:600}
+nav{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:15px;font-weight:600}
 nav a{color:var(--muted);text-decoration:none}
 nav a:hover,nav a[aria-current]{color:var(--fg)}
+.langs{display:flex;gap:2px;padding:3px;border-radius:10px;background:var(--surface);
+border:1px solid var(--line);font-size:13px;font-weight:700;letter-spacing:.02em}
+.langs a{padding:4px 9px;border-radius:7px;color:var(--muted);text-decoration:none}
+.langs a[aria-current]{background:var(--fg);color:var(--bg)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%}
 main{padding-block:40px 64px}
 h1{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.025em;
 line-height:1.15;margin:0 0 24px;text-wrap:pretty}
 h2{font-size:21px;font-weight:800;letter-spacing:-.01em;margin:40px 0 10px;text-wrap:pretty}
-p,li{text-wrap:pretty}
+p,li{text-wrap:pretty;overflow-wrap:break-word}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px;padding-left:22px}
 li{margin-bottom:7px}
@@ -176,6 +259,7 @@ padding:20px;border:1px solid var(--line)}
 .big{font-size:20px;font-weight:700}
 .warn{background:var(--warn);border-left:4px solid var(--warn-line);
 border-radius:10px;padding:16px 18px}
+.warn p:last-child{margin-bottom:0}
 table{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:15px;
 display:block;overflow-x:auto}
 th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);
@@ -197,69 +281,87 @@ gap:16px;flex-wrap:wrap}
       bunday fayl esa yo'q. Natijada maxfiylik siyosati va qolgan
       uchta sahifa SHRIFTSIZ ko'rinardi (tizim shriftiga tushardi) va
       buni sezish qiyin, chunki sahifa baribir o'qiladi.
+      /ru/ va /en/ sahifalari bir pog'ona chuqurroq — shuning uchun
+      ildizga yo'l har sahifa uchun chuqurligidan hisoblanadi (ROOT).
 
    2. Sayt endi ildizga bog'liq emas: uni pastki papkada ham
       (example.com/iquest/) yoki oflayn papka sifatida ham ochish
       mumkin. */
-const NAV = [
-  ['../', 'Bosh sahifa'],
-  ['../maxfiylik/', 'Maxfiylik'],
-  ['../shartlar/', 'Shartlar'],
-  ['../aloqa/', 'Aloqa'],
-];
 
 /* Shriftni ilova build'idan qayta ishlatamiz: u allaqachon dist/site/fonts
-   ichida va o'sha yerdan yuklanadi (Google Fonts'ga chiqmaydi). */
-const fontFaces = (() => {
-  const m = index.match(/@font-face\{[^]*?\}(?=\s*(?:@font-face|<\/style>))/g);
+   ichida va o'sha yerdan yuklanadi (Google Fonts'ga chiqmaydi). Kirill
+   yuzlari ham shu ro'yxatda — /ru/ sahifalari Manrope bilan chiziladi. */
+const fontCss = (() => {
   // Faqat Manrope kerak — matn sahifalarida sarlavha shrifti ishlatilmaydi.
   const all = index.slice(index.indexOf('<style>') + 7, index.indexOf('</style>'));
   return all.split('@font-face').filter(x => /Manrope/.test(x))
-    .map(x => '@font-face' + x.slice(0, x.lastIndexOf('}') + 1)).join('\n')
-    // Matn sahifasi ichki papkada — "./fonts/" u yerdan topilmaydi.
-    .replace(/url\(\.\/fonts\//g, 'url(../fonts/');
+    .map(x => '@font-face' + x.slice(0, x.lastIndexOf('}') + 1)).join('\n');
 })();
+const fontFacesAt = root => fontCss.replace(/url\(\.\/fonts\//g, `url(${root}fonts/`);
+
+const SHORT = { uz: 'UZ', ru: 'RU', en: 'EN' };
 
 function page(p) {
-  const nav = NAV.map(([href, label]) =>
-    `<a href="${href}"${href === '../' + p.slug + '/' ? ' aria-current="page"' : ''}>${label}</a>`
+  const C = CHROME[p.lang];
+  const root = '../'.repeat(p.path.split('/').filter(Boolean).length);
+  const nav = [`<a href="${root}">${C.home}</a>`].concat(
+    ['maxfiylik', 'shartlar', 'aloqa'].map(slug =>
+      `<a href="../${slug}/"${slug === p.slug ? ' aria-current="page"' : ''}>${C.nav[slug]}</a>`)
   ).join('\n');
-  const canonical = SITE ? `<link rel="canonical" href="${SITE}/${p.slug}/">\n` : '';
+  const langs = SITE_LANGS.map(l =>
+    `<a href="${root}${sitePath(l, p.slug)}" hreflang="${l}" lang="${CHROME[l].htmlLang}" ` +
+    `title="${CHROME[l].langName}"${l === p.lang ? ' aria-current="true"' : ''}>${SHORT[l]}</a>`
+  ).join('');
+  /* hreflang faqat tasdiqlangan domen bilan: Google to'liq URL talab qiladi
+     (canonical va sitemap bilan bir xil qoida). Ko'rinadigan til
+     tanlovi esa doim bor. */
+  const alternates = SITE ? SITE_LANGS.map(l =>
+      `<link rel="alternate" hreflang="${l}" href="${SITE}/${sitePath(l, p.slug)}">`)
+    .concat(`<link rel="alternate" hreflang="x-default" href="${SITE}/${sitePath(SITE_LANGS[0], p.slug)}">`)
+    .join('\n') + '\n' : '';
+  const canonical = SITE ? `<link rel="canonical" href="${SITE}/${p.path}">\n` : '';
+  const ogAlt = SITE_LANGS.filter(l => l !== p.lang)
+    .map(l => `<meta property="og:locale:alternate" content="${CHROME[l].ogLocale}">\n`).join('');
   return `<!DOCTYPE html>
-<html lang="uz">
+<html lang="${C.htmlLang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#F5F3FF">
-<link rel="icon" href="../favicon.png" sizes="32x32">
+<meta name="theme-color" content="#F5F3FF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14121F" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="${root}favicon.png" sizes="32x32">
 <title>${p.title} — ${APP}</title>
 <meta name="description" content="${p.description}">
-${canonical}<meta property="og:type" content="article">
+${canonical}${alternates}<meta property="og:type" content="article">
+<meta property="og:site_name" content="${APP}">
 <meta property="og:title" content="${p.title} — ${APP}">
 <meta property="og:description" content="${p.description}">
-${SITE && hasOg ? `<meta property="og:image" content="${SITE}/og.jpg">\n` : ''}<style>${fontFaces}</style>
+<meta property="og:locale" content="${C.ogLocale}">
+${ogAlt}${SITE && hasOg ? `<meta property="og:image" content="${SITE}/og.jpg">\n` : ''}<style>${fontFacesAt(root)}</style>
 <style>${CSS}</style>
 </head>
 <body>
 <header><div class="wrap">
-<a class="brand" href="../">${APP}</a>
-<nav>${nav}</nav>
+<div class="top">
+<a class="brand" href="${root}">${APP}</a>
+<div class="langs" role="navigation" aria-label="${C.langLabel}">${langs}</div>
+</div>
+<nav aria-label="${C.navLabel}">${nav}</nav>
 </div></header>
 <main><div class="wrap">${p.body}
 </div></main>
 <footer><div class="wrap">
-<span>© ${new Date().getFullYear()} ${cfg.publisher}${cfg.domainConfirmed ? ' · ' + cfg.domain : ''}</span>
-<span><a href="../malumot-ochirish/">Ma’lumotni o‘chirish</a></span>
+<span>© ${new Date().getFullYear()} ${cfg.publisher || APP}${cfg.domainConfirmed ? ' · ' + cfg.domain : ''}</span>
+<span><a href="../malumot-ochirish/"${p.slug === 'malumot-ochirish' ? ' aria-current="page"' : ''}>${C.deletion}</a></span>
 </div></footer>
 </body>
 </html>
 `;
 }
 
-const built = pages(cfg);
 for (const p of built) {
-  mkdirSync(join(OUT, p.slug), { recursive: true });
-  writeFileSync(join(OUT, p.slug, 'index.html'), page(p));
+  mkdirSync(join(OUT, p.path), { recursive: true });
+  writeFileSync(join(OUT, p.path, 'index.html'), page(p));
 }
 
 /* ── 5. PWA ikonkalari va manifest ──────────────────────────────────
@@ -291,7 +393,7 @@ if (existsSync(ICON_SRC)) {
   warn.push('resources/icon-only.png yo\'q — PWA ikonkalari yasalmadi');
 }
 writeFileSync(join(OUT, 'manifest.webmanifest'), JSON.stringify({
-  name: `${APP} — IQ test va aql o‘yinlari`,
+  name: `${APP} — IQ test va IQ oʻyinlari`,
   short_name: APP,
   description: DESC,
   start_url: './',
@@ -307,12 +409,19 @@ writeFileSync(join(OUT, 'manifest.webmanifest'), JSON.stringify({
 
 /* ── 6. robots.txt va sitemap.xml ───────────────────────────────────── */
 if (SITE) {
-  const urls = ['/'].concat(built.map(p => '/' + p.slug + '/'));
+  /* Har huquqiy sahifa uch tilda: har biri o'z <url> yozuvi va
+     xhtml:link bilan qolgan tildagi nusxalariga ishora qiladi. */
+  const alt = slug => SITE_LANGS.map(l =>
+    `    <xhtml:link rel="alternate" hreflang="${l}" href="${SITE}/${sitePath(l, slug)}"/>`)
+    .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}/${sitePath(SITE_LANGS[0], slug)}"/>`)
+    .join('\n');
+  const entries = [`  <url><loc>${SITE}/</loc></url>`].concat(built.map(p =>
+    `  <url>\n    <loc>${SITE}/${p.path}</loc>\n${alt(p.slug)}\n  </url>`));
   writeFileSync(join(OUT, 'sitemap.xml'),
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    urls.map(u => `  <url><loc>${SITE}${u}</loc></url>`).join('\n') +
-    '\n</urlset>\n');
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
+    '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+    entries.join('\n') + '\n</urlset>\n');
   writeFileSync(join(OUT, 'robots.txt'),
     `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 } else {
@@ -340,9 +449,9 @@ writeFileSync(join(OUT, '_headers'),
 const kb = p => (readFileSync(join(OUT, p)).length / 1024).toFixed(0) + ' KB';
 console.log('');
 console.log(`sayt → ${OUT}/`);
-console.log(`  ${'index.html'.padEnd(26)}${kb('index.html').padStart(6)}  (landing + ilova)`);
+console.log(`  ${'index.html'.padEnd(32)}${kb('index.html').padStart(6)}  (landing + ilova)`);
 for (const p of built) {
-  console.log(`  ${(p.slug + '/index.html').padEnd(26)}${kb(join(p.slug, 'index.html')).padStart(6)}  ${p.title}`);
+  console.log(`  ${(p.path + 'index.html').padEnd(32)}${kb(join(p.path, 'index.html')).padStart(6)}  ${p.title}`);
 }
 console.log(`  manifest.webmanifest    ${icons.length} ta ikonka`);
 console.log(`  og.jpg                  ${hasOg ? (SITE ? 'havola ko\'rinishi uchun' : 'yasalgan, lekin og:image domen tasdiqlanmaguncha yozilmaydi') : 'YO\'Q'}`);
