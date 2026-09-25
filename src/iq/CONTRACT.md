@@ -218,14 +218,27 @@ filtrlaydi.
 
 ## 6. HALOLLIK QOIDALARI (matn yozadigan HAMMA uchun)
 
-Bu mahsulotning eng nozik joyi. "IQ" so'zi va'da beradi, biz esa
-me'yorlanmagan (norm) test qilyapmiz.
+Bu mahsulotning eng nozik joyi. "IQ" so'zi va'da beradi — shuning
+uchun biz NIMA DEMASLIGIMIZ qat'iy, lekin ilova o'zini oqlab ham
+o'tirmaydi.
 
-1. **Ball har doim "taxminiy"** va har doim ORALIQ bilan: "Taxminiy IQ:
-   108 (100–116)". Oraliqsiz yolg'iz raqam ko'rsatilmaydi.
-2. **Rad qilish matni** natija ekranida doim ko'rinadi: *"Bu klinik IQ
-   testi emas. Savollar hali katta guruhda me'yorlanmagan, shuning uchun
-   natija taxminiy va faqat o'zingizni kuzatish uchun."*
+**Mahsulot egasining qarori (2026-09-25, №2):** ilova premium, tartibli
+va ishonchli ko'rinishi kerak (Nazariy darajasida). Ilova ICHIDA rad
+qilish / ogohlantirish matnlari ("taxminiy", "klinik emas", "norasmiy",
+"me'yorlanmagan", "namuna") YO'Q — ular ishonchni tushiradi. Hammasi
+**Foydalanish shartlari** (oferta, `src/site/pages.mjs` → `/shartlar/`)
+sahifasida to'liq yoziladi; ilovada Profil → "Foydalanish shartlari"
+havolasi bor. Ilova muhitida raqobat hissi bo'lishi kerak (liga
+darajalari, ball, shaxsiy rekord).
+
+1. **Natija ekrani:** katta IQ raqami va uning ostida BITTA kichik
+   xira qator — oraliq, professional hisobotlardagidek: "Oraliq
+   97–119". Izoh jumlasi yo'q. Oraliq olib tashlanmaydi: u raqamni
+   ishonchliroq qiladi, xatoni esa yashirmaydi.
+2. **Rad qilish matni** — faqat Foydalanish shartlarida: *"IQuest
+   testi klinik diagnostika vositasi emas va hech qanday tashkilot
+   tomonidan tasdiqlanmagan. Natija savollarga bergan javoblaringiz
+   asosida statistik baholanadi va xatolik oralig'iga ega."*
 3. **"IQ oshiradi" deb VA'DA QILINMAYDI.** Mashq qilingan topshiriqda
    natija oshadi — bu isbotlangan. Umumiy aqlga ko'chishi — isbotlanmagan
    (AQShda Lumosity shunday va'dalar uchun FTC bilan kelishuvda 2 mln $
@@ -238,7 +251,8 @@ me'yorlanmagan (norm) test qilyapmiz.
    tomonidan tasdiqlanmagan. IQuest'ning O'Z sertifikati (§6.7) bundan
    mustasno: u "IQuest.uz tomonidan berilgan" deb aniq yoziladi.
 5. `reliable: false` bo'lsa IQ raqami ko'rsatilmaydi — faqat to'g'ri
-   javoblar soni.
+   javoblar soni. (Haqiqatga yaqinlik talabi: 10 savollik mashqdan
+   IQ chiqarish — to'qima raqam.)
 6. **Natija hech qachon pul ortida emas.** Test va uning natijasi (oraliq
    bilan) bepul. IQ-test janrining №1 shikoyati — "natijani ko'rish uchun
    yashirin obuna" (Buyuk Britaniyada bunday reklama taqiqlangan).
@@ -344,6 +358,31 @@ hisoblagan natijadan** chiqadi:
   DIQQAT: `IQ.session.ENGINE` faqat sessiya algoritmini qamraydi.
   Backend qurilganda saqlanadigan versiya generatorlar versiyasini ham
   o'z ichiga olishi kerak (ochiq masala).
+
+---
+
+## 11. Dizayn standarti (mahsulot egasining qarori, 2026-09-25)
+
+Mezon — Nazariy'dagi premium, tartibli muhit. Har komponent va har
+yozuv o'z joyini biladi.
+
+1. **Har ekranda bitta asosiy harakat.** Foydalanuvchi keyin nima
+   qilishini o'ylab o'tirmaydi. Sarlavha 1–3 so'z; ostida ko'pi bilan
+   bitta qisqa qator. Kartochkalarda tushuntirish paragrafi yo'q.
+2. **Joy siljimaydi (layout shift yo'q).** Sarlavha, HUD, progress
+   chizig'i, variantlar panjarasi va pastki tugmalar doim bir joyda
+   va bir o'lchamda. Paydo bo'lib-yo'qoladigan tugma yoki izoh uchun
+   joy OLDINDAN ajratiladi. Sanagich va taymerlar `tabular-nums`.
+   Rasm uchun `aspect-ratio` qutisi — yuklanganda hech narsa sakramaydi.
+3. **Mashq izohi** javobdan keyin "Izoh" tugmasi ortida, qat'iy
+   balandlikdagi aylantiriladigan joyda.
+4. **Bir xil o'lchov tizimi:** kartochka radiusi, oraliqlar, shrift
+   o'lchamlari va tugma uslubi hamma ekranda bir xil.
+5. **Raqobat hissi:** Bosh ekranda liga darajasi va ball ko'rinadi;
+   Reyting tabida liga zinapoyasi (Bronza → Kumush → Oltin → Platina
+   → Olmos), joriy daraja, keyingisigacha progress, shaxsiy rekord.
+   To'qima foydalanuvchilar ro'yxati YO'Q — umumiy reyting ro'yxati
+   server (§10) tayyor bo'lganda qo'shiladi.
 
 ---
 
