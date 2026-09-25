@@ -360,50 +360,71 @@
       + '<path d="' + d + '" fill="none" stroke="' + INK + '" stroke-width="1.8" stroke-linecap="square"/></svg>';
   }
 
-  /* ── Matnlar ─────────────────────────────────────────────────────── */
+  /* ── Matnlar ─────────────────────────────────────────────────────────
+     Uch til: uz, ru, en. Izoh: to'g'ri javob jumlasi + har distraktor
+     guruhi alohida jumla (ilova har jumlani alohida qatorda ko'rsatadi).
+     O'zbekcha matnda oʻ/gʻ — ʻ (U+02BB), oddiy apostrof emas. Savol
+     (prompt) qisqa — bir-ikki qator; tafsilot izohda. */
   const LETTERS = 'ABCDEF';
+  const LANGS = ['uz', 'ru', 'en'];
+  const AND = { uz: 'va', ru: 'и', en: 'and' };
   const join = (ls, and) => ls.length === 1 ? ls[0] : ls.slice(0, -1).join(', ') + ' ' + and + ' ' + ls[ls.length - 1];
 
   /* rel — 45° birlikda, soat mili bo'yicha (1..7). */
-  function turnUz(rel) {
-    const d = rel * 45;
-    if (d === 180) return '180° ga';
-    return d < 180 ? "soat mili bo'yicha " + d + '° ga' : 'soat miliga teskari ' + (360 - d) + '° ga';
-  }
-  function turnRu(rel) {
-    const d = rel * 45;
-    if (d === 180) return 'на 180°';
-    return d < 180 ? 'на ' + d + '° по часовой стрелке' : 'на ' + (360 - d) + '° против часовой стрелки';
-  }
+  const TURN = {
+    uz: d => (d === 180 ? '180° ga' : d < 180 ? 'soat mili boʻyicha ' + d + '° ga' : 'soat miliga teskari ' + (360 - d) + '° ga'),
+    ru: d => (d === 180 ? 'на 180°' : d < 180 ? 'на ' + d + '° по часовой стрелке' : 'на ' + (360 - d) + '° против часовой стрелки'),
+    en: d => (d === 180 ? '180°' : d < 180 ? d + '° clockwise' : (360 - d) + '° counterclockwise'),
+  };
+  const HEAD = {
+    rotate: {
+      uz: (L, t) => L + ' — asl shaklning ' + t + ' burilgani.',
+      ru: (L, t) => L + ' — исходная фигура, повёрнутая ' + t + '.',
+      en: (L, t) => L + ' is the original shape rotated ' + t + '.',
+    },
+    fill: {
+      uz: (L, t) => L + ' — boʻsh joy shaklining ' + t + ' burilgani.',
+      ru: (L, t) => L + ' — форма пустого места, повёрнутая ' + t + '.',
+      en: (L, t) => L + ' is the shape of the gap rotated ' + t + '.',
+    },
+  };
 
   const ROLE_TEXT = {
     mirror: {
-      uz: "ko'zgudagi aksi: burib asl shaklga ustma-ust tushirib bo'lmaydi",
+      uz: 'koʻzgudagi aksi: burib asl shaklga ustma-ust tushirib boʻlmaydi',
       ru: 'зеркальное отражение: поворотом его с исходной фигурой не совместить',
+      en: 'mirror image: no rotation makes it match the original',
     },
     moved: {
-      uz: "boshqa shakl: bitta katagi boshqa joyga ko'chgan",
+      uz: 'boshqa shakl: bitta katagi boshqa joyga koʻchgan',
       ru: 'другая фигура: одна клетка перенесена в другое место',
+      en: 'a different shape: one square has moved',
     },
     'moved-mirror': {
-      uz: "ko'zgudagi aksi, ustiga bitta katagi boshqa joyga ko'chgan",
+      uz: 'koʻzgudagi aksi, ustiga bitta katagi boshqa joyga koʻchgan',
       ru: 'зеркальное отражение, к тому же одна клетка перенесена',
+      en: 'mirror image, and one square has moved too',
     },
     other: {
       uz: 'boshqa shakl: katakchalar boshqacha joylashgan',
       ru: 'другая фигура: клетки расположены иначе',
+      en: 'a different shape: the squares are arranged differently',
     },
   };
   const ROLE_ORDER = ['mirror', 'moved', 'moved-mirror', 'other'];
 
+  /* Savol bir-ikki qatorga sig'adi (uz ≤ 60 belgi): 360 px ekranda
+     rus va kirill yozuvida ham variantlarni pastga surib yubormaydi. */
   const PROMPT = {
     rotate: {
-      uz: "Qaysi shakl — berilgan shaklning burilgan ko'rinishi (ko'zgudagi aksi emas)?",
-      ru: 'Какая фигура — это данная фигура, только повёрнутая (а не зеркально отражённая)?',
+      uz: 'Qaysi shakl — shu shaklning burilgani (koʻzgu aksi emas)?',
+      ru: 'Какая фигура — эта же, но повёрнутая (не зеркальная)?',
+      en: 'Which shape is this one rotated, not mirrored?',
     },
     fill: {
-      uz: "Qaysi bo'lak bo'sh joyni aniq to'ldiradi? Bo'lakni burish mumkin.",
-      ru: 'Какая деталь точно заполняет пустое место? Деталь можно поворачивать.',
+      uz: 'Qaysi boʻlak boʻsh joyni aniq toʻldiradi? Burish mumkin.',
+      ru: 'Какая деталь точно заполнит пустое место? Можно вращать.',
+      en: 'Which piece fills the gap exactly? You may rotate it.',
     },
   };
 
@@ -535,23 +556,17 @@
   }
 
   function explain(p) {
-    const Lc = LETTERS[p.correct];
-    const uz = [], ru = [];
-    if (p.kind === 'rotate') {
-      uz.push(Lc + ' — asl shaklning ' + turnUz(p.rel) + ' burilgani.');
-      ru.push(Lc + ' — исходная фигура, повёрнутая ' + turnRu(p.rel) + '.');
-    } else {
-      uz.push(Lc + " — bo'sh joy shaklining " + turnUz(p.rel) + ' burilgani.');
-      ru.push(Lc + ' — форма пустого места, повёрнутая ' + turnRu(p.rel) + '.');
+    const out = {};
+    for (const lang of LANGS) {
+      const parts = [HEAD[p.kind][lang](LETTERS[p.correct], TURN[lang](p.rel * 45))];
+      for (const role of ROLE_ORDER) {
+        const ls = [];
+        p.options.forEach((x, i) => { if (x.role === role) ls.push(LETTERS[i]); });
+        if (ls.length) parts.push(join(ls, AND[lang]) + ' — ' + ROLE_TEXT[role][lang] + '.');
+      }
+      out[lang] = parts.join(' ');
     }
-    for (const role of ROLE_ORDER) {
-      const ls = [];
-      p.options.forEach((x, i) => { if (x.role === role) ls.push(LETTERS[i]); });
-      if (!ls.length) continue;
-      uz.push(join(ls, 'va') + ' — ' + ROLE_TEXT[role].uz + '.');
-      ru.push(join(ls, 'и') + ' — ' + ROLE_TEXT[role].ru + '.');
-    }
-    return { uz: uz.join(' '), ru: ru.join(' ') };
+    return out;
   }
 
   function generate(seed, level) {
@@ -564,7 +579,7 @@
       type: 'spatial',
       level: p.level,
       b: p.b,
-      prompt: { uz: PROMPT[p.kind].uz, ru: PROMPT[p.kind].ru },
+      prompt: { uz: PROMPT[p.kind].uz, ru: PROMPT[p.kind].ru, en: PROMPT[p.kind].en },
       stimulus: { kind: 'svg', svg: stimulus },
       options: p.options.map(x => ({ kind: 'svg', svg: shapeSvg(x.cells, x.o, p.cell) })),
       correct: p.correct,
@@ -574,7 +589,10 @@
 
   IQ.register({
     type: 'spatial',
-    label: { uz: 'Fazoviy tafakkur', ru: 'Пространственное мышление' },
+    /* ru nomi qisqa: ro'yxat qatorida va sarlavhada 360 px da ham sig'adi
+       ("Пространственное мышление" hamma kenglikda "…" ga kesilardi). */
+    label: { uz: 'Fazoviy tafakkur', ru: 'Пространство', en: 'Spatial' },
+    langs: ['uz', 'ru', 'en'],
     generate,
     /* Testlar uchun: savolning ichki rejasi (rollar, kataklar). Ilova
        buni ishlatmaydi. */

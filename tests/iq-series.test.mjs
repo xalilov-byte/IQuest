@@ -237,7 +237,52 @@ const ruRaz = n => { const m10 = n % 10, m100 = n % 100; return m10 >= 2 && m10 
 test('ro\'yxatdan o\'tgan: IQ.types() da "series", label uz/ru', () => {
   assert.ok(IQ.types().includes('series'));
   assert.equal(G.type, 'series');
-  assert.ok(G.label.uz && G.label.ru);
+  assert.ok(G.label.uz && G.label.ru && G.label.en);
+  assert.deepEqual(plain(G.langs), ['uz', 'ru', 'en']);
+  if (IQ.langsOf) assert.deepEqual(plain(IQ.langsOf('series')), ['uz', 'ru', 'en']);
+});
+
+/* ── Til sifati: uz imlosi (oʻ/gʻ — ʻ), en bor va unga uz/ru aralashmagan ── */
+const UZ_WORDS = /\b(va|har|bir|ga|bilan|son|sonlar|qator|qatorda|keyingi|javob|teng|oldingi|farq|qadam|barobar|ikkita|uchta|juft|toq)\b/i;
+function langErrs(v, where) {
+  const e = [];
+  for (const lang of ['uz', 'ru', 'en']) {
+    if (typeof v[lang] !== 'string' || !v[lang].trim()) e.push(where + ': ' + lang + ' yoʻq');
+    else if (v[lang] !== v[lang].trim() || / {2}|undefined|NaN|null|\[object|\$\{/.test(v[lang])) e.push(where + ': ' + lang + ' buzuq: ' + v[lang]);
+  }
+  if (e.length) return e;
+  const { uz, en } = v;
+  if (/['’‘`]/.test(uz)) e.push(where + ': uz da oddiy apostrof (oʻ/gʻ — ʻ, tutuq — ʼ): ' + uz);
+  if (/[^oOgG]ʻ/.test(uz) || /[oOgG]ʼ/.test(uz)) e.push(where + ': uz da ʻ/ʼ notoʻgʻri: ' + uz);
+  if (/[а-яёўқғҳ]/i.test(uz)) e.push(where + ': uz da kirill: ' + uz);
+  if (/[а-яёўқғҳʻʼ]/i.test(en)) e.push(where + ': en da kirill yoki ʻ/ʼ: ' + en);
+  if (UZ_WORDS.test(en)) e.push(where + ': en da oʻzbekcha soʻz: ' + en);
+  if (/[a-z]{3}/i.test(uz) && en === uz) e.push(where + ': en = uz');
+  return e;
+}
+
+test('til: uz imlosi (ʻ), en bor va toza (savol, stimul, variantlar, izoh); savol qisqa', () => {
+  assert.deepEqual(langErrs(G.label, 'label'), []);
+  const C = getCorpus();
+  for (const L of LEVELS) {
+    for (const x of C[L]) {
+      const it = x.item;
+      const errs = langErrs(it.prompt, 'prompt').concat(langErrs(it.explain, 'explain'));
+      if (it.stimulus.kind === 'text') {
+        errs.push(...langErrs(it.stimulus, 'stimulus'));
+        if (it.stimulus.en !== it.stimulus.uz) errs.push('stimul en ≠ uz');
+      }
+      it.options.forEach((o, i) => {
+        errs.push(...langErrs(o, 'options[' + i + ']'));
+        if (o.en !== o.uz) errs.push('variant en ≠ uz');
+      });
+      assert.deepEqual(errs, [], it.id);
+      assert.ok([...it.prompt.uz].length <= 60 && [...it.prompt.ru].length <= 64 && [...it.prompt.en].length <= 64, 'savol uzun');
+    }
+  }
+  assert.ok(langErrs({ uz: "yig'indi", ru: 'а', en: 'x' }, 't').length > 0);
+  assert.ok(langErrs({ uz: 'yigʻindi', ru: 'а', en: 'har qatorda' }, 't').length > 0);
+  assert.ok(langErrs({ uz: 'yigʻindi', ru: 'а' }, 't').length > 0);
 });
 
 test('minglab urug\' × har daraja: validateItem bo\'sh, shakl to\'g\'ri', () => {
@@ -431,7 +476,7 @@ test('explain: qoida uz va ru\'da, javob bilan; rus grammatikasi ("в 2 раза
   for (const L of LEVELS) {
     for (const x of C[L]) {
       const it = x.item, ans = it.options[it.correct].uz;
-      for (const lang of ['uz', 'ru']) {
+      for (const lang of ['uz', 'ru', 'en']) {
         const s = it.explain[lang];
         assert.ok(s.includes(ans), lang + ' izohida javob yo\'q: ' + s);
         assert.ok(!/undefined|NaN|null|\[object|\$\{/.test(s), s);
@@ -442,6 +487,7 @@ test('explain: qoida uz va ru\'da, javob bilan; rus grammatikasi ("в 2 раза
       assert.ok(!/[а-яё]/i.test(it.explain.uz), 'uz matnda kirill harfi: ' + it.explain.uz);
       assert.ok(/[а-яё]/i.test(it.explain.ru) && !/[a-z]/i.test(it.explain.ru), 'ru matn faqat kirillda: ' + it.explain.ru);
       assert.ok(!/[а-яё]/i.test(it.prompt.uz) && /[а-яё]/i.test(it.prompt.ru));
+      assert.ok(!/[а-яё]/i.test(it.explain.en) && !/[а-яё]/i.test(it.prompt.en), 'en matnda kirill: ' + it.explain.en);
       /* \b kirill harfidan keyin ishlamaydi (JS'da \w faqat ASCII) — shuning uchun (?![а-яё]). */
       for (const mm of it.explain.ru.matchAll(/в (\d+) (раза|раз)(?![а-яё])/g)) {
         assert.equal(mm[2], ruRaz(Number(mm[1])), 'rus: ' + mm[0]);
@@ -532,4 +578,20 @@ test('salbiy: validateItem buzilgan series savolini ushlaydi', () => {
   assert.ok(IQ.validateItem(idx).length > 0, 'indeks chegaradan tashqarida');
   const bb = plain(it); bb.b = IQ.levelToB(5) + 0.9;
   assert.ok(IQ.validateItem(bb).length > 0, 'b darajadan juda uzoq');
+});
+
+test('daraja kalibrlash: sonli lotin kvadrati (2–3-daraja qoidasi) yuqori darajada chiqmaydi; kub savollari xilma-xil', () => {
+  const C = getCorpus();
+  const key = r => r.slice().sort((a, b) => a - b).join();
+  for (const L of LEVELS) {
+    for (const x of C[L]) {
+      if (!x.grid) continue;
+      const M = x.grid;
+      assert.ok(!(key(M[0]) === key(M[1]) && key(M[1]) === key(M[2])), 'lotin kvadrati: ' + x.item.id);
+    }
+  }
+  for (const L of [5, 6]) {
+    const cubes = new Set(C[L].filter(x => x.variant === 'cube').map(x => x.item.stimulus.uz));
+    assert.ok(cubes.size >= 5, `L${L}: kub savollari atigi ${cubes.size} xil`);
+  }
 });

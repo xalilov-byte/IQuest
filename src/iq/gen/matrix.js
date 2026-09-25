@@ -556,21 +556,29 @@
   }
   const optionSvg = (d, R) => head(100, 100) + (d.fill === 2 ? HATCH : '') + panelSvg(d, R, 0, 0) + '</svg>';
 
-  /* ── Matnlar ─────────────────────────────────────────────────────── */
+  /* ── Matnlar ─────────────────────────────────────────────────────────
+     Uch til: uz, ru, en. Har tilda izoh bir xil tuzilishda: "X — to'g'ri
+     javob." + qoidalar ("; " bilan ajratilgan — ilova har qoidani alohida
+     qatorda ko'rsatadi) + har distraktor guruhi alohida jumla. Test uchala
+     tildagi izohni ham rasm bilan solishtiradi. O'zbekcha matnda oʻ/gʻ —
+     ʻ (U+02BB), oddiy apostrof emas. */
   const LETTERS = 'ABCDEF';
+  const LANGS = ['uz', 'ru', 'en'];
+  const AND = { uz: 'va', ru: 'и', en: 'and' };
   const joinL = (ls, and) => (ls.length === 1 ? ls[0] : ls.slice(0, -1).join(', ') + ' ' + and + ' ' + ls[ls.length - 1]);
 
   const NAME = {
-    uz: { shape: 'Shakli', count: 'Soni', size: "O'lchami", fill: "Bo'yalishi", rot: "Yo'nalishi", pos: 'Joyi', lines: 'Chiziqlari' },
+    uz: { shape: 'Shakli', count: 'Soni', size: 'Oʻlchami', fill: 'Boʻyalishi', rot: 'Yoʻnalishi', pos: 'Joyi', lines: 'Chiziqlari' },
     ru: { shape: 'Форма', count: 'Количество', size: 'Размер', fill: 'Заливка', rot: 'Направление', pos: 'Положение', lines: 'Линии' },
+    en: { shape: 'Shape', count: 'Count', size: 'Size', fill: 'Fill', rot: 'Direction', pos: 'Position', lines: 'Lines' },
   };
   const VALUE = {
     uz: {
       shape: ['doira', 'uchburchak', 'kvadrat', 'beshburchak', 'oltiburchak'],
-      size: ['kichik', "o'rta", 'katta'],
-      fill: ["bo'sh", "to'la", 'shtrixli'],
-      rot: ['yuqoriga', "o'ngga", 'pastga', 'chapga'],
-      pos: ['yuqori chap', "yuqori o'ng", "pastki o'ng", 'pastki chap'],
+      size: ['kichik', 'oʻrta', 'katta'],
+      fill: ['boʻsh', 'toʻla', 'shtrixli'],
+      rot: ['yuqoriga', 'oʻngga', 'pastga', 'chapga'],
+      pos: ['yuqori chap', 'yuqori oʻng', 'pastki oʻng', 'pastki chap'],
     },
     ru: {
       shape: ['круг', 'треугольник', 'квадрат', 'пятиугольник', 'шестиугольник'],
@@ -579,15 +587,22 @@
       rot: ['вверх', 'вправо', 'вниз', 'влево'],
       pos: ['левый верхний', 'правый верхний', 'правый нижний', 'левый нижний'],
     },
+    en: {
+      shape: ['circle', 'triangle', 'square', 'pentagon', 'hexagon'],
+      size: ['small', 'medium', 'large'],
+      fill: ['empty', 'solid', 'hatched'],
+      rot: ['up', 'right', 'down', 'left'],
+      pos: ['top left', 'top right', 'bottom right', 'bottom left'],
+    },
   };
   const val = (lang, a, v) => (a === 'count' ? String(v) : VALUE[lang][a][v]);
   const lower = s => s.charAt(0).toLowerCase() + s.slice(1);
 
   const LINE_OP = {
     uz: {
-      or: "birinchi va ikkinchi katak chiziqlari birga (qo'shiladi)",
+      or: 'birinchi va ikkinchi katak chiziqlari birga (qoʻshiladi)',
       sub: 'birinchi katak chiziqlaridan ikkinchida borlari ayriladi',
-      xor: "faqat bitta katakda bor chiziqlar (ikkalasida borlari o'chadi)",
+      xor: 'faqat bitta katakda bor chiziqlar (ikkalasida borlari oʻchadi)',
       and: 'faqat ikkala katakda ham bor chiziqlar',
     },
     ru: {
@@ -596,55 +611,82 @@
       xor: 'только линии, которые есть ровно в одной из двух клеток (общие исчезают)',
       and: 'только линии, которые есть в обеих клетках',
     },
+    en: {
+      or: 'the lines of the first two cells combined',
+      sub: 'the lines of the first cell minus those of the second',
+      xor: 'only the lines found in exactly one of the first two cells (shared lines vanish)',
+      and: 'only the lines found in both of the first two cells',
+    },
   };
 
+  /* Bitta atribut qoidasi — bitta qator (izohda "; " bilan ajratiladi). */
   function ruleText(lang, a, rule, ans) {
-    const N = NAME[lang][a], uz = lang === 'uz', f = rule.fam;
+    const N = NAME[lang][a], f = rule.fam;
+    const T = (uz, ru, en) => N + ': ' + (lang === 'uz' ? uz : lang === 'ru' ? ru : en);
     if (f === 'const') {
-      return uz ? N + ': hamma katakda bir xil (' + val(lang, a, ans[a]) + ')'
-        : N + ': во всех клетках одинаково (' + val(lang, a, ans[a]) + ')';
+      const v = val(lang, a, ans[a]);
+      return T('hamma katakda bir xil (' + v + ')', 'во всех клетках одинаково (' + v + ')', 'the same in every cell (' + v + ')');
     }
     if (f === 'row') {
-      return uz ? N + ": har qatorda bir xil, qatordan qatorga o'zgaradi"
-        : N + ': в каждой строке одинаково, от строки к строке меняется';
+      return T('har qatorda bir xil, qatordan qatorga oʻzgaradi', 'в каждой строке одинаково, от строки к строке меняется',
+        'the same within each row, changes from row to row');
     }
-    if (f === 'col') return uz ? N + ': har ustunda bir xil' : N + ': в каждом столбце одинаково';
+    if (f === 'col') return T('har ustunda bir xil', 'в каждом столбце одинаково', 'the same within each column');
     if (f === 'd3') {
       const vs = rule.T.map(v => val(lang, a, v)).join(', ');
-      return uz ? N + ': har qatorda ' + vs + ' — har biri bir martadan' : N + ': в каждой строке ' + vs + ' — по одному разу';
+      return T('har qatorda ' + vs + ' — har biri bir martadan', 'в каждой строке ' + vs + ' — по одному разу',
+        'each row has ' + vs + ' — one of each');
     }
     if (f === 'arith') {
       const s = rule.op === 'add' ? '+' : '−';
-      return uz ? N + ': har qatorda uchinchi katak = birinchi ' + s + ' ikkinchi'
-        : N + ': в каждой строке третья клетка = первая ' + s + ' вторая';
+      return T('har qatorda uchinchi katak = birinchi ' + s + ' ikkinchi', 'в каждой строке третья клетка = первая ' + s + ' вторая',
+        'in each row, third cell = first ' + s + ' second');
     }
     if (f === 'prog') {
       const d = rule.d, up = d > 0;
       if (a === 'count') {
-        return uz ? N + ": har qatorda chapdan o'ngga " + abs(d) + ' taga ' + (up ? 'ortadi' : 'kamayadi')
-          : N + ': в каждой строке слева направо ' + (up ? 'увеличивается' : 'уменьшается') + ' на ' + abs(d);
+        return T('har qatorda chapdan oʻngga ' + abs(d) + ' taga ' + (up ? 'ortadi' : 'kamayadi'),
+          'в каждой строке слева направо ' + (up ? 'увеличивается' : 'уменьшается') + ' на ' + abs(d),
+          'in each row it goes ' + (up ? 'up' : 'down') + ' by ' + abs(d) + ' from left to right');
       }
       if (a === 'size') {
-        return uz ? N + ": har qatorda chapdan o'ngga shakllar " + (up ? 'kattalashadi' : 'kichrayadi')
-          : N + ': в каждой строке слева направо фигуры ' + (up ? 'увеличиваются' : 'уменьшаются');
+        return T('har qatorda chapdan oʻngga shakllar ' + (up ? 'kattalashadi' : 'kichrayadi'),
+          'в каждой строке слева направо фигуры ' + (up ? 'увеличиваются' : 'уменьшаются'),
+          'in each row the shapes get ' + (up ? 'bigger' : 'smaller') + ' from left to right');
       }
-      const cw = uz ? (up ? "soat mili bo'yicha" : 'soat miliga teskari') : (up ? 'по часовой стрелке' : 'против часовой стрелки');
+      const cw = {
+        uz: up ? 'soat mili boʻyicha' : 'soat miliga teskari',
+        ru: up ? 'по часовой стрелке' : 'против часовой стрелки',
+        en: up ? 'clockwise' : 'counterclockwise',
+      }[lang];
       if (a === 'rot') {
-        return uz ? N + ': har qatorda har qadamda uchburchak ' + cw + ' 90° buriladi'
-          : N + ': в каждой строке треугольник с каждым шагом поворачивается на 90° ' + cw;
+        return T('har qatorda har qadamda uchburchak ' + cw + ' 90° buriladi',
+          'в каждой строке треугольник с каждым шагом поворачивается на 90° ' + cw,
+          'in each row the triangle turns 90° ' + cw + ' at each step');
       }
-      return uz ? N + ": har qatorda shakl har qadamda " + cw + " keyingi burchakka o'tadi"
-        : N + ': в каждой строке фигура с каждым шагом переходит в следующий угол ' + cw;
+      return T('har qatorda shakl har qadamda ' + cw + ' keyingi burchakka oʻtadi',
+        'в каждой строке фигура с каждым шагом переходит в следующий угол ' + cw,
+        'in each row the shape moves to the next corner ' + cw + ' at each step');
     }
     // chiziqlar amali
-    return uz ? N + ': har qatorda uchinchi katak — ' + LINE_OP.uz[f] : N + ': в каждой строке третья клетка — ' + LINE_OP.ru[f];
+    return T('har qatorda uchinchi katak — ' + LINE_OP.uz[f], 'в каждой строке третья клетка — ' + LINE_OP.ru[f],
+      'in each row the third cell shows ' + LINE_OP.en[f]);
   }
 
+  const HEAD = {
+    uz: L => L + ' — toʻgʻri javob. Qoidalar: ',
+    ru: L => L + ' — правильный ответ. Правила: ',
+    en: L => L + ' is correct. Rules: ',
+  };
+  /* Bir xil qoidani buzgan distraktorlar — bitta jumla. */
+  const WRONG = {
+    uz: (ls, as) => ls + ' — ' + as + ' qoidaga mos emas.',
+    ru: (ls, as) => ls + ' — не подходит: ' + as + '.',
+    en: (ls, as) => ls + ' — wrong ' + as + '.',
+  };
+
   function explain(p) {
-    const L = LETTERS[p.correct];
-    const uz = [L + " — to'g'ri javob. Qoidalar: " + p.ruleList.map(a => ruleText('uz', a, p.rules[a], p.answer)).join('; ') + '.'];
-    const ru = [L + ' — правильный ответ. Правила: ' + p.ruleList.map(a => ruleText('ru', a, p.rules[a], p.answer)).join('; ') + '.'];
-    // Bir xil qoidani buzgan distraktorlar bitta jumlada.
+    const out = {};
     const groups = new Map();
     p.options.forEach((o, i) => {
       if (i === p.correct) return;
@@ -652,17 +694,21 @@
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(LETTERS[i]);
     });
-    for (const [key, ls] of groups) {
-      const as = key.split(',');
-      uz.push(joinL(ls, 'va') + ' — ' + joinL(as.map(a => lower(NAME.uz[a])), 'va') + ' qoidaga mos emas.');
-      ru.push(joinL(ls, 'и') + ' — не подходит: ' + joinL(as.map(a => lower(NAME.ru[a])), 'и') + '.');
+    for (const lang of LANGS) {
+      const parts = [HEAD[lang](LETTERS[p.correct]) + p.ruleList.map(a => ruleText(lang, a, p.rules[a], p.answer)).join('; ') + '.'];
+      for (const [key, ls] of groups) {
+        parts.push(WRONG[lang](joinL(ls, AND[lang]), joinL(key.split(',').map(a => lower(NAME[lang][a])), AND[lang])));
+      }
+      out[lang] = parts.join(' ');
     }
-    return { uz: uz.join(' '), ru: ru.join(' ') };
+    return out;
   }
 
+  /* Savol qisqa (bir qator): qoida izohda. */
   const PROMPT = {
-    uz: "Bo'sh katakka qaysi rasm mos keladi? Qatorlar va ustunlardagi qonuniyatni toping.",
-    ru: 'Какая картинка подходит в пустую клетку? Найдите закономерность в строках и столбцах.',
+    uz: 'Boʻsh katakka qaysi rasm mos keladi?',
+    ru: 'Какая картинка подходит в пустую клетку?',
+    en: 'Which picture fits the empty cell?',
   };
 
   function generate(seed, level) {
@@ -673,7 +719,7 @@
       type: 'matrix',
       level: p.level,
       b: p.b,
-      prompt: { uz: PROMPT.uz, ru: PROMPT.ru },
+      prompt: { uz: PROMPT.uz, ru: PROMPT.ru, en: PROMPT.en },
       stimulus: { kind: 'svg', svg: stimulusSvg(p, R) },
       options: p.options.map(o => ({ kind: 'svg', svg: optionSvg(o.desc, R) })),
       correct: p.correct,
@@ -683,7 +729,8 @@
 
   IQ.register({
     type: 'matrix',
-    label: { uz: 'Matritsalar', ru: 'Матрицы' },
+    label: { uz: 'Matritsalar', ru: 'Матрицы', en: 'Matrices' },
+    langs: ['uz', 'ru', 'en'],
     generate,
     /* Testlar uchun: savolning ichki rejasi (qoidalar, har distraktor
        buzgan atributlar). Ilova buni ishlatmaydi. */

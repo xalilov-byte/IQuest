@@ -180,9 +180,12 @@ function readShape(polys) {
 
 /* ── Izohni o'qish ─────────────────────────────────────────────────── */
 
-const HEAD_UZ = /^([A-F]) — (?:asl shakl|bo'sh joy shakli)ning (?:soat mili bo'yicha (\d+)°|soat miliga teskari (\d+)°|(180)°) ga burilgani\./;
+const HEAD_UZ = /^([A-F]) — (?:asl shakl|boʻsh joy shakli)ning (?:soat mili boʻyicha (\d+)°|soat miliga teskari (\d+)°|(180)°) ga burilgani\./;
 const HEAD_RU = /^([A-F]) — (?:исходная фигура|форма пустого места), повёрнутая на (\d+)°( по часовой стрелке| против часовой стрелки|)\./;
-const ROLE_UZ = [["ko'zgudagi aksi: ", 'mirror'], ["ko'zgudagi aksi, ustiga", 'moved-mirror'],
+const HEAD_EN = /^([A-F]) is (?:the original shape|the shape of the gap) rotated (\d+)°( clockwise| counterclockwise|)\./;
+const ROLE_EN = [['mirror image: ', 'mirror'], ['mirror image, and', 'moved-mirror'],
+  ['a different shape: one', 'moved'], ['a different shape: the squares', 'other']];
+const ROLE_UZ = [['koʻzgudagi aksi: ', 'mirror'], ['koʻzgudagi aksi, ustiga', 'moved-mirror'],
   ['boshqa shakl: bitta', 'moved'], ['boshqa shakl: katakchalar', 'other']];
 const ROLE_RU = [['зеркальное отражение: ', 'mirror'], ['зеркальное отражение, к тому же', 'moved-mirror'],
   ['другая фигура: одна клетка', 'moved'], ['другая фигура: клетки', 'other']];
@@ -192,10 +195,11 @@ function readExplain(text, head, roles, lang) {
   if (!m) return null;
   let letter = m[1], theta;
   if (lang === 'uz') theta = m[2] ? +m[2] : m[3] ? -m[3] : 180;
+  else if (lang === 'en') theta = m[3] === ' counterclockwise' ? -m[2] : +m[2];
   else theta = m[3] === ' против часовой стрелки' ? -m[2] : +m[2];
   const groups = {};
   const rest = text.slice(m[0].length);
-  for (const g of rest.matchAll(/([A-F](?:, [A-F])*(?: (?:va|и) [A-F])?) — ([^.]+)\./g)) {
+  for (const g of rest.matchAll(/([A-F](?:, [A-F])*(?: (?:va|и|and) [A-F])?) — ([^.]+)\./g)) {
     const r = roles.find(([p]) => g[2].startsWith(p));
     for (const L of g[1].match(/[A-F]/g)) groups[L] = r ? r[1] : '??';
   }
@@ -276,11 +280,13 @@ function inspectRaw(item, opt) {
      R(φo)·So = R(θ)·R(φs)·Ss  ⇒  So = R(θ + φs − φo)·Ss. */
   const ex = readExplain(item.explain.uz, HEAD_UZ, ROLE_UZ, 'uz');
   const exRu = readExplain(item.explain.ru, HEAD_RU, ROLE_RU, 'ru');
+  const exEn = readExplain(item.explain.en || '', HEAD_EN, ROLE_EN, 'en');
   let theta = null;
-  if (!ex || !exRu) errs.push('izoh boshi o\'qilmadi');
+  if (!ex || !exRu || !exEn) errs.push('izoh boshi o\'qilmadi');
   else {
     if (ex.letter !== LETTERS[item.correct]) errs.push('izohdagi harf to\'g\'ri javob emas');
     if (exRu.letter !== ex.letter || exRu.theta !== ex.theta) errs.push('uz va ru izohi har xil');
+    if (exEn.letter !== ex.letter || exEn.theta !== ex.theta) errs.push('uz va en izohi har xil');
     theta = ex.theta;
     if (((theta % 360) + 360) % 360 === 0) errs.push('to\'g\'ri javob burilmagan');
     const co = opts[item.correct];
@@ -300,14 +306,15 @@ function inspectRaw(item, opt) {
       if ((mvm = mvm || tOneMoves(tMirror(target))).has(c)) return 'moved-mirror';
       return 'other';
     });
-    if (ex && exRu) {
+    if (ex && exRu && exEn) {
       roles.forEach((r, i) => {
         if (r === 'correct') {
-          if (ex.groups[LETTERS[i]] || exRu.groups[LETTERS[i]]) errs.push('to\'g\'ri javob distraktor sifatida izohlangan');
+          if (ex.groups[LETTERS[i]] || exRu.groups[LETTERS[i]] || exEn.groups[LETTERS[i]]) errs.push('to\'g\'ri javob distraktor sifatida izohlangan');
           return;
         }
         if (ex.groups[LETTERS[i]] !== r) errs.push(`izoh (uz): ${LETTERS[i]} — "${ex.groups[LETTERS[i]]}", rasmda "${r}"`);
         if (exRu.groups[LETTERS[i]] !== r) errs.push(`izoh (ru): ${LETTERS[i]} — "${exRu.groups[LETTERS[i]]}", rasmda "${r}"`);
+        if (exEn.groups[LETTERS[i]] !== r) errs.push(`izoh (en): ${LETTERS[i]} — "${exEn.groups[LETTERS[i]]}", rasmda "${r}"`);
       });
     }
   }
@@ -370,7 +377,45 @@ const BLIND = {
 test('ro\'yxatda bor, nomi uz/ru', () => {
   assert.ok(G, 'spatial generatori ro\'yxatdan o\'tmagan');
   assert.ok(IQ.types().includes('spatial'));
-  assert.ok(G.label.uz && G.label.ru);
+  assert.ok(G.label.uz && G.label.ru && G.label.en);
+  assert.deepEqual(plain(G.langs), ['uz', 'ru', 'en']);
+  if (IQ.langsOf) assert.deepEqual(plain(IQ.langsOf('spatial')), ['uz', 'ru', 'en']);
+  // ru nomi ro'yxat qatoriga sig'adi (uzun nom 360 px da "…" ga kesilardi)
+  assert.ok([...G.label.ru].length <= 16 && [...G.label.en].length <= 16, G.label.ru + ' / ' + G.label.en);
+});
+
+/* ── Til sifati: uz imlosi (oʻ/gʻ — ʻ), en bor va unga uz/ru aralashmagan ── */
+const UZ_WORDS = /\b(va|har|bir|ga|bilan|shakl|shakli|shaklning|javob|emas|burilgani|boshqa|katagi|asl|joy|ustiga|aksi)\b/i;
+function langErrs(v, where) {
+  const e = [];
+  for (const lang of ['uz', 'ru', 'en']) {
+    if (typeof v[lang] !== 'string' || !v[lang].trim()) e.push(where + ': ' + lang + ' yoʻq');
+    else if (v[lang] !== v[lang].trim() || / {2}|undefined|NaN|null|\[object|\$\{/.test(v[lang])) e.push(where + ': ' + lang + ' buzuq: ' + v[lang]);
+  }
+  if (e.length) return e;
+  const { uz, en } = v;
+  if (/['’‘`]/.test(uz)) e.push(where + ': uz da oddiy apostrof (oʻ/gʻ — ʻ, tutuq — ʼ): ' + uz);
+  if (/[^oOgG]ʻ/.test(uz) || /[oOgG]ʼ/.test(uz)) e.push(where + ': uz da ʻ/ʼ notoʻgʻri: ' + uz);
+  if (/[а-яёўқғҳ]/i.test(uz)) e.push(where + ': uz da kirill: ' + uz);
+  if (/[а-яёўқғҳʻʼ]/i.test(en)) e.push(where + ': en da kirill yoki ʻ/ʼ: ' + en);
+  if (UZ_WORDS.test(en)) e.push(where + ': en da oʻzbekcha soʻz: ' + en);
+  if (en === uz) e.push(where + ': en = uz');
+  return e;
+}
+
+test('til: uz imlosi (ʻ), en bor va toza; savol qisqa (uz ≤ 60 belgi)', () => {
+  assert.deepEqual(langErrs(G.label, 'label'), []);
+  for (const L of LEVELS) {
+    for (const { seed, item } of batch(L)) {
+      const errs = langErrs(item.prompt, 'prompt').concat(langErrs(item.explain, 'explain'));
+      assert.deepEqual(errs, [], `level ${L}, seed ${seed}`);
+      assert.ok([...item.prompt.uz].length <= 60 && [...item.prompt.ru].length <= 64 && [...item.prompt.en].length <= 64, 'savol uzun');
+      assert.ok(/[.]$/.test(item.explain.en));
+    }
+  }
+  assert.ok(langErrs({ uz: "bo'lak", ru: 'а', en: 'x' }, 't').length > 0);
+  assert.ok(langErrs({ uz: 'boʻlak', ru: 'а', en: 'boshqa shakl' }, 't').length > 0);
+  assert.ok(langErrs({ uz: 'boʻlak', ru: 'а' }, 't').length > 0);
 });
 
 test('har darajada 2000 urug\': makeItem yiqilmaydi, validateItem bo\'sh', () => {
@@ -572,7 +617,7 @@ test('b: IQ.levelToB(level) ± 0.75; 180° burilish 90° dan qiyinroq', () => {
 
 test('fill turi: faqat yuqori darajada; ag\'darib ham faqat bitta bo\'lak mos keladi', () => {
   for (const L of LEVELS) {
-    const fills = batch(L).filter(({ item }) => item.prompt.uz.includes('bo\'lak'));
+    const fills = batch(L).filter(({ item }) => item.prompt.uz.includes('boʻlak'));
     if (L < 7) assert.equal(fills.length, 0, `L${L}: fill bo'lmasligi kerak`);
     else assert.ok(fills.length > N * 0.15, `L${L}: fill juda kam`);
     for (const { seed, item } of fills.slice(0, 100)) {
@@ -635,12 +680,21 @@ test('tekshirgich o\'zi tishlaydi: buzilgan savollarni ushlaydi', () => {
   m = clone(rot); m.correct = other(m);
   assert.ok(inspect(m).errs.length > 0);
   m = clone(rot);                                  // faqat uz o'zgardi → uz ≠ ru
-  m.explain.uz = m.explain.uz.replace("soat mili bo'yicha 90°", '180°');
+  m.explain.uz = m.explain.uz.replace('soat mili boʻyicha 90°', '180°');
   assert.ok(hasErr(m, /uz va ru izohi har xil/));
   m.explain.ru = m.explain.ru.replace('на 90° по часовой стрелке', 'на 180°');  // ikkalasi ham, lekin rasmga zid
   assert.ok(hasErr(m, /izohdagi burchak \(180°\) rasmga mos emas/));
   m = clone(rot);
-  m.explain.uz = m.explain.uz.replace("ko'zgudagi aksi: ", 'boshqa shakl: katakchalar ').replace(/boshqa shakl: bitta/, "ko'zgudagi aksi: bitta");
+  m.explain.uz = m.explain.uz.replace('koʻzgudagi aksi: ', 'boshqa shakl: katakchalar ').replace(/boshqa shakl: bitta/, 'koʻzgudagi aksi: bitta');
+  assert.ok(hasErr(m, /izoh \(uz\)/));
+  m = clone(rot);                                  // faqat en buzildi
+  m.explain.en = m.explain.en.replace('mirror image: ', 'a different shape: the squares ');
+  assert.ok(hasErr(m, /izoh \(en\)/));
+  m = clone(rot);
+  m.explain.en = m.explain.en.replace('90° clockwise', '90° counterclockwise');
+  assert.ok(hasErr(m, /uz va en izohi har xil/));
+  m = clone(rot);
+  m.explain.uz = m.explain.uz.replace('koʻzgudagi aksi: ', 'boshqa shakl: katakchalar ').replace(/boshqa shakl: bitta/, 'koʻzgudagi aksi: bitta');
   assert.ok(hasErr(m, /izoh \(uz\)/));
 
   // 7) ikki bir xil variant (kanonik), SVG satri boshqacha bo'lsa ham

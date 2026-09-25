@@ -57,6 +57,15 @@
     return m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? 'раза' : 'раз';
   };
   const list3 = a => a.slice(0, 3).map(fmt).join(', ') + ', …';
+  /* Ingliz tili: "twice", "three times"; tartib son: "7th". */
+  const TIMES_EN = { 2: 'twice', 3: 'three times', 4: 'four times', 5: 'five times' };
+  const timesEn = n => TIMES_EN[n] || n + ' times';
+  const ordEn = n => {
+    const m10 = n % 10, m100 = n % 100;
+    return n + (m100 >= 11 && m100 <= 13 ? 'th' : m10 === 1 ? 'st' : m10 === 2 ? 'nd' : m10 === 3 ? 'rd' : 'th');
+  };
+  /* Matnlar uch tilda: uz, ru, en. O'zbekcha matnda oʻ/gʻ — ʻ (U+02BB),
+     oddiy apostrof emas. Izoh qoidani aytadi va javob bilan tugaydi. */
 
   /* ── Yordamchi arifmetika ─────────────────────────────────────────── */
 
@@ -286,7 +295,7 @@
 
   /* ══ QOIDA OILALARI (generatorlar) ═══════════════════════════════════
      gen(r, level) → null (parametr yaramadi) yoki
-       { terms | grid, answer, explain:{uz,ru}, mistakes:[{v, why}], step }
+       { terms | grid, answer, explain:{uz,ru,en}, mistakes:[{v, why}], step }
      mistakes — ISHONARLI xatolar; why — qaysi xato:
        off     hisobda ±1/±2 (±10) adashish
        step    qadam kattaligi noto'g'ri (+d±1, ×(r+1))
@@ -310,9 +319,11 @@
   function arithText(d, last, ans) {
     return d > 0
       ? { uz: `Har bir son oldingisidan ${d} ga katta: ${plus(last, d)} = ${fmt(ans)}.`,
-          ru: `Каждое число на ${d} больше предыдущего: ${plus(last, d)} = ${fmt(ans)}.` }
+          ru: `Каждое число на ${d} больше предыдущего: ${plus(last, d)} = ${fmt(ans)}.`,
+          en: `Each number is ${d} more than the one before: ${plus(last, d)} = ${fmt(ans)}.` }
       : { uz: `Har bir son oldingisidan ${-d} ga kichik: ${plus(last, d)} = ${fmt(ans)}.`,
-          ru: `Каждое число на ${-d} меньше предыдущего: ${plus(last, d)} = ${fmt(ans)}.` };
+          ru: `Каждое число на ${-d} меньше предыдущего: ${plus(last, d)} = ${fmt(ans)}.`,
+          en: `Each number is ${-d} less than the one before: ${plus(last, d)} = ${fmt(ans)}.` };
   }
 
   function arithMistakes(t, ans, d) {
@@ -349,11 +360,14 @@
   function geomText(r, last, ans) {
     if (r >= 2) {
       return { uz: `Har bir son oldingisidan ${r} barobar katta: ${fmt(last)} × ${r} = ${fmt(ans)}.`,
-        ru: `Каждое число в ${r} ${ruRaz(r)} больше предыдущего: ${fmt(last)} × ${r} = ${fmt(ans)}.` };
+        ru: `Каждое число в ${r} ${ruRaz(r)} больше предыдущего: ${fmt(last)} × ${r} = ${fmt(ans)}.`,
+        en: `Each number is ${timesEn(r)} the one before: ${fmt(last)} × ${r} = ${fmt(ans)}.` };
     }
     const q = -r;
-    return { uz: `Har bir son oldingisini ${fmt(r)} ga ko'paytirishdan hosil bo'ladi: ishora almashadi, ishorasiz qiymati ${q} barobar ortadi. ${fmt(last)} × ${par(r)} = ${fmt(ans)}.`,
-      ru: `Каждое число — предыдущее, умноженное на ${fmt(r)}: знак чередуется, а величина без учёта знака растёт в ${q} ${ruRaz(q)}. ${fmt(last)} × ${par(r)} = ${fmt(ans)}.` };
+    const grow = q === 2 ? 'doubles' : q === 3 ? 'triples' : `grows ${q}-fold`;
+    return { uz: `Har bir son oldingisini ${fmt(r)} ga koʻpaytirishdan hosil boʻladi: ishora almashadi, ishorasiz qiymati ${q} barobar ortadi. ${fmt(last)} × ${par(r)} = ${fmt(ans)}.`,
+      ru: `Каждое число — предыдущее, умноженное на ${fmt(r)}: знак чередуется, а величина без учёта знака растёт в ${q} ${ruRaz(q)}. ${fmt(last)} × ${par(r)} = ${fmt(ans)}.`,
+      en: `Each number is the one before multiplied by ${fmt(r)}: the sign flips every time and the size ${grow}. ${fmt(last)} × ${par(r)} = ${fmt(ans)}.` };
   }
 
   function geomMistakes(t, ans, q) {
@@ -386,7 +400,8 @@
     return {
       terms: t, answer: ans, step: ans,
       explain: { uz: `Har bir son oldingisidan ${q} barobar kichik: ${last} : ${q} = ${ans}.`,
-        ru: `Каждое число в ${q} ${ruRaz(q)} меньше предыдущего: ${last} : ${q} = ${ans}.` },
+        ru: `Каждое число в ${q} ${ruRaz(q)} меньше предыдущего: ${last} : ${q} = ${ans}.`,
+        en: `Each number is ${q === 2 ? 'half' : q === 3 ? 'one third of' : `1/${q} of`} the one before: ${last} ÷ ${q} = ${ans}.` },
       mistakes: [m(last - q, 'wrongop'), m(ans % q === 0 ? ans / q : ans - 3, 'step2'),
         m(last % (q + 1) === 0 ? last / (q + 1) : last - 2 * q, 'step'), m(last - ans / 2, 'wrongop')],
     };
@@ -430,7 +445,8 @@
     const onEven = len % 2 === 0;                // javob 1-, 3-, 5- … o'rinda (toq)
     const same = t[len - 2], last = t[len - 1];
     const dc = onEven ? dE : dO, gc = onEven ? gE : gO, dOth = onEven ? dO : dE, gOth = onEven ? gO : gE;
-    const stepTxt = (d, g) => (g ? { uz: `har safar ×${d}`, ru: `каждый раз ×${d}` } : { uz: `qadam ${sgn(d)}`, ru: `шаг ${sgn(d)}` });
+    const stepTxt = (d, g) => (g ? { uz: `har safar ×${d}`, ru: `каждый раз ×${d}`, en: `×${d} each time` }
+      : { uz: `qadam ${sgn(d)}`, ru: `шаг ${sgn(d)}`, en: `step ${sgn(d)}` });
     const sE = stepTxt(dE, gE), sO = stepTxt(dO, gO);
     const expr = gc ? `${fmt(same)} × ${dc}` : plus(same, dc);
     const pos = len + 1;
@@ -440,10 +456,12 @@
     return {
       terms: t, answer: ans, step: Math.abs(gc ? same : dc), mistakes,
       explain: {
-        uz: `Ikki qator navbatlashadi: toq o'rinlarda ${list3(E)} (${sE.uz}), juft o'rinlarda ${list3(O)} (${sO.uz}). ` +
-          `Keyingi son ${pos}-o'rinda turadi va ${onEven ? 'toq' : 'juft'} o'rinlardagi qatorni davom ettiradi: ${expr} = ${fmt(ans)}.`,
+        uz: `Ikki qator navbatlashadi: toq oʻrinlarda ${list3(E)} (${sE.uz}), juft oʻrinlarda ${list3(O)} (${sO.uz}). ` +
+          `Keyingi son ${pos}-oʻrinda turadi va ${onEven ? 'toq' : 'juft'} oʻrinlardagi qatorni davom ettiradi: ${expr} = ${fmt(ans)}.`,
         ru: `Чередуются два ряда: на нечётных местах ${list3(E)} (${sE.ru}), на чётных — ${list3(O)} (${sO.ru}). ` +
           `Следующее число стоит на ${pos}-м месте и продолжает ряд на ${onEven ? 'нечётных' : 'чётных'} местах: ${expr} = ${fmt(ans)}.`,
+        en: `Two sequences alternate: in odd positions ${list3(E)} (${sE.en}), in even positions ${list3(O)} (${sO.en}). ` +
+          `The next number is the ${ordEn(pos)} one, so it continues the ${onEven ? 'odd' : 'even'}-position sequence: ${expr} = ${fmt(ans)}.`,
       },
     };
   }
@@ -466,8 +484,9 @@
     return {
       terms: t, answer: ans, step: Math.max(1, Math.abs(dN)),
       explain: {
-        uz: `Qo'shni sonlar orasidagi farqlar har safar ${Math.abs(e)} ga ${e > 0 ? 'ortadi' : 'kamayadi'}: ${dl}. Keyingi farq ${sgn(dN)}: ${plus(last, dN)} = ${fmt(ans)}.`,
+        uz: `Qoʻshni sonlar orasidagi farqlar har safar ${Math.abs(e)} ga ${e > 0 ? 'ortadi' : 'kamayadi'}: ${dl}. Keyingi farq ${sgn(dN)}: ${plus(last, dN)} = ${fmt(ans)}.`,
         ru: `Разности соседних чисел каждый раз ${e > 0 ? 'увеличиваются' : 'уменьшаются'} на ${Math.abs(e)}: ${dl}. Следующая разность ${sgn(dN)}: ${plus(last, dN)} = ${fmt(ans)}.`,
+        en: `The differences between consecutive numbers ${e > 0 ? 'grow' : 'shrink'} by ${Math.abs(e)} each time: ${dl}. The next difference is ${sgn(dN)}: ${plus(last, dN)} = ${fmt(ans)}.`,
       },
       mistakes: [m(last + dL, 'noinc'), m(ans + e, 'step2'), m(last + dN + 2 * e, 'step2'),
         m(last - dN, 'dir'), m(last * 2, 'wrongop')],
@@ -483,7 +502,8 @@
     return {
       terms: t, answer: ans, step: 2 * M,
       explain: { uz: `Bular ketma-ket sonlarning kvadratlari: ${k}², ${k + 1}², ${k + 2}², … Keyingisi: ${M}² = ${ans}.`,
-        ru: `Это квадраты последовательных чисел: ${k}², ${k + 1}², ${k + 2}², … Следующее число: ${M}² = ${ans}.` },
+        ru: `Это квадраты последовательных чисел: ${k}², ${k + 1}², ${k + 2}², … Следующее число: ${M}² = ${ans}.`,
+        en: `These are the squares of consecutive numbers: ${k}², ${k + 1}², ${k + 2}², … Next: ${M}² = ${ans}.` },
       mistakes: [m(last + (last - prev), 'noinc'), m((M + 1) ** 2, 'step2'), m(last * 2, 'wrongop'),
         m(M * (M + 1), 'step')],
     };
@@ -496,8 +516,9 @@
     const cs = c > 0 ? ` + ${c}` : ` ${MINUS} ${-c}`;
     return {
       terms: t, answer: ans, step: 2 * M,
-      explain: { uz: `Har bir son — ketma-ket sonning kvadrati${c > 0 ? `ga ${c} qo'shilgani` : `dan ${-c} ayirilgani`}: ${k}²${cs}, ${k + 1}²${cs}, ${k + 2}²${cs}, … Keyingisi: ${M}²${cs} = ${fmt(ans)}.`,
-        ru: `Каждое число — квадрат очередного числа ${c > 0 ? 'плюс' : 'минус'} ${Math.abs(c)}: ${k}²${cs}, ${k + 1}²${cs}, ${k + 2}²${cs}, … Следующее число: ${M}²${cs} = ${fmt(ans)}.` },
+      explain: { uz: `Har bir son — ketma-ket sonning kvadrati${c > 0 ? `ga ${c} qoʻshilgani` : `dan ${-c} ayirilgani`}: ${k}²${cs}, ${k + 1}²${cs}, ${k + 2}²${cs}, … Keyingisi: ${M}²${cs} = ${fmt(ans)}.`,
+        ru: `Каждое число — квадрат очередного числа ${c > 0 ? 'плюс' : 'минус'} ${Math.abs(c)}: ${k}²${cs}, ${k + 1}²${cs}, ${k + 2}²${cs}, … Следующее число: ${M}²${cs} = ${fmt(ans)}.`,
+        en: `Each number is a consecutive square ${c > 0 ? 'plus' : 'minus'} ${Math.abs(c)}: ${k}²${cs}, ${k + 1}²${cs}, ${k + 2}²${cs}, … Next: ${M}²${cs} = ${fmt(ans)}.` },
       mistakes: [m(M * M, 'part'), m(M * M - c, 'sign'), m((M + 1) ** 2 + c, 'step2'), m(last + (last - prev), 'noinc')],
     };
   });
@@ -508,21 +529,23 @@
     const { t, ans } = cut(seqOf(len + 1, i => (i + k) * (i + k + j))), M = k + len, last = t[len - 1], prev = t[len - 2];
     return {
       terms: t, answer: ans, step: 2 * M,
-      explain: { uz: `Har bir son — ikki sonning ko'paytmasi: ${k}×${k + j}, ${k + 1}×${k + 1 + j}, ${k + 2}×${k + 2 + j}, … Keyingisi: ${M}×${M + j} = ${ans}.`,
-        ru: `Каждое число — произведение двух чисел: ${k}×${k + j}, ${k + 1}×${k + 1 + j}, ${k + 2}×${k + 2 + j}, … Следующее число: ${M}×${M + j} = ${ans}.` },
+      explain: { uz: `Har bir son — ikki sonning koʻpaytmasi: ${k}×${k + j}, ${k + 1}×${k + 1 + j}, ${k + 2}×${k + 2 + j}, … Keyingisi: ${M}×${M + j} = ${ans}.`,
+        ru: `Каждое число — произведение двух чисел: ${k}×${k + j}, ${k + 1}×${k + 1 + j}, ${k + 2}×${k + 2 + j}, … Следующее число: ${M}×${M + j} = ${ans}.`,
+        en: `Each number is a product of two numbers: ${k}×${k + j}, ${k + 1}×${k + 1 + j}, ${k + 2}×${k + 2 + j}, … Next: ${M}×${M + j} = ${ans}.` },
       mistakes: [m(last + (last - prev), 'noinc'), m((M + 1) * (M + 1 + j), 'step2'), m(M * M, 'part'), m((M + j) ** 2, 'wrongop')],
     };
   });
 
-  // kublar
+  // kublar. k 1..5: 1..3 da atigi 3 xil savol bor edi — bir testda takrorlanardi.
   def('cube', 'pow3', 4, (r) => {
-    const len = 5, k = r.range(1, 3);
+    const len = 5, k = r.range(1, 5);
     const { t, ans } = cut(seqOf(len + 1, i => (i + k) ** 3)), M = k + len, last = t[len - 1], prev = t[len - 2];
     const D = diffs(t), D2 = diffs(D);
     return {
       terms: t, answer: ans, step: M * M,
       explain: { uz: `Bular ketma-ket sonlarning kublari: ${k}³, ${k + 1}³, ${k + 2}³, … Keyingisi: ${M}³ = ${ans}.`,
-        ru: `Это кубы последовательных чисел: ${k}³, ${k + 1}³, ${k + 2}³, … Следующее число: ${M}³ = ${ans}.` },
+        ru: `Это кубы последовательных чисел: ${k}³, ${k + 1}³, ${k + 2}³, … Следующее число: ${M}³ = ${ans}.`,
+        en: `These are the cubes of consecutive numbers: ${k}³, ${k + 1}³, ${k + 2}³, … Next: ${M}³ = ${ans}.` },
       mistakes: [m(last + (last - prev), 'noinc'), m(last + D[D.length - 1] + D2[D2.length - 1], 'noinc'), m(M * M, 'wrongop'),
         m((M + 1) ** 3, 'step2')],
     };
@@ -535,8 +558,9 @@
     const { t, ans } = cut(full), last = t[len - 1], prev = t[len - 2];
     return {
       terms: t, answer: ans, step: prev,
-      explain: { uz: `Har bir son oldingi ikkita sonning yig'indisiga teng: ${prev} + ${last} = ${ans}.`,
-        ru: `Каждое число равно сумме двух предыдущих: ${prev} + ${last} = ${ans}.` },
+      explain: { uz: `Har bir son oldingi ikkita sonning yigʻindisiga teng: ${prev} + ${last} = ${ans}.`,
+        ru: `Каждое число равно сумме двух предыдущих: ${prev} + ${last} = ${ans}.`,
+        en: `Each number is the sum of the two before it: ${prev} + ${last} = ${ans}.` },
       mistakes: [m(last * 2, 'wrongop'), m(last + (last - prev), 'wrongop'), m(ans + t[len - 3], 'step2'),
         m(last + prev + prev, 'step')],
     };
@@ -551,8 +575,9 @@
     const cs = c > 0 ? ` + ${c}` : ` ${MINUS} ${-c}`;
     return {
       terms: t, answer: ans, step: Math.abs(c) + 1,
-      explain: { uz: `Har bir son oldingi ikkita son yig'indisidan ${Math.abs(c)} ga ${c > 0 ? 'katta' : 'kichik'}: ${prev} + ${last}${cs} = ${ans}.`,
-        ru: `Каждое число на ${Math.abs(c)} ${c > 0 ? 'больше' : 'меньше'} суммы двух предыдущих: ${prev} + ${last}${cs} = ${ans}.` },
+      explain: { uz: `Har bir son oldingi ikkita son yigʻindisidan ${Math.abs(c)} ga ${c > 0 ? 'katta' : 'kichik'}: ${prev} + ${last}${cs} = ${ans}.`,
+        ru: `Каждое число на ${Math.abs(c)} ${c > 0 ? 'больше' : 'меньше'} суммы двух предыдущих: ${prev} + ${last}${cs} = ${ans}.`,
+        en: `Each number is ${Math.abs(c)} ${c > 0 ? 'more' : 'less'} than the sum of the two before it: ${prev} + ${last}${cs} = ${ans}.` },
       mistakes: [m(last + prev, 'part'), m(last + prev - c, 'sign'), m(ans + c, 'step2'),
         m(last * 2 + c, 'wrongop')],
     };
@@ -565,8 +590,9 @@
     const { t, ans } = cut(full), last = t[len - 1], prev = t[len - 2], p3 = t[len - 3];
     return {
       terms: t, answer: ans, step: p3,
-      explain: { uz: `Har bir son oldingi uchta sonning yig'indisiga teng: ${p3} + ${prev} + ${last} = ${ans}.`,
-        ru: `Каждое число равно сумме трёх предыдущих: ${p3} + ${prev} + ${last} = ${ans}.` },
+      explain: { uz: `Har bir son oldingi uchta sonning yigʻindisiga teng: ${p3} + ${prev} + ${last} = ${ans}.`,
+        ru: `Каждое число равно сумме трёх предыдущих: ${p3} + ${prev} + ${last} = ${ans}.`,
+        en: `Each number is the sum of the three before it: ${p3} + ${prev} + ${last} = ${ans}.` },
       mistakes: [m(last + prev, 'part'), m(ans + t[len - 4], 'step2'), m(last * 2, 'wrongop')],
     };
   });
@@ -580,8 +606,9 @@
     if (ans >= LIM) return null;
     return {
       terms: t, answer: ans, step: last,
-      explain: { uz: `Har bir son oldingi ikkita sonning ko'paytmasiga teng: ${prev} × ${last} = ${ans}.`,
-        ru: `Каждое число равно произведению двух предыдущих: ${prev} × ${last} = ${ans}.` },
+      explain: { uz: `Har bir son oldingi ikkita sonning koʻpaytmasiga teng: ${prev} × ${last} = ${ans}.`,
+        ru: `Каждое число равно произведению двух предыдущих: ${prev} × ${last} = ${ans}.`,
+        en: `Each number is the product of the two before it: ${prev} × ${last} = ${ans}.` },
       mistakes: [m(last + prev, 'wrongop'), m(last * 2, 'wrongop'), m(last % prev === 0 ? last * (last / prev) : ans + prev, 'noinc'),
         m(ans + last, 'step'), m(ans - last, 'step')],
     };
@@ -602,8 +629,9 @@
     return {
       terms: t, answer: ans, step: Math.abs(c),
       explain: {
-        uz: `Har bir son oldingisini ${fmt(p)} ga ko'paytirib, ${c > 0 ? c + ' qo\'shishdan' : -c + ' ayirishdan'} hosil bo'ladi: ${fmt(last)} × ${par(p)} ${cs} = ${fmt(ans)}.`,
+        uz: `Har bir son oldingisini ${fmt(p)} ga koʻpaytirib, ${c > 0 ? c + ' qoʻshishdan' : -c + ' ayirishdan'} hosil boʻladi: ${fmt(last)} × ${par(p)} ${cs} = ${fmt(ans)}.`,
         ru: `Каждое число получается из предыдущего так: умножить на ${fmt(p)} и ${c > 0 ? 'прибавить' : 'вычесть'} ${Math.abs(c)}: ${fmt(last)} × ${par(p)} ${cs} = ${fmt(ans)}.`,
+        en: `To get each number, multiply the one before by ${fmt(p)} and ${c > 0 ? 'add' : 'subtract'} ${Math.abs(c)}: ${fmt(last)} × ${par(p)} ${cs} = ${fmt(ans)}.`,
       },
       mistakes: [m(last * p, 'part'), m(last * p - c, 'sign'), m(last + c, 'part'), m(ans + c, 'step2'), m(last + (last - prev), 'wrongop'),
         m(-ans, 'sign')],
@@ -622,8 +650,9 @@
     const rl = [0, 1, 2].map(i => '×' + (r0 + i * e)).join(', ');
     return {
       terms: t, answer: ans, step: last,
-      explain: { uz: `Ko'paytuvchi har safar ${e} ga ortadi: ${rl}, … Keyingi ko'paytuvchi ×${rN}: ${last} × ${rN} = ${ans}.`,
-        ru: `Множитель каждый раз увеличивается на ${e}: ${rl}, … Следующий множитель ×${rN}: ${last} × ${rN} = ${ans}.` },
+      explain: { uz: `Koʻpaytuvchi har safar ${e} ga ortadi: ${rl}, … Keyingi koʻpaytuvchi ×${rN}: ${last} × ${rN} = ${ans}.`,
+        ru: `Множитель каждый раз увеличивается на ${e}: ${rl}, … Следующий множитель ×${rN}: ${last} × ${rN} = ${ans}.`,
+        en: `The multiplier grows by ${e} each time: ${rl}, … The next multiplier is ×${rN}: ${last} × ${rN} = ${ans}.` },
       mistakes: [m(last * (rN - e), 'noinc'), m(last * (rN + e), 'step2'), m(last + (last - prev), 'wrongop'), m(ans + last, 'step'),
         m(last + rN, 'wrongop')],
     };
@@ -635,12 +664,14 @@
     while (full.length < len + 1) { const n = full.length; full.push(p * full[n - 1] + q * full[n - 2]); }
     const { t, ans } = cut(full), last = t[len - 1], prev = t[len - 2];
     if (ans >= LIM) return null;
-    const qw = { 2: ['2 barobari', 'удвоенного'], 3: ['3 barobari', 'утроенного'] };
+    const qw = { 2: ['2 barobari', 'удвоенного', 'twice'], 3: ['3 barobari', 'утроенного', 'three times'] };
     const ex = p === 1
-      ? { uz: `Har bir son oldingi son bilan undan oldingi sonning ${qw[q][0]} yig'indisiga teng: ${last} + ${q} × ${prev} = ${ans}.`,
-          ru: `Каждое число равно сумме предыдущего и ${qw[q][1]} числа перед ним: ${last} + ${q} × ${prev} = ${ans}.` }
-      : { uz: `Har bir son oldingi sonning 2 barobari bilan undan oldingi son yig'indisiga teng: 2 × ${last} + ${prev} = ${ans}.`,
-          ru: `Каждое число равно сумме удвоенного предыдущего и числа перед ним: 2 × ${last} + ${prev} = ${ans}.` };
+      ? { uz: `Har bir son oldingi son bilan undan oldingi sonning ${qw[q][0]} yigʻindisiga teng: ${last} + ${q} × ${prev} = ${ans}.`,
+          ru: `Каждое число равно сумме предыдущего и ${qw[q][1]} числа перед ним: ${last} + ${q} × ${prev} = ${ans}.`,
+          en: `Each number is the one before plus ${qw[q][2]} the number before that: ${last} + ${q} × ${prev} = ${ans}.` }
+      : { uz: `Har bir son oldingi sonning 2 barobari bilan undan oldingi son yigʻindisiga teng: 2 × ${last} + ${prev} = ${ans}.`,
+          ru: `Каждое число равно сумме удвоенного предыдущего и числа перед ним: 2 × ${last} + ${prev} = ${ans}.`,
+          en: `Each number is twice the one before plus the number before that: 2 × ${last} + ${prev} = ${ans}.` };
     return {
       terms: t, answer: ans, step: prev,
       explain: ex,
@@ -660,7 +691,8 @@
     return {
       terms: t, answer: ans, step: Math.abs(ds[0]),
       explain: { uz: `Farqlar navbat bilan takrorlanadi: ${lst}, … Keyingi farq ${cyc[0]}: ${plus(last, ds[0])} = ${fmt(ans)}.`,
-        ru: `Разности повторяются по кругу: ${lst}, … Следующая разность ${cyc[0]}: ${plus(last, ds[0])} = ${fmt(ans)}.` },
+        ru: `Разности повторяются по кругу: ${lst}, … Следующая разность ${cyc[0]}: ${plus(last, ds[0])} = ${fmt(ans)}.`,
+        en: `The differences repeat in a cycle: ${lst}, … The next difference is ${cyc[0]}: ${plus(last, ds[0])} = ${fmt(ans)}.` },
       mistakes: [m(last + ds[1], 'branch'), m(last + ds[2], 'branch'), m(ans + ds[1], 'step2'), m(last - ds[0], 'dir')],
     };
   });
@@ -683,7 +715,8 @@
     return {
       terms: t, answer: ans, step: oN[0] === '×' ? last : oN[1],
       explain: { uz: `Amallar navbatlashadi: ${os[0]}, ${os[1]}, ${os[0]}, ${os[1]}, … Keyingi amal ${oN[0]}${oN[1]}: ${last} ${oN[0]} ${oN[1]} = ${ans}.`,
-        ru: `Действия чередуются: ${os[0]}, ${os[1]}, ${os[0]}, ${os[1]}, … Следующее действие ${oN[0]}${oN[1]}: ${last} ${oN[0]} ${oN[1]} = ${ans}.` },
+        ru: `Действия чередуются: ${os[0]}, ${os[1]}, ${os[0]}, ${os[1]}, … Следующее действие ${oN[0]}${oN[1]}: ${last} ${oN[0]} ${oN[1]} = ${ans}.`,
+        en: `The operations alternate: ${os[0]}, ${os[1]}, ${os[0]}, ${os[1]}, … The next one is ${oN[0]}${oN[1]}: ${last} ${oN[0]} ${oN[1]} = ${ans}.` },
       mistakes: [m(ap(last, oO), 'branch'), m(ap(ans, oO), 'step2'), m(ap(ap(last, oO), oN), 'step2'),
         m(ap(last, oN[0] === '×' ? ['+', oN[1]] : ['×', 2]), 'wrongop')],
     };
@@ -698,7 +731,7 @@
       const ans = M[2][2], x = M[2][0], y = M[2][1], up = M[1][2], up2 = M[0][2];
       const flat = [].concat(...M);
       if (flat.some(v => !isInt(v) || Math.abs(v) >= GLIM)) return null;
-      if (new Set(flat).size < (fill.allowRepeat ? 3 : 7)) return null;   // bir xil sonlarga to'la panjara — tushunarsiz
+      if (new Set(flat).size < 7) return null;   // bir xil sonlarga to'la panjara — tushunarsiz
       return {
         grid: M, answer: ans, step: Math.max(1, Math.abs(up - up2)),
         explain: explain(M, x, y, ans),
@@ -712,79 +745,82 @@
 
   def('g_sum', 'row:sum', 4.5, gridBuild((r, L) => rows3(r, () => {
     const x = r.range(2, L >= 8 ? 60 : 30), y = r.range(2, L >= 8 ? 60 : 30); return [x, y, x + y];
-  }), (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining yig'indisiga teng: ${fmt(x)} + ${par(y)} = ${fmt(a)}.`,
-    ru: `В каждой строке третье число равно сумме первых двух: ${fmt(x)} + ${par(y)} = ${fmt(a)}.` })));
+  }), (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining yigʻindisiga teng: ${fmt(x)} + ${par(y)} = ${fmt(a)}.`,
+    ru: `В каждой строке третье число равно сумме первых двух: ${fmt(x)} + ${par(y)} = ${fmt(a)}.`,
+    en: `In each row, the third number is the sum of the first two: ${fmt(x)} + ${par(y)} = ${fmt(a)}.` })));
 
   def('g_arith', 'row:arith', 4.5, gridBuild((r) => {
     const ds = r.shuffle([-7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 9]).slice(0, 3);
     return ds.map(d => { const a = r.range(d < 0 ? 20 : 1, d < 0 ? 60 : 40); return [a, a + d, a + 2 * d]; });
   }, (M, x, y, a) => {
     const d = y - x;
-    return { uz: `Har bir qatorda sonlar teng qadam bilan o'zgaradi (har qatorning o'z qadami bor). Uchinchi qatorda qadam ${sgn(d)}: ${plus(y, d)} = ${fmt(a)}.`,
-      ru: `В каждой строке числа меняются с постоянным шагом (у каждой строки свой шаг). В третьей строке шаг ${sgn(d)}: ${plus(y, d)} = ${fmt(a)}.` };
+    return { uz: `Har bir qatorda sonlar teng qadam bilan oʻzgaradi (har qatorning oʻz qadami bor). Uchinchi qatorda qadam ${sgn(d)}: ${plus(y, d)} = ${fmt(a)}.`,
+      ru: `В каждой строке числа меняются с постоянным шагом (у каждой строки свой шаг). В третьей строке шаг ${sgn(d)}: ${plus(y, d)} = ${fmt(a)}.`,
+      en: `In each row, the numbers change by a fixed step (each row has its own step). In the third row the step is ${sgn(d)}: ${plus(y, d)} = ${fmt(a)}.` };
   }, (M, x, y) => [m(y + (M[1][1] - M[1][0]), 'branch'), m(y + (M[0][1] - M[0][0]), 'branch')]));
 
-  const permFill = (r) => {
-    const vals = r.shuffle([...Array(40).keys()].map(i => i + MIN_POS)).slice(0, 3);
-    const rowOrder = r.shuffle([0, 1, 2]), colOrder = r.shuffle([0, 1, 2]);
-    return rowOrder.map(i => colOrder.map(j => vals[(i + j) % 3]));
-  };
-  permFill.allowRepeat = true;
-  def('g_perm', 'row:perm', 4, gridBuild(permFill, (M, x, y, a) => {
-    const v = M[0].slice().sort((p, q) => p - q);
-    return { uz: `Har bir qatorda va har bir ustunda ${v.map(fmt).join(', ')} sonlari bittadan uchraydi. Uchinchi qatorda ${fmt(a)} yetishmaydi.`,
-      ru: `В каждой строке и в каждом столбце числа ${v.map(fmt).join(', ')} встречаются по одному разу. В третьей строке не хватает числа ${fmt(a)}.` };
-  }, (M, x, y, a) => [m(x, 'copy'), m(y, 'copy'), m(x + y - a, 'wrongop')]));
+  /* Sonli lotin kvadrati (g_perm, "har qatorda shu uch son bittadan")
+     olib tashlandi: 7-darajada b ≈ +0.55 bilan baholanardi, lekin bu
+     matritsalardagi 2–3-daraja qoidasi (b ≈ −1.25), javob esa 3-qatorda
+     yetishmagan son — tekin ball edi. Uning o'rni 7-darajada g_arith ga
+     berildi (LEVELS[7]) — boshqa urug'larning savoli o'zgarmasin. */
 
   def('g_diff', 'row:diff', 5, gridBuild((r, L) => rows3(r, () => {
     const y = r.range(2, 40), x = L >= 9 && r.chance(0.3) ? r.range(2, 60) : y + r.range(MIN_POS, 50); return [x, y, x - y];
   }), (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi va ikkinchi sonning ayirmasiga teng: ${fmt(x)} − ${par(y)} = ${fmt(a)}.`,
-    ru: `В каждой строке третье число равно разности первого и второго: ${fmt(x)} − ${par(y)} = ${fmt(a)}.` }),
+    ru: `В каждой строке третье число равно разности первого и второго: ${fmt(x)} − ${par(y)} = ${fmt(a)}.`,
+    en: `In each row, the third number is the first minus the second: ${fmt(x)} − ${par(y)} = ${fmt(a)}.` }),
   (M, x, y, a) => [m(-a, 'sign')]));
 
   def('g_prod', 'row:prod', 5, gridBuild((r) => rows3(r, () => {
     const x = r.range(2, 12), y = r.range(2, 12); return [x, y, x * y];
-  }), (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining ko'paytmasiga teng: ${fmt(x)} × ${par(y)} = ${fmt(a)}.`,
-    ru: `В каждой строке третье число равно произведению первых двух: ${fmt(x)} × ${par(y)} = ${fmt(a)}.` }),
+  }), (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining koʻpaytmasiga teng: ${fmt(x)} × ${par(y)} = ${fmt(a)}.`,
+    ru: `В каждой строке третье число равно произведению первых двух: ${fmt(x)} × ${par(y)} = ${fmt(a)}.`,
+    en: `In each row, the third number is the product of the first two: ${fmt(x)} × ${par(y)} = ${fmt(a)}.` }),
   (M, x, y, a) => [m(a + x, 'step'), m(a - y, 'step')]));
 
   def('g_colsum', 'col:sum', 5, gridBuild((r) => {
     const A = seqOf(3, () => r.range(2, 45)), B = seqOf(3, () => r.range(2, 45));
     return [A, B, A.map((v, j) => v + B[j])];
-  }, (M, x, y, a) => ({ uz: `Har bir ustunda pastki son yuqoridagi ikkita sonning yig'indisiga teng: ${fmt(M[0][2])} + ${par(M[1][2])} = ${fmt(a)}.`,
-    ru: `В каждом столбце нижнее число равно сумме двух верхних: ${fmt(M[0][2])} + ${par(M[1][2])} = ${fmt(a)}.` })));
+  }, (M, x, y, a) => ({ uz: `Har bir ustunda pastki son yuqoridagi ikkita sonning yigʻindisiga teng: ${fmt(M[0][2])} + ${par(M[1][2])} = ${fmt(a)}.`,
+    ru: `В каждом столбце нижнее число равно сумме двух верхних: ${fmt(M[0][2])} + ${par(M[1][2])} = ${fmt(a)}.`,
+    en: `In each column, the bottom number is the sum of the two above it: ${fmt(M[0][2])} + ${par(M[1][2])} = ${fmt(a)}.` })));
 
   def('g_sumconst', 'row:sumconst', 5.5, gridBuild((r) => {
     const S = r.range(30, 90);
     return rows3(r, () => { const x = r.range(2, S - 12), y = r.range(2, S - x - MIN_POS); return [x, y, S - x - y]; });
   }, (M, x, y, a) => {
     const S = M[0][0] + M[0][1] + M[0][2];
-    return { uz: `Har bir qatordagi sonlar yig'indisi ${fmt(S)} ga teng: ${fmt(S)} − ${par(x)} − ${par(y)} = ${fmt(a)}.`,
-      ru: `Сумма чисел в каждой строке равна ${fmt(S)}: ${fmt(S)} − ${par(x)} − ${par(y)} = ${fmt(a)}.` };
+    return { uz: `Har bir qatordagi sonlar yigʻindisi ${fmt(S)} ga teng: ${fmt(S)} − ${par(x)} − ${par(y)} = ${fmt(a)}.`,
+      ru: `Сумма чисел в каждой строке равна ${fmt(S)}: ${fmt(S)} − ${par(x)} − ${par(y)} = ${fmt(a)}.`,
+      en: `The numbers in each row add up to ${fmt(S)}: ${fmt(S)} − ${par(x)} − ${par(y)} = ${fmt(a)}.` };
   }, (M, x, y) => { const S = M[0][0] + M[0][1] + M[0][2]; return [m(S - x, 'part'), m(S - y, 'part')]; }));
 
   const kText = k => (k > 0 ? ` + ${k}` : ` ${MINUS} ${-k}`);
   def('g_sumk', 'row:sumk', 6, (r, L) => {
     const k = r.pick([-1, 1]) * r.range(1, 6);
     return gridBuild((rr) => rows3(rr, () => { const x = rr.range(2, 50), y = rr.range(2, 50); return [x, y, x + y + k]; }),
-      (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining yig'indisidan ${Math.abs(k)} ga ${k > 0 ? 'katta' : 'kichik'}: ${fmt(x)} + ${par(y)}${kText(k)} = ${fmt(a)}.`,
-        ru: `В каждой строке третье число на ${Math.abs(k)} ${k > 0 ? 'больше' : 'меньше'} суммы первых двух: ${fmt(x)} + ${par(y)}${kText(k)} = ${fmt(a)}.` }),
+      (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining yigʻindisidan ${Math.abs(k)} ga ${k > 0 ? 'katta' : 'kichik'}: ${fmt(x)} + ${par(y)}${kText(k)} = ${fmt(a)}.`,
+        ru: `В каждой строке третье число на ${Math.abs(k)} ${k > 0 ? 'больше' : 'меньше'} суммы первых двух: ${fmt(x)} + ${par(y)}${kText(k)} = ${fmt(a)}.`,
+        en: `In each row, the third number is ${Math.abs(k)} ${k > 0 ? 'more' : 'less'} than the sum of the first two: ${fmt(x)} + ${par(y)}${kText(k)} = ${fmt(a)}.` }),
       (M, x, y, a) => [m(x + y, 'part'), m(x + y - k, 'sign'), m(a + k, 'step2')])(r, L);
   });
 
   def('g_prodk', 'row:prodk', 6.5, (r, L) => {
     const k = r.pick([-1, 1]) * r.range(1, 6);
     return gridBuild((rr) => rows3(rr, () => { const x = rr.range(2, 11), y = rr.range(2, 11); return [x, y, x * y + k]; }),
-      (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining ko'paytmasidan ${Math.abs(k)} ga ${k > 0 ? 'katta' : 'kichik'}: ${fmt(x)} × ${par(y)}${kText(k)} = ${fmt(a)}.`,
-        ru: `В каждой строке третье число на ${Math.abs(k)} ${k > 0 ? 'больше' : 'меньше'} произведения первых двух: ${fmt(x)} × ${par(y)}${kText(k)} = ${fmt(a)}.` }),
+      (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasining koʻpaytmasidan ${Math.abs(k)} ga ${k > 0 ? 'katta' : 'kichik'}: ${fmt(x)} × ${par(y)}${kText(k)} = ${fmt(a)}.`,
+        ru: `В каждой строке третье число на ${Math.abs(k)} ${k > 0 ? 'больше' : 'меньше'} произведения первых двух: ${fmt(x)} × ${par(y)}${kText(k)} = ${fmt(a)}.`,
+        en: `In each row, the third number is ${Math.abs(k)} ${k > 0 ? 'more' : 'less'} than the product of the first two: ${fmt(x)} × ${par(y)}${kText(k)} = ${fmt(a)}.` }),
       (M, x, y, a) => [m(x * y, 'part'), m(x * y - k, 'sign'), m(x + y + k, 'wrongop'), m(a + k, 'step2')])(r, L);
   });
 
   def('g_sumx', 'row:sumx', 6, (r, L) => {
     const k = r.pick([2, 3]);
     return gridBuild((rr) => rows3(rr, () => { const x = rr.range(2, 30), y = rr.range(2, 30); return [x, y, (x + y) * k]; }),
-      (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasi yig'indisining ${k} barobariga teng: (${fmt(x)} + ${par(y)}) × ${k} = ${fmt(a)}.`,
-        ru: `В каждой строке третье число в ${k} ${ruRaz(k)} больше суммы первых двух: (${fmt(x)} + ${par(y)}) × ${k} = ${fmt(a)}.` }),
+      (M, x, y, a) => ({ uz: `Har bir qatorda uchinchi son birinchi ikkitasi yigʻindisining ${k} barobariga teng: (${fmt(x)} + ${par(y)}) × ${k} = ${fmt(a)}.`,
+        ru: `В каждой строке третье число в ${k} ${ruRaz(k)} больше суммы первых двух: (${fmt(x)} + ${par(y)}) × ${k} = ${fmt(a)}.`,
+        en: `In each row, the third number is ${timesEn(k)} the sum of the first two: (${fmt(x)} + ${par(y)}) × ${k} = ${fmt(a)}.` }),
       (M, x, y, a) => [m(x + y, 'part'), m((x + y) * (k + 1), 'step'), m(x * y * k, 'wrongop'), m(x + y * k, 'part')])(r, L);
   });
 
@@ -800,7 +836,7 @@
     4: { geom_half: 1, geom_big: 1, arith_neg: 2, alt2: 2, diff2: 2, square: 2, fib: 1 },
     5: { arith_neg: 1, alt2: 2, diff2: 1, square: 1, square_c: 2, ntimes: 1, geom_neg: 2, cube: 1, fib: 2, altop: 1 },
     6: { alt2_neg: 2, diff2_down: 2, square_c: 1, ntimes: 1, geom_neg: 1, cube: 1, fib: 1, altop: 2, fibc: 1 },
-    7: { alt2_neg: 1, diff2_down: 1, altop: 2, cyc3: 2, linrec: 2, fibc: 1, trib: 1, alt2mix: 1, g_sum: 1, g_arith: 1, g_perm: 1 },
+    7: { alt2_neg: 1, diff2_down: 1, altop: 2, cyc3: 2, linrec: 2, fibc: 1, trib: 1, alt2mix: 1, g_sum: 1, g_arith: 2 },
     8: { altop: 1, cyc3: 1, linrec: 2, ratio: 2, trib: 1, fibc: 1, alt2mix: 2, g_sum: 1, g_arith: 1, g_diff: 1, g_prod: 1, g_colsum: 1, g_sumconst: 1 },
     9: { linrec: 1, ratio: 2, alt2mix: 2, linrec2: 2, prodfib: 1, linrec_neg: 1, g_prod: 1, g_diff: 1, g_sumk: 1, g_prodk: 1, g_sumx: 1, g_colsum: 1 },
     10: { linrec2: 3, prodfib: 1, linrec_neg: 2, ratio: 1, alt2mix: 1, g_sumk: 2, g_prodk: 2, g_sumx: 1 },
@@ -898,8 +934,17 @@
     return s + '</svg>';
   }
 
-  const PROMPT_SERIES = { uz: 'Qatorni davom ettiring. Keyingi son qaysi?', ru: 'Продолжите ряд. Какое число следующее?' };
-  const PROMPT_GRID = { uz: 'Jadvaldagi so\'roq belgisi o\'rniga qaysi son turishi kerak?', ru: 'Какое число должно стоять вместо знака вопроса?' };
+  /* Savol qisqa (bir qator); qoida izohda. */
+  const PROMPT_SERIES = {
+    uz: 'Qatorni davom ettiring. Keyingi son qaysi?',
+    ru: 'Продолжите ряд. Какое число следующее?',
+    en: 'Continue the series. Which number comes next?',
+  };
+  const PROMPT_GRID = {
+    uz: 'Soʻroq belgisi oʻrniga qaysi son turadi?',
+    ru: 'Какое число должно стоять вместо знака вопроса?',
+    en: 'Which number replaces the question mark?',
+  };
 
   /* ── Asosiy: bitta savol ──────────────────────────────────────────── */
   function inspect(seed, level) {
@@ -937,7 +982,7 @@
       if (picked.ds.some(d => avoid.has(d.v))) { stats.leak++; continue; }
 
       const order = r.shuffle([{ v: g.answer, why: null }].concat(picked.ds));
-      const text = n => ({ kind: 'text', uz: fmt(n), ru: fmt(n) });
+      const text = n => ({ kind: 'text', uz: fmt(n), ru: fmt(n), en: fmt(n) });
       const cx = v.cx;
       /* b: darajaning boshlang'ich qiymati + shu savol qoidasi darajaning
          o'rtachasidan qanchalik murakkab ekaniga qarab ±0.75 gacha. */
@@ -950,10 +995,10 @@
         level: L,
         b,
         prompt: Object.assign({}, isGrid ? PROMPT_GRID : PROMPT_SERIES),   // nusxa: bir savolni o'zgartirish boshqasiga ta'sir qilmasin
-        stimulus: isGrid ? { kind: 'svg', svg: gridSvg(g.grid) } : { kind: 'text', uz: stimText, ru: stimText },
+        stimulus: isGrid ? { kind: 'svg', svg: gridSvg(g.grid) } : { kind: 'text', uz: stimText, ru: stimText, en: stimText },
         options: order.map(o => text(o.v)),
         correct: order.findIndex(o => o.why === null),
-        explain: g.explain,
+        explain: { uz: g.explain.uz, ru: g.explain.ru, en: g.explain.en },
       };
       return {
         item, variant: vid, fam: v.fam, cx, attempts: attempt + 1, stats, fallback,
@@ -966,7 +1011,8 @@
 
   IQ.register({
     type: 'series',
-    label: { uz: 'Son qatorlari', ru: 'Числовые ряды' },
+    label: { uz: 'Son qatorlari', ru: 'Числовые ряды', en: 'Number series' },
+    langs: ['uz', 'ru', 'en'],
     generate: (seed, level) => inspect(seed, level).item,
     /* Quyidagilar shartnomadan tashqari — faqat testlar va tahlil uchun. */
     inspect,

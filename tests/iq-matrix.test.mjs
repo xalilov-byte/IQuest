@@ -283,27 +283,29 @@ function fitsOf(a, grid) {
 
 /* ── Izohni o'qish ─────────────────────────────────────────────────── */
 
-const NAME_UZ = { shakli: 'shape', soni: 'count', "o'lchami": 'size', "bo'yalishi": 'fill', "yo'nalishi": 'rot', joyi: 'pos', chiziqlari: 'lines' };
+const NAME_UZ = { shakli: 'shape', soni: 'count', 'oʻlchami': 'size', 'boʻyalishi': 'fill', 'yoʻnalishi': 'rot', joyi: 'pos', chiziqlari: 'lines' };
 const NAME_RU = { форма: 'shape', количество: 'count', размер: 'size', заливка: 'fill', направление: 'rot', положение: 'pos', линии: 'lines' };
+const NAME_EN = { shape: 'shape', count: 'count', size: 'size', fill: 'fill', direction: 'rot', position: 'pos', lines: 'lines' };
 const RULE_UZ = [
   [/hamma katakda bir xil/, 'all'],
-  [/har qatorda bir xil, qatordan qatorga o'zgaradi/, 'rows'],
+  [/har qatorda bir xil, qatordan qatorga oʻzgaradi/, 'rows'],
   [/har ustunda bir xil/, 'cols'],
   [/bir martadan/, 'd3'],
-  [/taga ortadi|shakllar kattalashadi|soat mili bo'yicha/, 'step+'],
+  [/taga ortadi|shakllar kattalashadi|soat mili boʻyicha/, 'step+'],
   [/taga kamayadi|shakllar kichrayadi|soat miliga teskari/, 'step-'],
   [/= birinchi \+ ikkinchi/, 'sum'],
   [/= birinchi − ikkinchi/, 'diff'],
-  [/chiziqlari birga \(qo'shiladi\)/, 'union'],
+  [/chiziqlari birga \(qoʻshiladi\)/, 'union'],
   [/ikkinchida borlari ayriladi/, 'minus'],
   [/faqat bitta katakda bor chiziqlar/, 'xor'],
   [/faqat ikkala katakda ham bor/, 'inter'],
 ];
 
 function readExplain(ex, errs) {
-  const mu = /^([A-F]) — to'g'ri javob\. Qoidalar: ([^.]*)\.(.*)$/.exec(ex.uz);
+  const mu = /^([A-F]) — toʻgʻri javob\. Qoidalar: ([^.]*)\.(.*)$/.exec(ex.uz);
   const mr = /^([A-F]) — правильный ответ\. Правила: ([^.]*)\.(.*)$/.exec(ex.ru);
-  if (!mu || !mr) { errs.push('izoh boshi o\'qilmadi'); return null; }
+  const me = /^([A-F]) is correct\. Rules: ([^.]*)\.(.*)$/.exec(ex.en || '');
+  if (!mu || !mr || !me) { errs.push('izoh boshi o\'qilmadi'); return null; }
   const rules = {};
   for (const part of mu[2].split('; ')) {
     const m = /^([^:]+): (.+)$/.exec(part);
@@ -324,8 +326,11 @@ function readExplain(ex, errs) {
   };
   const vu = viol(mu[3], /([A-F](?:, [A-F])*(?: va [A-F])?) — ([^.]+?) qoidaga mos emas\./g, NAME_UZ, 'va');
   const vr = viol(mr[3], /([A-F](?:, [A-F])*(?: и [A-F])?) — не подходит: ([^.]+)\./g, NAME_RU, 'и');
+  const ve = viol(me[3], /([A-F](?:, [A-F])*(?: and [A-F])?) — wrong ([^.]+)\./g, NAME_EN, 'and');
+  // en qoidalari: har biri "Atribut: …", atribut nomi uz dagisi bilan bir xil tartibda
+  const rulesEn = me[2].split('; ').map(part => NAME_EN[(/^([^:]+): /.exec(part) || [])[1]?.toLowerCase()]);
   const rulesRu = mr[2].split('; ').length;
-  return { letter: mu[1], letterRu: mr[1], rules, rulesRu, vu, vr };
+  return { letter: mu[1], letterRu: mr[1], letterEn: me[1], rules, rulesRu, rulesEn, vu, vr, ve };
 }
 
 /* ── Savolni rasmdan to'liq tekshirish ─────────────────────────────── */
@@ -400,15 +405,17 @@ function inspectRaw(item) {
   // Izoh: harf, buzilgan atributlar, qoida turi — rasmga mos.
   const ex = readExplain(item.explain, errs);
   if (ex) {
-    if (ex.letter !== LETTERS[item.correct] || ex.letterRu !== ex.letter) errs.push('izohdagi harf to\'g\'ri javob emas');
+    if (ex.letter !== LETTERS[item.correct] || ex.letterRu !== ex.letter || ex.letterEn !== ex.letter) errs.push('izohdagi harf to\'g\'ri javob emas');
+    if (ex.rulesEn.join() !== Object.keys(ex.rules).join()) errs.push('en izohidagi qoidalar uz dagisidan farq qiladi: ' + ex.rulesEn.join());
     viol.forEach((v, i) => {
       if (i === item.correct) {
-        if (ex.vu[LETTERS[i]] || ex.vr[LETTERS[i]]) errs.push('to\'g\'ri javob distraktor sifatida izohlangan');
+        if (ex.vu[LETTERS[i]] || ex.vr[LETTERS[i]] || ex.ve[LETTERS[i]]) errs.push('to\'g\'ri javob distraktor sifatida izohlangan');
         return;
       }
       const want = v.slice().sort().join(',');
       if (ex.vu[LETTERS[i]] !== want) errs.push(`izoh (uz): ${LETTERS[i]} — "${ex.vu[LETTERS[i]]}", rasmda "${want}"`);
       if (ex.vr[LETTERS[i]] !== want) errs.push(`izoh (ru): ${LETTERS[i]} — "${ex.vr[LETTERS[i]]}", rasmda "${want}"`);
+      if (ex.ve[LETTERS[i]] !== want) errs.push(`izoh (en): ${LETTERS[i]} — "${ex.ve[LETTERS[i]]}", rasmda "${want}"`);
     });
     if (ex.rulesRu !== Object.keys(ex.rules).length) errs.push('uz va ru izohida qoidalar soni har xil');
     for (const a of varying) if (!ex.rules[a]) errs.push(`izohda o'zgaruvchi atribut qoidasi yo'q: ${a}`);
@@ -490,6 +497,44 @@ test('ro\'yxatda bor, nomi uz/ru', () => {
   assert.ok(IQ.types().includes('matrix'));
   assert.equal(G.label.uz, 'Matritsalar');
   assert.equal(G.label.ru, 'Матрицы');
+  assert.equal(G.label.en, 'Matrices');
+  assert.deepEqual(plain(G.langs), ['uz', 'ru', 'en']);
+  if (IQ.langsOf) assert.deepEqual(plain(IQ.langsOf('matrix')), ['uz', 'ru', 'en']);
+});
+
+/* ── Til sifati: uz imlosi (oʻ/gʻ — ʻ), en bor va unga uz/ru aralashmagan ── */
+const UZ_WORDS = /\b(va|har|bir|ga|bilan|qator|qatorda|katak|katakka|shakl|shakli|javob|qoida|qoidaga|emas|keyingi|hamma|uchinchi)\b/i;
+function langErrs(v, where) {
+  const e = [];
+  for (const lang of ['uz', 'ru', 'en']) {
+    if (typeof v[lang] !== 'string' || !v[lang].trim()) e.push(where + ': ' + lang + ' yoʻq');
+    else if (v[lang] !== v[lang].trim() || / {2}|undefined|NaN|null|\[object|\$\{/.test(v[lang])) e.push(where + ': ' + lang + ' buzuq: ' + v[lang]);
+  }
+  if (e.length) return e;
+  const { uz, en } = v;
+  if (/['’‘`]/.test(uz)) e.push(where + ': uz da oddiy apostrof (oʻ/gʻ — ʻ, tutuq — ʼ): ' + uz);
+  if (/[^oOgG]ʻ/.test(uz) || /[oOgG]ʼ/.test(uz)) e.push(where + ': uz da ʻ/ʼ notoʻgʻri: ' + uz);
+  if (/[а-яёўқғҳ]/i.test(uz)) e.push(where + ': uz da kirill: ' + uz);
+  if (/[а-яёўқғҳʻʼ]/i.test(en)) e.push(where + ': en da kirill yoki ʻ/ʼ: ' + en);
+  if (UZ_WORDS.test(en)) e.push(where + ': en da oʻzbekcha soʻz: ' + en);
+  if (/[a-zа-я]{3}/i.test(uz) && en === uz) e.push(where + ': en = uz');
+  return e;
+}
+
+test('til: uz imlosi (ʻ), en bor va toza; savol qisqa (uz ≤ 60 belgi)', () => {
+  assert.deepEqual(langErrs(G.label, 'label'), []);
+  for (const L of LEVELS) {
+    for (const { seed, item } of batch(L)) {
+      const errs = langErrs(item.prompt, 'prompt').concat(langErrs(item.explain, 'explain'));
+      assert.deepEqual(errs, [], `level ${L}, seed ${seed}`);
+      assert.ok([...item.prompt.uz].length <= 60 && [...item.prompt.ru].length <= 64 && [...item.prompt.en].length <= 64, 'savol uzun');
+      assert.ok(/[.]$/.test(item.explain.en));
+    }
+  }
+  // tekshirgich tishlaydi
+  assert.ok(langErrs({ uz: "Bo'sh", ru: 'а', en: 'x' }, 't').length > 0);
+  assert.ok(langErrs({ uz: 'Boʻsh', ru: 'а', en: 'har qatorda' }, 't').length > 0);
+  assert.ok(langErrs({ uz: 'Boʻsh', ru: 'а' }, 't').length > 0);
 });
 
 test('har darajada 2000 urug\': makeItem yiqilmaydi, validateItem bo\'sh, shakl to\'g\'ri', () => {
@@ -745,9 +790,10 @@ test('b: IQ.levelToB(level) ± 0.75; bir darajada murakkabroq savol — qiyinroq
 test('izoh: uz/ru, harf to\'g\'ri, qoidalar va distraktor xatolari aniq (misol)', () => {
   const item = batch(8)[0].item, r = inspect(item);
   assert.deepEqual(r.errs, []);
-  assert.match(item.explain.uz, /^[A-F] — to'g'ri javob\. Qoidalar: /);
+  assert.match(item.explain.uz, /^[A-F] — toʻgʻri javob\. Qoidalar: /);
+  assert.match(item.explain.en, /^[A-F] is correct\. Rules: /);
   assert.match(item.explain.ru, /^[A-F] — правильный ответ\. Правила: /);
-  assert.ok(/qoidaga mos emas\./.test(item.explain.uz) && /не подходит: /.test(item.explain.ru));
+  assert.ok(/qoidaga mos emas\./.test(item.explain.uz) && /не подходит: /.test(item.explain.ru) && / — wrong /.test(item.explain.en));
   // Har o'zgaruvchi atribut izohda o'z qoidasi bilan.
   for (const a of r.varying) assert.ok(r.ex.rules[a], a);
 });
