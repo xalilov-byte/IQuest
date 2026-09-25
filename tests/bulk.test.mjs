@@ -1,15 +1,16 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   Ommaviy import va eksport (parseBulk / toCsv) tekshiruvi
+   Ommaviy import va eksport (parseBulk / toCsv) tekshiruvi — og'zaki
+   savollar bazasi (admin panel)
 
    NIMA UCHUN: bu ikkalasi savol bankiga ma'lumot KIRITADIGAN va undan
    ma'lumot CHIQARADIGAN yo'l. Bu yerdagi xato jimgina o'tadi — fayl
-   import bo'ladi, ilova ishlaydi, lekin savolning bir qismi yo'qoladi.
-   Aynan shunday bo'lgan edi: CSV'da izoh ustuni yo'q edi va ommaviy
-   import orqali kirgan har bir savol IZOHSIZ qolardi.
+   import bo'ladi, ilova ishlaydi, lekin savolning bir qismi yo'qoladi
+   (Nazariy'da aynan shunday bo'lgan: CSV'da izoh ustuni yo'q edi).
 
-   Endi xuddi shu xavf rasm va beshinchi variant bilan takrorlanishi
-   mumkin, shuning uchun eksport → import aylanishi shu yerda
-   tekshiriladi.
+   IQuest'da og'zaki savollar generator savollari bilan bir xil
+   chegarada: 4..6 variant (src/iq/CONTRACT.md §2). 3 variantli savolda
+   tasodifan topish ehtimoli 33% — test natijasini sezilarli buzadi,
+   shuning uchun import uni rad etadi.
 
    Manba fayl O'ZGARTIRILMAYDI: Main.dc.html dagi mantiq skripti
    o'qiladi va uning ma'lumot qatlami (ko'rinish modullaridan oldingi
@@ -34,11 +35,13 @@ const idx = script.indexOf(CUT);
 assert.ok(idx > 0, 'mantiq skriptining ma\'lumot qatlami topilmadi — ' +
   'Main.dc.html dagi bo\'lim sarlavhasi o\'zgargan bo\'lsa shu testni yangilang');
 
+/* window bo'sh: IQ yadrosi, progress va i18n yo'q — ma'lumot qatlami
+   ularsiz ham yuklanishi kerak (Design Canvas'dagi holat). */
 const ctx = vm.createContext({ window: {}, document: {}, console });
 vm.runInContext(script.slice(0, idx) + `
-  globalThis.__api = { parseBulk, toCsv, CSV_COLUMNS, LETTERS, letterOf };
+  globalThis.__api = { parseBulk, toCsv, CSV_COLUMNS, LETTERS, letterOf, MIN_OPTIONS, parseId, QUESTIONS, regId };
 `, ctx);
-const { parseBulk, toCsv, CSV_COLUMNS, letterOf } = ctx.__api;
+const { parseBulk, toCsv, CSV_COLUMNS, letterOf, MIN_OPTIONS, parseId, QUESTIONS, regId } = ctx.__api;
 
 /* vm boshqa "realm" — undagi massivning prototipi boshqa obyekt va
    deepEqual shu sababli yiqiladi. JSON orqali oddiy qiymatga
@@ -46,122 +49,140 @@ const { parseBulk, toCsv, CSV_COLUMNS, letterOf } = ctx.__api;
 const plain = x => JSON.parse(JSON.stringify(x));
 
 const head = CSV_COLUMNS.join(';');
-const line = o => [o.id || '', o.topic, o.text, ...(o.opts || []), ...Array(5 - (o.opts || []).length).fill(''),
-  o.key, o.explain || '', o.sign || '', o.image || '', o.state || ''].join(';');
+const line = o => [o.id || '', o.topic, o.text, ...(o.opts || []), ...Array(6 - (o.opts || []).length).fill(''),
+  o.key, o.explain || '', o.state || ''].join(';');
 
 
-test('harflar A dan E gacha, chegaradan tashqarida ham oʻqiladi', () => {
+test('harflar A dan F gacha, chegaradan tashqarida ham oʻqiladi', () => {
   assert.equal(letterOf(0), 'A');
-  assert.equal(letterOf(4), 'E');
-  assert.equal(letterOf(5), '6', 'undefined emas, oʻqiladigan narsa qaytishi kerak');
+  assert.equal(letterOf(5), 'F');
+  assert.equal(letterOf(6), '7', 'undefined emas, oʻqiladigan narsa qaytishi kerak');
 });
 
 
-test('ikki variantli qator qabul qilinadi', () => {
+test('toʻrt variantli qator qabul qilinadi', () => {
   const r = parseBulk([head, line({
-    topic: 'Toʻxtab turish', text: 'Haydovchi qoidani buzdimi yoki buzmadimi?',
-    opts: ['Buzdi', 'Buzmadi'], key: 'B', explain: 'Izoh',
+    topic: 'Analogiya', text: 'Qush : uya = asalari : ?',
+    opts: ['Gul', 'Asal', 'Uya', 'Ari'], key: 'C', explain: 'Izoh',
   })].join('\n'), []);
   assert.equal(r.length, 1);
   assert.deepEqual(plain(r[0].errors), []);
-  assert.deepEqual(plain(r[0].options), ['Buzdi', 'Buzmadi']);
-  assert.equal(r[0].correct, 1);
+  assert.deepEqual(plain(r[0].options), ['Gul', 'Asal', 'Uya', 'Ari']);
+  assert.equal(r[0].correct, 2);
+  assert.equal(r[0].topic, 'Analogiya');
 });
 
 
-test('besh variantli qator va E kaliti qabul qilinadi', () => {
+test('olti variantli qator va F kaliti qabul qilinadi', () => {
   const r = parseBulk([head, line({
-    topic: 'Tezlik rejimi', text: 'Ruxsat etilgan eng katta tezlik qancha?',
-    opts: ['20', '40', '60', '70', '90'], key: 'E', explain: 'Izoh',
+    topic: 'Ortiqchasi', text: 'Qaysi soʻz ortiqcha?',
+    opts: ['a', 'b', 'c', 'd', 'e', 'f'], key: 'F', explain: 'Izoh',
   })].join('\n'), []);
   assert.deepEqual(plain(r[0].errors), []);
-  assert.equal(r[0].options.length, 5);
-  assert.equal(r[0].correct, 4);
+  assert.equal(r[0].options.length, 6);
+  assert.equal(r[0].correct, 5);
 });
 
 
 test('mavjud boʻlmagan variantni koʻrsatuvchi kalit — XATO', () => {
-  /* Ikki variantli savolda "C" — bo'sh javobni to'g'ri deb ko'rsatardi. */
+  /* To'rt variantli savolda "E" — bo'sh javobni to'g'ri deb ko'rsatardi. */
   const r = parseBulk([head, line({
-    topic: 'Toʻxtab turish', text: 'Haydovchi qoidani buzdimi yoki buzmadimi?',
-    opts: ['Buzdi', 'Buzmadi'], key: 'C',
+    topic: 'Munosabat', text: 'Kitob : sahifa = daraxt : ?',
+    opts: ['Oʻrmon', 'Barg', 'Soya', 'Yogʻoch'], key: 'E',
   })].join('\n'), []);
   assert.equal(r[0].ok, false);
-  assert.match(r[0].errors.join(' '), /A–B emas/);
+  assert.match(r[0].errors.join(' '), /A–D emas/);
 });
 
 
-test('bitta variantli qator — XATO', () => {
+test('uch variantli qator — XATO (kamida 4 ta)', () => {
+  assert.equal(MIN_OPTIONS, 4);
   const r = parseBulk([head, line({
-    topic: 'Svetofor', text: 'Yagona variantli savol matni juda uzun',
-    opts: ['Yagona'], key: 'A',
+    topic: 'Kategoriya', text: 'Uch variantli savol matni',
+    opts: ['a', 'b', 'c'], key: 'A',
   })].join('\n'), []);
   assert.equal(r[0].ok, false);
-  assert.match(r[0].errors.join(' '), /kamida 2 ta/);
+  assert.match(r[0].errors.join(' '), /kamida 4 ta/);
 });
 
 
 test('oʻrtada boʻsh variant — XATO (ustunlar siljigan boʻlishi mumkin)', () => {
   const r = parseBulk([head,
-    ['', 'Svetofor', 'Oʻrtasida boʻsh variant bor savol', 'A', '', 'C', '', '', 'A', '', '', '', '']
+    ['', 'Analogiya', 'Oʻrtasida boʻsh variant bor savol', 'A', '', 'C', 'D', 'E', '', 'A', '', '']
       .join(';')].join('\n'), []);
   assert.equal(r[0].ok, false);
   assert.match(r[0].errors.join(' '), /boʻsh variant|bo'sh variant/);
 });
 
 
-test('rasm nomi import qilinadi', () => {
-  const r = parseBulk([head, line({
-    topic: 'Chorrahalar', text: 'Qaysi avtomobil birinchi boʻlib oʻtadi?',
-    opts: ['Koʻk', 'Yashil', 'Qizil'], key: 'C', image: 'q005.webp',
-  })].join('\n'), []);
-  assert.deepEqual(plain(r[0].errors), []);
-  assert.equal(r[0].image, 'q005.webp');
+test('sarlavhada "tur" ustuni boʻlmasa — bitta tushunarli xato', () => {
+  const r = parseBulk(['savol;A;B;C;D;togri', 'x;a;b;c;d;A'].join('\n'), []);
+  assert.equal(r.length, 1);
+  assert.match(r[0].errors.join(' '), /tur/);
 });
 
 
-test('eksport → import: rasm, izoh va beshinchi variant yoʻqolmaydi', () => {
-  /* Aylanish sinovi. Ilgari aynan shu yerda ma'lumot yo'qolgan edi. */
+test('eksport → import: izoh va oltinchi variant yoʻqolmaydi', () => {
+  /* Aylanish sinovi. Nazariy'da aynan shu yerda ma'lumot yo'qolgan edi. */
   const asl = [
-    { id: '#A1', topic: 'Chorrahalar', text: 'Qaysi avtomobil birinchi boʻlib oʻtadi?',
-      options: ['Koʻk', 'Yashil', 'Qizil'], correct: 2, explain: 'Oʻng tomondagi imtiyozli',
-      sign: null, image: 'q005.webp', state: 'draft' },
-    { id: '#A2', topic: 'Tezlik rejimi', text: 'Ruxsat etilgan eng katta tezlik qancha?',
-      options: ['20', '40', '60', '70', '90'], correct: 4, explain: '', sign: null,
-      image: null, state: 'draft' },
-    { id: '#A3', topic: 'Toʻxtab turish', text: 'Haydovchi qoidani buzdimi yoki buzmadimi?',
-      options: ['Buzdi', 'Buzmadi'], correct: 0, explain: '', sign: null,
-      image: null, state: 'draft' },
+    { id: 'v101', topic: 'Analogiya', text: 'Qush : uya = asalari : ?',
+      options: ['Gul', 'Asal', 'Uya', 'Ari'], correct: 2, explain: 'Asalari uyasi', state: 'draft' },
+    { id: 'v102', topic: 'Ortiqchasi', text: 'Qaysi biri ortiqcha; nima uchun?',
+      options: ['a', 'b', 'c', 'd', 'e', 'f'], correct: 5, explain: '"Qoʻshtirnoq; va vergul"', state: 'draft' },
   ];
   const back = parseBulk(toCsv(asl), []);
 
-  assert.equal(back.length, 3);
+  assert.equal(back.length, 2);
   back.forEach((r, i) => {
     assert.deepEqual(plain(r.errors), [], asl[i].id + ' xatosiz qaytishi kerak');
     assert.deepEqual(plain(r.options), asl[i].options, asl[i].id + ' variantlari');
     assert.equal(r.correct, asl[i].correct, asl[i].id + ' kaliti');
     assert.equal(r.explain, asl[i].explain, asl[i].id + ' izohi');
-    assert.equal(r.image, asl[i].image, asl[i].id + ' rasmi');
+    assert.equal(r.topic, asl[i].topic, asl[i].id + ' turi');
   });
 });
 
 
 test('kaliti yoʻq savol eksportda boʻsh katak bilan chiqadi', () => {
-  /* Hujjatdan olingan 21 ta savolda kalit yo'q. "A" deb yozib qo'yish
-     — eng xavfli xato: moderator uni tekshirilgan kalit deb o'ylaydi. */
-  const csv = toCsv([{ id: '#A4', topic: 'Svetofor', text: 'Kaliti yoʻq savol matni',
-    options: ['a', 'b', 'c'], correct: null, explain: '', sign: null, image: null, state: 'draft' }]);
+  /* "A" deb yozib qo'yish — eng xavfli xato: moderator uni tekshirilgan
+     kalit deb o'ylaydi. */
+  const csv = toCsv([{ id: 'v103', topic: 'Munosabat', text: 'Kaliti yoʻq savol matni',
+    options: ['a', 'b', 'c', 'd'], correct: null, explain: '', state: 'draft' }]);
   const cells = csv.split('\n')[1].split(';');
   assert.equal(cells[CSV_COLUMNS.indexOf('togri')], '', 'kalit katagi boʻsh boʻlishi kerak');
 });
 
 
-test('eski 4 ustunli fayl ham import boʻladi (E ustunisiz)', () => {
-  /* Ilgari yozilgan fayllar ishlashdan to'xtamasligi kerak. */
-  const oldHead = ['id', 'mavzu', 'savol', 'A', 'B', 'C', 'D', 'togri', 'izoh', 'belgi', 'holat'].join(';');
-  const oldLine = ['', 'Svetofor', 'Eski formatdagi savol matni', 'a', 'b', 'c', 'd', 'D', 'izoh', '', 'draft'].join(';');
-  const r = parseBulk([oldHead, oldLine].join('\n'), []);
+test('E/F ustunisiz qisqa fayl ham import boʻladi', () => {
+  const shortHead = ['tur', 'savol', 'A', 'B', 'C', 'D', 'togri', 'izoh'].join(';');
+  const shortLine = ['Kategoriya', 'Qaysi soʻz transportga kirmaydi?', 'Poyezd', 'Samolyot', 'Velosiped', 'Stol', 'D', 'izoh'].join(';');
+  const r = parseBulk([shortHead, shortLine].join('\n'), []);
   assert.deepEqual(plain(r[0].errors), []);
   assert.equal(r[0].options.length, 4);
   assert.equal(r[0].correct, 3);
+});
+
+
+/* ── Savol ID'lari ("Xatolarim", "Saqlangan") ─────────────────────────
+   Ro'yxatlarda savolning o'zi emas, ID'si saqlanadi: "tur:daraja:urug'".
+   Buzuq ID savolga aylanmasligi kerak — aks holda "Xatolarim" dan
+   noma'lum savol chiqadi. */
+test('savol ID si toʻgʻri ajratiladi, buzuq ID — null', () => {
+  assert.deepEqual(plain(parseId('matrix:7:123456')), { type: 'matrix', level: 7, seed: 123456 });
+  assert.equal(parseId('matrix:7'), null);
+  assert.equal(parseId('#001'), null);
+  assert.equal(parseId('Matrix:7:1'), null, 'tur nomi kichik harf');
+  assert.equal(parseId(''), null);
+});
+
+
+test('ID registri: progress.js uchun ikki yoʻl (indeks va ID)', () => {
+  /* progress.js ref ↔ indeks o'girishni questions[i].ref orqali qiladi:
+     initial() raqamli elementlarni, save() esa state'dagi ID bo'yicha
+     taxallusni ishlatadi. Ikkalasi bir xil yozuvga ko'rsatishi shart. */
+  regId('series:3:42');
+  regId('series:3:42');               // takror — yangi yozuv qo'shilmaydi
+  assert.equal(QUESTIONS.length, 1);
+  assert.equal(QUESTIONS[0].ref, 'series:3:42');
+  assert.equal(QUESTIONS['series:3:42'], QUESTIONS[0]);
 });

@@ -106,26 +106,27 @@
     return d.getDate() + '-' + MONTHS[d.getMonth()];
   }
 
+  /* Og'zaki savol turlari (verbal_items.kind) — admin panelda "Tur"
+     ustunida shu nomlar ko'rinadi. */
+  const KIND_LABEL = { analogy: 'Analogiya', odd: 'Ortiqchasi', category: 'Kategoriya', relation: 'Munosabat' };
+
+  /* Bazadagi og'zaki savol (supabase/migrations/0002_verbal.sql,
+     verbal_items: uz va ru bitta qatorda) → admin panel shakli. Panel
+     o'zbekcha matnni ko'rsatadi; ruschasi bazada, tahrir — seed orqali. */
   function mapQuestion(q) {
     const author = (q.author && q.author.name) || (q.updater && q.updater.name) || '—';
     return {
       uuid: q.id,                                   // haqiqiy kalit (yozuv uchun)
-      id: q.ref || ('#' + String(q.id).slice(0, 6)), // ko'rinadigan raqam
-      topic: (q.topics && q.topics.name) || '—',
-      topic_id: q.topic_id,
+      id: q.key || ('#' + String(q.id).slice(0, 6)), // ko'rinadigan raqam (v001…)
+      topic: KIND_LABEL[q.kind] || q.kind || '—',
+      kind: q.kind,
+      level: q.level,
       state: q.state,
-      text: q.text,
-      options: q.options || [],
+      text: q.uz_stimulus ? q.uz_prompt + ' — ' + q.uz_stimulus : q.uz_prompt,
+      options: q.uz_options || [],
       correct: q.correct,
-      explain: q.explain || '',
-      sign: q.sign || null,
-      /* Yo'l vaziyati rasmi va kalitning manbasi. Ikkalasi ham admin
-         uchun SHART: 301 ta savol hujjatdan avtomatik olingan kalit
-         bilan keldi va moderator kalitni tasdiqlashi kerak. Rasmni
-         ko'rmasa "qaysi avtomobil birinchi o'tadi?" degan savolning
-         kalitini tekshirib bo'lmaydi. */
-      image: q.image || null,
-      keySource: q.key_source || 'human',
+      explain: q.explain_uz || '',
+      keySource: 'human',
       author: author,
       updated: shortDate(q.updated_at),
       // Sifat bayrog'i statistikadan keladi (DIF/DIS) — u hali
@@ -221,7 +222,7 @@
        holda interfeys "o'zgardi" deb ko'rsatib, aslida hech narsa
        o'zgarmagan bo'lardi. Shuning uchun: server → keyin qayta o'qish. */
     updateQuestion: async function (uuid, patch) {
-      const rows = await rest('questions?id=eq.' + encodeURIComponent(uuid), {
+      const rows = await rest('verbal_items?id=eq.' + encodeURIComponent(uuid), {
         method: 'PATCH',
         headers: { Prefer: 'return=representation' },
         body: patch,
@@ -233,61 +234,33 @@
        savol darhol foydalanuvchiga chiqmasligi kerak, u avval ko'rib
        chiqishdan o'tadi. */
     insertQuestions: async function (items) {
-      // topics.slug → id: import faylida mavzu NOMI keladi.
-      const topics = await rest('topics?select=id,name,slug');
-      const byName = {};
-      (topics || []).forEach(t => { byName[t.name.toLowerCase()] = t.id; });
-
-      const unknown = [];
-      const rows = [];
-      items.forEach(it => {
-        const tid = byName[String(it.topic || '').toLowerCase()];
-        if (!tid) { unknown.push(it.topic); return; }
-        rows.push({
-          ref: it.ref || null,
-          topic_id: tid,
-          text: it.text,
-          options: it.options,
-          correct: it.correct,
-          /* Izoh va belgi ham yuboriladi. Ilgari yuborilmasdi: CSV'da
-             izoh bo'lsa ham bazaga tushmasdi va ommaviy import orqali
-             kirgan savol izohsiz qolardi. */
-          explain: it.explain || null,
-          sign: it.sign || null,
-          /* Rasm nomi ham yuboriladi — CSV'da ustun bor, bazada ustun
-             bor, o'rtada tushib qolsa import rasmni jimgina yo'qotardi. */
-          image: it.image || null,
-          state: 'draft',
-        });
-      });
-      if (!rows.length) {
-        const e = new Error(unknown.length
-          ? 'Mavzu bazada topilmadi: ' + [...new Set(unknown)].join(', ')
-          : 'Qo\'shiladigan savol yo\'q');
-        e.soft = true;
-        throw e;
-      }
-      const saved = await rest('questions', {
-        method: 'POST', headers: { Prefer: 'return=representation' }, body: rows,
-      });
-      return { added: (saved || []).length, skipped: unknown };
+      /* Bazadagi og'zaki savol ikki tilda bitta qator (uz + ru, izoh
+         ham ikkala tilda — hammasi NOT NULL). Admin CSV'si hozircha
+         faqat o'zbekcha matnni o'qiydi, ya'ni undan to'liq qator yasab
+         bo'lmaydi. Yarim savolni bazaga yozishdan ko'ra ochiq aytamiz:
+         og'zaki savollar content/verbal.json orqali qo'shiladi
+         (supabase/mkseed.mjs). */
+      const e = new Error('Ommaviy import hozircha yopiq: ogʻzaki savol ' +
+        'uz va ru matnini talab qiladi. Savollar content/verbal.json orqali ' +
+        'qoʻshiladi (' + items.length + ' ta qator yuborilmadi).');
+      e.soft = true;
+      throw e;
     },
 
     /* ── O'qish ──────────────────────────────────────────────────────── */
     loadAll: async function () {
-      const [topics, questions, audit] = await Promise.all([
-        rest('topics?select=id,slug,name,sort_order&order=sort_order.asc'),
-        rest('questions?select=id,ref,text,options,correct,explain,sign,image,key_source,state,topic_id,updated_at,' +
-             'topics(name),' +
-             'author:profiles!questions_author_id_fkey(name),' +
-             'updater:profiles!questions_updated_by_fkey(name)' +
+      const topics = Object.keys(KIND_LABEL).map(k => ({ slug: k, name: KIND_LABEL[k] }));
+      const [questions, audit] = await Promise.all([
+        rest('verbal_items?select=id,key,kind,level,uz_prompt,uz_stimulus,uz_options,correct,explain_uz,state,updated_at,' +
+             'author:profiles!verbal_items_author_id_fkey(name),' +
+             'updater:profiles!verbal_items_updated_by_fkey(name)' +
              '&order=updated_at.desc&limit=500'),
         rest('audit_log?select=created_at,actor_role,action,resource,before,after,reason_code,' +
              'actor:profiles!audit_log_actor_id_fkey(name)' +
              '&order=created_at.desc&limit=200').catch(() => []),
       ]);
       return {
-        topics: topics || [],
+        topics: topics,
         questions: (questions || []).map(mapQuestion),
         audit: (audit || []).map(mapAudit),
       };

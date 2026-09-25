@@ -75,10 +75,11 @@
       'color:var(--foreground)');
 
     card.appendChild(el('div',
-      'font:800 22px Manrope,system-ui,sans-serif;letter-spacing:-.02em', 'Nazariy — admin'));
+      'font:800 22px Manrope,system-ui,sans-serif;letter-spacing:-.02em',
+      ((window.nzSite && window.nzSite.appName) || 'IQuest') + ' — admin'));
     card.appendChild(el('div',
       'margin-top:6px;color:var(--muted-foreground);font-size:13px',
-      'Savollar bazasini boshqarish uchun kiring'));
+      'Ogʻzaki savollar bazasini boshqarish uchun kiring'));
 
     const mkInput = (label, type, name) => {
       card.appendChild(el('div', 'margin-top:16px;font-weight:700;font-size:13px', label));
@@ -199,7 +200,7 @@
       });
       status(
         (me.name || me.role) + ' · ' + d.questions.length + ' savol · ' +
-        d.topics.length + ' mavzu · jurnalda ' + d.audit.length + ' yozuv',
+        d.topics.length + ' tur · jurnalda ' + d.audit.length + ' yozuv',
         'Chiqish', () => { api.signOut(); location.reload(); });
     } catch (e) {
       status('Maʼlumot yuklanmadi: ' + friendly(e), 'Qayta urinish', () => loadInto(me));
@@ -249,7 +250,7 @@
         await loadInto(me);
         if (r.skipped.length) {
           status(r.added + ' ta savol qoʻshildi · ' + r.skipped.length +
-                 ' tasi oʻtkazib yuborildi (mavzu topilmadi)', 'Yopish', () => loadInto(me));
+                 ' tasi oʻtkazib yuborildi (tur topilmadi)', 'Yopish', () => loadInto(me));
         }
       } catch (e) {
         status('Qoʻshilmadi: ' + friendly(e), 'Yopish', () => loadInto(me));
@@ -264,7 +265,7 @@
      yo'qotardi. Shuning uchun maydon ilova daraxtidan tashqarida
      turadi, xuddi kirish oynasi kabi, va natijani holatga yozadi.
 
-     Bu funksiya kontent kiritishning asosiy yo'li: 700 ta savol
+     Bu funksiya og'zaki savollarni kiritishning asosiy yo'li: savollar
      jadvalda (Excel/Sheets) tayyorlanadi, CSV sifatida saqlanadi va
      shu yerga qo'yiladi. */
   window.nzAdminPaste = function () {
@@ -284,16 +285,16 @@
       'CSV matnini qoʻying'));
     card.appendChild(el('div',
       'color:var(--muted-foreground);font-size:13px;line-height:1.55',
-      'Birinchi qator — sarlavha. Kerakli ustunlar: mavzu, savol, A, B, C, D, ' +
-      'togri. Ixtiyoriy: id, izoh, belgi. Ustunlar nomi boʻyicha oʻqiladi, ' +
-      'tartibi muhim emas. Ajratgich — nuqtali vergul (;).'));
+      'Birinchi qator — sarlavha. Kerakli ustunlar: tur, savol, A, B, C, D, ' +
+      'togri. Ixtiyoriy: id, E, F, izoh, holat. Variantlar 4–6 ta. Ustunlar ' +
+      'nomi boʻyicha oʻqiladi, tartibi muhim emas. Ajratgich — nuqtali vergul (;).'));
 
     const ta = el('textarea',
       'width:100%;min-height:260px;box-sizing:border-box;padding:12px 14px;' +
       'border-radius:12px;border:1px solid var(--hairline);background:var(--surface-alt);' +
       'color:var(--foreground);resize:vertical;' +
       'font:500 12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace');
-    ta.placeholder = 'mavzu;savol;A;B;C;D;togri;izoh;belgi';
+    ta.placeholder = 'tur;savol;A;B;C;D;togri;izoh';
     // Allaqachon qo'yilgan matn bo'lsa tahrirlash uchun qaytariladi.
     const cur = app.state.bulk && app.state.bulk.text;
     if (cur) ta.value = cur;

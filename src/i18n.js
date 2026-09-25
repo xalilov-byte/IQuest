@@ -16,9 +16,9 @@
       OʻZI bilan kalitlanadi (`i18n-ru.js`). Tarjima topilmasa matn
       oʻzbekcha qoladi — buzilmaydi, shunchaki tarjimasiz koʻrinadi.
 
-   NIMA OʻGIRILMAYDI: brend va texnik nomlar (Telegram, Click, Payme,
-   Pro…), foydalanuvchi nomlari (@sardor_t), havolalar, bitta bosh
-   harf (javob variantlari A–D va toifa "B" uchun).
+   NIMA OʻGIRILMAYDI: brend va texnik nomlar (IQuest, IQ, Telegram,
+   Click, Payme, Pro…), foydalanuvchi nomlari (@sardor_t), havolalar,
+   rasm manzillari (data:…), bitta bosh harf (javob variantlari A–F).
    ───────────────────────────────────────────────────────────────────── */
 
 (function () {
@@ -28,9 +28,9 @@
   /* Oʻgirilmaydigan tokenlar. Brendlar kirill matn ichida ham lotin
      boʻlib qoladi — bu odatiy amaliyot va tanilishni saqlaydi. */
   const KEEP = new Set([
-    'Nazariy', 'Pro', 'Telegram', 'Stars', 'Click', 'Payme', 'Uzum',
-    'UZCARD', 'HUMO', 'SMS', 'YHQ', 'DIF', 'DIS', 'NFD', 'Play', 'Market',
-    'Android', 'App', 'Mini', 'Web', 'Bot', 'ID', 'CSV', 'km', 'm',
+    'IQuest', 'IQ', 'Rasch', 'Pro', 'Telegram', 'Stars', 'Click', 'Payme', 'Uzum',
+    'UZCARD', 'HUMO', 'SMS', 'DIF', 'DIS', 'NFD', 'Play', 'Market',
+    'Android', 'App', 'Mini', 'Web', 'Bot', 'ID', 'CSV',
     'OO', 'YY', 'Wi', 'Fi',
   ]);
 
@@ -66,6 +66,14 @@
   ];
 
   const LETTER = /[A-Za-zʻʼ’']/;
+
+  /* Ilova nomi build sozlamasidan (nzSite.appName) kelishi mumkin — nom
+     hali yakuniy emas. U ham brend sifatida lotinda qoladi; tekshiruv
+     chaqiruv paytida, chunki nzSite bu fayldan KEYIN yuklanadi. */
+  function isBrand(w) {
+    const n = window.nzSite && window.nzSite.appName;
+    return !!n && w === n;
+  }
 
   function translitWord(w) {
     let out = '';
@@ -104,7 +112,7 @@
         while (j < text.length && LETTER.test(text[j])) j++;
         const word = text.slice(i, j);
         const bare = word.replace(/[ʻʼ’']/g, '');
-        const keep = KEEP.has(word) || KEEP.has(bare) ||
+        const keep = KEEP.has(word) || KEEP.has(bare) || isBrand(bare) ||
                      (bare.length === 1 && bare === bare.toUpperCase());
         out += keep ? word : translitWord(word);
         i = j;
@@ -157,8 +165,21 @@
     return /^(var\(|--[a-z]|#[0-9a-fA-F]{3,8}$|rgba?\()/.test(str);
   }
 
+  /* Rasm manzili (data:image/svg+xml,…) — savol rasmlari shu shaklda
+     keladi (IQ.svgSrc). Kirill rejimi uni harfma-harf o'girib, rasmni
+     buzardi. */
+  function isDataUri(str) {
+    return str.indexOf('data:') === 0;
+  }
+
+  /* Atribut qiymati bo'lgan so'z-tokenlar: data-theme="dark",
+     aria-pressed="true", aria-current="page". Ular matn emas — kirill
+     rejimi ularni "дарк", "труе" qilib, tungi temani va ekran
+     o'quvchi holatini jimgina buzardi (Nazariy'dan qolgan xato). */
+  const TOKENS = new Set(['true', 'false', 'page', 'dark', 'light']);
+
   function skip(str) {
-    return isCss(str) || isSvgPath(str);
+    return TOKENS.has(str) || isCss(str) || isSvgPath(str) || isDataUri(str);
   }
 
   /* Satrni joriy tilga oʻgiradi. Oʻzbek lotinda — hech narsa qilmaydi

@@ -1,0 +1,46 @@
+{
+  "_izoh": "SINOV NAMUNASI — ilovaga tushmaydi. Faqat supabase/mkseed.mjs va seed zanjirini sinash uchun (supabase/tests/run.sh). Shakl: src/iq/CONTRACT.md §2. Kalitlar v999xx — haqiqiy kontent bilan to'qnashmasin. Apostrof, qo'shtirnoq va teskari chiziq ataylab: SQL ekranlash shu yerda sinaladi.",
+  "version": 1,
+  "items": [
+    {
+      "key": "v99901",
+      "kind": "analogy",
+      "level": 3,
+      "uz": { "prompt": "Munosabatni davom ettiring", "stimulus": "Qush : uya = asalari : ?", "options": ["Gul", "Uya", "Asal", "Qo'l"] },
+      "ru": { "prompt": "Продолжите отношение", "stimulus": "Птица : гнездо = пчела : ?", "options": ["Цветок", "Улей", "Мёд", "Рука"] },
+      "correct": 1,
+      "explain": { "uz": "Qush uyada yashaydi, asalari — uyada (inida).", "ru": "Птица живёт в гнезде, пчела — в улье." },
+      "reviewed": false
+    },
+    {
+      "key": "v99902",
+      "kind": "odd",
+      "level": 2,
+      "uz": { "prompt": "Ortiqchasini toping", "options": ["Olma", "Nok", "Sabzi", "O'rik"] },
+      "ru": { "prompt": "Найдите лишнее", "options": ["Яблоко", "Груша", "Морковь", "Абрикос"] },
+      "correct": 2,
+      "explain": { "uz": "Sabzi — sabzavot, qolganlari meva.", "ru": "Морковь — овощ, остальные — фрукты." },
+      "reviewed": true
+    },
+    {
+      "key": "v99903",
+      "kind": "category",
+      "level": 5,
+      "uz": { "prompt": "Qaysi so'z \"asbob\" guruhiga kiradi?", "options": ["Bolg'a", "Stol", "Daraxt", "Kitob", "Non"] },
+      "ru": { "prompt": "Какое слово относится к группе «инструменты»?", "options": ["Молоток", "Стол", "Дерево", "Книга", "Хлеб"] },
+      "correct": 0,
+      "explain": { "uz": "Bolg'a — asbob; qolganlari boshqa guruhlar.", "ru": "Молоток — инструмент; остальные — другие группы." },
+      "reviewed": false
+    },
+    {
+      "key": "v99904",
+      "kind": "relation",
+      "level": 7,
+      "uz": { "prompt": "Juftlik munosabati qaysi javobda xuddi shunday?", "stimulus": "Issiq \\ sovuq", "options": ["Katta — kichik", "Yomg'ir — bulut", "Qalam — daftar", "Tez — yugurmoq", "Oq — qor", "Daryo — suv"] },
+      "ru": { "prompt": "В каком ответе такое же отношение пары?", "stimulus": "Горячий \\ холодный", "options": ["Большой — маленький", "Дождь — облако", "Карандаш — тетрадь", "Быстро — бежать", "Белый — снег", "Река — вода"] },
+      "correct": 0,
+      "explain": { "uz": "Issiq va sovuq — qarama-qarshi ma'nolar.", "ru": "Горячий и холодный — антонимы." },
+      "reviewed": false
+    }
+  ]
+}

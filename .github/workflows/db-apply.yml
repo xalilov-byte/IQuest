@@ -1,35 +1,31 @@
 # ─────────────────────────────────────────────────────────────────────────
-#  Nazariy — migratsiyani Supabase'ga qo'llash
+#  Zukko — migratsiya va seed'ni Supabase'ga qo'llash
 #
-#  NIMA UCHUN CI ORQALI: Claude Code ishlayotgan bulutli muhitdan
-#  Supabase domeni tashqi tarmoq siyosati bilan bloklangan (HTTP 403),
-#  shuning uchun u yerdan bazaga ulanib bo'lmaydi. GitHub runner'ida
-#  esa tarmoq ochiq. Ya'ni SQL'ni qo'lda nusxalab qo'yish shart emas:
-#  shu workflow uni o'zi qo'llaydi.
+#  NIMA UCHUN CI ORQALI: Claude Code ishlayotgan bulutli muhitdan Supabase
+#  domenlari tashqi tarmoq siyosati bilan yopiq, GitHub runner'ida esa
+#  tarmoq ochiq. SQL'ni qo'lda nusxalab qo'yish shart emas.
 #
-#  BIR MARTALIK SOZLASH — sizdan bitta maxfiy satr:
+#  BIR MARTALIK SOZLASH (batafsil: supabase/README.md):
 #
-#    1. Supabase → Project Settings → Database → Connection string
-#       → "URI" ni nusxalang (Session pooler tavsiya etiladi).
-#       Satr ichida [YOUR-PASSWORD] bo'lsa, uni haqiqiy parol bilan
-#       almashtiring.
+#    1. Zukko uchun YANGI Supabase loyihasi oching (Nazariy'niki EMAS!).
+#    2. Supabase → Project Settings → Database → Connection string → URI
+#       (Session pooler tavsiya etiladi). [YOUR-PASSWORD] ni haqiqiy parol
+#       bilan almashtiring.
+#    3. GitHub → repo → Settings → Secrets and variables → Actions →
+#       New repository secret:  Nom: SUPABASE_DB_URL   Qiymat: o'sha URI
+#    4. Actions → "Bazaga qo'llash" → Run workflow → tasdiq: ha
 #
-#    2. GitHub → repo → Settings → Secrets and variables → Actions
-#       → New repository secret
-#       Nom:    SUPABASE_DB_URL
-#       Qiymat: o'sha URI
+#  Bu satr BAZA PAROLINI saqlaydi — u faqat GitHub Secrets'da turadi,
+#  logda ko'rinmaydi va repoga tushmaydi. Uni chatga ham yozmang.
 #
-#    3. Actions → "Bazaga qo'llash" → Run workflow
-#
-#  Bu satr BAZA PAROLINI saqlaydi — u GitHub Secrets'da qoladi, logda
-#  ko'rinmaydi va repoga tushmaydi. Uni chatga ham yozish kerak emas.
-#
-#  XAVFSIZLIK: workflow faqat qo'shadi. Jadval o'chirish yoki ma'lumotni
-#  tozalash yo'q, va migratsiya allaqachon qo'llangan bo'lsa qayta
-#  ishga tushirilmaydi (supabase/apply.sh).
-#
-#  Ishga tushirish FAQAT qo'lda (workflow_dispatch): bazaga o'zgartirish
-#  kiritish har doim ataylab qilinadigan amal bo'lishi kerak.
+#  XAVFSIZLIK:
+#    · workflow faqat qo'shadi; jadval o'chirish yoki tozalash yo'q;
+#      qo'llangan migratsiya qayta ishga tushmaydi (supabase/apply.sh);
+#    · apply.sh Nazariy (yoki boshqa loyiha) bazasini tanib, unga HECH
+#      NARSA yozmasdan to'xtaydi — secret'ga tasodifan eski ulanish
+#      satri qo'yilsa ham;
+#    · ishga tushirish FAQAT qo'lda: bazaga o'zgartirish har doim
+#      ataylab qilinadigan amal.
 # ─────────────────────────────────────────────────────────────────────────
 name: Bazaga qo'llash
 
@@ -37,7 +33,7 @@ on:
   workflow_dispatch:
     inputs:
       tasdiq:
-        description: 'Migratsiya va seed bazaga qo''llanadi. Davom etish uchun "ha" deb yozing'
+        description: 'Migratsiya va seed Zukko bazasiga qo''llanadi. Davom etish uchun "ha" deb yozing'
         required: true
         default: 'yoq'
 
@@ -61,7 +57,7 @@ jobs:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           if [ -z "$SUPABASE_DB_URL" ]; then
-            echo "::error::SUPABASE_DB_URL secret'i qo'yilmagan. Yo'riqnoma: .github/workflows/db-apply.yml boshidagi izoh."
+            echo "::error::SUPABASE_DB_URL secret'i qo'yilmagan. Yo'riqnoma: supabase/README.md §1."
             exit 1
           fi
           echo "secret mavjud"
@@ -72,36 +68,13 @@ jobs:
         run: bash supabase/apply.sh
 
       - name: Tashqaridan RLS tekshiruvi
-        # Qo'llash tugagach, publishable kalit bilan tashqaridan
-        # tekshiramiz: nashr etilganlar ko'rinadi, qoralama va audit
-        # jurnali esa YO'Q. Bu klient ko'radigan haqiqiy manzara.
+        # Publishable kalit bilan, klient ko'radigan manzara: nashr
+        # etilganlar ochiq; qoralama, jurnal, natijalar va anonim javoblar
+        # yopiq; anon hech narsa yoza olmaydi. config.json hali bo'sh
+        # bo'lsa — eslatma bilan o'tkazib yuboriladi.
         run: |
-          URL=$(node -p "require('./supabase/config.json').url")
-          KEY=$(node -p "require('./supabase/config.json').publishableKey")
-
-          pub=$(curl -s "$URL/rest/v1/published_questions?select=ref" -H "apikey: $KEY")
-          n=$(node -p "JSON.parse(process.argv[1]).length" "$pub")
-          echo "nashr etilgan savollar (tashqaridan): $n"
-          if [ "$n" = "0" ]; then
-            echo "::error::Nashr etilgan savol ko'rinmadi — klient savollarni o'qiy olmaydi"
-            exit 1
+          if [ -z "$(node -p "require('./supabase/config.json').url || ''")" ]; then
+            echo "::warning::supabase/config.json bo'sh — tashqi tekshiruv o'tkazilmadi. Yangi loyihaning url va publishable kalitini yozib commit qiling; keyin 'Baza' workflow'i jonli tekshiradi."
+            exit 0
           fi
-
-          drafts=$(curl -s "$URL/rest/v1/questions?select=ref&state=eq.draft" -H "apikey: $KEY")
-          d=$(node -p "const x=JSON.parse(process.argv[1]); Array.isArray(x)?x.length:0" "$drafts")
-          if [ "$d" != "0" ]; then
-            echo "::error::RLS TESHIK: qoralama savollar tashqaridan ko'rindi"
-            echo "$drafts"
-            exit 1
-          fi
-          echo "qoralama savollar tashqaridan ko'rinmaydi"
-
-          audit=$(curl -s "$URL/rest/v1/audit_log?select=id&limit=1" -H "apikey: $KEY")
-          a=$(node -p "const x=JSON.parse(process.argv[1]); Array.isArray(x)?x.length:0" "$audit")
-          if [ "$a" != "0" ]; then
-            echo "::error::RLS TESHIK: audit jurnali tashqaridan o'qildi"
-            exit 1
-          fi
-          echo "audit jurnali tashqaridan o'qilmaydi"
-
-          echo "✅ RLS tashqaridan ham to'g'ri ishlayapti"
+          bash supabase/tests/live.sh --strict
