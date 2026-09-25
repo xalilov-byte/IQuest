@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   IQuest — mini render runtime (~140 qator, tashqi kutubxonasiz)
+   IQuest — mini render runtime (~250 qator, tashqi kutubxonasiz)
 
    Dizayn manbasi (Main.dc.html) Claude Design Canvas formatida yozilgan:
    sc-if / sc-for teglari va {{ binding }} qiymatlari. Ilova offline
@@ -12,9 +12,22 @@
    moslanadi). Sabab — to'liq qayta yaratishda ro'yxatning scroll holati
    yo'qoladi va har bir setState'da CSS animatsiyalari qaytadan ijro
    etiladi (ekran "sakraydi"). Morph bunga yo'l qo'ymaydi.
+
+   HODISALAR: onClick, onInput, onChange atributlari ({{ fn }}) — bitta
+   delegatsiyalangan tinglovchi orqali (mount). Inputlar BOSHQARILMAYDI:
+   `value` faqat yaratishda qo'yiladi, keyin foydalanuvchiniki (morph).
+
+   MORPH POZITSION: bolalar tartib bo'yicha solishtiriladi. Shuning uchun
+   input yoki uning yordam qatori OLDIDA shartli (sc-if) qo'shni element
+   bo'lmasin — u paydo bo'lsa input qayta yaratiladi va fokus/IME matni
+   yo'qoladi (ARXITEKTURA §9.6). Yashirish visibility bilan qilinadi.
    ───────────────────────────────────────────────────────────────────── */
 
 const BIND_ONLY = /^\s*\{\{\s*([\w.$]+)\s*\}\}\s*$/;
+/* Qiymati foydalanuvchiga tegishli elementlar va ularning morph
+   tegmaydigan atributlari (pastdagi morph() izohiga qarang). */
+const FIELD_TAGS = /^(INPUT|TEXTAREA|SELECT)$/;
+const FIELD_OWNED = /^(value|checked)$/;
 
 function getPath(scope, path) {
   let v = scope;
@@ -116,9 +129,10 @@ function build(tplNodes, scope, out) {
 
       const val = bindValue(raw, scope);
 
-      if (name === 'onclick') {
-        el.removeAttribute('onclick');
-        if (typeof val === 'function') el.__click = val;   // delegatsiya orqali chaqiriladi
+      if (name === 'onclick' || name === 'oninput' || name === 'onchange') {
+        el.removeAttribute(name);
+        // delegatsiya orqali chaqiriladi (mount): __click / __input / __change
+        if (typeof val === 'function') el['__' + name.slice(2)] = val;
         continue;
       }
       if (name === 'style' && val && typeof val === 'object') {
@@ -156,6 +170,17 @@ function morph(oldN, newN) {
   if (oldN.nodeType !== 1) return;
 
   oldN.__click = newN.__click;
+  oldN.__input = newN.__input;
+  oldN.__change = newN.__change;
+
+  /* BOSHQARILMAYDIGAN INPUTLAR. Input, textarea va select'ning qiymati
+     foydalanuvchiniki: `value` (va `checked`) atributi faqat element
+     YARATILGANDA ishlaydi, keyingi chizishlarda tegilmaydi. `.value`
+     xususiyatiga esa runtime HECH QACHON tegmaydi. Aks holda har
+     setState kursorni oxiriga otar, IME (kirill/oʻzbek klaviatura)
+     yozayotgan soʻzni uzib qoʻyardi. Holat esa har `input` hodisasida
+     ilovaning oʻziga koʻchiriladi (oninput). */
+  const field = FIELD_TAGS.test(oldN.nodeName);
 
   if (oldN.getAttribute('style') !== newN.getAttribute('style')) {
     if (newN.hasAttribute('style')) oldN.setAttribute('style', newN.getAttribute('style'));
@@ -163,11 +188,15 @@ function morph(oldN, newN) {
   }
   for (const a of Array.from(newN.attributes)) {
     if (a.name === 'style') continue;
+    if (field && FIELD_OWNED.test(a.name)) continue;
     if (oldN.getAttribute(a.name) !== a.value) oldN.setAttribute(a.name, a.value);
   }
   for (const a of Array.from(oldN.attributes)) {
+    if (field && FIELD_OWNED.test(a.name)) continue;
     if (!newN.hasAttribute(a.name)) oldN.removeAttribute(a.name);
   }
+  // textarea'ning bola matni — uning boshlang'ich qiymati: u ham faqat yaratishda.
+  if (oldN.nodeName === 'TEXTAREA') return;
 
   const oc = Array.from(oldN.childNodes);
   const nc = Array.from(newN.childNodes);
@@ -196,7 +225,7 @@ function schedule() {
   requestAnimationFrame(() => { queued = false; draw(); });
 }
 
-function draw() {
+function render() {
   const frag = document.createDocumentFragment();
   build(TPL.content.childNodes, APP.renderVals(), frag);
   if (!ROOT.firstChild) { ROOT.appendChild(frag); return; }
@@ -209,18 +238,43 @@ function draw() {
   }
 }
 
+/* Chizilgandan keyingi ilgak: joylashuvni haqiqiy o'lcham bilan
+   tekshirish (masalan savol variantlari pastki panel ostida qolmaganmi).
+   componentDidUpdate true qaytarsa (holatni o'zi tuzatgan), ekran SHU
+   kadrning o'zida qayta chiziladi — brauzer oraliq holatni bo'yamaydi,
+   foydalanuvchi sakrashni ko'rmaydi. Cheksiz aylanmaslik uchun ≤ 3 marta. */
+function draw() {
+  render();
+  for (let k = 0; k < 3; k++) {
+    let again = false;
+    if (APP.componentDidUpdate) { try { again = APP.componentDidUpdate() === true; } catch (e) { again = false; } }
+    if (!again) break;
+    render();
+  }
+}
+
+/* Delegatsiya: hodisa bosilgan/yozilgan elementdan ildizgacha ko'tariladi
+   va birinchi topilgan ishlovchi (__click / __input / __change)
+   chaqiriladi. Ishlovchilar DOM'ga emas, element xususiyatiga yozilgan —
+   morph ularni har chizishda yangilaydi, tinglovchi esa bitta. */
+function delegate(rootEl, type, prop) {
+  rootEl.addEventListener(type, e => {
+    let n = e.target;
+    while (n && n !== rootEl) {
+      if (n[prop]) { n[prop](e); return; }
+      n = n.parentNode;
+    }
+  });
+}
+
 function mount(ComponentClass, props, rootEl, templateEl) {
   ROOT = rootEl;
   TPL = templateEl;
   APP = new ComponentClass(props);
 
-  rootEl.addEventListener('click', e => {
-    let n = e.target;
-    while (n && n !== rootEl) {
-      if (n.__click) { n.__click(e); return; }
-      n = n.parentNode;
-    }
-  });
+  delegate(rootEl, 'click', '__click');
+  delegate(rootEl, 'input', '__input');
+  delegate(rootEl, 'change', '__change');
 
   draw();
   if (APP.componentDidMount) APP.componentDidMount();
