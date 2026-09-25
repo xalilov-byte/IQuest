@@ -1,8 +1,12 @@
-# Zukko — IQ yadrosi shartnomasi
+# IQuest — IQ yadrosi shartnomasi
 
 Bu hujjat parallel ishlayotgan hamma qismlar uchun **yagona kelishuv**.
 Kim nimani o'zgartirsa ham, shu yerdagi API va qoidalar buzilmaydi.
 O'zgartirish kerak bo'lsa — avval shu hujjat, keyin kod.
+
+**Nom: IQuest** (ilova), sayt **IQuest.uz**, Android ID `uz.iquest.app`.
+(Ish boshida "Zukko" deb atalgan — u nom band chiqdi. Papka nomi
+/home/user/Zukko qoladi, foydalanuvchiga ko'rinadigan hamma joyda IQuest.)
 
 Loyiha Nazariy (haydovchilik nazariy imtihoni ilovasi) asosida qurilgan.
 Dvigatel o'sha: Capacitor Android + bitta Design Canvas fayli
@@ -151,9 +155,14 @@ Result = {
   iq, lo, hi,             // taxminiy IQ-uslubidagi ball va 90% oraliq
   reliable: bool,         // false — savol kam (masalan < 20): ilova IQ raqamini KO'RSATMAYDI
   byType: { [type]: { n, correct } },
-  items: [{ id, type, level, b, correct: bool, ms }],
+  items: [{ id, type, level, b, k, answer: int, correct: bool, ms }],
 }
 ```
+
+`items[].answer` — foydalanuvchi tanlagan variant indeksi. SHART: server
+natijani shu jurnal bo'yicha QAYTA hisoblaydi (§10) — savol urug'dan
+qayta yaratiladi, javob tekshiriladi, ball qayta chiqariladi. Mijoz
+yuborgan `iq` ga ishonilmaydi.
 
 ---
 
@@ -192,12 +201,116 @@ me'yorlanmagan (norm) test qilyapmiz.
    natija taxminiy va faqat o'zingizni kuzatish uchun."*
 3. **"IQ oshiradi" deb VA'DA QILINMAYDI.** Mashq qilingan topshiriqda
    natija oshadi — bu isbotlangan. Umumiy aqlga ko'chishi — isbotlanmagan
-   (AQShda Lumosity shunday va'da uchun 2 mln $ jarima to'lagan). Mumkin:
+   (AQShda Lumosity shunday va'dalar uchun FTC bilan kelishuvda 2 mln $
+   tovon to'lagan; LearningRx "IQ 12 haftada 15 ballga oshadi" degani
+   uchun jazolangan — raqamli va'da bizga eng yaqin xavf). Mumkin:
    "mantiqiy fikrlashni mashq qiling", "natijangiz o'sishini kuzating".
    Mumkin emas: "IQ'ingizni 20 ballga oshiring", "aqlli bo'ling".
 4. **"Rasmiy", "sertifikatlangan", "Mensa", "klinik"** so'zlari yo'q.
 5. `reliable: false` bo'lsa IQ raqami ko'rsatilmaydi — faqat to'g'ri
    javoblar soni.
+6. **Natija hech qachon pul ortida emas.** Test va uning natijasi (oraliq
+   bilan) bepul. IQ-test janrining №1 shikoyati — "natijani ko'rish uchun
+   yashirin obuna" (Buyuk Britaniyada bunday reklama taqiqlangan).
+7. **Mahsulot egasining qarori (2026-09-25):** liga, reyting,
+   IQ o'yinlari va sertifikat BO'LADI. Mezon — Google Play siyosati
+   (Deceptive Behavior, Health claims). Shunga ko'ra:
+   - **Sertifikat** IQuest.uz tomonidan beriladi: "IQuest testi natijasi"
+     — ball, oraliq, sana, ism, noyob kod va tekshirish havolasi
+     (iquest.uz/sertifikat/?kod=…). Faqat SERVERDA qayta hisoblangan
+     (§10), `reliable: true` test uchun. "Rasmiy IQ", "klinik",
+     davlat/Mensa bilan bog'liqlik ishorasi yo'q.
+   - **O'yinlar** "IQ o'yinlari" / "aql o'yinlari" deb ataladi. Do'kon
+     va reklama matnida "IQ'ingizni X ballga oshiradi" kabi KAFOLAT va
+     raqamli va'da yo'q — Play shuning uchun ilovani olib tashlashi
+     mumkin. "Mashq qiling, natijangiz o'sishini kuzating" — mumkin.
+   - **Liga** — faollik ballari bo'yicha (haftalik). **Reyting** — eng
+     yaxshi tekshirilgan IQuest balli va umumiy ball bo'yicha. Ikkalasi
+     ham faqat serverda tekshirilgan ballardan (§10).
+   - Hanuz YO'Q: persentil / "aholining X% idan aqlliroq" (norm yo'q —
+     bu to'qima raqam), sog'liq da'volari (diqqat buzilishi, demensiya,
+     xotira kasalligi).
+8. **Qabul imtihonlari.** Akademik litsey, ijod maktablari, El-yurt
+   umidi testlarida IQ/mantiq bo'limi bor — "shu turdagi topshiriqlarni
+   mashq qiling" deyish mumkin. **DTM'da mantiq bo'limi YO'Q** — "DTM'ga
+   tayyorlaydi" deyish yolg'on. "Rasmiy", "agentlik bilan bog'liq"
+   degan ishora ham yo'q.
+
+---
+
+## 9. O'yinlar — `src/games/`
+
+Test savollaridan tashqari interaktiv "IQ o'yinlari". Reyestr:
+`src/games/index.js` (integratorniki). Namuna: `src/games/demo.js`.
+
+```js
+IQ.games.register({
+  id: 'schulte',                     // barqaror, [a-z0-9-]
+  title: { uz, ru }, desc: { uz, ru },
+  skill: 'attention' | 'memory' | 'speed' | 'logic' | 'spatial',
+  create(seed, level) → Game,        // level 1..10, deterministik (IQ.rng)
+});
+
+Game = {
+  view()          → GameView,        // joriy holat — faqat ma'lumot
+  tap(i, now)     // grid katagi bosildi
+  press(id, now)  // tugma bosildi
+  tick(now)       → bool             // vaqt o'tishi; ko'rinish o'zgarsa true
+  done            // getter
+  log()           → [{ t, k: 'tap' | 'press' | 'tick', v }]   // replay uchun
+  result()        → { score, points, correct, total, durationMs, nextLevel }
+}
+
+GameView = {
+  phase:   'intro' | 'show' | 'input' | 'feedback' | 'done',
+  prompt:  { uz, ru },
+  hud:     [{ label: { uz, ru }, value: string }],    // ≤ 3 ta
+  display: null | { kind: 'text', uz, ru } | { kind: 'svg', svg },
+  grid:    null | { cols: 2..6, cells: [{ label: string, svg?, state }] },   // ≤ 36 katak
+           // state: 'idle' | 'lit' | 'ok' | 'bad' | 'hidden' | 'disabled'
+  buttons: [{ id, label: { uz, ru }, kind: 'primary' | 'secondary' }],    // ≤ 4 ta
+  progress: 0..1,
+}
+```
+
+Qoidalar:
+- **Vaqt faqat `now` argumentidan.** O'yin ichida `Date.now()`,
+  `setTimeout`, `Math.random()` TAQIQLANGAN. Ilova har ~100 ms da
+  `tick(Date.now())` chaqiradi va `true` bo'lsa qayta chizadi.
+- **Replay:** `IQ.games.replay(id, seed, level, log)` aynan shu
+  `result()` ni berishi SHART — test bilan isbotlanadi. Server shu
+  orqali ballni tekshiradi.
+- **points** — liga uchun. Normal o'yin (≈ 1–2 daqiqa) ≈ 30–150 ball;
+  formula izohlanadi; imkonsiz tezlik (masalan bosishlar orasida < 120 ms
+  ketma-ket) ball bermaydi — bot/avtoklikerga qarshi.
+- `validateView(view)` har holatda bo'sh — test minglab tasodifiy
+  bosishlar bilan tekshiradi (o'yin hech qachon buzuq ko'rinish bermaydi).
+- Rang yagona farq emas (§2 dagi kabi). Katak holatlari ilova
+  tomonidan chiziladi; `svg` faqat katak ICHIDAGI rasm uchun.
+
+---
+
+## 10. Server tekshiruvi, sertifikat, liga, reyting
+
+Mijozdagi hamma narsani o'zgartirish mumkin (APK ochiladi, so'rov qo'lda
+yuboriladi). Shuning uchun **ball, liga va sertifikat faqat server qayta
+hisoblagan natijadan** chiqadi:
+
+- Test: mijoz `{ seed, mode, types, length, items: [{ id, answer, ms }] }`
+  yuboradi. Server (Supabase Edge Function) har `id` dan savolni AYNI
+  generator kodi bilan qayta yaratadi, `answer` ni tekshiradi, `IQ.score`
+  bilan qayta hisoblaydi. Adaptiv ketma-ketlik ham tekshiriladi:
+  `IQ.session.restore` jurnalni qayta o'ynaganda aynan shu `id`lar chiqishi
+  kerak (aks holda mijoz oson savollarni tanlab olgan).
+- O'yin: mijoz `{ game, seed, level, log }` yuboradi, server
+  `IQ.games.replay` bilan ballni qayta chiqaradi.
+- Sertifikat: faqat `mode: 'test'`, `reliable: true`, server tasdiqlagan
+  natija uchun; kod — tasodifiy, taxmin qilib bo'lmaydigan
+  (masalan `IQ-7K3P-92XQ`); tekshirish sahifasi faqat ko'rsatiladigan
+  maydonlarni oladi (RPC orqali, jadvalni to'liq o'qish yo'q).
+- Generator kodi o'zgarsa eski urug'lar boshqa savol beradi — shuning
+  uchun natijada `engine` versiyasi saqlanadi va server shu versiyani
+  qo'llab-quvvatlaydi (yoki eski natijani qayta tekshirmaydi).
 
 ---
 
@@ -216,7 +329,10 @@ yakunda hisobotga yozing, integratsiyada hal qilinadi.
 | ui | `src/Main.dc.html`, `src/i18n-ru.js`, `src/i18n.js`, `src/site/**`, `src/shell*.css`, `src/admin-*.js`, `tools/source.mjs`, `tools/mksite.mjs`, `tests/bulk.test.mjs` |
 | backend | `supabase/**`, `src/data.js`, `tests/data.test.mjs`, `.github/workflows/db.yml`, `.github/workflows/db-apply.yml` |
 | brand | `android/**`, `capacitor.config.json`, `site.config.json`, `resources/**`, `tools/icon.html`, `tools/mk{icons,og,play}.mjs`, `README.md`, `PLAY.md`, `RASMLAR.md`, `.github/workflows/android.yml`, `.claude/agents/**` |
-| integrator | `build.mjs`, `package.json`, `version.json`, `src/iq/{rng,index}.js`, `src/iq/CONTRACT.md`, `src/iq/gen/demo.js`, `.github/workflows/js.yml` |
+| games-memory | `src/games/{matrix-memory,sequence,nback}.js`, `tests/game-{matrix-memory,sequence,nback}.test.mjs` |
+| games-speed | `src/games/{schulte,mental-math,flanker}.js`, `tests/game-{schulte,mental-math,flanker}.test.mjs` |
+| cert | `src/cert/**`, `tests/cert-*.test.mjs` |
+| integrator | `build.mjs`, `package.json`, `version.json`, `src/iq/{rng,index}.js`, `src/iq/CONTRACT.md`, `src/iq/gen/demo.js`, `src/games/{index,demo}.js`, `.github/workflows/js.yml` |
 
 `npm test` hamma testni ishga tushiradi. O'zingizniki yashil bo'lishi
 shart; boshqaning testi (u hali ishlayotgan bo'lsa) qizil bo'lishi

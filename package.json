@@ -1,7 +1,7 @@
 {
-  "name": "zukko-app",
+  "name": "iquest-app",
   "version": "1.0.0",
-  "description": "Zukko — mantiqiy fikrlash va taxminiy IQ testi (Android, offline)",
+  "description": "IQuest — IQ testlari, mantiqiy o'yinlar va sertifikat (Android, offline)",
   "main": "index.js",
   "scripts": {
     "build": "node build.mjs",

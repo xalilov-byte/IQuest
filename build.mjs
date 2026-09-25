@@ -475,8 +475,22 @@ const VERBAL_PATH = join('content', 'verbal.json');
 const verbalSnippet = existsSync(VERBAL_PATH)
   ? `window.IQ_VERBAL = ${JSON.stringify(JSON.parse(readFileSync(VERBAL_PATH, 'utf8')))};\n`
   : '';
+/* O'yinlar (src/games/) va sertifikat (src/cert/) — xuddi shu qoida:
+   avval reyestr (games/index.js), keyin o'yinlar alifbo tartibida;
+   demo faqat IQ_DEMO=1 bilan. Papka bo'lmasa — bo'sh. */
+const listJs = (dir, first) => existsSync(dir)
+  ? readdirSync(dir)
+      .filter(f => f.endsWith('.js') && f !== first && (f !== 'demo.js' || process.env.IQ_DEMO === '1'))
+      .sort().map(f => join(dir, f))
+  : [];
+const GAMES_DIR = join(SRC, 'games'), CERT_DIR = join(SRC, 'cert');
+const GAME_FILES = existsSync(join(GAMES_DIR, 'index.js'))
+  ? [join(GAMES_DIR, 'index.js')].concat(listJs(GAMES_DIR, 'index.js')) : [];
+const CERT_FILES = listJs(CERT_DIR, null);
+
 const iqBundle = verbalSnippet + IQ_CORE.map(f => join(SRC, 'iq', f))
   .concat(IQ_GENS.map(f => join(SRC, 'iq', 'gen', f)))
+  .concat(GAME_FILES, CERT_FILES)
   .map(p => `/* ── ${p} ── */\n` + readFileSync(p, 'utf8'))
   .join('\n');
 
@@ -593,7 +607,7 @@ ${adminScripts}
 const NEED = ['.nz-card-reyting{', '.nz-card-hafta{', 'url(./reyting-bg.jpg)', 'url(./hafta-bg.jpg)',
               'class Component extends DCLogic', 'renderVals()'];
 if (CFG.app) NEED.push('nz-nav', 'nz-frame');
-NEED.push('IQ.register = register', 'IQ.session =');
+NEED.push('IQ.register = register', 'IQ.session =', 'IQ.games =');
 if (CFG.admin) NEED.push('valsManage', 'Admin panel');
 /* Landing'ning MATNI emas, tuzilmasi tekshiriladi: matn mahsulot bilan
    o'zgaradi (bu loyiha Nazariy'dan olingan va u yerda sarlavha matni
