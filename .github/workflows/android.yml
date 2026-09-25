@@ -1,0 +1,207 @@
+# ─────────────────────────────────────────────────────────────────────────
+#  Nazariy — Android build (APK + AAB)
+#
+#  Kompyuteringizga hech narsa o'rnatmasdan yig'ish uchun: loyihani GitHub'ga
+#  qo'ying, quyidagi Secrets'ni sozlang va Actions → "Android build" → Run.
+#
+#  GitHub → Settings → Secrets and variables → Actions → New repository secret:
+#    KEYSTORE_BASE64     — kalit faylining base64 ko'rinishi
+#                          (base64 -w0 nazariy.keystore > keystore.txt)
+#    KEYSTORE_PASSWORD   — kalit ombori paroli
+#    KEY_ALIAS           — kalit nomi (masalan: nazariy)
+#    KEY_PASSWORD        — kalit paroli
+#
+#  Secrets qo'yilmasa ham workflow ishlaydi. Har doim uchta fayl chiqadi:
+#    Nazariy-debug.apk    — telefonga DARHOL o'rnatiladi (sinash uchun)
+#    Nazariy-release.apk  — secrets bo'lsa imzolangan, bo'lmasa imzosiz
+#    Nazariy-release.aab  — Play Market uchun (imzo shart)
+# ─────────────────────────────────────────────────────────────────────────
+name: Android build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'claude/**']
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Release yaratish uchun kerak (pastdagi oxirgi qadam). Qolgan hamma
+    # narsa uchun o'qish yetarli, shuning uchun ro'yxat qisqa.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # `packages` ATAYLAB berilgan. Standart qiymat "tools platform-tools",
+      # "tools" esa Google SDK omboridan OLIB TASHLANGAN paket — sdkmanager
+      # uni topa olmay yiqiladi va build 30-soniyada to'xtaydi
+      # ("Warning: Failed to find package 'tools'"). Bu kodga bog'liq emas,
+      # shuning uchun action'ga faqat hozir ham mavjud paketlar beriladi.
+      #
+      # compileSdk = 36 (android/variables.gradle), shuning uchun platforma
+      # va build-tools shu yerda aniq nomi bilan o'rnatiladi — runner
+      # obrazida qaysi versiya borligiga tayanmaymiz.
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+
+      # Gradle distributivi va bog'liqliklari keshlanadi. Ikki foyda: yig'ish
+      # tezlashadi va har push'da services.gradle.org ga chiqilmaydi — aynan
+      # o'sha yuklab olish so'nggi yugurishlarning ko'pini yiqitgan.
+      - name: Gradle keshi
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/**/*.gradle', 'android/gradle.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Paketlarni o'rnatish
+        run: npm ci
+
+      - name: Web ilovani yig'ish (src/Main.dc.html → www/)
+        run: node build.mjs
+
+      # Sayt va admin build'lari ham shu yerda yig'iladi: ularning
+      # tekshiruvlari (admin qatlami mobil build'ga tushmaganini
+      # tasdiqlash ham shunda) har push'da ishlashi kerak.
+      - name: Sayt va admin build'larini tekshirish
+        run: |
+          node build.mjs --target=admin
+          node tools/mksite.mjs
+
+      # Sayt tayyor holda yuklab olinadi: hosting'ga (Cloudflare Pages,
+      # Vercel va h.k.) shu papkani qo'yish kifoya. Build mashinasi
+      # kerak emas.
+      - name: Saytni yuklab olish uchun saqlash
+        uses: actions/upload-artifact@v4
+        with:
+          name: nazariy-sayt
+          path: dist/site
+          if-no-files-found: error
+
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      - name: Imzo kalitini tayyorlash (secret bo'lsa)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/nazariy.keystore"
+            echo "Kalit tayyor — imzolangan build."
+          else
+            echo "KEYSTORE_BASE64 yo'q — imzosiz build (faqat sinash uchun)."
+          fi
+
+      # Distributivni olish tarmoq uzilishi bilan yiqilishi mumkin:
+      # services.gradle.org bilan TLS ulanishi "Connection reset by peer"
+      # beradi. Bu kodga aloqasi yo'q, shuning uchun butun yig'ishni emas,
+      # faqat shu qadamni qayta urinamiz. Kesh bo'lsa u umuman tarmoqqa
+      # chiqmaydi va darhol o'tadi.
+      - name: Gradle distributivini tayyorlash
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          for i in 1 2 3 4; do
+            if ./gradlew --no-daemon --version; then exit 0; fi
+            w=$((i * 10))
+            echo "::warning::Gradle distributivi olinmadi ($i-urinish) — ${w}s dan keyin qayta."
+            sleep "$w"
+          done
+          echo "Gradle distributivini 4 urinishda ham olib bo'lmadi." >&2
+          exit 1
+
+      - name: APK va AAB yig'ish
+        working-directory: android
+        env:
+          NAZARIY_KEYSTORE: ${{ runner.temp }}/nazariy.keystore
+          NAZARIY_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          NAZARIY_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          NAZARIY_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew --no-daemon assembleDebug assembleRelease bundleRelease
+
+      - name: Yig'ilgan fayllarni ko'rsatish
+        working-directory: android
+        run: |
+          echo "── Yig'ilgan fayllar ─────────────────────────────"
+          ls -lh app/build/outputs/apk/debug/*.apk \
+                 app/build/outputs/apk/release/*.apk \
+                 app/build/outputs/bundle/release/*.aab
+          echo "── Imzo holati (debug APK) ──────────────────────"
+          # build-tools bir nechta versiyada bo'lishi mumkin — eng yangisi
+          bt=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)
+          "$bt/apksigner" verify --print-certs \
+            app/build/outputs/apk/debug/Nazariy-debug.apk | head -4 || true
+
+      - name: Natijalarni yuklab olish uchun saqlash
+        uses: actions/upload-artifact@v4
+        with:
+          name: nazariy-android
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+      # ── Telefonga to'g'ridan-to'g'ri yuklab olish uchun ────────────────
+      # Yuqoridagi artefakt zip'ini faqat GitHub'ga KIRGAN odam yuklay
+      # oladi va u 90 kundan keyin o'chadi. Telefonda esa odam brauzerdan
+      # bosib o'rnatadi — shuning uchun APK Release'ga ham qo'yiladi:
+      # havola ochiq, doimiy va to'g'ridan-to'g'ri .apk faylga olib boradi.
+      #
+      # Release "aylanma": har build'da o'chirilib qayta yaratiladi, ya'ni
+      # havola o'zgarmaydi va eski sinov APK'lari yig'ilib qolmaydi.
+      # Teg `sinov-` bilan boshlanadi, `v*` emas — shuning uchun bu
+      # workflow'ni qaytadan ishga tushirmaydi.
+      - name: Sinov APK'sini Release'ga qo'yish
+        if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="sinov-${GITHUB_REF_NAME//\//-}"
+
+          # Imzolanmagan release APK'si o'rnatilmaydi, shuning uchun u
+          # Release'ga qo'yilmaydi — faqat artefaktda qoladi.
+          files=()
+          for f in android/app/build/outputs/apk/debug/*.apk \
+                   android/app/build/outputs/apk/release/*.apk; do
+            [ -e "$f" ] || continue
+            case "$f" in *unsigned*) continue ;; esac
+            files+=("$f")
+          done
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "O'rnatsa bo'ladigan APK topilmadi" >&2
+            exit 1
+          fi
+          printf 'Release ga qo%s yiladi: %s\n' "'" "${files[*]}"
+
+          gh release delete "$tag" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$tag" "${files[@]}" \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Nazariy — sinov APK ($GITHUB_REF_NAME)" \
+            --notes "Avtomatik yig'ilgan sinov versiyasi.
+
+          Commit: \`$GITHUB_SHA\`
+          Yig'ildi: $(date -u '+%Y-%m-%d %H:%M UTC')
+
+          \`Nazariy-debug.apk\` — telefonga darhol o'rnatiladi. Android
+          \"noma'lum manbadan o'rnatish\" ruxsatini so'raydi.
+
+          Play Market uchun \`.aab\` fayli Actions artefaktida
+          (\`nazariy-android\`) — u imzo kalitini talab qiladi."

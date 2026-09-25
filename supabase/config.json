@@ -1,0 +1,17 @@
+{
+  "_izoh": [
+    "Supabase loyihasining OMMAVIY sozlamalari (url + publishable kalit).",
+    "",
+    "HOZIR BO'SH — ATAYLAB. Bu loyiha Nazariy'dan nusxa olib boshlangan va",
+    "bu yerda Nazariy'ning jonli bazasi turgan edi. Yangi ilova o'sha bazaga",
+    "HECH QACHON yozmasligi kerak: u boshqa mahsulotning foydalanuvchilari",
+    "va savollari. Bo'sh qiymat bilan ilova to'liq offline ishlaydi —",
+    "savollarning asosiy qismi baribir qurilmada yaratiladi (src/iq/gen/).",
+    "",
+    "Yangi Supabase loyihasi ochilganda shu yerga uning url va publishable",
+    "kaliti yoziladi. BU YERGA HECH QACHON service_role KALITINI YOZMANG —",
+    "u RLS'ni chetlab o'tadi. Ma'lumotni FAQAT RLS himoya qiladi."
+  ],
+  "url": "",
+  "publishableKey": ""
+}

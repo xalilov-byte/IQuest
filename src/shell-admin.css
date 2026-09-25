@@ -1,0 +1,70 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   ADMIN PANEL QOBIG'I — dizaynning o'ziga TEGILMAYDI.
+
+   shell.css telefon ilovasi uchun: 390px ramkani qurilma ekraniga cho'zadi,
+   matn tanlashni o'chiradi, zoom'ni taqiqlaydi. Admin panel esa boshqa
+   narsa — kompyuterda, klaviatura bilan ishlanadigan ish quroli. Shuning
+   uchun unga o'z qobig'i kerak:
+
+     · matn TANLANADI (ID, telefon, jurnal yozuvi nusxalanadi)
+     · zoom taqiqlanmaydi (jadvallarga yaqinlashish kerak bo'ladi)
+     · telefon ramkasi yo'q — admin bo'limi maketda ramkadan tashqarida
+
+   Admin paneli maketda o'z kengligini (max-width:1180px) o'zi belgilaydi,
+   shuning uchun bu yerda maketga deyarli aralashilmaydi.
+   ───────────────────────────────────────────────────────────────────── */
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--background);
+}
+
+/* Maket chromi (logotip + ko'rinish almashtirgichi + tema tugmasi).
+   Admin build'da almashtirgich tugmalari kesilgan — chrome ham keraksiz. */
+.nz-chrome { display: none !important }
+
+/* Telefonda tasodifiy uzun bosishda kontekst menyusi chiqmasin, lekin
+   matn tanlash saqlanadi — admin uchun nusxalash asosiy amal. */
+body { -webkit-tap-highlight-color: transparent }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TOR EKRAN — admin panel telefonda ham ochiladi.
+
+   Bu yerda shu paytgacha birorta @media qoidasi yo'q edi: panel faqat
+   kompyuter uchun chizilgan. Lekin u telefonda ham ochiladi (moderator
+   yo'lda savolni tasdiqlashi mumkin), va 390px da o'lchanganda sahifa
+   488px ga cho'zilardi — gorizontal scroll, ya'ni kartalar ekrandan
+   chiqib ketardi.
+
+   Sabab: KPI kartalari `repeat(4,1fr)` bilan chizilgan va bu qiymat
+   elementning INLINE style'ida turardi. Inline qiymat @media ichidagi
+   klass qoidasidan har doim ustun turadi, shuning uchun ustun soni
+   klassga ko'chirildi (landing'da xuddi shu yo'l tanlangan edi).
+   Boshqa hamma narsa — padding, rang, matn — o'z joyida qoldi.
+   ───────────────────────────────────────────────────────────────────── */
+.nz-admin-cards { display: grid; grid-template-columns: repeat(4, 1fr) }
+.nz-admin-grid3 { display: grid; grid-template-columns: repeat(3, 1fr) }
+/* Ikki ustunli bloklar (grafik + voronka, kogortalar, daromad) —
+   ularning nisbati har xil edi (1.35fr 1fr, 1fr 1.15fr, 1.3fr 1fr),
+   lekin tor ekranda uchalasi ham bitta ustunga tushadi. */
+.nz-admin-two { display: grid; grid-template-columns: 1.3fr 1fr }
+
+@media (max-width: 900px) {
+  .nz-admin-cards { grid-template-columns: repeat(2, 1fr) }
+  .nz-admin-grid3 { grid-template-columns: repeat(2, 1fr) }
+  .nz-admin-two   { grid-template-columns: 1fr }
+}
+
+@media (max-width: 560px) {
+  .nz-admin-cards,
+  .nz-admin-grid3 { grid-template-columns: 1fr }
+}
+
+/* Jadvallar tor ekranga sig'maydi va sig'ishi ham shart emas: ustunlar
+   qisqartirilsa ID va sana o'qilmay qoladi. Ular o'z konteyneri ichida
+   yon tomonga suriladi — SAHIFA esa surilmaydi. */
+@media (max-width: 900px) {
+  .nz-admin-table { overflow-x: auto; -webkit-overflow-scrolling: touch }
+  .nz-admin-table > * { min-width: 720px }
+}

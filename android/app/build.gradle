@@ -1,0 +1,136 @@
+apply plugin: 'com.android.application'
+
+import groovy.json.JsonSlurper
+
+/* Versiya loyiha ildizidagi version.json dan o'qiladi — bitta manba.
+   Nima uchun: Play Market bir xil yoki kichik versionCode bilan
+   yuklashni rad etadi, ya'ni har release'da u oshishi SHART. Raqam
+   ikki joyda (bu yerda va hujjatda) yozilsa, biri unutiladi va
+   yuklash oxirgi qadamda to'xtaydi. */
+def nzVersionFile = rootProject.file("../version.json")
+def nzVersion = new JsonSlurper().parseText(nzVersionFile.getText("UTF-8"))
+
+/* ── ASSETS ESKIRIB QOLMASLIGI UCHUN TO'SIQ ────────────────────────────
+   APK ichidagi veb-ilova `android/app/src/main/assets/public/` da
+   turadi va u `npm run sync` (build.mjs + cap sync) bilan yangilanadi.
+   Gradle buni O'ZI qilmaydi.
+
+   Xavf aniq: kim `npm run sync` qilmasdan to'g'ridan-to'g'ri
+   `./gradlew assembleRelease` desa, ESKI nusxa bilan APK chiqadi.
+   Bir marta shunday bo'lgan ham — assets ichida allaqachon kesilgan
+   taqlid to'lov oqimi (openPro, payStepMethod) qolib ketgan edi, ya'ni
+   Play RAD ETADIGAN APK yig'ilishi mumkin edi.
+
+   Shuning uchun yig'ish oldidan ikkala nusxa solishtiriladi. Farq
+   bo'lsa build TO'XTAYDI va nima qilish kerakligini aytadi — jimgina
+   eski fayl bilan davom etmaydi. */
+def nzAssets = project.file("src/main/assets/public/index.html")
+def nzWww = rootProject.file("../www/index.html")
+
+tasks.register("nzAssetsFresh") {
+    doLast {
+        if (!nzWww.exists()) {
+            throw new GradleException(
+                "www/index.html yo'q. Avval yig'ing:\n" +
+                "  npm run sync    (build.mjs + npx cap sync android)")
+        }
+        if (!nzAssets.exists()) {
+            throw new GradleException(
+                "APK ichidagi assets/public/index.html yo'q. Avval:\n" +
+                "  npm run sync")
+        }
+        if (nzAssets.getText("UTF-8") != nzWww.getText("UTF-8")) {
+            throw new GradleException(
+                "APK ichidagi nusxa ESKIRGAN — www/index.html dan farq qiladi.\n" +
+                "Bu holda do'kon rad etadigan yoki eskirgan ilova yig'iladi.\n" +
+                "Yangilash:\n" +
+                "  npm run sync    (build.mjs + npx cap sync android)")
+        }
+    }
+}
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn("nzAssetsFresh") }
+
+/* Yig'ilgan fayllar nomi: Nazariy-release.apk / Nazariy-debug.apk /
+   Nazariy-release.aab (standart "app-..." o'rniga). */
+base {
+    archivesName = "Nazariy"
+}
+
+android {
+    namespace = "uz.nazariy.app"
+    compileSdk = rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "uz.nazariy.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode nzVersion.versionCode
+        versionName nzVersion.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    /* ── Imzo (signing) ────────────────────────────────────────────────
+       Kalit fayli va parollar loyihada SAQLANMAYDI. Ikki manba:
+         1) mahalliy:  android/keystore.properties  (git'ga tushmaydi)
+         2) CI:        NAZARIY_KEYSTORE / NAZARIY_STORE_PASSWORD /
+                       NAZARIY_KEY_ALIAS / NAZARIY_KEY_PASSWORD muhit
+                       o'zgaruvchilari (GitHub Secrets)
+       Kalit topilmasa release baribir yig'iladi — faqat imzosiz
+       (Play Market'ga yuklash uchun imzo shart).                        */
+    signingConfigs {
+        release {
+            def props = new Properties()
+            def f = rootProject.file("keystore.properties")
+            if (f.exists()) props.load(new FileInputStream(f))
+            def storePath = props['storeFile'] ?: System.getenv('NAZARIY_KEYSTORE')
+            if (storePath && file(storePath).exists()) {
+                storeFile file(storePath)
+                storePassword props['storePassword'] ?: System.getenv('NAZARIY_STORE_PASSWORD')
+                keyAlias props['keyAlias'] ?: System.getenv('NAZARIY_KEY_ALIAS')
+                keyPassword props['keyPassword'] ?: System.getenv('NAZARIY_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (signingConfigs.release.storeFile != null && signingConfigs.release.storeFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

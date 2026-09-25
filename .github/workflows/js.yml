@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────
+#  Nazariy — JS testlari
+#
+#  Nima uchun alohida workflow: bu tekshiruv soniyalar ichida tugaydi,
+#  Android build esa daqiqalar. Testlar buzilganini bilish uchun butun
+#  APK yig'ilishini kutish shart emas.
+#
+#  Testlar `node:vm` ichida ishlaydi — src/ dagi fayllar brauzer
+#  globallariga (window, localStorage, fetch) tayanadi, shuning uchun
+#  ular test muhitida taqlid qilinadi va manba fayllarga test uchun
+#  birorta o'zgartirish kiritilmagan.
+# ─────────────────────────────────────────────────────────────────────────
+name: JS testlari
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # Testlarning o'ziga bog'liqlik kerak emas (node:vm + node:test —
+      # ikkalasi ham Node ichida), lekin build shriftlarni
+      # @fontsource/manrope dan o'qiydi.
+      - name: Bog'liqliklar
+        run: npm ci
+
+      - name: Testlar
+        run: npm test
+
+      - name: Uchala build yig'ilishini tekshirish
+        # Qatlamlarni kesish xavfsizlik chegarasi: build.mjs mobil va
+        # sayt build'idan admin qatlamini kesadi va o'z tekshiruvini
+        # qiladi. Kesilgan nom qolgan kodda ishlatilsa build yiqiladi —
+        # ya'ni bu qadam kesish teshigini ham ushlaydi.
+        run: npm run build:all

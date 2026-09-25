@@ -1,0 +1,65 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   ILOVA QOBIG'I — dizaynning o'ziga TEGILMAYDI.
+
+   Main.dc.html "maket" sifatida chizilgan: brauzer sahifasi ichida
+   markazlashtirilgan 390px telefon ramkasi + tepada "Mini App / Web sayt /
+   Admin" almashtirgichi. Android ilovasida ramka qurilma ekranining o'zi,
+   almashtirgich esa keraksiz. Quyidagi qoidalar faqat SHU ikki narsani
+   moslaydi — ilova ekranlarining birorta ham piksellik uslubi
+   o'zgartirilmagan.
+   ───────────────────────────────────────────────────────────────────── */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--background);
+  overscroll-behavior: none;          /* scroll oxirida sahifa "cho'zilmasin" */
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+input, textarea { -webkit-user-select: text; user-select: text }
+
+/* Maket chromi (logotip + Mini App/Web sayt/Admin + tema tugmasi).
+   O'chirilmadi — ko'rinmaydi: manba fayl bilan farq minimal qolsin. */
+.nz-chrome { display: none !important }
+
+/* Markazlashtiruvchi o'ram → to'liq ekran */
+.nz-appwrap { padding: 0 !important; display: block !important }
+
+/* Telefon ramkasi → qurilma ekrani.
+   padding-top: status bar ostiga kirib ketmaslik uchun (edge-to-edge). */
+.nz-frame {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding-top: env(safe-area-inset-top) !important;
+}
+
+/* Ekranlar maydoni endi o'zi scroll qiladi (maketda butun sahifa scroll
+   qilardi). Pastdagi inset — Android navigatsiya paneli uchun bo'sh joy:
+   ekran ichidagi mavjud 84px klirens uning ustiga qo'shiladi. */
+.nz-screens,
+.nz-screens-quiz {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+/* PASTKI TAB PANELI — Androidning o'z navigatsiya paneli (uch tugma yoki
+   jest chizig'i) ORTIDA QOLIB KETMAYDI. Panel balandligi inset qadar o'sadi,
+   ikonkalar esa 68px lik asl maydonda markazda qoladi: sirt rangi tizim
+   paneli ostigacha davom etadi, tegib bo'ladigan qism esa uning tepasida. */
+.nz-nav {
+  height: calc(68px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}

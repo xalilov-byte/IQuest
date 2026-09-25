@@ -1,0 +1,171 @@
+# ─────────────────────────────────────────────────────────────────────────
+#  Nazariy — baza tekshiruvi
+#
+#  Ikki ish bajaradi:
+#
+#  1. migratsiya — toza PostgreSQL 16 da migratsiya, seed va RLS
+#     testlarini o'tkazadi. Supabase kerak emas: auth sxemasi taqlid
+#     qilinadi (supabase/tests/_stub.sql). Shuning uchun SQL'dagi xato
+#     Supabase'ga tegmasdan, shu yerda tutiladi.
+#
+#  2. jonli-tekshiruv — haqiqiy Supabase loyihasida migratsiya
+#     qo'llanganini va RLS tashqaridan HAQIQATAN to'sayotganini
+#     tekshiradi. Migratsiya hali qo'llanmagan bo'lsa, xato bermaydi —
+#     shunchaki eslatadi.
+# ─────────────────────────────────────────────────────────────────────────
+name: Baza
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'supabase/**'
+      - 'tools/mkseed.mjs'
+      - '.github/workflows/db.yml'
+
+jobs:
+  migratsiya:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: nz
+          POSTGRES_PASSWORD: nz
+          POSTGRES_DB: nztest
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U nz"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGUSER: nz
+      PGPASSWORD: nz
+      PGDATABASE: nztest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: psql o'rnatish
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+
+      - name: Supabase auth sxemasi taqlidi
+        run: psql -v ON_ERROR_STOP=1 -q -f supabase/tests/_stub.sql
+
+      - name: Migratsiyalar
+        # Bitta fayl nomini yozib qo'yish xavfli: yangi migratsiya
+        # qo'shilganda CI uni jimgina o'tkazib yuborardi va faqat eski
+        # sxema tekshirilardi. Shuning uchun papkadagi hammasi tartib
+        # bilan ishlaydi — apply.sh ham xuddi shunday qiladi.
+        run: |
+          for f in supabase/migrations/*.sql; do
+            echo "── $f"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+
+      - name: Seed (savollar va mavzular)
+        # Migratsiyalardagi kabi: papkadagi hammasi tartib bilan.
+        run: |
+          for f in supabase/seed/*.sql; do
+            echo "── $f"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+
+      - name: Seed manbaga mos kelishini tekshirish
+        # Generator qayta ishga tushirilganda fayl o'zgarmasligi kerak —
+        # aks holda seed qo'lda tahrirlangan yoki manba o'zgargan, lekin
+        # generator qayta yurgizilmagan.
+        run: |
+          node tools/mkseed.mjs
+          if ! git diff --quiet supabase/seed/0002_questions.sql; then
+            echo "::error::supabase/seed/0002_questions.sql manbaga mos emas — 'node tools/mkseed.mjs' ni ishga tushirib, natijani commit qiling"
+            git diff --stat supabase/seed/0002_questions.sql
+            exit 1
+          fi
+          node tools/mkbankseed.mjs
+          if ! git diff --quiet supabase/seed/0005_bank.sql; then
+            echo "::error::supabase/seed/0005_bank.sql content/bank.json ga mos emas — 'node tools/mkbankseed.mjs' ni ishga tushirib, natijani commit qiling"
+            git diff --stat supabase/seed/0005_bank.sql
+            exit 1
+          fi
+          echo "seed manbaga mos"
+
+      - name: RLS va to'rt ko'z qoidasi tekshiruvi
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/0001_rls.sql
+
+      - name: To'rt ko'z qoidasining uchta teshigi yopiqligini tekshirish
+        # Tartib muhim: 0001_rls.sql profil va savol sonini aniq raqam
+        # bilan tekshiradi, shuning uchun u birinchi ishlashi kerak.
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/0003_guard.sql
+
+      - name: Savollar banki sxemasi va javob kaliti himoyasi
+        # Eng muhimi: hujjatdan avtomatik olingan javob kaliti bilan
+        # savol nashr etilmasligi.
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/0004_bank.sql
+
+      - name: Ma'lumot xulosasi
+        run: |
+          psql -tAq -c "
+            select 'mavzular: '||count(*) from topics
+            union all select 'savollar: '||count(*) from questions
+            union all select 'tarjimalar: '||count(*) from question_translations
+            union all select 'audit yozuvlari: '||count(*) from audit_log;"
+
+  jonli-tekshiruv:
+    runs-on: ubuntu-latest
+    needs: migratsiya
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Supabase loyihasini tekshirish
+        run: |
+          URL=$(node -p "require('./supabase/config.json').url")
+          KEY=$(node -p "require('./supabase/config.json').publishableKey")
+
+          code=$(curl -s -o /tmp/topics.json -w '%{http_code}' \
+            "$URL/rest/v1/topics?select=slug&limit=1" -H "apikey: $KEY")
+
+          if [ "$code" = "404" ] || grep -q "does not exist" /tmp/topics.json 2>/dev/null; then
+            echo "::notice::Migratsiya hali Supabase'ga qo'llanmagan (topics jadvali yo'q)."
+            echo "Supabase → SQL Editor → supabase/migrations/0001_init.sql, keyin seed."
+            exit 0
+          fi
+          if [ "$code" != "200" ]; then
+            echo "::error::Supabase javobi: HTTP $code"
+            cat /tmp/topics.json
+            exit 1
+          fi
+          echo "topics o'qildi (HTTP 200)"
+
+          # ── RLS jonli tekshiruvi ──
+          # Publishable kalit bilan qoralama savol KO'RINMASLIGI kerak.
+          curl -s "$URL/rest/v1/questions?select=ref,state&state=eq.draft" \
+            -H "apikey: $KEY" -o /tmp/drafts.json
+          if [ "$(node -p "JSON.parse(require('fs').readFileSync('/tmp/drafts.json','utf8')).length" 2>/dev/null)" != "0" ]; then
+            echo "::error::RLS TESHIK: publishable kalit bilan qoralama savollar ko'rindi"
+            cat /tmp/drafts.json
+            exit 1
+          fi
+          echo "qoralama savollar tashqaridan ko'rinmaydi — RLS ishlayapti"
+
+          # Audit jurnali ham tashqariga chiqmasligi kerak.
+          curl -s "$URL/rest/v1/audit_log?select=id&limit=1" -H "apikey: $KEY" -o /tmp/audit.json
+          if [ "$(node -p "const d=JSON.parse(require('fs').readFileSync('/tmp/audit.json','utf8')); Array.isArray(d)?d.length:0" 2>/dev/null)" != "0" ]; then
+            echo "::error::RLS TESHIK: audit jurnali publishable kalit bilan o'qildi"
+            exit 1
+          fi
+          echo "audit jurnali tashqaridan o'qilmaydi"
+
+          # Nashr etilgan savollar esa ko'rinishi KERAK (ilova shundan oziqlanadi).
+          curl -s "$URL/rest/v1/published_questions?select=ref&limit=100" \
+            -H "apikey: $KEY" -o /tmp/pub.json
+          n=$(node -p "JSON.parse(require('fs').readFileSync('/tmp/pub.json','utf8')).length" 2>/dev/null || echo 0)
+          echo "nashr etilgan savollar: $n"
+          if [ "$n" = "0" ]; then
+            echo "::notice::Nashr etilgan savol yo'q — seed hali qo'llanmagan bo'lishi mumkin."
+          fi

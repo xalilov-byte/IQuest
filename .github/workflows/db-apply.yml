@@ -1,0 +1,107 @@
+# ─────────────────────────────────────────────────────────────────────────
+#  Nazariy — migratsiyani Supabase'ga qo'llash
+#
+#  NIMA UCHUN CI ORQALI: Claude Code ishlayotgan bulutli muhitdan
+#  Supabase domeni tashqi tarmoq siyosati bilan bloklangan (HTTP 403),
+#  shuning uchun u yerdan bazaga ulanib bo'lmaydi. GitHub runner'ida
+#  esa tarmoq ochiq. Ya'ni SQL'ni qo'lda nusxalab qo'yish shart emas:
+#  shu workflow uni o'zi qo'llaydi.
+#
+#  BIR MARTALIK SOZLASH — sizdan bitta maxfiy satr:
+#
+#    1. Supabase → Project Settings → Database → Connection string
+#       → "URI" ni nusxalang (Session pooler tavsiya etiladi).
+#       Satr ichida [YOUR-PASSWORD] bo'lsa, uni haqiqiy parol bilan
+#       almashtiring.
+#
+#    2. GitHub → repo → Settings → Secrets and variables → Actions
+#       → New repository secret
+#       Nom:    SUPABASE_DB_URL
+#       Qiymat: o'sha URI
+#
+#    3. Actions → "Bazaga qo'llash" → Run workflow
+#
+#  Bu satr BAZA PAROLINI saqlaydi — u GitHub Secrets'da qoladi, logda
+#  ko'rinmaydi va repoga tushmaydi. Uni chatga ham yozish kerak emas.
+#
+#  XAVFSIZLIK: workflow faqat qo'shadi. Jadval o'chirish yoki ma'lumotni
+#  tozalash yo'q, va migratsiya allaqachon qo'llangan bo'lsa qayta
+#  ishga tushirilmaydi (supabase/apply.sh).
+#
+#  Ishga tushirish FAQAT qo'lda (workflow_dispatch): bazaga o'zgartirish
+#  kiritish har doim ataylab qilinadigan amal bo'lishi kerak.
+# ─────────────────────────────────────────────────────────────────────────
+name: Bazaga qo'llash
+
+on:
+  workflow_dispatch:
+    inputs:
+      tasdiq:
+        description: 'Migratsiya va seed bazaga qo''llanadi. Davom etish uchun "ha" deb yozing'
+        required: true
+        default: 'yoq'
+
+jobs:
+  qollash:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tasdiqni tekshirish
+        if: ${{ inputs.tasdiq != 'ha' }}
+        run: |
+          echo "::error::Tasdiq berilmadi — hech narsa qilinmadi. Qayta ishga tushirib \"ha\" deb yozing."
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - name: psql o'rnatish
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+
+      - name: Maxfiy satr borligini tekshirish
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::SUPABASE_DB_URL secret'i qo'yilmagan. Yo'riqnoma: .github/workflows/db-apply.yml boshidagi izoh."
+            exit 1
+          fi
+          echo "secret mavjud"
+
+      - name: Migratsiya va seed'ni qo'llash
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: bash supabase/apply.sh
+
+      - name: Tashqaridan RLS tekshiruvi
+        # Qo'llash tugagach, publishable kalit bilan tashqaridan
+        # tekshiramiz: nashr etilganlar ko'rinadi, qoralama va audit
+        # jurnali esa YO'Q. Bu klient ko'radigan haqiqiy manzara.
+        run: |
+          URL=$(node -p "require('./supabase/config.json').url")
+          KEY=$(node -p "require('./supabase/config.json').publishableKey")
+
+          pub=$(curl -s "$URL/rest/v1/published_questions?select=ref" -H "apikey: $KEY")
+          n=$(node -p "JSON.parse(process.argv[1]).length" "$pub")
+          echo "nashr etilgan savollar (tashqaridan): $n"
+          if [ "$n" = "0" ]; then
+            echo "::error::Nashr etilgan savol ko'rinmadi — klient savollarni o'qiy olmaydi"
+            exit 1
+          fi
+
+          drafts=$(curl -s "$URL/rest/v1/questions?select=ref&state=eq.draft" -H "apikey: $KEY")
+          d=$(node -p "const x=JSON.parse(process.argv[1]); Array.isArray(x)?x.length:0" "$drafts")
+          if [ "$d" != "0" ]; then
+            echo "::error::RLS TESHIK: qoralama savollar tashqaridan ko'rindi"
+            echo "$drafts"
+            exit 1
+          fi
+          echo "qoralama savollar tashqaridan ko'rinmaydi"
+
+          audit=$(curl -s "$URL/rest/v1/audit_log?select=id&limit=1" -H "apikey: $KEY")
+          a=$(node -p "const x=JSON.parse(process.argv[1]); Array.isArray(x)?x.length:0" "$audit")
+          if [ "$a" != "0" ]; then
+            echo "::error::RLS TESHIK: audit jurnali tashqaridan o'qildi"
+            exit 1
+          fi
+          echo "audit jurnali tashqaridan o'qilmaydi"
+
+          echo "✅ RLS tashqaridan ham to'g'ri ishlayapti"

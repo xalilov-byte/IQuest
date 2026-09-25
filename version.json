@@ -1,0 +1,19 @@
+{
+  "_izoh": [
+    "ILOVA VERSIYASI — YAGONA MANBA.",
+    "",
+    "versionCode — Play Market uchun. Har yuklashda U OSHISHI SHART va",
+    "hech qachon kamaymaydi: Play bir xil yoki kichik versionCode bilan",
+    "yuklashni rad etadi, hatto ilova o'zgargan bo'lsa ham. Shuning uchun",
+    "u qo'lda ikki joyda yozilmasligi kerak — build.gradle shu fayldan",
+    "o'qiydi.",
+    "",
+    "versionName — odam ko'radigan versiya (Play sahifasida va ilova",
+    "ichida). Uni istalgancha yozish mumkin.",
+    "",
+    "Yangi release: versionCode ni 1 ga oshirib, versionName ni",
+    "o'zgartiring. Boshqa hech qayerda tahrir kerak emas."
+  ],
+  "versionCode": 1,
+  "versionName": "1.0.0"
+}

@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--no-sandbox'] });
+const p = await b.newPage({ viewport: { width: 2800, height: 2800 } });
+await p.goto('file:///home/claude/nazariy-app/tools/icon.html');
+await p.waitForTimeout(1200);
+await p.locator('#icon').screenshot({ path: 'resources/icon-only.png' });
+await p.locator('#fg').screenshot({ path: 'resources/icon-foreground.png', omitBackground: true });
+await p.locator('#bg').screenshot({ path: 'resources/icon-background.png' });
+await p.locator('#splash').screenshot({ path: 'resources/splash-dark.png' });
+await p.locator('#splash').screenshot({ path: 'resources/splash.png' });
+await b.close();
+console.log('ok');

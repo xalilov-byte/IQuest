@@ -1,0 +1,30 @@
+{
+  "_izoh": [
+    "SAYTNING YAGONA SOZLAMA FAYLI. Domen, aloqa manzili va bot nomi",
+    "faqat shu yerda yoziladi — sahifalarga build orqali qo'yiladi.",
+    "Sababi: bu qiymatlar o'nlab joyda uchraydi (sitemap, canonical,",
+    "Open Graph, maxfiylik siyosati, ma'lumot o'chirish sahifasi) va",
+    "ularni qo'lda tarqatib yozish bitta joyni unutishga olib keladi.",
+    "",
+    "PLACEHOLDER qiymatlar bilan build YIQILMAYDI, lekin baland",
+    "ogohlantirish beradi va sitemap'ga noto'g'ri domen yozilmaydi.",
+    "Play Console'ga havola berishdan OLDIN hammasi to'ldirilishi shart:",
+    "maxfiylik siyosati va aloqa manzili Google'ning majburiy talabi."
+  ],
+
+  "domain": "nazariy.uz",
+  "domainConfirmed": false,
+
+  "contactEmail": "PLACEHOLDER@nazariy.uz",
+  "contactTelegram": "",
+
+  "telegramBot": "",
+
+  "appId": "uz.nazariy.app",
+  "appName": "Nazariy",
+
+  "publisher": "Nazariy",
+  "publisherLegal": "",
+
+  "playUrl": ""
+}
