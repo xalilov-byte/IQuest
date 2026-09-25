@@ -5,6 +5,10 @@ Kim nimani o'zgartirsa ham, shu yerdagi API va qoidalar buzilmaydi.
 O'zgartirish kerak bo'lsa — avval shu hujjat, keyin kod.
 
 **Nom: IQuest** (ilova), sayt **IQuest.uz**, Android ID `uz.iquest.app`.
+**Joylash:** hamma narsa egasining o'z VDS serverida — sayt `iquest.uz`,
+admin `admin.iquest.uz`, API `api.iquest.uz` (o'z-o'zini xosting qilingan
+Supabase, Docker Compose). supabase.com buluti ishlatilmaydi. Barcha
+foydalanuvchi ma'lumotlari shu serverda.
 (Ish boshida "Zukko" deb atalgan — u nom band chiqdi. Papka nomi
 /home/user/Zukko qoladi, foydalanuvchiga ko'rinadigan hamma joyda IQuest.)
 
@@ -335,6 +339,7 @@ yakunda hisobotga yozing, integratsiyada hal qilinadi.
 | games-memory | `src/games/{matrix-memory,sequence,nback}.js`, `tests/game-{matrix-memory,sequence,nback}.test.mjs` |
 | games-speed | `src/games/{schulte,mental-math,flanker}.js`, `tests/game-{schulte,mental-math,flanker}.test.mjs` |
 | cert | `src/cert/**`, `tests/cert-*.test.mjs` |
+| deploy | `deploy/**`, `.github/workflows/deploy.yml`, `DEPLOY.md` |
 | integrator | `build.mjs`, `package.json`, `version.json`, `src/iq/{rng,index}.js`, `src/iq/CONTRACT.md`, `src/iq/gen/demo.js`, `src/games/{index,demo}.js`, `.github/workflows/js.yml` |
 
 `npm test` hamma testni ishga tushiradi. O'zingizniki yashil bo'lishi
