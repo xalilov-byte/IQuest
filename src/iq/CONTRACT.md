@@ -140,14 +140,19 @@ const s = IQ.session.create({
   types?: string[],       // default: IQ.types() (hammasi)
   length?: number,        // default: test 30, practice 10
   seed?: number,          // default: Date.now()
-  startLevel?: number,    // practice: nzProgress.levelFor(type)
+  startLevel?: number | { [type]: number },  // practice; yo'q bo'lsa nzProgress.levelFor(type), u ham yo'q bo'lsa 3
 });
 s.mode, s.length, s.seed, s.index, s.done
 s.current()             → Item | null   (tugagan bo'lsa null)
 s.answer(i, ms)         → { correct: bool, correctIndex: int, item }
+                        // i: 0..k-1; -1 / null / undefined = javobsiz (xato hisoblanadi); boshqasi otadi
+                        // ms: shu savolga ketgan vaqt — durationMs shularning YIG'INDISI
 s.result()              → Result
 s.snapshot()            → JSON-serializable (ilova yopilsa davom ettirish)
+s.payload()             → { engine, seed, mode, types, length, items: [{ id, answer, ms }], startLevels? }  // serverga (§10)
 IQ.session.restore(snapshot) → Session   (aynan shu joydan, aynan shu savollar)
+IQ.session.verify(payload, { allowPartial? }) → Result   // §10: qayta yaratadi va qayta hisoblaydi
+IQ.session.ENGINE       // sessiya algoritmi versiyasi (hozir 1)
 
 Result = {
   mode, n, correct, durationMs,
@@ -156,8 +161,20 @@ Result = {
   reliable: bool,         // false — savol kam (masalan < 20): ilova IQ raqamini KO'RSATMAYDI
   byType: { [type]: { n, correct } },
   items: [{ id, type, level, b, k, answer: int, correct: bool, ms }],
+  complete, seed, types, length, engine,   // qo'shimcha maydonlar
 }
 ```
+
+`restore` va `verify` jurnalni qayta o'ynaydi va nomuvofiqlikda OTADI —
+`err.code`: `IQ_REPLAY_MISMATCH` (qayta yaratilgan `id` jurnaldagidan
+farq qiladi; `.index`, `.expected`, `.got`), `IQ_ENGINE_MISMATCH`,
+`IQ_INCOMPLETE` (`verify`: tugallanmagan test — omadli boshlanishdan
+keyin to'xtab qolishning oldini oladi), `IQ_GEN_FAILED` (20 urinishda
+ham savol yaratilmadi). Ilova tiklash xatosida saqlangan holatni
+tashlab yuboradi va buni foydalanuvchiga aytadi.
+
+`types` ni ilova ANIQ beradi: default `IQ.types()` bundle'da qaysi
+generator borligiga bog'liq.
 
 `items[].answer` — foydalanuvchi tanlagan variant indeksi. SHART: server
 natijani shu jurnal bo'yicha QAYTA hisoblaydi (§10) — savol urug'dan
@@ -169,11 +186,17 @@ yuborgan `iq` ga ishonilmaydi.
 ## 4. Baholash — `src/iq/score.js`
 
 ```js
-IQ.score.estimate(responses: [{ b, correct }]) → { theta, se }   // EAP, N(0,1) prior
+IQ.score.estimate(responses: [{ b, correct, k? }]) → { theta, se }   // EAP, N(0,1) prior, 81 nuqta
 IQ.score.toIQ(theta) → int, 55..145                               // 100 + 15·θ
 IQ.score.interval(theta, se, z = 1.645) → { lo, hi }
-IQ.score.nextLevel(theta, rng) → 1..10                            // b ≈ θ atrofida
+IQ.score.nextLevel(theta, rng) → 1..10                            // b* = θ − 0.3, tasodifiy yaxlitlash
+IQ.score.prob(theta, b, k), IQ.score.guess(k)                     // P = c + (1−c)·σ(θ−b), c = 1/k
 ```
+
+Taxmin qilish hisobga olinadi (c = 1/k, k — variantlar soni): busiz
+tasodifan belgilagan odam o'z darajasidan ancha yuqori ball olardi.
+30 savoldan keyin 90% oraliq taxminan ±11 IQ ball — shunday
+ko'rsatiladi, toraytirilmaydi.
 
 ---
 
@@ -182,10 +205,14 @@ IQ.score.nextLevel(theta, rng) → 1..10                            // b ≈ θ 
 Mavjud API (ball, streak, "Xatolarim", "Saqlangan") saqlanadi. Qo'shiladi:
 
 ```js
-nzProgress.recordTest(result)   // diskka; tarix eng ko'pi 100 ta
-nzProgress.testHistory()        // [{ at, iq, lo, hi, n, correct, reliable, byType }] — eskidan yangiga
-nzProgress.levelFor(type)       // 1..10 — shu turdagi so'nggi natijalardan mashq darajasi
+nzProgress.recordTest(result)   // diskka; tarix eng ko'pi 100 ta (test VA mashq natijalari)
+nzProgress.testHistory()        // [{ at, mode, iq, lo, hi, n, correct, reliable, byType, theta, se }] — eskidan yangiga
+nzProgress.levelFor(type)       // 1..10 — shu turdagi so'nggi ≤10 javobdan; yangi foydalanuvchi uchun 3
 ```
+
+Mashq natijasi ham `recordTest` ga beriladi — aks holda `levelFor`
+o'zgarmaydi. Shuning uchun IQ tarixi ekrani `mode === 'test'` bo'yicha
+filtrlaydi.
 
 ---
 
@@ -314,6 +341,9 @@ hisoblagan natijadan** chiqadi:
 - Generator kodi o'zgarsa eski urug'lar boshqa savol beradi — shuning
   uchun natijada `engine` versiyasi saqlanadi va server shu versiyani
   qo'llab-quvvatlaydi (yoki eski natijani qayta tekshirmaydi).
+  DIQQAT: `IQ.session.ENGINE` faqat sessiya algoritmini qamraydi.
+  Backend qurilganda saqlanadigan versiya generatorlar versiyasini ham
+  o'z ichiga olishi kerak (ochiq masala).
 
 ---
 

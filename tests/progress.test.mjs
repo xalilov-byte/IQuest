@@ -22,9 +22,14 @@ const KEY = 'nz-progress';
    o'tkazish qiymatni o'zgartirmaydi, faqat shu farqni olib tashlaydi. */
 const plain = x => JSON.parse(JSON.stringify(x));
 
-function env(saved) {
+/* extra — boshqa kalitlar: { 'nz-iq-tests': qiymat } (satr yoki obyekt). */
+function env(saved, extra) {
   const store = new Map();
   if (saved !== undefined) store.set(KEY, typeof saved === 'string' ? saved : JSON.stringify(saved));
+  Object.keys(extra || {}).forEach(k => {
+    const v = extra[k];
+    store.set(k, typeof v === 'string' ? v : JSON.stringify(v));
+  });
 
   const io = { writes: 0, reads: 0 };
   const ctx = {
@@ -46,6 +51,7 @@ function env(saved) {
     p: ctx.window.nzProgress, io,
     disk: () => JSON.parse(store.get(KEY) || 'null'),
     queue: () => JSON.parse(store.get('nz-attempts') || 'null'),
+    raw: k => store.get(k),
   };
 }
 
@@ -350,4 +356,175 @@ test('rejim koʻrsatilmagan javob imtihon deb hisoblanadi', () => {
   const { p } = env();
   p.answered({ ref: '#001', correct: true });
   assert.equal(p.stats().examAnswered, 1);
+});
+
+
+/* ── IQ testi natijalari (CONTRACT §5) ─────────────────────────────── */
+
+const TESTS_KEY = 'nz-iq-tests';
+
+/* IQ.session Result'iga o'xshash obyekt. items — [tur, daraja, to'g'rimi]. */
+function natija(x, items) {
+  const its = (items || []).map(([type, level, correct], i) => ({
+    id: type + ':' + level + ':' + i, type, level, b: (level - 5.5) * 0.5, k: 4,
+    answer: correct ? 0 : 1, correct, ms: 1000,
+  }));
+  const byType = {};
+  its.forEach(it => {
+    const b = byType[it.type] || (byType[it.type] = { n: 0, correct: 0 });
+    b.n++; if (it.correct) b.correct++;
+  });
+  return Object.assign({
+    mode: 'test', n: its.length, correct: its.filter(i => i.correct).length, durationMs: 1000 * its.length,
+    theta: 0.4, se: 0.43, iq: 106, lo: 95, hi: 117, reliable: its.length >= 20,
+    byType, items: its,
+  }, x);
+}
+
+const qator = (type, level, n, ok) => Array.from({ length: n }, (_, i) => [type, level, i < ok]);
+
+
+test('IQ tarixi: bo\'sh boshlanadi, levelFor — 3', () => {
+  const { p } = env();
+  assert.deepEqual(plain(p.testHistory()), []);
+  assert.equal(p.levelFor('series'), 3);
+  assert.equal(p.levelFor('matrix'), 3);
+  assert.equal(p.levelFor(undefined), 3);
+});
+
+
+test('recordTest diskka yozadi, qayta ochilganda tarix joyida', () => {
+  const { p, raw } = env();
+  const before = Date.now();
+  const saved = p.recordTest(natija({}, qator('series', 6, 12, 8).concat(qator('spatial', 4, 12, 5))));
+  assert.ok(raw(TESTS_KEY), 'darhol yoziladi — flush kutilmaydi');
+  assert.equal(saved.iq, 106);
+
+  const h = p.testHistory();
+  assert.equal(h.length, 1);
+  const e = h[0];
+  assert.deepEqual(Object.keys(e).sort(),
+    ['at', 'byType', 'correct', 'hi', 'iq', 'lo', 'mode', 'n', 'reliable', 'se', 'theta']);
+  assert.ok(e.at >= before && e.at <= Date.now());
+  assert.deepEqual(plain(e), plain({ at: e.at, mode: 'test', iq: 106, lo: 95, hi: 117, n: 24, correct: 13,
+    reliable: true, byType: { series: { n: 12, correct: 8 }, spatial: { n: 12, correct: 5 } }, theta: 0.4, se: 0.43 }));
+
+  // Qayta ochish
+  const again = env(undefined, { [TESTS_KEY]: raw(TESTS_KEY) });
+  assert.deepEqual(plain(again.p.testHistory()), plain(h));
+  assert.equal(again.p.levelFor('series'), p.levelFor('series'));
+});
+
+
+test('testHistory eskidan yangiga, eng koʻpi 100 ta', () => {
+  const { p, raw } = env();
+  for (let i = 0; i < 105; i++) p.recordTest(natija({ iq: 60 + i, lo: 50 + i, hi: 70 + i }));
+  const h = p.testHistory();
+  assert.equal(h.length, 100);
+  assert.equal(h[0].iq, 65, 'eng eski 5 tasi tashlangan');
+  assert.equal(h[99].iq, 164);
+  for (let i = 1; i < h.length; i++) assert.ok(h[i].at >= h[i - 1].at);
+  assert.equal(JSON.parse(raw(TESTS_KEY)).tests.length, 100);
+});
+
+
+test('testHistory nusxa qaytaradi — chaqiruvchi xotirani buzolmaydi', () => {
+  const { p } = env();
+  p.recordTest(natija({}, qator('series', 5, 3, 3)));
+  const h = p.testHistory();
+  h[0].iq = 999; h[0].byType.series.n = 999; h.push({});
+  assert.equal(p.testHistory().length, 1);
+  assert.equal(p.testHistory()[0].iq, 106);
+  assert.equal(p.testHistory()[0].byType.series.n, 3);
+});
+
+
+test('recordTest: yaroqsiz natija yozilmaydi, yiqilmaydi', () => {
+  const { p } = env();
+  for (const bad of [null, undefined, 5, 'x', {}, { iq: 'yuz', lo: 1, hi: 2, n: 1 },
+                     natija({ iq: NaN }), natija({ n: -1 })]) {
+    assert.equal(p.recordTest(bad), null);
+  }
+  assert.equal(p.testHistory().length, 0);
+  // Qisman buzuq: correct > n, byType axlat, items axlat — tozalanadi.
+  p.recordTest(natija({ n: 3, correct: 10, reliable: 'ha', theta: 'x',
+    byType: { series: { n: 3, correct: 7 }, __proto__x: 1, '': { n: 1 } },
+    items: [null, { type: 'series', level: 99, correct: true }, { type: 'series', level: 4, correct: true }] }));
+  const e = plain(p.testHistory()[0]);
+  assert.equal(e.correct, 3);
+  assert.equal(e.reliable, false, 'faqat aynan true');
+  assert.equal(e.theta, null);
+  assert.deepEqual(e.byType, { series: { n: 3, correct: 3 } });
+  assert.equal(p.levelFor('series'), 5, 'faqat yaroqli yozuv (4-daraja, to\'g\'ri) hisobga olindi');
+});
+
+
+test('buzilgan disk: tarix bo\'sh, ilova yiqilmaydi', () => {
+  const cases = [
+    ['{buzuq json', 3], ['"satr"', 3], ['[1,2]', 3], [{ v: 2, tests: [] }, 3],
+    [{ v: 1, tests: 'x', recent: 5 }, 3],
+    // "constructor" — diskda oddiy kalit; prototipsiz obyektda xavfsiz tur nomi.
+    [{ v: 1, tests: [null, { iq: 1 }], recent: { series: 'x', constructor: [[5, 1]] } }, 6],
+  ];
+  for (const [junk, ctor] of cases) {
+    const { p } = env(undefined, { [TESTS_KEY]: junk });
+    assert.deepEqual(plain(p.testHistory()), []);
+    assert.equal(p.levelFor('series'), 3);
+    assert.equal(p.levelFor('constructor'), ctor);
+  }
+  const { p } = env(undefined, { [TESTS_KEY]: { v: 1, tests: [{ at: 5, iq: 100, lo: 90, hi: 110, n: 20, correct: 10 }],
+    recent: { series: [[5, 1], [11, 1], [0, 0], [5, 2], 'x', [7, 0]] } } });
+  assert.equal(p.testHistory().length, 1);
+  assert.equal(p.testHistory()[0].mode, 'test');
+  // Yaroqli juftliklar: [5,1], [7,0] → o'rtacha 6, ulush 50% → 6
+  assert.equal(p.levelFor('series'), 6);
+});
+
+
+test('levelFor: oxirgi javoblar darajasi, ulush ≥ 80% → +1, < 50% → −1', () => {
+  const { p } = env();
+  p.recordTest(natija({ mode: 'practice' }, qator('series', 5, 10, 9)));       // 90%
+  assert.equal(p.levelFor('series'), 6);
+  p.recordTest(natija({ mode: 'practice' }, qator('series', 6, 10, 6)));       // 60%
+  assert.equal(p.levelFor('series'), 6, 'faqat oxirgi 10 ta — oldingi 90% hisobga olinmaydi');
+  p.recordTest(natija({ mode: 'practice' }, qator('series', 6, 10, 3)));       // 30%
+  assert.equal(p.levelFor('series'), 5);
+
+  // Har tur alohida.
+  p.recordTest(natija({}, qator('spatial', 8, 5, 5)));
+  assert.equal(p.levelFor('spatial'), 9);
+  assert.equal(p.levelFor('series'), 5);
+  assert.equal(p.levelFor('matrix'), 3);
+
+  // Chegaralar.
+  p.recordTest(natija({}, qator('verbal', 10, 10, 10)));
+  assert.equal(p.levelFor('verbal'), 10);
+  p.recordTest(natija({}, qator('matrix', 1, 10, 0)));
+  assert.equal(p.levelFor('matrix'), 1);
+
+  // Aralash darajalar: o'rtachasi yaxlitlanadi.
+  const q = env().p;
+  q.recordTest(natija({}, [['series', 4, true], ['series', 5, false], ['series', 5, true], ['series', 6, false]]));
+  assert.equal(q.levelFor('series'), 5);                                       // 5.0, 50%
+  assert.equal(q.levelFor('constructor'), 3, 'prototip nomi — tur emas');
+});
+
+
+test('reset IQ tarixini ham tozalaydi', () => {
+  const { p, raw } = env();
+  p.recordTest(natija({}, qator('series', 7, 5, 5)));
+  p.reset();
+  assert.deepEqual(plain(p.testHistory()), []);
+  assert.equal(p.levelFor('series'), 3);
+  assert.equal(raw(TESTS_KEY), undefined);
+});
+
+
+test('mavjud holat yozuvi IQ tarixini buzmaydi (alohida kalit)', () => {
+  const { p, disk, raw } = env();
+  p.recordTest(natija({}));
+  p.answered({ ref: '#001', correct: true });
+  p.flush();
+  assert.equal(disk().tests, undefined, 'asosiy holatga aralashmaydi');
+  assert.equal(JSON.parse(raw(TESTS_KEY)).tests.length, 1);
 });

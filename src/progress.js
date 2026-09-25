@@ -352,7 +352,92 @@
     commit();
   }
 
-  const tests = [];   // VAQTINCHALIK — recordTest() qolipi uchun
+  /* ── IQ testi natijalari (src/iq/CONTRACT.md §5) ──────────────────
+     Asosiy holatdan ALOHIDA kalitda: u har javobda yoziladi, natija esa
+     test tugaganda bir marta — 100 ta natijani har bosishda qayta yozish
+     keraksiz ish bo'lardi. Shuning uchun yozish ham kechiktirilmaydi:
+     natija kamdan-kam va qimmatli, ilova shu zahoti yopilishi mumkin.
+
+     Diskdagi shakl:
+       { v: 1,
+         tests:  [{ at, mode, iq, lo, hi, n, correct, reliable, byType, theta, se }],
+         recent: { tur: [[daraja, 1|0], …] } }   // har tur uchun oxirgi javoblar
+
+     `recent` — levelFor() uchun. Natijaning o'zi (byType) faqat
+     to'g'ri/jami sonini saqlaydi, qaysi DARAJADA yechilgani esa unda
+     yo'q; to'liq items jurnalini 100 ta natija uchun saqlash esa
+     ~100 KB bo'lardi. Har turga eng ko'pi RECENT_MAX ta juftlik. */
+  const TESTS_KEY = 'nz-iq-tests';
+  const TESTS_MAX = 100;
+  const RECENT_MAX = 20;
+  const LEVEL_WINDOW = 10;       // levelFor qarayadigan oxirgi javoblar
+  const LEVEL_DEFAULT = 3;       // yangi foydalanuvchi: oson boshlanadi
+  const LEVEL_MIN = 1, LEVEL_MAX = 10;
+
+  const isNum = v => typeof v === 'number' && isFinite(v);
+  /* Tur nomi — kalit sifatida ishlatiladi. "__proto__" oddiy {} da
+     kalit emas, prototipni almashtiradi — shuning uchun rad etiladi. */
+  const okType = t => typeof t === 'string' && t.length > 0 && t.length <= 40 && t !== '__proto__';
+
+  function blankTests() { return { v: 1, tests: [], recent: Object.create(null) }; }
+
+  /* byType: { tur: { n, correct } } — tur nomlari ham ishonchsiz kirish. */
+  function saneByType(bt) {
+    const out = {};
+    if (!bt || typeof bt !== 'object') return out;
+    Object.keys(bt).slice(0, 20).forEach(k => {
+      const v = bt[k];
+      if (!okType(k) || !v || typeof v !== 'object') return;
+      const n = isNum(v.n) && v.n >= 0 ? Math.round(v.n) : 0;
+      const c = isNum(v.correct) && v.correct >= 0 ? Math.round(v.correct) : 0;
+      if (n > 0) out[k] = { n: n, correct: Math.min(c, n) };
+    });
+    return out;
+  }
+
+  /* Bitta natija yozuvi. Yaramaydigani null — ro'yxatdan tushadi. */
+  function saneTest(r, at) {
+    if (!r || typeof r !== 'object') return null;
+    if (!isNum(r.iq) || !isNum(r.lo) || !isNum(r.hi)) return null;
+    if (!isNum(r.n) || r.n < 0) return null;
+    const n = Math.round(r.n);
+    const c = isNum(r.correct) && r.correct >= 0 ? Math.min(Math.round(r.correct), n) : 0;
+    return {
+      at: isNum(at) ? at : 0,
+      mode: r.mode === 'practice' ? 'practice' : 'test',
+      iq: Math.round(r.iq), lo: Math.round(r.lo), hi: Math.round(r.hi),
+      n: n, correct: c,
+      reliable: r.reliable === true,
+      byType: saneByType(r.byType),
+      theta: isNum(r.theta) ? r.theta : null,
+      se: isNum(r.se) && r.se >= 0 ? r.se : null,
+    };
+  }
+
+  function saneTests(raw) {
+    const out = blankTests();
+    if (!raw || typeof raw !== 'object' || raw.v !== 1) return out;
+    if (Array.isArray(raw.tests)) {
+      raw.tests.forEach(t => {
+        const s = saneTest(t, t && t.at);
+        if (s) out.tests.push(s);
+      });
+      out.tests = out.tests.slice(-TESTS_MAX);
+    }
+    const rc = raw.recent;
+    if (rc && typeof rc === 'object') {
+      Object.keys(rc).slice(0, 20).forEach(k => {
+        if (!okType(k) || !Array.isArray(rc[k])) return;
+        const list = rc[k].filter(p => Array.isArray(p) && p.length === 2 &&
+          Number.isInteger(p[0]) && p[0] >= LEVEL_MIN && p[0] <= LEVEL_MAX &&
+          (p[1] === 0 || p[1] === 1)).map(p => [p[0], p[1]]);
+        if (list.length) out.recent[k] = list.slice(-RECENT_MAX);
+      });
+    }
+    return out;
+  }
+
+  let iqStore = saneTests(read(TESTS_KEY));
 
   window.nzProgress = {
     /* Saqlash ishlayaptimi. Ilova bunga qarab xulqini o'zgartirmaydi —
@@ -541,16 +626,54 @@
     longest: function () { return store.longest; },
     streak: liveStreak,
 
-    /* ── IQ testi natijalari — VAQTINCHALIK QOLIP ────────────────────
-       score agenti bularni diskka saqlanadigan qilib almashtiradi
-       (src/iq/CONTRACT.md §5). Hozir faqat xotirada. */
+    /* ── IQ testi natijalari (CONTRACT §5) ─────────────────────────────
+       recordTest(result) — IQ.session Result'i. Diskka darhol yoziladi.
+       Saqlanadi: { at, mode, iq, lo, hi, n, correct, reliable, byType,
+       theta, se } — items jurnali EMAS (u serverga ketadi, bu yerda
+       faqat tarix ekrani uchun). Tarix eng ko'pi 100 ta, eng eskisi
+       tashlanadi. Yaroqsiz natija (iq/lo/hi/n son emas) yozilmaydi —
+       null qaytadi; aks holda saqlangan yozuvning nusxasi. */
     recordTest: function (result) {
-      tests.push({ at: Date.now(), iq: result.iq, lo: result.lo, hi: result.hi,
-        n: result.n, correct: result.correct, reliable: !!result.reliable,
-        byType: result.byType });
+      const e = saneTest(result, Date.now());
+      if (!e) return null;
+      iqStore.tests.push(e);
+      if (iqStore.tests.length > TESTS_MAX) iqStore.tests = iqStore.tests.slice(-TESTS_MAX);
+      (Array.isArray(result.items) ? result.items : []).forEach(it => {
+        if (!it || !okType(it.type)) return;
+        if (!(Number.isInteger(it.level) && it.level >= LEVEL_MIN && it.level <= LEVEL_MAX)) return;
+        const list = iqStore.recent[it.type] || (iqStore.recent[it.type] = []);
+        list.push([it.level, it.correct === true ? 1 : 0]);
+        if (list.length > RECENT_MAX) list.splice(0, list.length - RECENT_MAX);
+      });
+      write(TESTS_KEY, iqStore);
+      return Object.assign({}, e, { byType: saneByType(e.byType) });
     },
-    testHistory: function () { return tests.slice(); },
-    levelFor: function (type) { return 5; },
+
+    /* Eskidan yangiga. Nusxa — chaqiruvchi o'zgartirsa ham xotira buzilmaydi. */
+    testHistory: function () {
+      return iqStore.tests.map(e => Object.assign({}, e, { byType: saneByType(e.byType) }));
+    },
+
+    /* Mashqning boshlang'ich darajasi, 1..10. QOIDA:
+         · shu turda hali javob yo'q → 3 (yangi odam oson boshlaydi,
+           birinchi taassurot "juda qiyin" bo'lmasligi kerak);
+         · aks holda shu turdagi oxirgi ≤ 10 ta javob (test ham, mashq
+           ham) olinadi: L = ularning o'rtacha darajasi (yaxlitlangan),
+           to'g'ri ulushi ≥ 80% bo'lsa L + 1, 50% dan kam bo'lsa L − 1,
+           oradagi holatda L; natija 1..10 ga qisiladi.
+       Mashq zinapoyasi (IQ.session, ~71% ga yaqinlashadi) ham shu
+       darajadan davom etadi, ya'ni har mashq oldingisi to'xtagan joydan
+       ±1 atrofida boshlanadi. */
+    levelFor: function (type) {
+      const list = okType(type) ? iqStore.recent[type] : null;
+      if (!list || !list.length) return LEVEL_DEFAULT;
+      const last = list.slice(-LEVEL_WINDOW);
+      let sum = 0, ok = 0;
+      last.forEach(p => { sum += p[0]; ok += p[1]; });
+      const acc = ok / last.length;
+      let lv = Math.round(sum / last.length) + (acc >= 0.8 ? 1 : acc < 0.5 ? -1 : 0);
+      return Math.max(LEVEL_MIN, Math.min(LEVEL_MAX, lv));
+    },
 
     /* Serverga yuborilmagan javoblar soni. Sinxronizatsiya kelganda
        (Faza 4) shu navbat bo'shatiladi. */
@@ -573,7 +696,11 @@
       queueDirty = false;
       scoredIdx = null;
       if (timer) { clearTimeout(timer); timer = null; }
-      try { localStorage.removeItem(KEY); localStorage.removeItem(QUEUE_KEY); }
+      iqStore = blankTests();
+      try {
+        localStorage.removeItem(KEY); localStorage.removeItem(QUEUE_KEY);
+        localStorage.removeItem(TESTS_KEY);
+      }
       catch (e) {}
     },
   };
