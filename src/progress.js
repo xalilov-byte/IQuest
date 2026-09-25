@@ -55,6 +55,20 @@
      lekin bu yuzlab savol yechilgandan keyingi holat. */
   const SCORED_MAX = 5000;
 
+  /* IQ testlari tarixi (CONTRACT.md §5): eng ko'pi 100 ta, eskisi
+     tushadi. Bitta yozuv ~150 bayt → 100 tasi ~15 KB. Holat bilan bir
+     kalitda yoziladi (yozish 400 ms da bir marta birlashtiriladi), shuning
+     uchun cheksiz o'smasligi shart. */
+  const TESTS_MAX = 100;
+
+  /* levelFor() uchun: har tur bo'yicha so'nggi 30 ta javob (test va
+     mashqdan). 30 — bitta to'liq testga teng ma'lumot (θ ning s.o. ~0.45);
+     undan eskisi tushadi, ya'ni mashq qilgan odamning darajasi eski
+     natijaga yopishib qolmaydi. */
+  const RECENT_MAX = 30;
+  const TYPES_MAX = 20;          // tur nomlari — ishonchsiz kirish, cheksiz o'smasin
+  const TYPE_LEN_MAX = 30;
+
   /* ── Qurilma xotirasi ──────────────────────────────────────────────
      localStorage ishlamasligi mumkin: brauzerning maxfiy oynasi, sayt
      ma'lumoti bloklangan, joy tugagan. Bunday holda ilova SAQLAMASDAN
@@ -152,7 +166,79 @@
          standart qiymat ishlatiladi). */
       soundOn: null,
       notifOn: null,
+      /* IQ testlari natijalari, eskidan yangiga. byType diskda
+         { tur: [n, to'g'ri] } — topics bilan bir xil sabab (joy). */
+      tests: [],
+      /* Tur bo'yicha so'nggi javoblar: { tur: [[b, k, 0|1], ...] } —
+         levelFor() shulardan hisoblaydi. Prototipsiz obyekt: tur nomi
+         "constructor" bo'lsa ham funksiya qaytmasin. */
+      iqRecent: Object.create(null),
     };
+  }
+
+  /* ── IQ yozuvlarini tekshirish ─────────────────────────────────────
+     Versiya (VERSION) OSHIRILMAGAN: tests va iqRecent — yangi, ixtiyoriy
+     maydonlar. Versiyani oshirish sane() da butun eski progressni (ball,
+     streak, "Saqlangan") nolga tushirardi. Eski yozuvda bu maydonlar
+     yo'q → bo'sh; buzuq bo'lsa → faqat buzuq YOZUV tashlanadi, qolgani
+     saqlanadi. */
+  const isInt = (x, lo, hi) => Number.isInteger(x) && x >= lo && x <= hi;
+  const isNum = x => typeof x === 'number' && isFinite(x);
+  /* "__proto__" — yagona xavfli nom: testHistory() oddiy {} ga
+     byType["__proto__"] = … yozganda u xususiyat emas, PROTOTIP bo'lib
+     qolardi. Generator turi hech qachon bunday nomlanmaydi. */
+  const okType = k => typeof k === 'string' && k.length > 0 && k.length <= TYPE_LEN_MAX && k !== '__proto__';
+
+  /* { tur: [n, to'g'ri] } — diskdagi shakl. Natijadan ({ n, correct })
+     ham, diskdan ([n, c]) ham o'qiydi. */
+  function saneByType(v) {
+    const out = Object.create(null);
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return out;
+    Object.keys(v).slice(0, TYPES_MAX).forEach(k => {
+      const x = v[k];
+      const n = Array.isArray(x) ? x[0] : x && x.n;
+      const c = Array.isArray(x) ? x[1] : x && x.correct;
+      if (okType(k) && isInt(n, 1, 1000) && isInt(c, 0, n)) out[k] = [n, c];
+    });
+    return out;
+  }
+
+  function saneTest(e) {
+    if (!e || typeof e !== 'object') return null;
+    if (!(isNum(e.at) && e.at > 0)) return null;
+    if (!isInt(e.iq, 55, 145) || !isInt(e.lo, 55, 145) || !isInt(e.hi, 55, 145)) return null;
+    if (!(e.lo <= e.iq && e.iq <= e.hi)) return null;
+    if (!isInt(e.n, 1, 1000) || !isInt(e.correct, 0, e.n)) return null;
+    return {
+      at: e.at, iq: e.iq, lo: e.lo, hi: e.hi, n: e.n, correct: e.correct,
+      reliable: e.reliable === true,
+      theta: isNum(e.theta) ? Math.round(e.theta * 1000) / 1000 : null,
+      se: isNum(e.se) && e.se >= 0 ? Math.round(e.se * 1000) / 1000 : null,
+      byType: saneByType(e.byType),
+    };
+  }
+
+  function saneTests(v) {
+    if (!Array.isArray(v)) return [];
+    const out = [];
+    v.forEach(e => { const t = saneTest(e); if (t) out.push(t); });
+    return out.slice(-TESTS_MAX);
+  }
+
+  /* Bitta javob: [b, k, 0|1]. b — logit (±10 dan tashqarisi buzuq),
+     k — variantlar soni. */
+  const saneResp = r => (Array.isArray(r) && r.length === 3 && isNum(r[0]) && Math.abs(r[0]) <= 10 &&
+    isInt(r[1], 2, 10) && (r[2] === 0 || r[2] === 1)) ? [r[0], r[1], r[2]] : null;
+
+  function saneRecent(v) {
+    const out = Object.create(null);
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return out;
+    Object.keys(v).slice(0, TYPES_MAX).forEach(k => {
+      if (!okType(k) || !Array.isArray(v[k])) return;
+      const list = v[k].map(saneResp).filter(Boolean).slice(-RECENT_MAX);
+      if (list.length) out[k] = list;
+    });
+    return out;
   }
 
   /* Saqlangan ma'lumot ishonchsiz manba: foydalanuvchi uni qo'lda
@@ -204,6 +290,8 @@
       tasks: Array.isArray(raw.tasks) ? raw.tasks.filter(x => typeof x === 'string') : [],
       soundOn: typeof raw.soundOn === 'boolean' ? raw.soundOn : null,
       notifOn: typeof raw.notifOn === 'boolean' ? raw.notifOn : null,
+      tests: saneTests(raw.tests),
+      iqRecent: saneRecent(raw.iqRecent),
     };
   }
 
@@ -352,7 +440,37 @@
     commit();
   }
 
-  const tests = [];   // VAQTINCHALIK — recordTest() qolipi uchun
+  /* Natijadagi savollarni (Result.items) tur bo'yicha so'nggi javoblar
+     ro'yxatiga qo'shadi. Qaytaradi: nechta qo'shildi. */
+  function addRecent(items) {
+    if (!Array.isArray(items)) return 0;
+    let added = 0;
+    items.forEach(it => {
+      if (!it || !okType(it.type)) return;
+      const k = isInt(it.k, 2, 10) ? it.k : 4;
+      const r = saneResp([isNum(it.b) ? Math.round(it.b * 100) / 100 : NaN, k, it.correct === true ? 1 : 0]);
+      if (!r) return;
+      let list = store.iqRecent[it.type];
+      if (!list) {
+        if (Object.keys(store.iqRecent).length >= TYPES_MAX) return;
+        list = store.iqRecent[it.type] = [];
+      }
+      list.push(r);
+      if (list.length > RECENT_MAX) list.splice(0, list.length - RECENT_MAX);
+      added++;
+    });
+    return added;
+  }
+
+  /* Mashq natijasi: tarixga TUSHMAYDI (u IQ testi emas — 10 savol,
+     boshqa boshlanish nuqtasi), faqat levelFor() uchun javoblar. */
+  function recordPractice(result) {
+    if (!result || typeof result !== 'object') return false;
+    if (!addRecent(result.items)) return false;
+    pending = Object.assign({}, store);
+    if (!timer) timer = setTimeout(commit, 400);
+    return true;
+  }
 
   window.nzProgress = {
     /* Saqlash ishlayaptimi. Ilova bunga qarab xulqini o'zgartirmaydi —
@@ -541,16 +659,75 @@
     longest: function () { return store.longest; },
     streak: liveStreak,
 
-    /* ── IQ testi natijalari — VAQTINCHALIK QOLIP ────────────────────
-       score agenti bularni diskka saqlanadigan qilib almashtiradi
-       (src/iq/CONTRACT.md §5). Hozir faqat xotirada. */
+    /* ── IQ testi natijalari (src/iq/CONTRACT.md §5) ─────────────────
+
+       recordTest(result) — IQ.session natijasi (Result). Tarixga yoziladi
+       (≤ 100, eskisi tushadi) va DARHOL diskka: bu 30 savollik mehnat,
+       400 ms kutish paytida ilova yopilsa yo'qolmasin. Savollari
+       levelFor() ga ham qo'shiladi. Mashq natijasi (mode: 'practice')
+       berilsa — tarixga emas, faqat levelFor() ga (recordPractice).
+       Qaytaradi: yozildimi (buzuq yoki 0 savollik natija — false). */
     recordTest: function (result) {
-      tests.push({ at: Date.now(), iq: result.iq, lo: result.lo, hi: result.hi,
-        n: result.n, correct: result.correct, reliable: !!result.reliable,
-        byType: result.byType });
+      if (!result || typeof result !== 'object') return false;
+      if (result.mode === 'practice') return recordPractice(result);
+      const e = saneTest({
+        at: Date.now(), iq: result.iq, lo: result.lo, hi: result.hi,
+        n: result.n, correct: result.correct, reliable: result.reliable === true,
+        theta: result.theta, se: result.se, byType: result.byType,
+      });
+      if (!e) return false;
+      store.tests.push(e);
+      if (store.tests.length > TESTS_MAX) store.tests = store.tests.slice(-TESTS_MAX);
+      addRecent(result.items);
+      pending = Object.assign({}, store);
+      flush();
+      return true;
     },
-    testHistory: function () { return tests.slice(); },
-    levelFor: function (type) { return 5; },
+
+    /* QO'SHIMCHA (shartnomaga zid emas): mashq natijasini levelFor()
+       uchun yozish. recordTest({mode:'practice'}) ham shu yerga keladi. */
+    recordPractice: recordPractice,
+
+    /* [{ at, iq, lo, hi, n, correct, reliable, byType, theta, se }] —
+       eskidan yangiga. Har chaqiriqda yangi obyektlar: chaqiruvchi
+       o'zgartirsa ham saqlangan tarix buzilmaydi. */
+    testHistory: function () {
+      return store.tests.map(e => {
+        const byType = {};
+        Object.keys(e.byType).forEach(k => { byType[k] = { n: e.byType[k][0], correct: e.byType[k][1] }; });
+        return { at: e.at, iq: e.iq, lo: e.lo, hi: e.hi, n: e.n, correct: e.correct,
+                 reliable: e.reliable, byType: byType, theta: e.theta, se: e.se };
+      });
+    },
+
+    /* Mashq darajasi (1..10) — shu turdagi so'nggi ≤ 30 javobdan
+       (test va mashq aralash, vaqt tartibida).
+
+       QANDAY: javoblar [b, k, to'g'ri] IQ.score.estimate ga beriladi
+       (3PL, EAP, prior N(0,1)) → θ; daraja = IQ.score.nextLevel(θ)
+       tasodifsiz, ya'ni shu θ uchun eng ko'p ma'lumot beradigan daraja.
+       U yerda P(to'g'ri) ≈ 0.68: mashq uchun "qiyin, lekin
+       yengiladigan" nuqta.
+
+       NEGA SHUNDAY: (1) byType dagi ulushning o'zi yetmaydi — adaptiv
+       testda hamma ~68% topadi, ulush darajani emas, adaptivlikni
+       o'lchaydi; savol qiyinligi (b) bilan birga o'qish kerak.
+       (2) Prior kam ma'lumotni o'rtaga tortadi: 2 ta to'g'ri javob
+       odamni 5 dan 10 ga otib yubormaydi. (3) Faqat so'nggi 30 ta —
+       mashq qilib o'sgan odam eski natijasiga bog'lanib qolmaydi.
+
+       Ma'lumot yo'q (yoki IQ yadrosi yuklanmagan) — 5, o'rta daraja. */
+    levelFor: function (type) {
+      const list = okType(type) ? store.iqRecent[type] : null;
+      if (!list || !list.length) return 5;
+      const S = window.IQ && window.IQ.score;
+      if (!S || typeof S.estimate !== 'function' || typeof S.nextLevel !== 'function') return 5;
+      try {
+        const est = S.estimate(list.map(r => ({ b: r[0], k: r[1], correct: r[2] === 1 })));
+        const lv = S.nextLevel(est.theta);
+        return isInt(lv, 1, 10) ? lv : 5;
+      } catch (e) { return 5; }
+    },
 
     /* Serverga yuborilmagan javoblar soni. Sinxronizatsiya kelganda
        (Faza 4) shu navbat bo'shatiladi. */
