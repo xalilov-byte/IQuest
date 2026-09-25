@@ -311,8 +311,25 @@ hisoblagan natijadan** chiqadi:
   kerak (aks holda mijoz oson savollarni tanlab olgan).
 - O'yin: mijoz `{ game, seed, level, log }` yuboradi, server
   `IQ.games.replay` bilan ballni qayta chiqaradi.
-- Sertifikat: faqat `mode: 'test'`, `reliable: true`, server tasdiqlagan
-  natija uchun; kod — tasodifiy, taxmin qilib bo'lmaydigan
+- **Sertifikat — faqat SERVERDA o'tkazilgan testdan.** Qurilmada
+  yaratilgan savolda to'g'ri javob (`item.correct`) qurilma xotirasida
+  bo'ladi: brauzerda devtools ochgan odam har savolga to'g'ri javob
+  beradi va `verify` buni ushlay olmaydi (jurnal to'g'ri bo'ladi). Shuning
+  uchun "Sertifikatli test" alohida, ONLAYN rejim:
+  · `test-start` (tizimga kirgan foydalanuvchi) → server bir martalik
+    tasodifiy urug' yaratadi va o'zida saqlaydi, birinchi savolni
+    `correct` va `explain` SIZ qaytaradi: `{ session, index, length,
+    item, deadline }`;
+  · `test-answer` `{ session, answer }` → keyingi savol (yana javobsiz)
+    yoki yakun `{ result, certificate? }`. Vaqtni SERVER o'lchaydi
+    (savol berilgan va javob kelgan payt), umumiy muddat server
+    tomonida; tartib, urug' va darajalar serverda — mijoz tanlay olmaydi;
+  · yakundan keyin savollar va izohlar ko'rib chiqish uchun beriladi.
+  Qurilmadagi (offline) IQ testi sertifikat BERMAYDI — u shaxsiy
+  kuzatuv va mashq uchun. Liga ballari o'yin/mashq jurnalini server
+  tekshirishidan (replay/verify) — bu past garovli, qabul qilingan xavf.
+- Sertifikat: `mode: 'test'`, `reliable: true`, `length` ≥ 30, `types` =
+  to'liq `IQ.types()`; kod — tasodifiy, taxmin qilib bo'lmaydigan
   (masalan `IQ-7K3P-92XQ`); tekshirish sahifasi faqat ko'rsatiladigan
   maydonlarni oladi (RPC orqali, jadvalni to'liq o'qish yo'q).
 - Generator kodi o'zgarsa eski urug'lar boshqa savol beradi — shuning
