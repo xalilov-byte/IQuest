@@ -1,0 +1,1365 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "key": "v001", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qo'l : qo'lqop = oyoq : ?","options":["paypoq","tizza","shlyapa","qadam"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Рука : перчатка = нога : ?","options":["носок","колено","шляпа","шаг"]},
+      "correct": 0,
+      "explain": {"uz":"Qo'lqop qo'lga kiyiladi, paypoq esa oyoqqa kiyiladi.","ru":"Перчатку надевают на руку, а носок — на ногу."},
+      "reviewed": false
+    },
+    {
+      "key": "v002", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qalam : yozmoq = qaychi : ?","options":["qog'oz","o'tkir","qirqmoq","tikmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Карандаш : писать = ножницы : ?","options":["бумага","острые","резать","шить"]},
+      "correct": 2,
+      "explain": {"uz":"Qalam bilan yoziladi, qaychi bilan qirqiladi: asbob va uning vazifasi.","ru":"Карандашом пишут, ножницами режут: инструмент и его назначение."},
+      "reviewed": false
+    },
+    {
+      "key": "v003", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Katta : kichik = baland : ?","options":["uzun","past","keng","yuqori"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Большой : маленький = высокий : ?","options":["длинный","низкий","широкий","верхний"]},
+      "correct": 1,
+      "explain": {"uz":"Katta va kichik — ma'nosi qarama-qarshi so'zlar. Balandning qarama-qarshisi — past.","ru":"«Большой» и «маленький» — противоположности. Противоположность слова «высокий» — «низкий»."},
+      "reviewed": false
+    },
+    {
+      "key": "v004", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Baliq : suzmoq = qush : ?","options":["qanot","osmon","don","uchmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Рыба : плавать = птица : ?","options":["крыло","небо","зерно","летать"]},
+      "correct": 3,
+      "explain": {"uz":"Baliq suzib harakatlanadi, qush esa uchib: jonzot va uning harakatlanish usuli.","ru":"Рыба передвигается вплавь, а птица — летая: существо и его способ передвижения."},
+      "reviewed": false
+    },
+    {
+      "key": "v005", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Sigir : buzoq = qo'y : ?","options":["jun","echki","qo'ra","qo'zi"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Корова : телёнок = овца : ?","options":["шерсть","коза","загон","ягнёнок"]},
+      "correct": 3,
+      "explain": {"uz":"Buzoq — sigirning bolasi, qo'zi — qo'yning bolasi.","ru":"Телёнок — детёныш коровы, ягнёнок — детёныш овцы."},
+      "reviewed": false
+    },
+    {
+      "key": "v006", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Oshpaz : oshxona = o'qituvchi : ?","options":["bo'r","sinfxona","o'quvchi","kitob"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Повар : кухня = учитель : ?","options":["мел","класс","ученик","книга"]},
+      "correct": 1,
+      "explain": {"uz":"Oshpaz oshxonada ishlaydi, o'qituvchi esa sinfxonada: kasb egasi va uning ish joyi.","ru":"Повар работает на кухне, а учитель — в классе: человек и место его работы."},
+      "reviewed": false
+    },
+    {
+      "key": "v007", "kind": "analogy", "level": 1,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Ko'z : ko'rmoq = quloq : ?","options":["bosh","ovoz","eshitmoq","gapirmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Глаз : видеть = ухо : ?","options":["голова","звук","слышать","говорить"]},
+      "correct": 2,
+      "explain": {"uz":"Ko'z bilan ko'ramiz, quloq bilan eshitamiz: a'zo va uning vazifasi.","ru":"Глазами мы видим, ушами — слышим: орган и его назначение."},
+      "reviewed": false
+    },
+    {
+      "key": "v008", "kind": "odd", "level": 1,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["sabzi","olma","nok","o'rik"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["морковь","яблоко","груша","абрикос"]},
+      "correct": 0,
+      "explain": {"uz":"Olma, nok va o'rik — mevalar, sabzi esa sabzavot.","ru":"Яблоко, груша и абрикос — фрукты, а морковь — овощ."},
+      "reviewed": false
+    },
+    {
+      "key": "v009", "kind": "odd", "level": 1,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["chumchuq","it","mushuk","quyon"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["воробей","собака","кошка","кролик"]},
+      "correct": 0,
+      "explain": {"uz":"It, mushuk va quyon — to'rt oyoqli hayvonlar, chumchuq esa qush.","ru":"Собака, кошка и кролик — четвероногие звери, а воробей — птица."},
+      "reviewed": false
+    },
+    {
+      "key": "v010", "kind": "odd", "level": 1,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["stol","stul","qoshiq","divan"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["стол","стул","ложка","диван"]},
+      "correct": 2,
+      "explain": {"uz":"Stol, stul va divan — mebel, qoshiq esa mebel emas.","ru":"Стол, стул и диван — мебель, а ложка — нет."},
+      "reviewed": false
+    },
+    {
+      "key": "v011", "kind": "odd", "level": 1,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["qizil","katta","sariq","ko'k"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["красный","большой","жёлтый","синий"]},
+      "correct": 1,
+      "explain": {"uz":"Qizil, sariq va ko'k — ranglar, «katta» esa o'lchamni bildiradi.","ru":"Красный, жёлтый и синий — цвета, а «большой» обозначает размер."},
+      "reviewed": false
+    },
+    {
+      "key": "v012", "kind": "category", "level": 1,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Kaptar, qarg'a, chumchuq","options":["baqa","mushuk","baliq","laylak"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Голубь, ворона, воробей","options":["лягушка","кошка","рыба","аист"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar — qushlar. Variantlar ichida faqat laylak qush.","ru":"В группе — птицы. Среди вариантов птица только аист."},
+      "reviewed": false
+    },
+    {
+      "key": "v013", "kind": "category", "level": 1,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Poyezd, avtobus, samolyot","options":["yo'l","haydovchi","bekat","kema"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Поезд, автобус, самолёт","options":["дорога","водитель","остановка","корабль"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar — transport vositalari. Kema ham transport, qolganlari esa yo'q.","ru":"В группе — виды транспорта. Корабль тоже транспорт, остальные — нет."},
+      "reviewed": false
+    },
+    {
+      "key": "v014", "kind": "category", "level": 1,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Etik, tufli, shippak","options":["shlyapa","krossovka","ko'ylak","qo'lqop"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Сапоги, туфли, тапочки","options":["шляпа","кроссовки","рубашка","перчатки"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar — poyabzal. Krossovka ham poyabzal.","ru":"В группе — обувь. Кроссовки тоже обувь."},
+      "reviewed": false
+    },
+    {
+      "key": "v015", "kind": "relation", "level": 1,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"G'ildirak — velosiped","options":["ma'nosi qarama-qarshi","ma'nosi yaqin","qism va butun","hayvon va uning bolasi"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Колесо — велосипед","options":["противоположные по смыслу","близкие по смыслу","часть и целое","животное и его детёныш"]},
+      "correct": 2,
+      "explain": {"uz":"G'ildirak — velosipedning bir qismi.","ru":"Колесо — часть велосипеда."},
+      "reviewed": false
+    },
+    {
+      "key": "v016", "kind": "relation", "level": 1,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Kulmoq — yig'lamoq","options":["ma'nosi qarama-qarshi","qism va butun","ma'nosi yaqin","narsa va uning rangi"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Смеяться — плакать","options":["противоположные по смыслу","часть и целое","близкие по смыслу","предмет и его цвет"]},
+      "correct": 0,
+      "explain": {"uz":"Kulmoq va yig'lamoq — ma'nosi qarama-qarshi so'zlar.","ru":"«Смеяться» и «плакать» — слова с противоположным смыслом."},
+      "reviewed": false
+    },
+    {
+      "key": "v017", "kind": "relation", "level": 1,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Tugma — ko'ylak","options":["Sahifa — kitob","Igna — ip","Ko'ylak — shim","Tikuvchi — ko'ylak"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Пуговица — рубашка","options":["Страница — книга","Иголка — нитка","Рубашка — брюки","Портной — рубашка"]},
+      "correct": 0,
+      "explain": {"uz":"Tugma — ko'ylakning qismi, sahifa — kitobning qismi.","ru":"Пуговица — часть рубашки, страница — часть книги."},
+      "reviewed": false
+    },
+    {
+      "key": "v018", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Oshpaz : sho'rva = novvoy : ?","options":["un","tandir","non","sotuvchi"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Повар : суп = пекарь : ?","options":["мука","печь","хлеб","продавец"]},
+      "correct": 2,
+      "explain": {"uz":"Oshpaz sho'rva pishiradi, novvoy esa non yopadi: usta va u tayyorlaydigan narsa. Un — xomashyo.","ru":"Повар варит суп, пекарь печёт хлеб: мастер и то, что он делает. Мука — это сырьё."},
+      "reviewed": false
+    },
+    {
+      "key": "v019", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"It : hurmoq = mushuk : ?","options":["sichqon","miyovlamoq","sut","yugurmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Собака : лаять = кошка : ?","options":["мышь","мяукать","молоко","бегать"]},
+      "correct": 1,
+      "explain": {"uz":"It huradi, mushuk esa miyovlaydi: hayvon va u chiqaradigan ovoz.","ru":"Собака лает, кошка мяукает: животное и звук, который оно издаёт."},
+      "reviewed": false
+    },
+    {
+      "key": "v020", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Sovun : yuvmoq = sochiq : ?","options":["hammom","yumshoq","taramoq","artmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Мыло : мыть = полотенце : ?","options":["ванная","мягкое","причёсывать","вытирать"]},
+      "correct": 3,
+      "explain": {"uz":"Sovun bilan yuvinamiz, sochiq bilan artinamiz: narsa va uning vazifasi.","ru":"Мылом моют, полотенцем вытирают: предмет и его назначение."},
+      "reviewed": false
+    },
+    {
+      "key": "v021", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Asal : asalari = sut : ?","options":["qaymoq","oq","stakan","sigir"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Мёд : пчела = молоко : ?","options":["сливки","белое","стакан","корова"]},
+      "correct": 3,
+      "explain": {"uz":"Asalni asalari beradi, sutni esa sigir: mahsulot va uni beradigan jonzot.","ru":"Мёд даёт пчела, а молоко — корова: продукт и тот, кто его даёт."},
+      "reviewed": false
+    },
+    {
+      "key": "v022", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qor : oq = ko'mir : ?","options":["issiq","qora","tosh","pech"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Снег : белый = уголь : ?","options":["горячий","чёрный","камень","печь"]},
+      "correct": 1,
+      "explain": {"uz":"Qor oq rangda, ko'mir esa qora rangda: narsa va uning rangi.","ru":"Снег белый, а уголь — чёрный: предмет и его цвет."},
+      "reviewed": false
+    },
+    {
+      "key": "v023", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Barmoq : qo'l = ekran : ?","options":["rasm","yorug'","telefon","xabar"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Палец : рука = экран : ?","options":["картинка","светлый","телефон","сообщение"]},
+      "correct": 2,
+      "explain": {"uz":"Barmoq qo'lning qismi, ekran esa telefonning qismi.","ru":"Палец — часть руки, а экран — часть телефона."},
+      "reviewed": false
+    },
+    {
+      "key": "v024", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kunduz : tun = kirish : ?","options":["chiqish","eshik","kechikish","boshlanish"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"День : ночь = вход : ?","options":["выход","дверь","опоздание","начало"]},
+      "correct": 0,
+      "explain": {"uz":"Kunduz va tun — qarama-qarshi, kirish va chiqish ham qarama-qarshi.","ru":"День и ночь противоположны, так же как вход и выход."},
+      "reviewed": false
+    },
+    {
+      "key": "v025", "kind": "analogy", "level": 2,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qalam : qog'oz = bo'r : ?","options":["doska","o'qituvchi","oq","sinf"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Карандаш : бумага = мел : ?","options":["доска","учитель","белый","класс"]},
+      "correct": 0,
+      "explain": {"uz":"Qalam bilan qog'ozga, bo'r bilan doskaga yoziladi: asbob va u bilan yoziladigan sirt.","ru":"Карандашом пишут на бумаге, мелом — на доске: инструмент и поверхность для письма."},
+      "reviewed": false
+    },
+    {
+      "key": "v026", "kind": "odd", "level": 2,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["qoshiq","likopcha","bolg'a","piyola"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["ложка","тарелка","молоток","чашка"]},
+      "correct": 2,
+      "explain": {"uz":"Qoshiq, likopcha va piyola ovqatlanishda kerak, bolg'a esa asbob.","ru":"Ложка, тарелка и чашка нужны за едой, а молоток — инструмент."},
+      "reviewed": false
+    },
+    {
+      "key": "v027", "kind": "odd", "level": 2,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["yomg'ir","quyosh","qor","do'l"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["дождь","солнце","снег","град"]},
+      "correct": 1,
+      "explain": {"uz":"Yomg'ir, qor va do'l bulutdan yog'adi, quyosh esa yog'maydi.","ru":"Дождь, снег и град выпадают из облаков, а солнце — нет."},
+      "reviewed": false
+    },
+    {
+      "key": "v028", "kind": "odd", "level": 2,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["tulki","bo'ri","ayiq","tovuq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["лиса","волк","медведь","курица"]},
+      "correct": 3,
+      "explain": {"uz":"Tulki, bo'ri va ayiq — yovvoyi hayvonlar, tovuq esa uy parrandasi.","ru":"Лиса, волк и медведь — дикие звери, а курица — домашняя птица."},
+      "reviewed": false
+    },
+    {
+      "key": "v029", "kind": "odd", "level": 2,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["yugurmoq","sakramoq","yurmoq","uxlamoq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["бегать","прыгать","ходить","спать"]},
+      "correct": 3,
+      "explain": {"uz":"Yugurmoq, sakramoq va yurmoq — harakat qilish, uxlamoq esa dam olish.","ru":"Бегать, прыгать и ходить — движения, а спать — отдых."},
+      "reviewed": false
+    },
+    {
+      "key": "v030", "kind": "category", "level": 2,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Bodring, pomidor, karam","options":["olcha","kartoshka","uzum","yong'oq"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Огурец, помидор, капуста","options":["вишня","картофель","виноград","орех"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar — sabzavotlar. Kartoshka ham sabzavot.","ru":"В группе — овощи. Картофель тоже овощ."},
+      "reviewed": false
+    },
+    {
+      "key": "v031", "kind": "category", "level": 2,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Gitara, skripka, arfa","options":["qo'shiq","sahna","baraban","nota"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Гитара, скрипка, арфа","options":["песня","сцена","барабан","ноты"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilar — musiqa asboblari. Baraban ham musiqa asbobi.","ru":"В группе — музыкальные инструменты. Барабан тоже музыкальный инструмент."},
+      "reviewed": false
+    },
+    {
+      "key": "v032", "kind": "category", "level": 2,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Ko'ylak, shim, kurtka","options":["sviter","tugma","shkaf","ip"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Рубашка, брюки, куртка","options":["свитер","пуговица","шкаф","нитка"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar — kiyimlar. Sviter ham kiyim.","ru":"В группе — одежда. Свитер тоже одежда."},
+      "reviewed": false
+    },
+    {
+      "key": "v033", "kind": "relation", "level": 2,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Tikuvchi — igna","options":["usta va uning asbobi","qism va butun","ma'nosi yaqin","ma'nosi qarama-qarshi"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Портной — иголка","options":["мастер и его инструмент","часть и целое","близкие по смыслу","противоположные по смыслу"]},
+      "correct": 0,
+      "explain": {"uz":"Tikuvchi igna bilan ishlaydi — bu uning asbobi.","ru":"Портной работает иголкой — это его инструмент."},
+      "reviewed": false
+    },
+    {
+      "key": "v034", "kind": "relation", "level": 2,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Qush — uya","options":["Sigir — sut","Qush — qanot","Sigir — molxona","Tovuq — o'rdak"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Птица — гнездо","options":["Корова — молоко","Птица — крыло","Корова — коровник","Курица — утка"]},
+      "correct": 2,
+      "explain": {"uz":"Uya — qushning uyi, molxona — sigirning uyi: jonzot va u yashaydigan joy.","ru":"Гнездо — жилище птицы, коровник — жилище коровы: животное и его жилище."},
+      "reviewed": false
+    },
+    {
+      "key": "v035", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kitob : qog'oz = ko'ylak : ?","options":["tugma","mato","kiyim","tikuvchi"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Книга : бумага = рубашка : ?","options":["пуговица","ткань","одежда","портной"]},
+      "correct": 1,
+      "explain": {"uz":"Kitob qog'ozdan, ko'ylak esa matodan qilinadi: narsa va uning materiali.","ru":"Книгу делают из бумаги, а рубашку — из ткани: предмет и его материал."},
+      "reviewed": false
+    },
+    {
+      "key": "v036", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kalta : uzun = tor : ?","options":["past","kichik","chuqur","keng"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Короткий : длинный = узкий : ?","options":["низкий","маленький","глубокий","широкий"]},
+      "correct": 3,
+      "explain": {"uz":"Kalta — uzunning, tor — kengning qarama-qarshisi.","ru":"«Короткий» противоположен «длинному», а «узкий» — «широкому»."},
+      "reviewed": false
+    },
+    {
+      "key": "v037", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Bemor : shifokor = buzilgan mashina : ?","options":["garaj","g'ildirak","haydovchi","usta"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Больной : врач = сломанная машина : ?","options":["гараж","колесо","водитель","механик"]},
+      "correct": 3,
+      "explain": {"uz":"Bemorni shifokor davolaydi, buzilgan mashinani usta tuzatadi.","ru":"Больного лечит врач, а сломанную машину чинит механик."},
+      "reviewed": false
+    },
+    {
+      "key": "v038", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Oyoq : yurmoq = tish : ?","options":["og'iz","chaynamoq","oq","yutmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Ноги : ходить = зубы : ?","options":["рот","жевать","белые","глотать"]},
+      "correct": 1,
+      "explain": {"uz":"Oyoq bilan yuramiz, tish bilan chaynaymiz. Yutish tish bilan emas, tomoq bilan bo'ladi.","ru":"Ногами ходим, зубами жуём. Глотаем мы не зубами, а горлом."},
+      "reviewed": false
+    },
+    {
+      "key": "v039", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kutubxona : kitob = garaj : ?","options":["eshik","haydovchi","mashina","benzin"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Библиотека : книги = гараж : ?","options":["ворота","водитель","машина","бензин"]},
+      "correct": 2,
+      "explain": {"uz":"Kutubxonada kitoblar, garajda esa mashina saqlanadi: joy va u yerda saqlanadigan narsa.","ru":"В библиотеке хранят книги, а в гараже — машину: место и то, что там хранят."},
+      "reviewed": false
+    },
+    {
+      "key": "v040", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Mix : bolg'a = vint : ?","options":["otvyortka","taxta","temir","burmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Гвоздь : молоток = шуруп : ?","options":["отвёртка","доска","железо","крутить"]},
+      "correct": 0,
+      "explain": {"uz":"Mix bolg'a bilan qoqiladi, vint esa otvyortka bilan buraladi: mahkamlagich va uning asbobi.","ru":"Гвоздь забивают молотком, а шуруп закручивают отвёрткой: крепёж и инструмент для него."},
+      "reviewed": false
+    },
+    {
+      "key": "v041", "kind": "analogy", "level": 3,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Sichqon : mushuk = quyon : ?","options":["tulki","sabzi","quloq","olmaxon"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Мышь : кошка = заяц : ?","options":["лиса","морковь","уши","белка"]},
+      "correct": 0,
+      "explain": {"uz":"Mushuk sichqonni ovlaydi, tulki esa quyonni: o'lja va ovchi. Sabzini quyonning o'zi yeydi — munosabat teskari.","ru":"Кошка охотится на мышь, лиса — на зайца: добыча и охотник. Морковь ест сам заяц — связь обратная."},
+      "reviewed": false
+    },
+    {
+      "key": "v042", "kind": "odd", "level": 3,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["dengiz","daryo","cho'l","ko'l"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["море","река","пустыня","озеро"]},
+      "correct": 2,
+      "explain": {"uz":"Dengiz, daryo va ko'l — suv havzalari, cho'l esa suvsiz joy.","ru":"Море, река и озеро — водоёмы, а пустыня — место почти без воды."},
+      "reviewed": false
+    },
+    {
+      "key": "v043", "kind": "odd", "level": 3,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["qalam","o'chirg'ich","flomaster","bo'r"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["карандаш","ластик","фломастер","мел"]},
+      "correct": 1,
+      "explain": {"uz":"Qalam, flomaster va bo'r bilan yoziladi, o'chirg'ich esa yozuvni o'chiradi.","ru":"Карандашом, фломастером и мелом пишут, а ластик стирает написанное."},
+      "reviewed": false
+    },
+    {
+      "key": "v044", "kind": "odd", "level": 3,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["kichik","mitti","mayda","ulkan"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["маленький","крошечный","мелкий","огромный"]},
+      "correct": 3,
+      "explain": {"uz":"Kichik, mitti va mayda — kichiklikni bildiradi, ulkan esa aksincha.","ru":"«Маленький», «крошечный» и «мелкий» говорят о малом размере, а «огромный» — наоборот."},
+      "reviewed": false
+    },
+    {
+      "key": "v045", "kind": "odd", "level": 3,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["sut","pishloq","qatiq","non"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["молоко","сыр","кефир","хлеб"]},
+      "correct": 3,
+      "explain": {"uz":"Sut, pishloq va qatiq — sut mahsulotlari, non esa bug'doy unidan pishiriladi.","ru":"Молоко, сыр и кефир — молочные продукты, а хлеб пекут из муки."},
+      "reviewed": false
+    },
+    {
+      "key": "v046", "kind": "category", "level": 3,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Mis, temir, oltin","options":["rezina","kumush","shisha","tosh"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Медь, железо, золото","options":["резина","серебро","стекло","камень"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar — metallar. Kumush ham metall.","ru":"В группе — металлы. Серебро тоже металл."},
+      "reviewed": false
+    },
+    {
+      "key": "v047", "kind": "category", "level": 3,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Tovuq, o'rdak, g'oz","options":["bo'ri","ilon","kurka","toshbaqa"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Курица, утка, гусь","options":["волк","змея","индюк","черепаха"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilar — uy parrandalari. Kurka ham uy parrandasi.","ru":"В группе — домашние птицы. Индюк тоже домашняя птица."},
+      "reviewed": false
+    },
+    {
+      "key": "v048", "kind": "category", "level": 3,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Aprel, may, iyun","options":["iyul","bahor","dushanba","soat"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Апрель, май, июнь","options":["июль","весна","понедельник","час"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar — yil oylarining nomlari. Iyul ham yil oyi.","ru":"В группе — названия месяцев. Июль тоже месяц."},
+      "reviewed": false
+    },
+    {
+      "key": "v049", "kind": "relation", "level": 3,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Mushuk — hayvon","options":["biri ikkinchisining bir turi","qism va butun","ma'nosi qarama-qarshi","sabab va natija"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Кошка — животное","options":["первое — один из видов второго","часть и целое","противоположные по смыслу","причина и следствие"]},
+      "correct": 0,
+      "explain": {"uz":"Mushuk — hayvonlarning bir turi. U hayvonning bir qismi emas.","ru":"Кошка — один из видов животных, а не часть животного."},
+      "reviewed": false
+    },
+    {
+      "key": "v050", "kind": "relation", "level": 3,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Uchuvchi — samolyot","options":["Yo'lovchi — poyezd","Samolyot — aeroport","Haydovchi — avtobus","Qanot — samolyot"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Лётчик — самолёт","options":["Пассажир — поезд","Самолёт — аэропорт","Водитель — автобус","Крыло — самолёт"]},
+      "correct": 2,
+      "explain": {"uz":"Uchuvchi samolyotni, haydovchi avtobusni boshqaradi. Yo'lovchi esa faqat unda ketadi.","ru":"Лётчик управляет самолётом, водитель — автобусом. Пассажир же только едет."},
+      "reviewed": false
+    },
+    {
+      "key": "v051", "kind": "relation", "level": 3,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Yomg'ir — ko'lmak","options":["qism va butun","sabab va natija","ma'nosi yaqin","ma'nosi qarama-qarshi"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Дождь — лужа","options":["часть и целое","причина и следствие","близкие по смыслу","противоположные по смыслу"]},
+      "correct": 1,
+      "explain": {"uz":"Yomg'ir yog'gani uchun ko'lmak paydo bo'ladi.","ru":"Лужа появляется из-за дождя."},
+      "reviewed": false
+    },
+    {
+      "key": "v052", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qo'shiqchi : qo'shiq = raqqos : ?","options":["sahna","musiqa","kostyum","raqs"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Певец : песня = танцор : ?","options":["сцена","музыка","костюм","танец"]},
+      "correct": 3,
+      "explain": {"uz":"Qo'shiqchi qo'shiq ijro etadi, raqqos esa raqs: ijrochi va uning ijrosi.","ru":"Певец исполняет песню, танцор — танец: исполнитель и то, что он исполняет."},
+      "reviewed": false
+    },
+    {
+      "key": "v053", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Dushanba : seshanba = yanvar : ?","options":["dekabr","qish","oy","fevral"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Понедельник : вторник = январь : ?","options":["декабрь","зима","месяц","февраль"]},
+      "correct": 3,
+      "explain": {"uz":"Seshanba dushanbadan keyin keladi, fevral esa yanvardan keyin. Dekabr yanvardan oldin keladi.","ru":"Вторник идёт после понедельника, февраль — после января. Декабрь идёт до января."},
+      "reviewed": false
+    },
+    {
+      "key": "v054", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Rassom : rasm = shoir : ?","options":["qalam","she'r","kitobxon","so'z"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Художник : картина = поэт : ?","options":["карандаш","стихотворение","читатель","слово"]},
+      "correct": 1,
+      "explain": {"uz":"Rassom rasm yaratadi, shoir esa she'r: ijodkor va uning asari.","ru":"Художник создаёт картину, а поэт — стихотворение: автор и его произведение."},
+      "reviewed": false
+    },
+    {
+      "key": "v055", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Daqiqa : soat = santimetr : ?","options":["uzunlik","millimetr","metr","gramm"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Минута : час = сантиметр : ?","options":["длина","миллиметр","метр","грамм"]},
+      "correct": 2,
+      "explain": {"uz":"Daqiqa — soatning kichik bo'lagi, santimetr — metrning kichik bo'lagi. Millimetr esa santimetrdan ham kichik — yo'nalish teskari.","ru":"Минута — малая доля часа, сантиметр — малая доля метра. Миллиметр меньше сантиметра — направление обратное."},
+      "reviewed": false
+    },
+    {
+      "key": "v056", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"G'isht : devor = so'z : ?","options":["jumla","harf","qalam","ovoz"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Кирпич : стена = слово : ?","options":["предложение","буква","карандаш","голос"]},
+      "correct": 0,
+      "explain": {"uz":"Devor g'ishtlardan, jumla esa so'zlardan tuziladi. Harf — so'zning o'zidan kichik bo'lak.","ru":"Стена складывается из кирпичей, предложение — из слов. Буква меньше слова, это его часть."},
+      "reviewed": false
+    },
+    {
+      "key": "v057", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Ertaga : bugun = bugun : ?","options":["kecha","ertaga","indinga","hozir"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Завтра : сегодня = сегодня : ?","options":["вчера","завтра","послезавтра","сейчас"]},
+      "correct": 0,
+      "explain": {"uz":"Har safar bir kun orqaga: ertagadan bugunga, bugundan kechaga.","ru":"Каждый раз на один день назад: от завтрашнего дня к сегодняшнему, от сегодняшнего — ко вчерашнему."},
+      "reviewed": false
+    },
+    {
+      "key": "v058", "kind": "analogy", "level": 4,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Uy : tom = quti : ?","options":["karton","sovg'a","qopqoq","burchak"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Дом : крыша = коробка : ?","options":["картон","подарок","крышка","угол"]},
+      "correct": 2,
+      "explain": {"uz":"Tom uyni ustidan yopadi, qopqoq esa qutini.","ru":"Крыша закрывает дом сверху, а крышка — коробку."},
+      "reviewed": false
+    },
+    {
+      "key": "v059", "kind": "odd", "level": 4,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["quvnoq","g'amgin","xursand","shod"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["весёлый","грустный","радостный","счастливый"]},
+      "correct": 1,
+      "explain": {"uz":"Quvnoq, xursand va shod — yaxshi kayfiyatni bildiradi, g'amgin esa aksincha.","ru":"«Весёлый», «радостный» и «счастливый» — о хорошем настроении, а «грустный» — наоборот."},
+      "reviewed": false
+    },
+    {
+      "key": "v060", "kind": "odd", "level": 4,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["santimetr","kilogramm","litr","termometr"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["сантиметр","килограмм","литр","термометр"]},
+      "correct": 3,
+      "explain": {"uz":"Santimetr, kilogramm va litr — o'lchov birliklari, termometr esa o'lchov asbobi.","ru":"Сантиметр, килограмм и литр — единицы измерения, а термометр — измерительный прибор."},
+      "reviewed": false
+    },
+    {
+      "key": "v061", "kind": "odd", "level": 4,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["nonushta","tushlik","kechki ovqat","oshxona"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["завтрак","обед","ужин","кухня"]},
+      "correct": 3,
+      "explain": {"uz":"Nonushta, tushlik va kechki ovqat — ovqatlanish vaqtlari, oshxona esa xona.","ru":"Завтрак, обед и ужин — приёмы пищи, а кухня — комната."},
+      "reviewed": false
+    },
+    {
+      "key": "v062", "kind": "odd", "level": 4,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["yostiq","sochiq","ko'rpa","choyshab"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["подушка","полотенце","одеяло","простыня"]},
+      "correct": 1,
+      "explain": {"uz":"Yostiq, ko'rpa va choyshab — yotoq anjomlari, sochiq esa artinish uchun.","ru":"Подушка, одеяло и простыня — постельные принадлежности, а полотенцем вытираются."},
+      "reviewed": false
+    },
+    {
+      "key": "v063", "kind": "category", "level": 4,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Qayin, terak, zarang","options":["atirgul","o'rmon","eman","barg"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Берёза, тополь, клён","options":["роза","лес","дуб","лист"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilar — daraxtlar. Eman ham daraxt, atirgul esa buta.","ru":"В группе — деревья. Дуб тоже дерево, а роза — кустарник."},
+      "reviewed": false
+    },
+    {
+      "key": "v064", "kind": "category", "level": 4,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Uchburchak, to'rtburchak, beshburchak","options":["oltiburchak","doira","kub","chiziq"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Треугольник, четырёхугольник, пятиугольник","options":["шестиугольник","круг","куб","линия"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar — burchakli tekis shakllar (ko'pburchaklar). Oltiburchak ham shunday.","ru":"В группе — плоские фигуры с углами (многоугольники). Шестиугольник тоже."},
+      "reviewed": false
+    },
+    {
+      "key": "v065", "kind": "category", "level": 4,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Suv, sut, sharbat","options":["choy","non","muz","shakar"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Вода, молоко, сок","options":["чай","хлеб","лёд","сахар"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar — ichimliklar. Choy ham ichimlik.","ru":"В группе — напитки. Чай тоже напиток."},
+      "reviewed": false
+    },
+    {
+      "key": "v066", "kind": "relation", "level": 4,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Urug' — daraxt","options":["Ildiz — daraxt","Bog'bon — daraxt","Tuxum — qush","Daraxt — o'rmon"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Семя — дерево","options":["Корень — дерево","Садовник — дерево","Яйцо — птица","Дерево — лес"]},
+      "correct": 2,
+      "explain": {"uz":"Urug'dan daraxt o'sib chiqadi, tuxumdan esa qush: boshlanish va undan rivojlanadigan jonzot.","ru":"Из семени вырастает дерево, из яйца — птица: начало и то, что из него развивается."},
+      "reviewed": false
+    },
+    {
+      "key": "v067", "kind": "relation", "level": 4,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Katta — ulkan","options":["ma'nosi qarama-qarshi","bir belgining kuchsiz va kuchli darajasi","qism va butun","sabab va natija"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Большой — огромный","options":["противоположные по смыслу","слабая и сильная степень одного признака","часть и целое","причина и следствие"]},
+      "correct": 1,
+      "explain": {"uz":"Ulkan — juda katta degani: belgi bir xil, faqat kuchliroq.","ru":"«Огромный» значит «очень большой»: признак тот же, только сильнее."},
+      "reviewed": false
+    },
+    {
+      "key": "v068", "kind": "relation", "level": 4,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Termometr — harorat","options":["qism va butun","ma'nosi qarama-qarshi","joy va u yerdagi narsa","asbob va u o'lchaydigan kattalik"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Термометр — температура","options":["часть и целое","противоположные по смыслу","место и то, что там находится","прибор и величина, которую он измеряет"]},
+      "correct": 3,
+      "explain": {"uz":"Termometr haroratni o'lchaydi.","ru":"Термометр измеряет температуру."},
+      "reviewed": false
+    },
+    {
+      "key": "v069", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Bug' : gaz = muz : ?","options":["sovuq","suyuqlik","qor","qattiq jism"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Пар : газ = лёд : ?","options":["холод","жидкость","снег","твёрдое тело"]},
+      "correct": 3,
+      "explain": {"uz":"Bug' — suvning gaz holati, muz — suvning qattiq holati. Suyuq holat esa oddiy suvga mos keladi.","ru":"Пар — газообразное состояние воды, лёд — твёрдое. Жидкое же состояние соответствует обычной воде."},
+      "reviewed": false
+    },
+    {
+      "key": "v070", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kompas : yo'nalish = soat : ?","options":["strelka","vaqt","devor","raqam"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Компас : направление = часы : ?","options":["стрелка","время","стена","цифра"]},
+      "correct": 1,
+      "explain": {"uz":"Kompas yo'nalishni, soat esa vaqtni ko'rsatadi: asbob va u ko'rsatadigan narsa. Strelka — asbobning qismi.","ru":"Компас показывает направление, часы — время: прибор и то, что он показывает. Стрелка — лишь часть прибора."},
+      "reviewed": false
+    },
+    {
+      "key": "v071", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Shifokor : bemor = o'qituvchi : ?","options":["maktab","dars","o'quvchi","bilim"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Врач : пациент = учитель : ?","options":["школа","урок","ученик","знания"]},
+      "correct": 2,
+      "explain": {"uz":"Shifokor bemorga, o'qituvchi esa o'quvchiga yordam beradi: mutaxassis va u xizmat qiladigan odam.","ru":"Врач помогает пациенту, учитель — ученику: специалист и человек, которому он помогает."},
+      "reviewed": false
+    },
+    {
+      "key": "v072", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Tikuvchi : mato = duradgor : ?","options":["yog'och","arra","stol","ustaxona"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Портной : ткань = столяр : ?","options":["древесина","пила","стол","мастерская"]},
+      "correct": 0,
+      "explain": {"uz":"Tikuvchi mato bilan, duradgor yog'och bilan ishlaydi: usta va uning materiali. Stol — mahsulot, arra — asbob.","ru":"Портной работает с тканью, столяр — с древесиной: мастер и его материал. Стол — изделие, пила — инструмент."},
+      "reviewed": false
+    },
+    {
+      "key": "v073", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qanot : qush = suzgich : ?","options":["baliq","suv","dum","qayiq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Крыло : птица = плавник : ?","options":["рыба","вода","хвост","лодка"]},
+      "correct": 0,
+      "explain": {"uz":"Qanot — qushning, suzgich — baliqning harakatlanish a'zosi: qism va uning egasi.","ru":"Крыло — орган движения птицы, плавник — рыбы: часть и её обладатель."},
+      "reviewed": false
+    },
+    {
+      "key": "v074", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Muzlatgich : sovuq = pech : ?","options":["oshxona","non","issiqlik","temir"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Холодильник : холод = печь : ?","options":["кухня","хлеб","тепло","железо"]},
+      "correct": 2,
+      "explain": {"uz":"Muzlatgich sovuq, pech esa issiqlik hosil qiladi.","ru":"Холодильник создаёт холод, а печь — тепло."},
+      "reviewed": false
+    },
+    {
+      "key": "v075", "kind": "analogy", "level": 5,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Arra : taxta = qaychi : ?","options":["tikuvchi","qog'oz","o'tkir","qirqmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Пила : доска = ножницы : ?","options":["портной","бумага","острые","резать"]},
+      "correct": 1,
+      "explain": {"uz":"Arra taxtani, qaychi qog'ozni kesadi: asbob va u kesadigan material.","ru":"Пила режет доску, ножницы — бумагу: инструмент и материал, который им режут."},
+      "reviewed": false
+    },
+    {
+      "key": "v076", "kind": "odd", "level": 5,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["chumoli","asalari","kapalak","o'rgimchak"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["муравей","пчела","бабочка","паук"]},
+      "correct": 3,
+      "explain": {"uz":"Chumoli, asalari va kapalak — hasharotlar (oltita oyoq). O'rgimchakning sakkizta oyog'i bor, u hasharot emas.","ru":"Муравей, пчела и бабочка — насекомые (шесть ног). У паука восемь ног, он не насекомое."},
+      "reviewed": false
+    },
+    {
+      "key": "v077", "kind": "odd", "level": 5,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["sher","yo'lbars","qoplon","bo'ri"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["лев","тигр","леопард","волк"]},
+      "correct": 3,
+      "explain": {"uz":"Sher, yo'lbars va qoplon — mushuksimonlar oilasidan, bo'ri esa itsimonlardan.","ru":"Лев, тигр и леопард — из семейства кошачьих, а волк — из псовых."},
+      "reviewed": false
+    },
+    {
+      "key": "v078", "kind": "odd", "level": 5,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["roman","haykal","hikoya","ertak"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["роман","скульптура","рассказ","сказка"]},
+      "correct": 1,
+      "explain": {"uz":"Roman, hikoya va ertak — so'z bilan yaratilgan asarlar, haykal esa tosh yoki metalldan yasaladi.","ru":"Роман, рассказ и сказка создаются словами, а скульптуру делают из камня или металла."},
+      "reviewed": false
+    },
+    {
+      "key": "v079", "kind": "odd", "level": 5,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["eshik","deraza","devor","darcha"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["дверь","окно","стена","форточка"]},
+      "correct": 2,
+      "explain": {"uz":"Eshik, deraza va darcha ochiladi va yopiladi, devor esa yo'q.","ru":"Дверь, окно и форточка открываются и закрываются, а стена — нет."},
+      "reviewed": false
+    },
+    {
+      "key": "v080", "kind": "category", "level": 5,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Kit, delfin, tyulen","options":["morj","akula","sigir","qisqichbaqa"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Кит, дельфин, тюлень","options":["морж","акула","корова","краб"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar — dengizda yashaydigan sutemizuvchilar. Morj ham shunday. Akula — baliq, sigir quruqlikda yashaydi.","ru":"В группе — морские млекопитающие. Морж тоже. Акула — рыба, а корова живёт на суше."},
+      "reviewed": false
+    },
+    {
+      "key": "v081", "kind": "category", "level": 5,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Shimol, janub, g'arb","options":["sharq","chap","yuqori","xarita"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Север, юг, запад","options":["восток","лево","верх","карта"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar — dunyo tomonlari. Sharq ham dunyo tomoni.","ru":"В группе — стороны света. Восток тоже сторона света."},
+      "reviewed": false
+    },
+    {
+      "key": "v082", "kind": "category", "level": 5,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Lupa, mikroskop, teleskop","options":["tarozi","termometr","durbin","soat"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Лупа, микроскоп, телескоп","options":["весы","термометр","бинокль","часы"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilar narsalarni kattalashtirib ko'rsatadi. Durbin ham shunday.","ru":"В группе — приборы, которые увеличивают изображение. Бинокль тоже."},
+      "reviewed": false
+    },
+    {
+      "key": "v083", "kind": "relation", "level": 5,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Qurg'oqchilik — hosilsizlik","options":["Yomg'ir — bulut","Uyqusizlik — charchoq","Qish — yoz","Dehqon — dala"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Засуха — неурожай","options":["Дождь — туча","Бессонница — усталость","Зима — лето","Фермер — поле"]},
+      "correct": 1,
+      "explain": {"uz":"Qurg'oqchilik tufayli hosil bo'lmaydi, uyqusizlik tufayli odam charchaydi: avval sabab, keyin natija. «Yomg'ir — bulut»da esa avval natija, keyin sabab.","ru":"Из-за засухи — неурожай, из-за бессонницы — усталость: сначала причина, потом следствие. В паре «дождь — туча» наоборот."},
+      "reviewed": false
+    },
+    {
+      "key": "v084", "kind": "relation", "level": 5,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Botir — jasur","options":["ma'nosi qarama-qarshi","qism va butun","biri ikkinchisining sababi","ma'nosi yaqin"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Храбрый — отважный","options":["противоположные по смыслу","часть и целое","одно — причина другого","близкие по смыслу"]},
+      "correct": 3,
+      "explain": {"uz":"Botir va jasur — ma'nosi yaqin so'zlar (sinonimlar).","ru":"«Храбрый» и «отважный» — слова, близкие по смыслу (синонимы)."},
+      "reviewed": false
+    },
+    {
+      "key": "v085", "kind": "relation", "level": 5,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Muallif — kitob","options":["Kitobxon — kitob","Kitob — sahifa","Qalam — daftar","Bastakor — kuy"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Автор — книга","options":["Читатель — книга","Книга — страница","Карандаш — тетрадь","Композитор — мелодия"]},
+      "correct": 3,
+      "explain": {"uz":"Muallif kitobni, bastakor kuyni yaratadi: ijodkor va uning asari.","ru":"Автор создаёт книгу, композитор — мелодию: создатель и его произведение."},
+      "reviewed": false
+    },
+    {
+      "key": "v086", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qurt : kapalak = itbaliq : ?","options":["baliq","baqa","suv","ilon"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Гусеница : бабочка = головастик : ?","options":["рыба","лягушка","вода","змея"]},
+      "correct": 1,
+      "explain": {"uz":"Qurt o'sib kapalakka, itbaliq esa baqaga aylanadi: yosh bosqich va voyaga yetgan jonzot.","ru":"Гусеница превращается в бабочку, а головастик — в лягушку: ранняя стадия и взрослое животное."},
+      "reviewed": false
+    },
+    {
+      "key": "v087", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Tarozi : og'irlik = chizg'ich : ?","options":["santimetr","qalam","uzunlik","to'g'ri"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Весы : вес = линейка : ?","options":["сантиметр","карандаш","длина","прямая"]},
+      "correct": 2,
+      "explain": {"uz":"Tarozi og'irlikni, chizg'ich uzunlikni o'lchaydi. Santimetr — o'lchov birligi, kattalikning o'zi emas.","ru":"Весы измеряют вес, линейка — длину. Сантиметр — единица измерения, а не сама величина."},
+      "reviewed": false
+    },
+    {
+      "key": "v088", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Ko'prik : daryo = tunnel : ?","options":["tog'","poyezd","qorong'ilik","yo'l"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Мост : река = тоннель : ?","options":["гора","поезд","темнота","дорога"]},
+      "correct": 0,
+      "explain": {"uz":"Ko'prik daryo ustidan, tunnel tog' ichidan o'tishga yordam beradi: inshoot va u yengib o'tadigan to'siq.","ru":"Мост позволяет пройти над рекой, тоннель — сквозь гору: сооружение и препятствие, которое оно преодолевает."},
+      "reviewed": false
+    },
+    {
+      "key": "v089", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kitob : o'qimoq = kuy : ?","options":["tinglamoq","nota","quloq","karnay"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Книга : читать = мелодия : ?","options":["слушать","ноты","ухо","труба"]},
+      "correct": 0,
+      "explain": {"uz":"Kitobni o'qiymiz, kuyni tinglaymiz: asar va uni qabul qilish usuli.","ru":"Книгу читают, мелодию слушают: произведение и способ его восприятия."},
+      "reviewed": false
+    },
+    {
+      "key": "v090", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Mashq : mahorat = o'qish : ?","options":["kitob","maktab","bilim","imtihon"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Тренировка : мастерство = учёба : ?","options":["книга","школа","знания","экзамен"]},
+      "correct": 2,
+      "explain": {"uz":"Mashq qilish mahoratga, o'qish esa bilimga olib keladi: harakat va uning natijasi.","ru":"Тренировка приводит к мастерству, учёба — к знаниям: действие и его результат."},
+      "reviewed": false
+    },
+    {
+      "key": "v091", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Oshpaz : retsept = quruvchi : ?","options":["g'isht","chizma","uy","kran"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Повар : рецепт = строитель : ?","options":["кирпич","чертёж","дом","кран"]},
+      "correct": 1,
+      "explain": {"uz":"Oshpaz retseptga qarab pishiradi, quruvchi chizmaga qarab quradi: usta va u amal qiladigan ko'rsatma.","ru":"Повар готовит по рецепту, строитель строит по чертежу: мастер и инструкция, по которой он работает."},
+      "reviewed": false
+    },
+    {
+      "key": "v092", "kind": "analogy", "level": 6,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Ildiz : daraxt = poydevor : ?","options":["g'isht","yer","tom","bino"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Корень : дерево = фундамент : ?","options":["кирпич","земля","крыша","здание"]},
+      "correct": 3,
+      "explain": {"uz":"Ildiz daraxtni, poydevor binoni ushlab turadi: tayanch va u ushlab turgan narsa.","ru":"Корень держит дерево, фундамент — здание: опора и то, что она держит."},
+      "reviewed": false
+    },
+    {
+      "key": "v093", "kind": "odd", "level": 6,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["g'isht","taxta","sement","bolg'a"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["кирпич","доска","цемент","молоток"]},
+      "correct": 3,
+      "explain": {"uz":"G'isht, taxta va sement — qurilish materiallari, bolg'a esa asbob.","ru":"Кирпич, доска и цемент — строительные материалы, а молоток — инструмент."},
+      "reviewed": false
+    },
+    {
+      "key": "v094", "kind": "odd", "level": 6,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["sevinch","xotira","g'azab","qo'rquv"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["радость","память","гнев","страх"]},
+      "correct": 1,
+      "explain": {"uz":"Sevinch, g'azab va qo'rquv — his-tuyg'ular, xotira esa his-tuyg'u emas.","ru":"Радость, гнев и страх — чувства, а память — нет."},
+      "reviewed": false
+    },
+    {
+      "key": "v095", "kind": "odd", "level": 6,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["ko'rish","eshitish","yurish","hid bilish"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["зрение","слух","ходьба","обоняние"]},
+      "correct": 2,
+      "explain": {"uz":"Ko'rish, eshitish va hid bilish — sezgilar, yurish esa harakat.","ru":"Зрение, слух и обоняние — чувства восприятия, а ходьба — движение."},
+      "reviewed": false
+    },
+    {
+      "key": "v096", "kind": "odd", "level": 6,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["mikrofon","barometr","termometr","spidometr"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["микрофон","барометр","термометр","спидометр"]},
+      "correct": 0,
+      "explain": {"uz":"Barometr, termometr va spidometr nimanidir o'lchaydi, mikrofon esa ovozni qabul qilib uzatadi.","ru":"Барометр, термометр и спидометр что-то измеряют, а микрофон улавливает и передаёт звук."},
+      "reviewed": false
+    },
+    {
+      "key": "v097", "kind": "category", "level": 6,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Keng, uzun, baland","options":["chuqur","og'ir","qizil","tez"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Широкий, длинный, высокий","options":["глубокий","тяжёлый","красный","быстрый"]},
+      "correct": 0,
+      "explain": {"uz":"Guruhdagilar narsaning qaysidir yo'nalishdagi o'lchamini bildiradi. Chuqur ham shunday; og'ir — vazn, o'lcham emas.","ru":"В группе — размеры предмета в каком-то направлении. «Глубокий» тоже; «тяжёлый» — это вес, а не размер."},
+      "reviewed": false
+    },
+    {
+      "key": "v098", "kind": "category", "level": 6,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Soat, kalendar, qum soat","options":["tarozi","chizg'ich","sekundomer","kompas"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Часы, календарь, песочные часы","options":["весы","линейка","секундомер","компас"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilar vaqtni o'lchashga yordam beradi. Sekundomer ham shunday.","ru":"Всё в группе помогает измерять время. Секундомер тоже."},
+      "reviewed": false
+    },
+    {
+      "key": "v099", "kind": "category", "level": 6,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"O'pka, yurak, jigar","options":["tirnoq","oshqozon","soch","qosh"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Лёгкие, сердце, печень","options":["ноготь","желудок","волосы","бровь"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar — tananing ichki a'zolari. Oshqozon ham ichki a'zo.","ru":"В группе — внутренние органы. Желудок тоже внутренний орган."},
+      "reviewed": false
+    },
+    {
+      "key": "v100", "kind": "relation", "level": 6,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Sham — mum","options":["joy va u yerdagi narsa","asbob va uning vazifasi","ma'nosi qarama-qarshi","narsa va u yasalgan material"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Свеча — воск","options":["место и то, что там находится","инструмент и его назначение","противоположные по смыслу","предмет и материал, из которого он сделан"]},
+      "correct": 3,
+      "explain": {"uz":"Sham mumdan yasaladi.","ru":"Свечу делают из воска."},
+      "reviewed": false
+    },
+    {
+      "key": "v101", "kind": "relation", "level": 6,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Spidometr — tezlik","options":["Haydovchi — mashina","Tezlik — yo'l","Soat — devor","Soat — vaqt"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Спидометр — скорость","options":["Водитель — машина","Скорость — дорога","Часы — стена","Часы — время"]},
+      "correct": 3,
+      "explain": {"uz":"Spidometr tezlikni, soat esa vaqtni ko'rsatadi: asbob va u o'lchaydigan kattalik.","ru":"Спидометр показывает скорость, часы — время: прибор и величина, которую он измеряет."},
+      "reviewed": false
+    },
+    {
+      "key": "v102", "kind": "relation", "level": 6,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Ochlik — ovqat","options":["Ovqat — likopcha","Chanqoq — suv","Oshpaz — ovqat","Non — bug'doy"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Голод — еда","options":["Еда — тарелка","Жажда — вода","Повар — еда","Хлеб — пшеница"]},
+      "correct": 1,
+      "explain": {"uz":"Ochlikni ovqat, chanqoqni suv qondiradi: ehtiyoj va uni qondiradigan narsa.","ru":"Голод утоляет еда, жажду — вода: потребность и то, что её удовлетворяет."},
+      "reviewed": false
+    },
+    {
+      "key": "v103", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Yomg'ir : jala = shamol : ?","options":["shabada","bulut","bo'ron","momaqaldiroq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Дождь : ливень = ветер : ?","options":["ветерок","туча","ураган","гром"]},
+      "correct": 2,
+      "explain": {"uz":"Jala — juda kuchli yomg'ir, bo'ron — juda kuchli shamol. Shabada esa kuchsiz shamol, munosabat teskari.","ru":"Ливень — очень сильный дождь, ураган — очень сильный ветер. Ветерок — слабый ветер, это обратная связь."},
+      "reviewed": false
+    },
+    {
+      "key": "v104", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Sahifa : kitob = kadr : ?","options":["film","kamera","rasm","ekran"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Страница : книга = кадр : ?","options":["фильм","камера","фотография","экран"]},
+      "correct": 0,
+      "explain": {"uz":"Kitob ko'p sahifalardan, film esa ko'p kadrlardan tashkil topadi: birlik va ulardan tuzilgan butun.","ru":"Книга состоит из многих страниц, фильм — из многих кадров: единица и целое из таких единиц."},
+      "reviewed": false
+    },
+    {
+      "key": "v105", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qo'rquv : jasorat = dangasalik : ?","options":["tirishqoqlik","charchoq","uyqu","dam olish"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Страх : смелость = лень : ?","options":["трудолюбие","усталость","сон","отдых"]},
+      "correct": 0,
+      "explain": {"uz":"Jasorat qo'rquvning, tirishqoqlik dangasalikning qarama-qarshisi.","ru":"Смелость противоположна страху, трудолюбие — лени."},
+      "reviewed": false
+    },
+    {
+      "key": "v106", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Pilla : ipak = paxta : ?","options":["qurt","dala","ip","oq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Кокон : шёлк = хлопок : ?","options":["гусеница","поле","нить","белый"]},
+      "correct": 2,
+      "explain": {"uz":"Pilladan ipak ip olinadi, paxtadan ham ip yigiriladi: xomashyo va undan olinadigan ip.","ru":"Из кокона получают шёлковую нить, из хлопка тоже прядут нить: сырьё и нить из него."},
+      "reviewed": false
+    },
+    {
+      "key": "v107", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Saxiy : ziqna = kamtar : ?","options":["uyatchan","maqtanchoq","jasur","sodda"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Щедрый : жадный = скромный : ?","options":["застенчивый","хвастливый","смелый","простой"]},
+      "correct": 1,
+      "explain": {"uz":"Saxiy — ziqnaning, kamtar — maqtanchoqning qarama-qarshisi. Uyatchan esa kamtarga yaqin.","ru":"Щедрый противоположен жадному, скромный — хвастливому. «Застенчивый» же близок к «скромному»."},
+      "reviewed": false
+    },
+    {
+      "key": "v108", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Tomir : qon = quvur : ?","options":["temir","uy","jo'mrak","suv"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Вена : кровь = труба : ?","options":["железо","дом","кран","вода"]},
+      "correct": 3,
+      "explain": {"uz":"Qon tomir bo'ylab, suv esa quvur bo'ylab oqadi: yo'l va u bo'ylab oqadigan suyuqlik.","ru":"Кровь течёт по вене, вода — по трубе: канал и жидкость, которая по нему течёт."},
+      "reviewed": false
+    },
+    {
+      "key": "v109", "kind": "analogy", "level": 7,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Urug' : ekmoq = hosil : ?","options":["sug'ormoq","dala","bug'doy","yig'moq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Семена : сеять = урожай : ?","options":["поливать","поле","пшеница","собирать"]},
+      "correct": 3,
+      "explain": {"uz":"Urug' ekiladi, hosil yig'iladi: dehqonchilikning boshidagi va oxiridagi ish.","ru":"Семена сеют, урожай собирают: первое и последнее дело в земледелии."},
+      "reviewed": false
+    },
+    {
+      "key": "v110", "kind": "odd", "level": 7,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["oldin","bu yerda","keyin","hozir"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["раньше","здесь","позже","сейчас"]},
+      "correct": 1,
+      "explain": {"uz":"Oldin, keyin va hozir — vaqtni, «bu yerda» esa joyni bildiradi.","ru":"«Раньше», «позже» и «сейчас» говорят о времени, а «здесь» — о месте."},
+      "reviewed": false
+    },
+    {
+      "key": "v111", "kind": "odd", "level": 7,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["kub","piramida","kvadrat","prizma"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["куб","пирамида","квадрат","призма"]},
+      "correct": 2,
+      "explain": {"uz":"Kub, piramida va prizma — hajmli jismlar, kvadrat esa tekis shakl.","ru":"Куб, пирамида и призма — объёмные тела, а квадрат — плоская фигура."},
+      "reviewed": false
+    },
+    {
+      "key": "v112", "kind": "odd", "level": 7,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["unutmoq","tushunmoq","anglamoq","fahmlamoq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["забывать","понимать","осознавать","постигать"]},
+      "correct": 0,
+      "explain": {"uz":"Tushunmoq, anglamoq va fahmlamoq — ma'nosi yaqin so'zlar, unutmoq esa ulardan farq qiladi.","ru":"«Понимать», «осознавать» и «постигать» близки по смыслу, а «забывать» — нет."},
+      "reviewed": false
+    },
+    {
+      "key": "v113", "kind": "odd", "level": 7,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["talaba","o'qituvchi","shifokor","muhandis"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["студент","учитель","врач","инженер"]},
+      "correct": 0,
+      "explain": {"uz":"O'qituvchi, shifokor va muhandis — kasb egalari, talaba esa hali kasb o'rganayotgan odam.","ru":"Учитель, врач и инженер — профессии, а студент ещё только учится профессии."},
+      "reviewed": false
+    },
+    {
+      "key": "v114", "kind": "category", "level": 7,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Yo'lbars, zebra, asalari","options":["pomidor","qor","tarvuz","bulut"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Тигр, зебра, пчела","options":["помидор","снег","арбуз","облако"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilarning umumiy belgisi — yo'l-yo'l (chiziqli) ko'rinish. Variantlardan faqat tarvuz ham yo'l-yo'l.","ru":"Общий признак группы — полоски. Из вариантов полосатый только арбуз."},
+      "reviewed": false
+    },
+    {
+      "key": "v115", "kind": "category", "level": 7,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Ko'mir, neft, gaz","options":["g'isht","o'tin","shisha","paxta"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Уголь, нефть, газ","options":["кирпич","дрова","стекло","хлопок"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar — yoqilg'i. O'tin ham yoqilg'i.","ru":"В группе — топливо. Дрова тоже топливо."},
+      "reviewed": false
+    },
+    {
+      "key": "v116", "kind": "category", "level": 7,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Qor, sut, paxta","options":["ko'mir","osmon","maysa","bo'r"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Снег, молоко, хлопок","options":["уголь","небо","трава","мел"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilarning umumiy belgisi — oq rang. Bo'r ham oq.","ru":"Общий признак группы — белый цвет. Мел тоже белый."},
+      "reviewed": false
+    },
+    {
+      "key": "v117", "kind": "relation", "level": 7,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Daraxt — o'rmon","options":["Barg — yashil","O'rmon — bo'ri","Daraxt — yog'och","Qo'y — suruv"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Дерево — лес","options":["Лист — зелёный","Лес — волк","Дерево — древесина","Овца — отара"]},
+      "correct": 3,
+      "explain": {"uz":"O'rmon ko'p daraxtlardan, suruv ko'p qo'ylardan iborat: bitta va ularning to'plami.","ru":"Лес состоит из многих деревьев, отара — из многих овец: один и их множество."},
+      "reviewed": false
+    },
+    {
+      "key": "v118", "kind": "relation", "level": 7,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Ehtiyotsizlik — xato","options":["ma'nosi yaqin","sabab va natija","ma'nosi qarama-qarshi","qism va butun"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Невнимательность — ошибка","options":["близкие по смыслу","причина и следствие","противоположные по смыслу","часть и целое"]},
+      "correct": 1,
+      "explain": {"uz":"Ehtiyotsizlik tufayli xato qilinadi: biri ikkinchisining sababi.","ru":"Из-за невнимательности совершают ошибки: одно — причина другого."},
+      "reviewed": false
+    },
+    {
+      "key": "v119", "kind": "relation", "level": 7,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Transport — velosiped","options":["qism va butun","sabab va natija","umumiy tushuncha va uning bir turi","asbob va uning vazifasi"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Транспорт — велосипед","options":["часть и целое","причина и следствие","общее понятие и один из его видов","инструмент и его назначение"]},
+      "correct": 2,
+      "explain": {"uz":"Velosiped — transportning bir turi, uning qismi emas.","ru":"Велосипед — один из видов транспорта, а не его часть."},
+      "reviewed": false
+    },
+    {
+      "key": "v120", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kechikish : uzr = sovg'a : ?","options":["minnatdorchilik","bayram","quti","pul"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Опоздание : извинение = подарок : ?","options":["благодарность","праздник","коробка","деньги"]},
+      "correct": 0,
+      "explain": {"uz":"Kechiksak uzr so'raymiz, sovg'a olsak minnatdorchilik bildiramiz: vaziyat va unga odobli javob.","ru":"Опоздав, мы извиняемся, получив подарок — благодарим: ситуация и вежливый ответ на неё."},
+      "reviewed": false
+    },
+    {
+      "key": "v121", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Tushunmovchilik : tushuntirish = qorong'ilik : ?","options":["yorug'lik","tun","qo'rquv","ko'z"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Непонимание : объяснение = темнота : ?","options":["свет","ночь","страх","глаза"]},
+      "correct": 0,
+      "explain": {"uz":"Tushuntirish tushunmovchilikni, yorug'lik qorong'ilikni yo'qotadi: holat va uni bartaraf etadigan narsa.","ru":"Объяснение устраняет непонимание, свет — темноту: состояние и то, что его устраняет."},
+      "reviewed": false
+    },
+    {
+      "key": "v122", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Oz : ko'p = kamdan-kam : ?","options":["hech qachon","doim","tez-tez","ba'zan"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Мало : много = редко : ?","options":["никогда","всегда","часто","иногда"]},
+      "correct": 2,
+      "explain": {"uz":"«Oz» — «ko'p»ning qarama-qarshisi, «kamdan-kam» — «tez-tez»ning. «Ko'p» — «hammasi» degani emas, shuning uchun «doim» mos emas.","ru":"«Мало» противоположно «много», «редко» — «часто». «Много» не значит «всё», поэтому «всегда» не подходит."},
+      "reviewed": false
+    },
+    {
+      "key": "v123", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Bo'yoq : rassom = so'z : ?","options":["lug'at","yozuvchi","harf","kitob"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Краски : художник = слова : ?","options":["словарь","писатель","буква","книга"]},
+      "correct": 1,
+      "explain": {"uz":"Rassom bo'yoq bilan, yozuvchi so'z bilan ijod qiladi: material va u bilan ishlaydigan ijodkor.","ru":"Художник творит красками, писатель — словами: материал и творец, который с ним работает."},
+      "reviewed": false
+    },
+    {
+      "key": "v124", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Retsept : taom = nota : ?","options":["qalam","pianino","qo'shiqchi","kuy"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Рецепт : блюдо = ноты : ?","options":["карандаш","пианино","певец","мелодия"]},
+      "correct": 3,
+      "explain": {"uz":"Retsept bo'yicha taom tayyorlanadi, nota bo'yicha kuy ijro etiladi: yozma ko'rsatma va uning natijasi.","ru":"По рецепту готовят блюдо, по нотам исполняют мелодию: запись-инструкция и её результат."},
+      "reviewed": false
+    },
+    {
+      "key": "v125", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Shoshilish : xato = ehtiyotkorlik : ?","options":["tezlik","qo'rquv","shoshilish","aniqlik"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Спешка : ошибка = осторожность : ?","options":["скорость","страх","спешка","точность"]},
+      "correct": 3,
+      "explain": {"uz":"Shoshilish xatoga, ehtiyotkorlik aniqlikka olib keladi: xulq va uning oqibati.","ru":"Спешка ведёт к ошибке, осторожность — к точности: поведение и его последствие."},
+      "reviewed": false
+    },
+    {
+      "key": "v126", "kind": "analogy", "level": 8,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Xarita : hudud = chizma : ?","options":["qalam","bino","me'mor","qog'oz"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Карта : местность = чертёж : ?","options":["карандаш","здание","архитектор","бумага"]},
+      "correct": 1,
+      "explain": {"uz":"Xarita hududni, chizma binoni qog'ozda tasvirlaydi: tasvir va u ko'rsatadigan narsa.","ru":"Карта изображает местность, чертёж — здание: изображение и то, что на нём показано."},
+      "reviewed": false
+    },
+    {
+      "key": "v127", "kind": "odd", "level": 8,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["pichirlash","nutq","imo-ishora","qichqiriq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["шёпот","речь","жест","крик"]},
+      "correct": 2,
+      "explain": {"uz":"Pichirlash, nutq va qichqiriqda ovoz ishlatiladi, imo-ishora esa ovozsiz.","ru":"В шёпоте, речи и крике участвует голос, а жест беззвучен."},
+      "reviewed": false
+    },
+    {
+      "key": "v128", "kind": "odd", "level": 8,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["doim","kecha","bugun","ertaga"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["всегда","вчера","сегодня","завтра"]},
+      "correct": 0,
+      "explain": {"uz":"Kecha, bugun va ertaga — aniq kunlar, «doim» esa har qanday vaqtni bildiradi.","ru":"«Вчера», «сегодня» и «завтра» — конкретные дни, а «всегда» — любое время."},
+      "reviewed": false
+    },
+    {
+      "key": "v129", "kind": "odd", "level": 8,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["sinmoq","gullamoq","o'smoq","ko'karmoq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["ломаться","цвести","расти","зеленеть"]},
+      "correct": 0,
+      "explain": {"uz":"Gullamoq, o'smoq va ko'karmoq — o'simlikning rivojlanishi, sinmoq esa buzilish.","ru":"Цвести, расти и зеленеть — развитие растения, а ломаться — разрушение."},
+      "reviewed": false
+    },
+    {
+      "key": "v130", "kind": "odd", "level": 8,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["eshitmoq","tinglamoq","gapirmoq","quloq solmoq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["слышать","слушать","говорить","прислушиваться"]},
+      "correct": 2,
+      "explain": {"uz":"Eshitmoq, tinglamoq va quloq solmoq — ovozni qabul qilish, gapirmoq esa ovoz chiqarish.","ru":"Слышать, слушать и прислушиваться — воспринимать звук, а говорить — издавать его."},
+      "reviewed": false
+    },
+    {
+      "key": "v131", "kind": "category", "level": 8,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Yulduz, quyosh, olov","options":["oy","chiroq","oyna","olmos"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Звезда, солнце, огонь","options":["луна","лампа","зеркало","алмаз"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar o'zidan yorug'lik chiqaradi. Chiroq ham shunday. Oy, oyna va olmos esa boshqa manbaning yorug'ligini qaytaradi.","ru":"Всё в группе само излучает свет. Лампа тоже. Луна, зеркало и алмаз лишь отражают чужой свет."},
+      "reviewed": false
+    },
+    {
+      "key": "v132", "kind": "category", "level": 8,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Bug'doy, guruch, makkajo'xori","options":["loviya","kartoshka","kungaboqar","arpa"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Пшеница, рис, кукуруза","options":["фасоль","картофель","подсолнечник","ячмень"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar — g'alla (don) ekinlari. Arpa ham shunday.","ru":"В группе — зерновые культуры. Ячмень тоже."},
+      "reviewed": false
+    },
+    {
+      "key": "v133", "kind": "category", "level": 8,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Muqaddima, bob, xotima","options":["muallif","nashriyot","kitobxon","mundarija"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Вступление, глава, заключение","options":["автор","издательство","читатель","оглавление"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar — kitobning qismlari. Mundarija ham kitobning qismi; qolganlari kitobdan tashqarida.","ru":"В группе — части книги. Оглавление тоже часть книги; остальное находится вне её."},
+      "reviewed": false
+    },
+    {
+      "key": "v134", "kind": "relation", "level": 8,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Muqova — kitob","options":["Kitob — kitobxon","Po'st — apelsin","Kitob — javon","Muallif — kitob"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Обложка — книга","options":["Книга — читатель","Кожура — апельсин","Книга — полка","Автор — книга"]},
+      "correct": 1,
+      "explain": {"uz":"Muqova kitobni, po'st apelsinni tashqaridan o'rab himoya qiladi.","ru":"Обложка защищает книгу снаружи, кожура — апельсин."},
+      "reviewed": false
+    },
+    {
+      "key": "v135", "kind": "relation", "level": 8,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Harorat — gradus","options":["asbob va u o'lchaydigan kattalik","qism va butun","kattalik va uning o'lchov birligi","sabab va natija"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Температура — градус","options":["прибор и величина, которую он измеряет","часть и целое","величина и её единица измерения","причина и следствие"]},
+      "correct": 2,
+      "explain": {"uz":"Harorat gradusda o'lchanadi: gradus — o'lchov birligi, asbob emas.","ru":"Температуру измеряют в градусах: градус — единица измерения, а не прибор."},
+      "reviewed": false
+    },
+    {
+      "key": "v136", "kind": "relation", "level": 8,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Xato — tuzatish","options":["Kir — yuvish","Xato — o'qituvchi","Tuzatish — qalam","Kir — ko'ylak"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Ошибка — исправление","options":["Грязь — стирка","Ошибка — учитель","Исправление — карандаш","Грязь — рубашка"]},
+      "correct": 0,
+      "explain": {"uz":"Xato tuzatish bilan, kir yuvish bilan yo'qotiladi: muammo va uni bartaraf etish.","ru":"Ошибку устраняет исправление, грязь — стирка: проблема и её устранение."},
+      "reviewed": false
+    },
+    {
+      "key": "v137", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Hech kim : hamma = hech qachon : ?","options":["doim","ba'zan","hozir","ko'pincha"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Никто : все = никогда : ?","options":["всегда","иногда","сейчас","часто"]},
+      "correct": 0,
+      "explain": {"uz":"«Hech kim» va «hamma» — odamlar bo'yicha ikki chekka; vaqt bo'yicha ularga «hech qachon» va «doim» mos keladi.","ru":"«Никто» и «все» — две крайности по людям; по времени им соответствуют «никогда» и «всегда»."},
+      "reviewed": false
+    },
+    {
+      "key": "v138", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Urug' : nihol = nihol : ?","options":["urug'","tuproq","daraxt","suv"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Семя : росток = росток : ?","options":["семя","почва","дерево","вода"]},
+      "correct": 2,
+      "explain": {"uz":"Har safar bir bosqich oldinga: urug'dan nihol, niholdan daraxt o'sadi. «Urug'» — orqaga qaytish.","ru":"Каждый раз на одну стадию вперёд: из семени — росток, из ростка — дерево. «Семя» — шаг назад."},
+      "reviewed": false
+    },
+    {
+      "key": "v139", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qisqa : qisqartirmoq = keng : ?","options":["toraytirmoq","kengaytirmoq","kenglik","uzaytirmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Короткий : укорачивать = широкий : ?","options":["сужать","расширять","ширина","удлинять"]},
+      "correct": 1,
+      "explain": {"uz":"Qisqartirmoq — qisqa qilmoq, kengaytirmoq — keng qilmoq: belgi va narsaga shu belgini berish.","ru":"Укорачивать — делать коротким, расширять — делать широким: признак и действие, которое его придаёт."},
+      "reviewed": false
+    },
+    {
+      "key": "v140", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Muammo : yechim = kasallik : ?","options":["kasalxona","shifokor","alomat","davo"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Проблема : решение = болезнь : ?","options":["больница","врач","симптом","лечение"]},
+      "correct": 3,
+      "explain": {"uz":"Muammoni yechim, kasallikni davo bartaraf etadi. Shifokor — davolovchi odam, davoning o'zi emas.","ru":"Проблему устраняет решение, болезнь — лечение. Врач — человек, который лечит, а не само лечение."},
+      "reviewed": false
+    },
+    {
+      "key": "v141", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kulgi : quvonch = ko'z yoshi : ?","options":["ko'z","suv","yig'lamoq","qayg'u"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Смех : радость = слёзы : ?","options":["глаза","вода","плакать","грусть"]},
+      "correct": 3,
+      "explain": {"uz":"Kulgi — quvonchning, ko'z yoshi — qayg'uning tashqi belgisi: ko'rinadigan belgi va ichki his.","ru":"Смех — внешний знак радости, слёзы — грусти: видимый признак и внутреннее чувство."},
+      "reviewed": false
+    },
+    {
+      "key": "v142", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Isitma : kasallik = tutun : ?","options":["mo'ri","olov","kul","havo"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Жар : болезнь = дым : ?","options":["дымоход","огонь","пепел","воздух"]},
+      "correct": 1,
+      "explain": {"uz":"Isitma kasallik borligini, tutun olov borligini bildiradi: belgi va uning sababi.","ru":"Жар говорит о болезни, дым — об огне: признак и его причина."},
+      "reviewed": false
+    },
+    {
+      "key": "v143", "kind": "analogy", "level": 9,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kirish : chiqish = havoga ko'tarilish : ?","options":["osmon","uchuvchi","qo'nish","aeroport"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Вход : выход = взлёт : ?","options":["небо","лётчик","посадка","аэропорт"]},
+      "correct": 2,
+      "explain": {"uz":"Kirish va chiqish — qarama-qarshi harakatlar. Samolyotning havoga ko'tarilishiga qarama-qarshi harakat — qo'nish.","ru":"Вход и выход — противоположные действия. Противоположность взлёту самолёта — посадка."},
+      "reviewed": false
+    },
+    {
+      "key": "v144", "kind": "odd", "level": 9,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["ba'zi","hamma","har bir","barcha"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["некоторые","все","каждый","всякий"]},
+      "correct": 0,
+      "explain": {"uz":"Hamma, har bir va barcha — to'liq qamrovni, «ba'zi» esa faqat bir qismini bildiradi.","ru":"«Все», «каждый» и «всякий» охватывают всех, а «некоторые» — только часть."},
+      "reviewed": false
+    },
+    {
+      "key": "v145", "kind": "odd", "level": 9,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["tarqalmoq","yig'ilmoq","to'planmoq","jamlanmoq"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["расходиться","собираться","скапливаться","сходиться"]},
+      "correct": 0,
+      "explain": {"uz":"Yig'ilmoq, to'planmoq va jamlanmoq — bir joyga kelish, tarqalmoq esa aksincha.","ru":"Собираться, скапливаться и сходиться — сближаться в одном месте, а расходиться — наоборот."},
+      "reviewed": false
+    },
+    {
+      "key": "v146", "kind": "odd", "level": 9,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["yarim","chorak","juft","uchdan bir"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["половина","четверть","пара","треть"]},
+      "correct": 2,
+      "explain": {"uz":"Yarim, chorak va uchdan bir — butunning bir ulushi, juft esa ikkita narsa.","ru":"Половина, четверть и треть — доли целого, а пара — два предмета."},
+      "reviewed": false
+    },
+    {
+      "key": "v147", "kind": "odd", "level": 9,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["sabab","oqibat","asos","manba"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["причина","последствие","основание","источник"]},
+      "correct": 1,
+      "explain": {"uz":"Sabab, asos va manba — biror narsaning boshlanishi, oqibat esa uning natijasi.","ru":"Причина, основание и источник — то, из чего что-то происходит, а последствие — результат."},
+      "reviewed": false
+    },
+    {
+      "key": "v148", "kind": "category", "level": 9,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Tong, bahor, bolalik","options":["kechqurun","qarilik","xotima","muqaddima"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Рассвет, весна, детство","options":["вечер","старость","заключение","вступление"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar — nimaningdir boshlanishi: kunning, yilning, hayotning. Muqaddima ham kitobning boshlanishi.","ru":"В группе — начало чего-то: дня, года, жизни. Вступление — тоже начало книги."},
+      "reviewed": false
+    },
+    {
+      "key": "v149", "kind": "category", "level": 9,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Muz, qor, do'l","options":["bug'","yomg'ir","tuman","qirov"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Лёд, снег, град","options":["пар","дождь","туман","иней"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagilar — muzlagan, qattiq holatdagi suv. Qirov ham shunday; bug', yomg'ir va tuman esa qattiq emas.","ru":"В группе — замёрзшая, твёрдая вода. Иней тоже; пар, дождь и туман — не твёрдые."},
+      "reviewed": false
+    },
+    {
+      "key": "v150", "kind": "category", "level": 9,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Kalit, parol, ruxsatnoma","options":["qulf","chipta","to'siq","devor"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Ключ, пароль, пропуск","options":["замок","билет","шлагбаум","стена"]},
+      "correct": 1,
+      "explain": {"uz":"Guruhdagilar kirishga ruxsat beradi. Chipta ham shunday; qulf, to'siq va devor esa kirishni to'sadi.","ru":"Всё в группе даёт право войти. Билет тоже; замок, шлагбаум и стена, наоборот, преграждают путь."},
+      "reviewed": false
+    },
+    {
+      "key": "v151", "kind": "relation", "level": 9,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Harf — so'z","options":["Qalam — harf","So'z — ma'no","Nota — kuy","Kitob — muallif"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Буква — слово","options":["Карандаш — буква","Слово — смысл","Нота — мелодия","Книга — автор"]},
+      "correct": 2,
+      "explain": {"uz":"So'z harflardan, kuy notalardan tuziladi: kichik birlik va undan tuzilgan butun.","ru":"Слово складывается из букв, мелодия — из нот: мелкая единица и целое из таких единиц."},
+      "reviewed": false
+    },
+    {
+      "key": "v152", "kind": "relation", "level": 9,
+      "uz": {"prompt":"Bu ikki so'z qanday bog'langan?","stimulus":"Chizma — bino","options":["reja va unga ko'ra yaratiladigan narsa","qism va butun","narsa va uning materiali","asbob va u bilan ishlaydigan odam"]},
+      "ru": {"prompt":"Как связаны эти два слова?","stimulus":"Чертёж — здание","options":["план и то, что создаётся по нему","часть и целое","предмет и его материал","инструмент и тот, кто им работает"]},
+      "correct": 0,
+      "explain": {"uz":"Bino chizmaga qarab quriladi: chizma — reja, bino — shu reja bo'yicha yaratilgan narsa.","ru":"Здание строят по чертежу: чертёж — план, здание — то, что создано по этому плану."},
+      "reviewed": false
+    },
+    {
+      "key": "v153", "kind": "relation", "level": 9,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Soya — narsa","options":["Aks-sado — ovoz","Quyosh — yorug'lik","Soya — salqin","Daraxt — soya"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Тень — предмет","options":["Эхо — звук","Солнце — свет","Тень — прохлада","Дерево — тень"]},
+      "correct": 0,
+      "explain": {"uz":"Soya narsadan, aks-sado ovozdan hosil bo'ladi: avval hosila, keyin u kelib chiqqan narsa. «Daraxt — soya»da tartib teskari, «Soya — salqin»da esa soya — sabab, salqin — uning natijasi.","ru":"Тень возникает от предмета, эхо — от звука: сначала производное, потом его источник. В паре «дерево — тень» порядок обратный, а в паре «тень — прохлада» тень — причина, прохлада — её следствие."},
+      "reviewed": false
+    },
+    {
+      "key": "v154", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Iliq : issiq : qaynoq = salqin : sovuq : ?","options":["iliq","qor","muzdek","qish"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Тёплый : горячий : раскалённый = прохладный : холодный : ?","options":["тёплый","снег","ледяной","зима"]},
+      "correct": 2,
+      "explain": {"uz":"Har qatorda belgi bosqichma-bosqich kuchayadi: iliq → issiq → qaynoq; salqin → sovuq → muzdek.","ru":"В каждом ряду признак усиливается шаг за шагом: тёплый → горячий → раскалённый; прохладный → холодный → ледяной."},
+      "reviewed": false
+    },
+    {
+      "key": "v155", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Yo'qotmoq : topmoq = unutmoq : ?","options":["bilmoq","eslamoq","yo'qotmoq","o'rganmoq"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Потерять : найти = забыть : ?","options":["знать","вспомнить","потерять","выучить"]},
+      "correct": 1,
+      "explain": {"uz":"Yo'qotilgan narsa topiladi, unutilgan narsa eslanadi: yo'qolganini qaytarib olish.","ru":"Потерянное находят, забытое вспоминают: вернуть то, что было утрачено."},
+      "reviewed": false
+    },
+    {
+      "key": "v156", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Hamma : ba'zi = doim : ?","options":["hech qachon","hamisha","tez-tez","ba'zan"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Все : некоторые = всегда : ?","options":["никогда","постоянно","часто","иногда"]},
+      "correct": 3,
+      "explain": {"uz":"«Ba'zi» — «hamma»ning bir qismi. Vaqt bo'yicha xuddi shunday: «doim»ning bir qismi — «ba'zan».","ru":"«Некоторые» — часть от «все». Так же и со временем: часть от «всегда» — «иногда»."},
+      "reviewed": false
+    },
+    {
+      "key": "v157", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Mehmon : mezbon = yo'lovchi : ?","options":["bekat","chipta","yo'l","haydovchi"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Гость : хозяин = пассажир : ?","options":["остановка","билет","дорога","водитель"]},
+      "correct": 3,
+      "explain": {"uz":"Mezbon mehmonni kutib oladi va unga xizmat qiladi, haydovchi esa yo'lovchini manziliga eltadi: xizmat oluvchi va xizmat ko'rsatuvchi.","ru":"Хозяин принимает гостя, водитель везёт пассажира: тот, кому служат, и тот, кто служит."},
+      "reviewed": false
+    },
+    {
+      "key": "v158", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Qarz : to'lamoq = va'da : ?","options":["bermoq","bajarmoq","unutmoq","so'z"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Долг : вернуть = обещание : ?","options":["дать","сдержать","забыть","слово"]},
+      "correct": 1,
+      "explain": {"uz":"Qarzni to'lash va va'dani bajarish — olingan majburiyatni ado etish. Va'da berish esa majburiyatni endi olish.","ru":"Вернуть долг и сдержать обещание — значит выполнить взятое обязательство. «Дать обещание» — это только взять его."},
+      "reviewed": false
+    },
+    {
+      "key": "v159", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Mikroskop : kichik = teleskop : ?","options":["katta","yulduz","uzoq","osmon"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Микроскоп : маленькое = телескоп : ?","options":["большое","звёзды","далёкое","небо"]},
+      "correct": 2,
+      "explain": {"uz":"Mikroskop juda kichik narsalarni, teleskop juda uzoqdagi narsalarni ko'rishga yordam beradi. Yulduzlar katta, lekin juda uzoqda bo'lgani uchun kichik ko'rinadi.","ru":"Микроскоп помогает видеть очень маленькое, телескоп — очень далёкое. Звёзды большие, но из-за огромного расстояния кажутся маленькими."},
+      "reviewed": false
+    },
+    {
+      "key": "v160", "kind": "analogy", "level": 10,
+      "uz": {"prompt":"So'roq belgisi o'rniga qaysi so'z mos keladi?","stimulus":"Kecha : ertaga = o'tmish : ?","options":["kelajak","hozir","tarix","vaqt"]},
+      "ru": {"prompt":"Какое слово должно стоять вместо знака вопроса?","stimulus":"Вчера : завтра = прошлое : ?","options":["будущее","настоящее","история","время"]},
+      "correct": 0,
+      "explain": {"uz":"Kecha — o'tgan kun, ertaga — keladigan kun. Xuddi shunday, o'tmishning qarama-qarshisi — kelajak; «hozir» ikkalasining o'rtasida.","ru":"Вчера — прошедший день, завтра — будущий. Так же прошлому противоположно будущее; «настоящее» — между ними."},
+      "reviewed": false
+    },
+    {
+      "key": "v161", "kind": "odd", "level": 10,
+      "uz": {"prompt":"Qaysi juftlik ortiqcha?","stimulus":"Uchta juftlikda so'zlar bir xil bog'langan, bittasida esa boshqacha.","options":["Yaxshi — a'lo","Issiq — sovuq","Baland — past","Yorug' — qorong'i"]},
+      "ru": {"prompt":"Какая пара лишняя?","stimulus":"В трёх парах слова связаны одинаково, а в одной — по-другому.","options":["Хороший — отличный","Горячий — холодный","Высокий — низкий","Светлый — тёмный"]},
+      "correct": 0,
+      "explain": {"uz":"Uchta juftlikdagi so'zlar ma'nosi qarama-qarshi, «yaxshi — a'lo»da esa bir belgining kuchsiz va kuchli darajasi.","ru":"В трёх парах слова противоположны, а «хороший — отличный» — слабая и сильная степень одного признака."},
+      "reviewed": false
+    },
+    {
+      "key": "v162", "kind": "odd", "level": 10,
+      "uz": {"prompt":"Qaysi juftlik ortiqcha?","stimulus":"Uchta juftlikda so'zlar bir xil bog'langan, bittasida esa boshqacha.","options":["Barmoq — qo'l","G'ildirak — mashina","Olma — meva","Sahifa — kitob"]},
+      "ru": {"prompt":"Какая пара лишняя?","stimulus":"В трёх парах слова связаны одинаково, а в одной — по-другому.","options":["Палец — рука","Колесо — машина","Яблоко — фрукт","Страница — книга"]},
+      "correct": 2,
+      "explain": {"uz":"Uchta juftlikda birinchi so'z ikkinchisining qismi. Olma esa mevaning qismi emas, uning bir turi.","ru":"В трёх парах первое слово — часть второго. Яблоко же не часть фрукта, а его вид."},
+      "reviewed": false
+    },
+    {
+      "key": "v163", "kind": "odd", "level": 10,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["chunki","lekin","sababli","tufayli"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["потому что","но","так как","поскольку"]},
+      "correct": 1,
+      "explain": {"uz":"«Chunki», «sababli», «tufayli» sababni bildiradi, «lekin» esa qarama-qarshilikni.","ru":"«Потому что», «так как», «поскольку» указывают на причину, а «но» — на противопоставление."},
+      "reviewed": false
+    },
+    {
+      "key": "v164", "kind": "odd", "level": 10,
+      "uz": {"prompt":"Qaysi so'z ortiqcha?","stimulus":"Uchta so'z bitta guruhga kiradi, bittasi esa kirmaydi.","options":["taxmin","faraz","gipoteza","dalil"]},
+      "ru": {"prompt":"Какое слово лишнее?","stimulus":"Три слова относятся к одной группе, а одно — нет.","options":["догадка","предположение","гипотеза","доказательство"]},
+      "correct": 3,
+      "explain": {"uz":"Taxmin, faraz va gipoteza — hali isbotlanmagan fikr, dalil esa fikrni isbotlaydi.","ru":"Догадка, предположение и гипотеза — ещё не доказанные мысли, а доказательство подтверждает мысль."},
+      "reviewed": false
+    },
+    {
+      "key": "v165", "kind": "category", "level": 10,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Ehtimol, balki, aftidan","options":["albatta","aniq","shubhasiz","shekilli"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Вероятно, возможно, по-видимому","options":["конечно","точно","несомненно","кажется"]},
+      "correct": 3,
+      "explain": {"uz":"Guruhdagi so'zlar ishonch to'liq emasligini (taxminni) bildiradi. «Shekilli» ham shunday, qolganlari esa to'liq ishonchni.","ru":"Слова группы выражают неполную уверенность (предположение). «Кажется» тоже, а остальные — полную уверенность."},
+      "reviewed": false
+    },
+    {
+      "key": "v166", "kind": "category", "level": 10,
+      "uz": {"prompt":"Qaysi juftlik shu guruhga kiradi?","stimulus":"Urug' — daraxt; tuxum — qush; bola — katta odam","options":["It — kuchukcha","Kuchukcha — it","Daraxt — o'rmon","Qush — uya"]},
+      "ru": {"prompt":"Какая пара относится к этой группе?","stimulus":"Семя — дерево; яйцо — птица; ребёнок — взрослый","options":["Собака — щенок","Щенок — собака","Дерево — лес","Птица — гнездо"]},
+      "correct": 1,
+      "explain": {"uz":"Har juftlikda avval boshlang'ich bosqich, keyin undan o'sib chiqadigan jonzot. «It — kuchukcha»da tartib teskari.","ru":"В каждой паре сначала ранняя стадия, потом то, что из неё вырастает. В паре «собака — щенок» порядок обратный."},
+      "reviewed": false
+    },
+    {
+      "key": "v167", "kind": "category", "level": 10,
+      "uz": {"prompt":"Qaysi so'z shu guruhga kiradi?","stimulus":"Tajriba, kuzatish, o'lchash","options":["taxmin","orzu","sinov","xayol"]},
+      "ru": {"prompt":"Какое слово относится к этой группе?","stimulus":"Эксперимент, наблюдение, измерение","options":["догадка","мечта","испытание","фантазия"]},
+      "correct": 2,
+      "explain": {"uz":"Guruhdagilar — haqiqatni amalda tekshirib bilish usullari. Sinov ham shunday; taxmin, orzu va xayol esa faqat fikrda bo'ladi.","ru":"В группе — способы узнать правду, проверив её на деле. Испытание тоже; догадка, мечта и фантазия существуют только в мыслях."},
+      "reviewed": false
+    },
+    {
+      "key": "v168", "kind": "relation", "level": 10,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Tejamkor — xasis","options":["O'ziga ishongan — manman","Saxiy — ziqna","Mehnatkash — tirishqoq","Kamtar — maqtanchoq"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Бережливый — скупой","options":["Уверенный — самоуверенный","Щедрый — жадный","Трудолюбивый — старательный","Скромный — хвастливый"]},
+      "correct": 0,
+      "explain": {"uz":"Xasislik — tejamkorlikning haddan oshgani; manmanlik ham o'ziga ishonchning haddan oshgani. Qolganlari — qarama-qarshi yoki ma'nodosh.","ru":"Скупость — бережливость, доведённая до крайности; самоуверенность — уверенность в себе, доведённая до крайности. Остальные пары — противоположности или синонимы."},
+      "reviewed": false
+    },
+    {
+      "key": "v169", "kind": "relation", "level": 10,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Tajriba — xulosa","options":["Dalillar — hukm","Xulosa — tajriba","Olim — tajriba","Savol — imtihon"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Эксперимент — вывод","options":["Улики — приговор","Вывод — эксперимент","Учёный — эксперимент","Вопрос — экзамен"]},
+      "correct": 0,
+      "explain": {"uz":"Xulosa tajribaga, hukm dalillarga asoslanadi: avval asos, keyin undan chiqarilgan qaror. «Xulosa — tajriba»da tartib teskari.","ru":"Вывод опирается на эксперимент, приговор — на улики: сначала основание, потом решение. В паре «вывод — эксперимент» порядок обратный."},
+      "reviewed": false
+    },
+    {
+      "key": "v170", "kind": "relation", "level": 10,
+      "uz": {"prompt":"Qaysi juftlikda so'zlar xuddi shunday bog'langan?","stimulus":"Maslahat — buyruq","options":["Buyruq — maslahat","Savol — javob","Iltimos — talab","Ruxsat — taqiq"]},
+      "ru": {"prompt":"В какой паре слова связаны так же?","stimulus":"Совет — приказ","options":["Приказ — совет","Вопрос — ответ","Просьба — требование","Разрешение — запрет"]},
+      "correct": 2,
+      "explain": {"uz":"Maslahatga amal qilish ixtiyoriy, buyruqqa esa majburiy; iltimos va talab ham xuddi shunday: yumshoq va qat'iy shakl.","ru":"Совету следовать необязательно, приказу — обязательно; так же различаются просьба и требование: мягкая и жёсткая форма."},
+      "reviewed": false
+    }
+  ]
+}
