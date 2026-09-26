@@ -14,3 +14,6 @@ t-home.png
 dist/
 .env
 .env.*
+
+# IQuest boti sirlari (bot/config.example.php dan nusxa)
+bot/config.php

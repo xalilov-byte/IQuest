@@ -5,6 +5,8 @@
      node build.mjs                    → www/        (Android APK ichiga)
      node build.mjs --target=web       → dist/web/   (sayt)
      node build.mjs --target=admin     → dist/admin/ (admin panel)
+     node build.mjs --target=tg        → dist/tg/    (Telegram Mini App:
+                                         ilova + paywall, landing'siz)
 
    Bayroqlar:
      --strict   (yoki IQ_STRICT=1) — reliz nomzodi (WP11): v1.1 ning hamma
@@ -54,7 +56,11 @@ const SOCIAL_ON = false;
 /* ── 0. Maqsad (target) ──────────────────────────────────────────────── */
 /* mobile — foydalanuvchi ilovasi (APK). Admin va landing kesiladi.
    web    — sayt: foydalanuvchi ilovasi + landing. Admin kesiladi.
-   admin  — faqat admin panel. Foydalanuvchi ilovasi va landing kesiladi. */
+   admin  — faqat admin panel. Foydalanuvchi ilovasi va landing kesiladi.
+   tg     — Telegram Mini App (DEPLOY-AHOST.md): ilova toʻgʻridan-toʻgʻri
+            ochiladi (landing va admin kesiladi), paywall yoqilgan,
+            telegram-web-app.js + src/telegram.js (ready/expand, BackButton,
+            tema, t.me havolalari). Sayt (landing) alohida — tools/mksite.mjs. */
 /* PUL QATLAMI YO'Q. Nazariy'da Pro obunasi va to'lov oqimi bor edi
    (taqlid: "Tasdiqlash" bosilganda hech qanday to'lov bo'lmasdi). IQuest
    manbasidan u BUTUNLAY olib tashlandi: natija hech qachon pul ortida
@@ -66,7 +72,10 @@ const TARGETS = {
   mobile: { out: 'www',        app: true,  admin: false, landing: false, shell: 'shell.css' },
   web:    { out: 'dist/web',   app: true,  admin: false, landing: true,  shell: 'shell.css' },
   admin:  { out: 'dist/admin', app: false, admin: true,  landing: false, shell: 'shell-admin.css' },
+  tg:     { out: 'dist/tg',    app: true,  admin: false, landing: false, shell: 'shell.css', telegram: true },
 };
+/* Telegram WebApp SDK — faqat tg build'ida (CSP script-src ham faqat unda). */
+const TG_SDK = 'https://telegram.org/js/telegram-web-app.js';
 
 const targetArg = ARGS.find(a => a.startsWith('--target='));
 const TARGET = targetArg ? targetArg.slice('--target='.length) : 'mobile';
@@ -696,7 +705,7 @@ const supaSnippet = CFG.app && !CFG.landing
   ? 'window.nzSupabase = null;'
   : `window.nzSupabase = ${JSON.stringify({ url: supaCfg.url, publishableKey: supaCfg.publishableKey })};`;
 if (CFG.app && !CFG.landing && supaCfg.url) {
-  console.warn('[build] supabase/config.json da url bor, lekin mobil build OFFLINE — nzSupabase = null');
+  console.warn(`[build] supabase/config.json da url bor, lekin ${TARGET} build OFFLINE — nzSupabase = null`);
 }
 
 /* Saytga tegishli sozlama. Faqat OMMAVIY qiymatlar (bot nomi, domen) —
@@ -740,7 +749,7 @@ const NZ_SITE = {
 /* Qoʻlda toʻlov paywall'i (PAYWALL.md) — FAQAT web (Telegram Mini App).
    Mobil (APK) va admin build'iga na sozlama, na src/paywall.js tushadi:
    APK'da natija bepul qoladi. */
-const PAYWALL_ON = TARGET === 'web' && !!(siteCfg.paywall && siteCfg.paywall.enabled);
+const PAYWALL_ON = (TARGET === 'web' || TARGET === 'tg') && !!(siteCfg.paywall && siteCfg.paywall.enabled);
 if (PAYWALL_ON) {
   const p = siteCfg.paywall;
   NZ_SITE.paywall = { enabled: true, price: String(p.price || ''), card: String(p.card || ''),
@@ -774,7 +783,7 @@ const title = CFG.admin ? 'IQuest — admin' : 'IQuest';
 const supaOrigin = (() => { try { return supaCfg.url ? new URL(supaCfg.url).origin : ''; } catch (e) { return ''; } })();
 const CSP = CFG.admin ? '' : [
   "default-src 'none'",
-  "script-src 'unsafe-inline'",
+  "script-src 'unsafe-inline'" + (CFG.telegram ? ' ' + new URL(TG_SDK).origin : ''),
   "style-src 'unsafe-inline'",
   'img-src data:',
   "font-src 'self'",
@@ -783,6 +792,9 @@ const CSP = CFG.admin ? '' : [
   "base-uri 'none'",
   "form-action 'none'",
 ].join('; ');
+/* SDK <head> da, sinxron: Main.componentDidMount → pwFromLink() start_param
+   ni Telegram.WebApp.initDataUnsafe dan oʻqiydi, ya'ni SDK undan OLDIN. */
+const tgHead = CFG.telegram ? `<script src="${TG_SDK}"></script>\n` : '';
 const cspMeta = CSP ? `<meta http-equiv="Content-Security-Policy" content="${CSP}">\n` : '';
 
 /* Skriptlar tartibi — ARXITEKTURA §10.5. Har biri alohida <script>:
@@ -815,6 +827,8 @@ const SCRIPTS = [
   ['Main (logic)',    logic],
   ['src/data.js',     supaSnippet + '\n' + data],
   ['src/bootstrap.js', bootstrap],
+  /* Bootstrap'dan KEYIN: window.nzApp tayyor boʻlishi kerak. */
+  ['src/telegram.js', CFG.telegram ? read(join(SRC, 'telegram.js')) : null],
 ].filter(([, code]) => code !== null);
 
 const scriptsHtml = SCRIPTS
@@ -826,7 +840,7 @@ const html = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 ${cspMeta}<meta name="viewport" content="${viewport}">
-<meta name="theme-color" content="#F5F3FF">
+${tgHead}<meta name="theme-color" content="#F5F3FF">
 <meta name="color-scheme" content="light dark">
 <title>${title}</title>
 <style>
@@ -858,6 +872,7 @@ if (CFG.admin) NEED.push('valsManage', 'Admin panel');
    tekshirilardi), bosh blok esa har doim bo'lishi kerak. */
 if (CFG.landing) NEED.push('nz-landing-hero', 'nz-landing-h1');
 NEED.push('window.nzSite = ', 'IQ.langsOf = langsOf');
+if (CFG.telegram) NEED.push(TG_SDK, 'nzTelegram', 'nzPaywall');
 
 /* v1.1 ekran modullari (ARXITEKTURA §10.7, CONTRACT §16). Main ularni
    bosqichma-bosqich oladi (WP7 U1–U5), shuning uchun oddiy build'da
@@ -959,6 +974,14 @@ if (!CFG.admin) {
 
 writeFileSync(join(OUT, 'index.html'), html);
 
+/* Telegram admin paneli (faqat tg): app/admin.html — ADMIN_IDS uchun,
+   maʼlumot bot/admin-api.php dan (DEPLOY-AHOST.md). Shriftlar shu build'niki. */
+if (CFG.telegram) {
+  const adm = read(join(SRC, 'tg-admin.html'));
+  must(adm, '/*FONTS*/', 'tg-admin.html shrift joyi');
+  writeFileSync(join(OUT, 'admin.html'), adm.replace('/*FONTS*/', fontCss));
+}
+
 
 const kb = n => (n / 1024).toFixed(0) + ' KB';
 console.log(`maqsad: ${TARGET} → ${OUT}/`);
@@ -969,6 +992,7 @@ if (absent.length) console.log(`oʻtkazildi     — hali yoʻq v1.1 modullari: $
 console.log(`versiya        — ${NZ_SITE.version} (versionCode ${VERSION.versionCode})`);
 console.log(`tillar         — ${LANGS.join(', ')}`);
 if (PAYWALL_ON) console.log('paywall        — yoqilgan (qoʻlda toʻlov, PAYWALL.md)');
+if (CFG.telegram) console.log('telegram       — Mini App (telegram-web-app.js, src/telegram.js)');
 if (FORCE_EN) console.log('⚠ EN darvozasi --lang-en bilan MAJBURAN ochildi — faqat ishlab chiqish uchun');
 else if (enWhy.length) {
   console.log(`⚠ EN darvozasi yopiq (${enWhy.length} ta sabab) — English taklif qilinmaydi:`);

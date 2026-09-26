@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<!-- IQuest — admin panel (Telegram ichida, faqat ADMIN_IDS). build.mjs --target=tg
+     → dist/tg/admin.html. Maʼlumot: ../bot/admin-api.php (initData HMAC tekshiruvi). -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://telegram.org; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>IQuest — admin</title>
+<style>/*FONTS*/</style>
+<style>
+:root{--bg:#F5F3FF;--surface:#fff;--fg:#10183A;--muted:#596186;--line:rgba(16,24,58,.10);--navy:#10183A;--coral:#FF5B3A;--ok:#12B76A;--no:#F04438;--warn:#F79009}
+:root[data-theme=dark]{--bg:#0C1230;--surface:#141C44;--fg:#fff;--muted:#A3ACD2;--line:rgba(255,255,255,.10)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:500 15px/1.5 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+header{background:var(--navy);color:#fff;padding:16px 16px 18px}
+.brand{display:flex;align-items:center;gap:10px;font:700 20px 'Space Grotesk',Manrope,sans-serif}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px}
+.stat b{display:block;font:700 18px 'Space Grotesk',Manrope,sans-serif}
+.stat span{font-size:12px;color:#C9D0F0}
+.tabs{display:flex;gap:6px;padding:12px 16px 4px;position:sticky;top:0;background:var(--bg);z-index:2}
+.tabs button{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:12px;padding:9px 4px;font:700 13px Manrope,sans-serif}
+.tabs button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+main{padding:8px 16px 32px;display:grid;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;display:grid;grid-template-columns:84px 1fr;gap:12px}
+.card img{width:84px;height:112px;object-fit:cover;border-radius:10px;background:var(--line);cursor:zoom-in}
+.card.big{grid-template-columns:1fr}.card.big img{width:100%;height:auto;max-height:70vh;object-fit:contain}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.code{font:700 16px 'Space Grotesk',Manrope,sans-serif}
+.iq{font-weight:800;color:var(--coral)}
+.muted{color:var(--muted);font-size:13px}
+.acts{display:flex;gap:8px;margin-top:8px}
+.acts button{flex:1;border:0;border-radius:12px;padding:10px;font:800 14px Manrope,sans-serif;color:#fff}
+.b-ok{background:var(--ok)}.b-no{background:var(--no)}
+.badge{font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px}
+.s-pending{background:rgba(247,144,9,.15);color:var(--warn)}.s-ok{background:rgba(18,183,106,.15);color:var(--ok)}.s-no{background:rgba(240,68,56,.15);color:var(--no)}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+<div class="brand"><svg width="26" height="26" viewBox="112 112 290 290" aria-hidden="true"><g fill="#fff"><rect x="120" y="120" width="72" height="72" rx="4"/><rect x="219.13" y="119.13" width="73.75" height="73.75" rx="12.88"/><rect x="318.25" y="118.25" width="75.5" height="75.5" rx="21.75"/><rect x="119.13" y="219.13" width="73.75" height="73.75" rx="12.88"/><rect x="218.25" y="218.25" width="75.5" height="75.5" rx="21.75"/><rect x="317.38" y="217.38" width="77.25" height="77.25" rx="30.63"/><rect x="118.25" y="318.25" width="75.5" height="75.5" rx="21.75"/><rect x="217.38" y="317.38" width="77.25" height="77.25" rx="30.63"/></g><rect x="316.5" y="316.5" width="79" height="79" rx="39.5" fill="#FF6A4B"/></svg>IQuest · admin</div>
+<div class="stats">
+<div class="stat"><b id="s-today">—</b><span>Bugun tasdiqlangan</span></div>
+<div class="stat"><b id="s-total">—</b><span>Jami tasdiqlangan</span></div>
+<div class="stat"><b id="s-pending">—</b><span>Kutilmoqda</span></div>
+</div>
+</header>
+<div class="tabs">
+<button data-f="pending" aria-pressed="true">Kutilmoqda</button>
+<button data-f="ok" aria-pressed="false">Tasdiqlangan</button>
+<button data-f="no" aria-pressed="false">Rad etilgan</button>
+</div>
+<main id="list"><div class="empty">Yuklanmoqda…</div></main>
+<script>
+(function () {
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var initData = tg ? tg.initData : '';
+  var API = '../bot/admin-api.php';
+  var filter = 'pending', data = null;
+  var $ = function (id) { return document.getElementById(id); };
+  if (tg) {
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    document.documentElement.setAttribute('data-theme', tg.colorScheme === 'dark' ? 'dark' : 'light');
+  }
+  var som = function (n) { return String(n || 0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' soʻm'; };
+  var dt = function (t) {
+    if (!t) return '';
+    var d = new Date(t * 1000), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return p(d.getDate()) + '.' + p(d.getMonth() + 1) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var LABEL = { pending: 'Kutilmoqda', ok: 'Tasdiqlangan', no: 'Rad etilgan' };
+
+  function call(body) {
+    body.initData = initData;
+    return fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); });
+  }
+  function load(body) {
+    return call(body || { action: 'list' }).then(function (j) {
+      if (!j.ok) { $('list').innerHTML = '<div class="empty">' + esc(j.error || 'Xato') + '</div>'; return j; }
+      data = j; render(); return j;
+    }).catch(function () { $('list').innerHTML = '<div class="empty">Server bilan aloqa yoʻq</div>'; });
+  }
+  function render() {
+    var s = data.stats;
+    $('s-today').textContent = s.todayCount + ' · ' + som(s.todaySum);
+    $('s-total').textContent = s.totalCount + ' · ' + som(s.totalSum);
+    $('s-pending').textContent = s.pending;
+    var list = data.orders.filter(function (o) { return o.status === filter; });
+    if (!list.length) { $('list').innerHTML = '<div class="empty">Hozircha yoʻq</div>'; return; }
+    $('list').innerHTML = list.map(function (o) {
+      return '<div class="card">' +
+        (o.img ? '<img src="' + esc(o.img) + '" alt="Chek" loading="lazy">' : '<div></div>') +
+        '<div><div class="row"><span class="code">' + esc(o.code) + '</span>' +
+        (o.iq ? '<span class="iq">IQ ' + esc(o.iq) + '</span>' : '') + '</div>' +
+        '<div>' + esc(o.name || '—') + (o.username ? ' <span class="muted">@' + esc(o.username) + '</span>' : '') + '</div>' +
+        '<div class="muted">ID ' + esc(o.uid) + ' · ' + dt(o.paid) + '</div>' +
+        '<div class="row" style="margin-top:4px"><span class="badge s-' + o.status + '">' + LABEL[o.status] + '</span>' +
+        (o.by ? '<span class="muted">' + esc(o.by) + ' · ' + dt(o.decided) + '</span>' : '') + '</div>' +
+        (o.status === 'pending' ? '<div class="acts"><button class="b-ok" data-code="' + esc(o.code) + '" data-act="ok">✅ Tasdiq</button>' +
+          '<button class="b-no" data-code="' + esc(o.code) + '" data-act="no">❌ Yolgʻon</button></div>' : '') +
+        '</div></div>';
+    }).join('');
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.matches('.tabs button')) {
+      filter = t.getAttribute('data-f');
+      document.querySelectorAll('.tabs button').forEach(function (b) { b.setAttribute('aria-pressed', b === t ? 'true' : 'false'); });
+      if (data) render();
+    } else if (t.matches('.acts button')) {
+      var code = t.getAttribute('data-code'), act = t.getAttribute('data-act');
+      var go = function () {
+        t.disabled = true;
+        load({ action: 'decide', code: code, act: act }).then(function (j) {
+          if (j && !j.ok) { if (tg && tg.showAlert) tg.showAlert(j.error); load(); }
+        });
+      };
+      var q = (act === 'ok' ? 'Tasdiqlaysizmi? ' : 'Rad etasizmi? ') + code;
+      if (tg && tg.showConfirm) tg.showConfirm(q, function (yes) { if (yes) go(); }); else if (confirm(q)) go();
+    } else if (t.matches('.card img')) {
+      t.closest('.card').classList.toggle('big');
+    }
+  });
+  if (!initData) { $('list').innerHTML = '<div class="empty">Panel faqat Telegram ichida, bot orqali ochiladi (/admin).</div>'; return; }
+  load();
+  setInterval(function () { if (document.visibilityState === 'visible') load(); }, 30000);
+})();
+</script>
+</body>
+</html>

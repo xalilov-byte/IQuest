@@ -2,12 +2,14 @@
    SAYTNI YIG'ISH  →  dist/site/
 
    Ishga tushirish:  node tools/mksite.mjs
-   (avval `node build.mjs --target=web` ishga tushadi — u avtomatik)
+   (avval `node build.mjs --target=tg` ishga tushadi — undan faqat shriftlar
+   olinadi; ilovaning oʻzi saytga KIRMAYDI, u Telegram botida — /app/,
+   tools/mkahost.mjs, DEPLOY-AHOST.md)
 
    Chiqadigan tuzilma:
 
      dist/site/
-       index.html              landing + brauzerdagi ilova (bitta fayl)
+       index.html              landing (JS'siz): bitta tugma → Telegram bot
        maxfiylik/index.html    maxfiylik siyosati   ← Play MAJBURIY
        shartlar/index.html     foydalanish shartlari (TOʻLIQ rad qilish matni)
        aloqa/index.html        aloqa                ← Play MAJBURIY
@@ -54,8 +56,12 @@ if (/PLACEHOLDER/.test(cfg.contactEmail)) {
   warn.push('contactEmail hali PLACEHOLDER — Play Console maxfiylik siyosatida ' +
             'HAQIQIY aloqa manzilini talab qiladi');
 }
-if (!cfg.telegramBot) {
-  warn.push('telegramBot bo\'sh — landing\'dagi "Telegramda ochish" tugmasi olib tashlanadi');
+/* Landing'ning yagona asosiy tugmasi — Mini App boti (paywall.bot; boʻsh
+   boʻlsa telegramBot). Bot yoʻq — tugma yoʻq (oʻlik havola boʻlmaydi). */
+const BOT = String((cfg.paywall && cfg.paywall.bot) || cfg.telegramBot || '').replace(/^@/, '');
+const BOT_URL = BOT ? 'https://t.me/' + BOT : '';
+if (!BOT) {
+  warn.push('paywall.bot (va telegramBot) bo\'sh — landing\'dagi "Telegram botda ochish" tugmasi olib tashlanadi');
 }
 if (!cfg.publisherLegal) {
   warn.push('publisherLegal bo\'sh — maxfiylik siyosatida ilova egasi sifatida "' +
@@ -75,29 +81,30 @@ if (textErrors.length) {
 
 const SITE = cfg.domainConfirmed ? 'https://' + cfg.domain : null;
 
-/* ── 2. Ilovani yig'ish ─────────────────────────────────────────────── */
-execFileSync(process.execPath, ['build.mjs', '--target=web'], { stdio: 'inherit' });
+/* ── 2. Shriftlar ───────────────────────────────────────────────────
+   Landing ILOVANI OʻZ ICHIGA OLMAYDI (Telegram-first: ilova faqat botda,
+   Mini App sifatida — DEPLOY-AHOST.md). Mini App build'i (dist/tg) baribir
+   kerak, shuning uchun shu yerda yigʻiladi va undan faqat shriftlar va
+   ularning @font-face qatorlari olinadi (bitta manba — build.mjs). */
+execFileSync(process.execPath, ['build.mjs', '--target=tg'], { stdio: 'inherit' });
 
 rmSync(OUT, { recursive: true, force: true });
-mkdirSync(OUT, { recursive: true });
+mkdirSync(join(OUT, 'fonts'), { recursive: true });
+for (const f of readdirSync('dist/tg/fonts')) copyFileSync(join('dist/tg/fonts', f), join(OUT, 'fonts', f));
 
-/* dist/web ni ko'chiramiz (fontlar, rasmlar, index.html) */
-function copyDir(from, to) {
-  mkdirSync(to, { recursive: true });
-  for (const name of readdirSync(from, { withFileTypes: true })) {
-    if (name.isDirectory()) copyDir(join(from, name.name), join(to, name.name));
-    else copyFileSync(join(from, name.name), join(to, name.name));
-  }
-}
-copyDir('dist/web', OUT);
+const appHtml = readFileSync('dist/tg/index.html', 'utf8');
+const allFontCss = (() => {
+  const all = appHtml.slice(appHtml.indexOf('<style>') + 7, appHtml.indexOf('</style>'));
+  if (all.indexOf('@font-face') === -1) throw new Error('[mksite] dist/tg/index.html da @font-face topilmadi');
+  return all.trim();
+})();
 
-/* ── 3. Landing sahifasining <head> qismi ────────────────────────────
-   Ilova build'i faqat "IQuest" nomini qo'yadi — ilovaga shundan ortiq
-   kerak emas. Saytga esa kerak: qidiruv natijasidagi matn, Telegram va
-   ijtimoiy tarmoqdagi havola ko'rinishi (Open Graph) va qaysi manzil
-   asosiy ekani (canonical). */
-/* Matn qisqa va halol (src/iq/CONTRACT.md §6): "rasmiy",
-   "sertifikatlangan", persentil, "IQ oshiradi" va'dasi yo'q. */
+/* ── 3. Landing (index.html) ─────────────────────────────────────────
+   Qisqa, premium va halol (src/iq/CONTRACT.md §6): "rasmiy",
+   "sertifikatlangan", persentil, "IQ oshiradi" va'dasi yo'q. Bitta asosiy
+   tugma — botga. Narx yashirilmaydi: natija va sertifikat pullik ekani
+   landing'da ochiq yoziladi. Brend — «Matritsa» (tools/brand.html).
+   JS yoʻq, CSP qatʼiy. */
 const APP = cfg.appName || 'IQuest';
 
 /* Test uzunligi ilovadagi bilan bir xil bo'lsin (Main.dc.html →
@@ -108,43 +115,137 @@ const TEST_LEN = (() => {
     return m ? m[1] : '';
   } catch (e) { return ''; }
 })();
+/* O'yinlar soni — src/games/ dagi haqiqiy fayllardan (demo va reyestr emas). */
+const GAME_COUNT = (() => {
+  try { return readdirSync('src/games').filter(f => f.endsWith('.js') && f !== 'index.js' && f !== 'demo.js').length; }
+  catch (e) { return 0; }
+})();
 
-/* Landing matni ilovadagi nom bilan bir xil: «IQ oʻyinlari» (CONTRACT
-   §6.7). Imlo: oʻ/gʻ — ʻ (U+02BB). */
 const TITLE = `${APP} — IQ test, mashq va IQ oʻyinlari`;
 const DESC = (TEST_LEN ? `${TEST_LEN} savollik moslashuvchan IQ test` : 'Moslashuvchan IQ test') +
-             ', savol turlari boʻyicha mashq va IQ oʻyinlari. ' +
-             'Internetsiz ishlaydi, roʻyxatdan oʻtish shart emas.';
-
-/* Brauzer yorlig'idagi sarlavha ilova tiliga ergashadi: landing tilni
-   ilovadan oladi (nz-lang), <title> esa statik. i18n.js <html data-lang>
-   ni o'rnatadi — shu atribut kuzatiladi. 'en' faqat EN darvozasi
-   ochilganda uchraydi. */
-const TITLES = {
-  'uz': TITLE,
-  'uz-cyrl': `${APP} — IQ тест, машқ ва IQ ўйинлари`,
-  'ru': `${APP} — IQ-тест, тренировка и IQ-игры`,
-  'en': `${APP} — IQ test, practice and IQ games`,
-};
-for (const [l, t] of Object.entries(TITLES)) {
-  const errs = lintTextSafe(l, t);
-  if (errs) throw new Error('[mksite] landing sarlavhasi (' + l + '): ' + errs);
-}
-function lintTextSafe(l, t) {
-  if (/[‘’'`]/.test(t)) return 'notoʻgʻri apostrof';
-  if (l === 'uz' && /[\u0400-\u04FF]/.test(t)) return 'kirill harfi';
-  return '';
+             ', savol turlari boʻyicha mashq va IQ oʻyinlari — Telegram ichida. ' +
+             'Roʻyxatdan oʻtish shart emas.';
+for (const t of [TITLE, DESC]) {
+  if (/[‘’'`]/.test(t) || /[Ѐ-ӿ]/.test(t)) throw new Error('[mksite] landing matnida imlo xatosi: ' + t);
 }
 
-/* Havola ko'rinishidagi rasm (Telegram, WhatsApp, ijtimoiy tarmoq).
-   tools/mkog.mjs bilan yasaladi. Fayl yo'q bo'lsa og:image YOZILMAYDI —
-   mavjud bo'lmagan rasmga ko'rsatish havola ko'rinishini butunlay
-   buzadi (ba'zi mijozlar rasm o'rniga bo'sh joy qoldiradi). */
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const PW = cfg.paywall && cfg.paywall.enabled ? cfg.paywall : null;
+const PRICE = PW && PW.price ? String(PW.price) : '';
+const CHANNEL = String(cfg.telegramChannel || '').replace(/^@/, '').replace(/^https?:\/\/t\.me\//, '');
+const CHANNEL_URL = CHANNEL ? 'https://t.me/' + CHANNEL : '';
+
+/* «Matritsa» belgisi — 512 setka (tools/brand.html). fg — kataklar,
+   acc — javob (oxirgi doira). */
+const glyph = (fg, acc, size, cls) =>
+  `<svg class="${cls || ''}" width="${size}" height="${size}" viewBox="112 112 290 290" aria-hidden="true">` +
+  [[120, 120, 72, 4], [219.13, 119.13, 73.75, 12.88], [318.25, 118.25, 75.5, 21.75],
+   [119.13, 219.13, 73.75, 12.88], [218.25, 218.25, 75.5, 21.75], [317.38, 217.38, 77.25, 30.63],
+   [118.25, 318.25, 75.5, 21.75], [217.38, 317.38, 77.25, 30.63], [316.5, 316.5, 79, 39.5]]
+    .map(([x, y, w, r], i) => `<rect x="${x}" y="${y}" width="${w}" height="${w}" rx="${r}" fill="${i === 8 ? acc : fg}"/>`)
+    .join('') + '</svg>';
+const tgIcon = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" ' +
+  'd="M21.4 3.6 2.9 10.8c-1.3.5-1.2 1.3-.2 1.6l4.7 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.5Zm-3.3 3.6-8.6 7.8-.3 3.4-1.6-4.9 10.1-6.4c.5-.3.8 0 .4.1Z"/></svg>';
+
+const ctas = () => BOT_URL ? `<div class="ctas">
+<a class="btn btn-main" href="${BOT_URL}">${tgIcon}<span>Telegram botda ochish</span></a>${CHANNEL_URL ? `
+<a class="btn btn-ghost" href="${CHANNEL_URL}">Kanal</a>` : ''}
+</div>` : '';
+
+const FEATURES = [
+  ['IQ test', (TEST_LEN ? `${TEST_LEN} ta savol. ` : '') +
+    'Savollar javoblaringizga qarab qiyinlashadi yoki osonlashadi. Natija — IQ shkalasidagi baho va uning oraligʻi.'],
+  ['Mashq', 'Savol turlari boʻyicha alohida mashq: sonli qatorlar, matritsalar, fazoviy va ogʻzaki mantiq. Har javobdan keyin izoh.'],
+  ['IQ oʻyinlari', (GAME_COUNT ? `${GAME_COUNT} ta qisqa oʻyin` : 'Qisqa oʻyinlar') +
+    ': diqqat, xotira va hisob tezligi uchun. Har kuni bir necha daqiqa.'],
+];
+const STEPS = [
+  ['Botni oching', '«Telegram botda ochish» tugmasini bosing, botda «IQuestni ochish»ni tanlang. Ilova Telegram ichida ochiladi.'],
+  ['Testni ishlang', 'Oʻzingizga qulay vaqtda, shoshilmasdan. Mashq va IQ oʻyinlari — bepul.'],
+  PW ? ['Natijani oling', `Toʻliq natija va sertifikat — ${PRICE || 'bir martalik toʻlov'}. Kartaga oʻtkazib, chekni botga yuborasiz; tasdiqlangach natija shu yerda ochiladi.`]
+     : ['Natijani oling', 'Natija test tugashi bilan ekranda koʻrinadi.'],
+];
+
+const landingCss = `
+:root{color-scheme:light dark;
+--bg:#F5F3FF;--surface:#FFFFFF;--fg:#10183A;--muted:#596186;--line:rgba(16,24,58,.10);
+--navy:#10183A;--night:#0C1230;--coral:#FF5B3A;--blue:#3D5EFF;--num:#3D5EFF}
+@media (prefers-color-scheme:dark){:root{
+--bg:#0C1230;--surface:#141C44;--fg:#FFFFFF;--muted:#A3ACD2;--line:rgba(255,255,255,.10);--num:#8FA2FF}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:500 17px/1.6 Manrope,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+h1,h2,h3,.brand{font-family:'Space Grotesk',Manrope,system-ui,sans-serif;letter-spacing:-.02em}
+.hero{position:relative;overflow:hidden;background:var(--night);color:#fff;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;
+background:radial-gradient(60% 50% at 85% 20%,rgba(61,94,255,.35),rgba(61,94,255,0) 70%),
+radial-gradient(40% 35% at 10% 95%,rgba(255,91,58,.16),rgba(255,91,58,0) 70%)}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;
+background-image:radial-gradient(rgba(255,255,255,.13) 1.3px,transparent 1.7px);background-size:14px 14px;
+-webkit-mask-image:radial-gradient(90% 80% at 70% 30%,#000 30%,transparent 80%);mask-image:radial-gradient(90% 80% at 70% 30%,#000 30%,transparent 80%)}
+.top{display:flex;align-items:center;justify-content:space-between;padding-block:18px}
+.brand{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:22px;text-decoration:none;color:#fff}
+.hero-grid{display:grid;gap:36px;padding-block:28px 64px;align-items:center}
+.eyebrow{display:inline-block;margin:0;padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;
+letter-spacing:.02em;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#C9D0F0}
+h1{font-size:clamp(34px,8.6vw,60px);line-height:1.04;font-weight:700;margin:18px 0 0;text-wrap:balance}
+.lead{margin:18px 0 0;font-size:18px;line-height:1.55;color:#C9D0F0;max-width:34em;text-wrap:pretty}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 26px;
+border-radius:16px;font-weight:800;font-size:17px;text-decoration:none;transition:transform .15s ease,box-shadow .15s ease}
+.btn:active{transform:scale(.98)}
+.btn-main{background:#fff;color:var(--navy);box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.btn-main svg{color:#2AABEE}
+.btn-main:hover{box-shadow:0 14px 36px rgba(0,0,0,.36)}
+.btn-ghost{color:#fff;border:1.5px solid rgba(255,255,255,.28)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5)}
+.note{margin:14px 0 0;font-size:14px;color:#A3ACD2}
+.art{display:grid;place-items:center}
+.art-tile{width:min(300px,72vw);aspect-ratio:1;border-radius:22%;background:linear-gradient(160deg,#18214A,#10183A);
+display:grid;place-items:center;border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 80px rgba(4,8,30,.55),inset 0 1px 0 rgba(255,255,255,.08)}
+.art-tile svg{width:64%;height:64%}
+section.block{padding-block:64px 8px}
+h2{font-size:clamp(26px,5.4vw,36px);line-height:1.15;font-weight:700;margin:0 0 24px;text-wrap:balance}
+.cards{display:grid;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px 22px 20px}
+.card h3{margin:14px 0 6px;font-size:20px;font-weight:700}
+.card p{margin:0;color:var(--muted);font-size:16px;line-height:1.55;text-wrap:pretty}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:4px 14px;background:var(--surface);
+border:1px solid var(--line);border-radius:22px;padding:20px}
+.steps li:before{content:counter(s);grid-row:span 2;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+font:700 20px/1 'Space Grotesk',Manrope,sans-serif;background:var(--navy);color:#fff}
+.steps li:last-child:before{background:var(--coral)}
+.steps b{font-family:'Space Grotesk',Manrope,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.steps span{color:var(--muted);font-size:16px;line-height:1.55;text-wrap:pretty}
+.final{margin:56px 0 0;background:var(--night);color:#fff;border-radius:28px;padding:36px 24px;text-align:center;position:relative;overflow:hidden}
+.final h2{margin:18px 0 0}
+.final .ctas{justify-content:center}
+footer{padding-block:40px 48px;color:var(--muted);font-size:14px}
+footer nav{display:flex;flex-wrap:wrap;gap:8px 18px;font-weight:600;margin-bottom:14px}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--fg)}
+@media (min-width:760px){
+.hero-grid{grid-template-columns:1.25fr 1fr;padding-block:48px 96px}
+.cards{grid-template-columns:repeat(3,1fr)}
+.steps{grid-template-columns:repeat(3,1fr)}
+.steps li{grid-template-columns:1fr;gap:10px}
+.steps li:before{grid-row:auto}
+.final{padding:56px 40px}}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+`;
+
+const LEGAL_NAV = ['maxfiylik', 'shartlar', 'aloqa', 'malumot-ochirish']
+  .map(slug => `<a href="${sitePath('uz', slug)}">${pageTitle('uz', slug)}</a>`).join('\n');
+function pageTitle(lang, slug) {
+  return built.find(p => p.lang === lang && p.slug === slug).title;
+}
+
 const hasOg = existsSync('resources/og.jpg');
 if (hasOg) copyFileSync('resources/og.jpg', join(OUT, 'og.jpg'));
 else warn.push('resources/og.jpg yo\'q — `node tools/mkog.mjs` ishga tushiring');
-
-let index = readFileSync(join(OUT, 'index.html'), 'utf8');
 
 const head = [
   `<title>${TITLE}</title>`,
@@ -167,55 +268,65 @@ const head = [
   hasOg ? `<meta property="og:image:alt" content="${APP} — IQ test va IQ oʻyinlari">` : null,
 ].filter(Boolean).join('\n');
 
-/* Faqat <title> almashtiriladi — qolgan head o'z joyida qoladi.
-   build.mjs sarlavhani "IQuest" qilib yozadi (u yerda ham shu nom). */
-if (index.indexOf('<title>IQuest</title>') === -1) {
-  throw new Error('[mksite] dist/web/index.html da "<title>IQuest</title>" topilmadi — ' +
-                  'build.mjs o\'zgargan, mksite.mjs yangilansin');
-}
-index = index.replace('<title>IQuest</title>', head);
-
-/* JS o'chirilgan brauzer (va JS ishlatmaydigan indekslovchi) bo'sh
-   ekran ko'rmasligi kerak. Bu marketing matni emas — sahifaning
-   mazmuni matn ko'rinishida va uch tildagi huquqiy sahifalarga havola. */
-const legalLinks = lang => ['maxfiylik', 'shartlar', 'aloqa']
-  .map(slug => `<a href="${sitePath(lang, slug)}">${pageTitle(lang, slug)}</a>`).join(' · ');
-function pageTitle(lang, slug) {
-  return built.find(p => p.lang === lang && p.slug === slug).title;
-}
-const noscript = `
-<noscript>
-<div style="max-width:680px;margin:0 auto;padding:48px 24px;font:500 16px/1.6 Manrope,system-ui,sans-serif">
-<h1 style="font-size:32px;font-weight:800;letter-spacing:-.02em">${APP}</h1>
-<p>${DESC}</p>
-<p><strong>Ilovadan foydalanish uchun JavaScript yoqilishi kerak.</strong></p>
-<p lang="uz">${legalLinks('uz')}</p>
-<p lang="ru">${legalLinks('ru')}</p>
-<p lang="en">${legalLinks('en')}</p>
+const index = `<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0C1230">
+${head}
+<style>${allFontCss}</style>
+<style>${landingCss}</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap">
+<div class="top">
+<a class="brand" href="./">${glyph('#FFFFFF', '#FF6A4B', 30)}${APP}</a>
 </div>
-</noscript>
+<div class="hero-grid">
+<div>
+<p class="eyebrow">Telegram Mini App</p>
+<h1>Mantiqiy fikrlashingizni sinang va mashq qiling</h1>
+<p class="lead">${esc(DESC)}</p>
+${ctas()}
+${BOT_URL ? `<p class="note">Ilova oʻrnatish shart emas — hammasi Telegram ichida ishlaydi.</p>` : ''}
+</div>
+<div class="art"><div class="art-tile">${glyph('#FFFFFF', '#FF6A4B', 200)}</div></div>
+</div>
+</div>
+</header>
+<main>
+<section class="block"><div class="wrap">
+<h2>Ichida nima bor</h2>
+<div class="cards">
+${FEATURES.map(([t, d], i) => `<div class="card">${glyph(i === 0 ? 'var(--fg)' : 'var(--muted)', '#FF5B3A', 36)}<h3>${t}</h3><p>${d}</p></div>`).join('\n')}
+</div>
+</div></section>
+<section class="block"><div class="wrap">
+<h2>Qanday ishlaydi</h2>
+<ol class="steps">
+${STEPS.map(([t, d]) => `<li><b>${t}</b><span>${esc(d)}</span></li>`).join('\n')}
+</ol>
+${BOT_URL ? `<div class="final">
+${glyph('#FFFFFF', '#FF6A4B', 56)}
+<h2>Boshlash uchun bitta tugma</h2>
+${ctas()}
+</div>` : ''}
+</div></section>
+</main>
+<footer><div class="wrap">
+<nav aria-label="Huquqiy sahifalar">
+${LEGAL_NAV}
+</nav>
+<nav aria-label="Til"><a href="${sitePath('ru', 'shartlar')}" lang="ru">Русский</a><a href="${sitePath('en', 'shartlar')}" lang="en">English</a></nav>
+<span>© ${new Date().getFullYear()} ${esc(cfg.publisher || APP)}${cfg.domainConfirmed ? ' · ' + cfg.domain : ''}</span>
+</div></footer>
+</body>
+</html>
 `;
-index = index.replace('<div id="nz-root"></div>', '<div id="nz-root"></div>' + noscript);
-
-const titleScript = `<script>
-(function () {
-  var T = ${JSON.stringify(TITLES)};
-  function apply() {
-    var l = document.documentElement.getAttribute('data-lang') || 'uz';
-    if (T[l] && document.title !== T[l]) document.title = T[l];
-  }
-  apply();
-  try {
-    new MutationObserver(apply).observe(document.documentElement,
-      { attributes: true, attributeFilter: ['data-lang'] });
-  } catch (e) {}
-})();
-</script>
-`;
-const bodyEnd = index.lastIndexOf('</body>');
-if (bodyEnd === -1) throw new Error('[mksite] dist/web/index.html da </body> topilmadi');
-index = index.slice(0, bodyEnd) + titleScript + index.slice(bodyEnd);
-
+if (/<script\b/i.test(index)) throw new Error('[mksite] landing JS saqlamasligi kerak');
 writeFileSync(join(OUT, 'index.html'), index);
 
 /* ── 4. Matn sahifalari (uz · ru · en) ──────────────────────────────── */
@@ -293,8 +404,7 @@ gap:16px;flex-wrap:wrap}
    yuzlari ham shu ro'yxatda — /ru/ sahifalari Manrope bilan chiziladi. */
 const fontCss = (() => {
   // Faqat Manrope kerak — matn sahifalarida sarlavha shrifti ishlatilmaydi.
-  const all = index.slice(index.indexOf('<style>') + 7, index.indexOf('</style>'));
-  return all.split('@font-face').filter(x => /Manrope/.test(x))
+  return allFontCss.split('@font-face').filter(x => /Manrope/.test(x))
     .map(x => '@font-face' + x.slice(0, x.lastIndexOf('}') + 1)).join('\n');
 })();
 const fontFacesAt = root => fontCss.replace(/url\(\.\/fonts\//g, `url(${root}fonts/`);
@@ -449,7 +559,7 @@ writeFileSync(join(OUT, '_headers'),
 const kb = p => (readFileSync(join(OUT, p)).length / 1024).toFixed(0) + ' KB';
 console.log('');
 console.log(`sayt → ${OUT}/`);
-console.log(`  ${'index.html'.padEnd(32)}${kb('index.html').padStart(6)}  (landing + ilova)`);
+console.log(`  ${'index.html'.padEnd(32)}${kb('index.html').padStart(6)}  (landing → ${BOT_URL || 'bot yoʻq'})`);
 for (const p of built) {
   console.log(`  ${(p.path + 'index.html').padEnd(32)}${kb(join(p.path, 'index.html')).padStart(6)}  ${p.title}`);
 }

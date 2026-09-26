@@ -13,9 +13,9 @@
     "",
     "domainConfirmed: false — iquest.uz hali ulanmagan. true qilinmaguncha",
     "sitemap/canonical yozilmaydi va robots.txt indekslashni to'sadi.",
-    "telegramBot ATAYLAB bo'sh: bot hali yaratilmagan. Bo'sh bo'lsa",
-    "Telegram tugmalari umuman ko'rsatilmaydi — o'lik havola bo'lmaydi.",
-    "Bot yaratilgach nomi @ belgisiz yoziladi (masalan: IQuestBot)."
+    "telegramBot / paywall.bot — bitta bot (@ belgisiz): IQuestebot.",
+    "Landing tugmasi ham, Mini App ham, cheklar ham shu botda (DEPLOY-AHOST.md).",
+    "telegramChannel — ixtiyoriy kanal nomi; bo'sh bo'lsa landing'da tugma yo'q."
   ],
 
   "domain": "iquest.uz",
@@ -24,7 +24,9 @@
   "contactEmail": "PLACEHOLDER@iquest.uz",
   "contactTelegram": "",
 
-  "telegramBot": "",
+  "telegramBot": "IQuestebot",
+
+  "telegramChannel": "",
 
   "appId": "uz.iquest.app",
   "appName": "IQuest",
@@ -41,7 +43,7 @@
     "card": "8600 0000 0000 0000",
     "cardOwner": "ISM FAMILIYA",
     "adminTg": "iquest_admin",
-    "bot": "IQuestBot",
-    "secret": "change-me"
+    "bot": "IQuestebot",
+    "secret": "aVjqNrK8tG7A75KESbfDK528"
   }
 }

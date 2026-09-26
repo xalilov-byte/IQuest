@@ -1,7 +1,12 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   IQuest TOʻLOV BOTI — bitta Cloudflare Worker, bazasiz (bot/README.md)
+   IQuest TOʻLOV BOTI — bitta Cloudflare Worker, bazasiz (bot/README.md).
+   ASOSIY bot endi PHP'da (aHOST): bot/bot.php + bot/lib.php — bitta bot,
+   ADMIN_IDS, buyurtmalar roʻyxati va Telegram ichidagi admin panel
+   (DEPLOY-AHOST.md). Bu Worker — zaxira varianti; ochish kodi algoritmi
+   uchalasida bir xil (tests/bot-php.test.mjs).
 
    Oqim:
+     0. /start → salom + «IQuestni ochish» web_app tugmasi (WEBAPP_URL).
      1. Ilova «Chekni yuborish» → t.me/<bot>?start=pay_IQ-4F7K
      2. /start pay_<KOD> → bot force_reply bilan soʻraydi: «… Test kodi: <KOD>»
         (kod shu xabar matnida yuradi — serverda hech narsa saqlanmaydi).
@@ -38,13 +43,21 @@ const CODE_RE = /IQ-[0-9A-HJKMNP-TV-Z]{4}/;
 
 export const TEXT = {
   ask: code => `Toʻlov chekini rasm qilib yuboring. Test kodi: ${code}`,
-  hello: 'Salom! Toʻlov uchun ilovadagi «Chekni yuborish» tugmasini bosing.',
+  hello: 'Salom! IQuest — IQ test, mashq va IQ oʻyinlari. Boshlash uchun «IQuestni ochish» tugmasini bosing.',
   noCode: 'Chekni «Test kodi» yozilgan xabarga javob qilib yuboring (ilovadagi «Chekni yuborish» tugmasi).',
   got: 'Chek qabul qilindi. Tekshirilgach xabar beramiz.',
   ok: 'Toʻlov tasdiqlandi! Natijangiz va sertifikatingiz tayyor.',
   no: 'Chek tasdiqlanmadi. Savollar boʻlsa, adminga yozing.',
   open: 'Natijani ochish',
+  app: 'IQuestni ochish',
 };
+
+/* Salom: WEBAPP_URL bor boʻlsa — «IQuestni ochish» web_app tugmasi bilan. */
+function hello(env, chat) {
+  const body = { chat_id: chat, text: TEXT.hello };
+  if (env.WEBAPP_URL) body.reply_markup = { inline_keyboard: [[{ text: TEXT.app, web_app: { url: String(env.WEBAPP_URL) } }]] };
+  return api(env, 'sendMessage', body);
+}
 
 /* Telegram Bot API chaqiruvi (oddiy fetch). */
 export function api(env, method, body) {
@@ -80,20 +93,20 @@ export async function handleUpdate(update, env) {
     const chat = msg.chat.id;
     const text = msg.text || '';
     if (text.startsWith('/start')) {
-      const m = /^\/start\s+pay_(IQ-[0-9A-Za-z]{4})\s*$/.exec(text);
+      const m = /^\/start\s+pay_(IQ-[0-9A-Za-z]{4})(?:_[0-9A-Za-z]{2})?\s*$/.exec(text);
       const code = m ? m[1].toUpperCase() : '';
       if (code && CODE_RE.test(code)) {
         await api(env, 'sendMessage', { chat_id: chat, text: TEXT.ask(code),
           reply_markup: { force_reply: true, input_field_placeholder: 'Chek rasmi' } });
       } else {
-        await api(env, 'sendMessage', { chat_id: chat, text: TEXT.hello });
+        await hello(env, chat);
       }
       return;
     }
     const photo = msg.photo && msg.photo.length ? msg.photo[msg.photo.length - 1].file_id : '';
     const doc = !photo && msg.document && /^image\//.test(msg.document.mime_type || '') ? msg.document.file_id : '';
     if (!photo && !doc) {
-      await api(env, 'sendMessage', { chat_id: chat, text: TEXT.hello });
+      await hello(env, chat);
       return;
     }
     const ref = msg.reply_to_message;

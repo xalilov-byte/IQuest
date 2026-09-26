@@ -6,6 +6,8 @@
      · test kodi   = "IQ-" + 4 belgi (Crockford base32) FNV-1a(seed) dan;
      · ochish kodi = 6 belgi (Crockford base32) FNV-1a(`${testKod}:${secret}`).
    Egasi kodni `node tools/unlock.mjs IQ-XXXX` bilan oladi (PAYWALL.md).
+   «Chekni yuborish» havolasi: t.me/<bot>?start=pay_IQ-XXXX_<iqTag> — IQ
+   belgisi bot admin paneli uchun (bot/lib.php).
    Sir web bundle ichida koʻrinadi — sinov bosqichi uchun egasi rozi.
 
    Saqlash (kalit nz-paywall): { v:1, name, items: { [kod]: { code, at,
@@ -45,6 +47,13 @@
   function testCode(seed) { return 'IQ-' + b32(fnv('iquest:test:' + (seed >>> 0)), 4); }
   function unlockCode(code, secret) { return b32(fnv(normCode(code) + ':' + String(secret || '')), 6); }
   function check(code, secret, input) { return clean(input) === unlockCode(code, secret); }
+  /* IQ belgisi — botdagi admin panelida IQ koʻrinsin (bot/lib.php
+     iq_tag_decode). 2 belgi: 10 bit, sir bilan XOR (oddiy yashirish —
+     foydalanuvchi /start havolasida raqamni koʻrmasin; kriptografik emas). */
+  function iqTag(code, iq, secret) {
+    const t = ((iq | 0) & 0x3FF) ^ (fnv(normCode(code) + ':iq:' + String(secret || '')) & 0x3FF);
+    return b32((t << 22) >>> 0, 2);
+  }
 
   function ls() { try { return root.localStorage || null; } catch (e) { return null; } }
   function load() {
@@ -62,6 +71,7 @@
     unlockCode: unlockCode,
     check: check,
     normCode: normCode,
+    iqTag: iqTag,
     /* Yangi toʻliq natija — kutilmoqda holatida (bor boʻlsa oʻzgarmaydi). */
     add(code, at, r) {
       const st = load();
