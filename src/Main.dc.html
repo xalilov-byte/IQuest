@@ -1168,15 +1168,7 @@
               <span class="nz-ell">2) Chek rasmini botga yuboring</span>
             </div>
             <button onClick="{{ pwSend }}" class="nz-btn" style="flex:none">{{ pwSendLabel }}</button>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;height:24px;flex:none;margin-top:4px">
-              <span class="nz-cap">Kodni kiritish</span>
-              <button onClick="{{ pwAdmin }}" style="background:transparent;padding:0;height:24px;font-size:13px;font-weight:700;color:var(--primary-ink)">Adminga yozish</button>
-            </div>
-            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;flex:none">
-              <input id="nz-pw-key" class="nz-input" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ochish kodi" aria-label="Ochish kodi" style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase;letter-spacing:.08em">
-              <button onClick="{{ pwTryUnlock }}" class="nz-btn soft" style="width:auto;padding:0 20px">Ochish</button>
-            </div>
-            <div style="{{ pwErrStyle }}">Kod notoʻgʻri</div>
+            <button onClick="{{ pwAdmin }}" style="flex:none;align-self:center;background:transparent;padding:0;height:32px;font-size:13px;font-weight:700;color:var(--primary-ink)">Savol boʻlsa — adminga yozing</button>
           </div>
         </div>
         </sc-if>
