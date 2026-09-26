@@ -737,6 +737,17 @@ const NZ_SITE = {
   playUrl: siteCfg.playUrl || '',
   langs: LANGS,
 };
+/* Qoʻlda toʻlov paywall'i (PAYWALL.md) — FAQAT web (Telegram Mini App).
+   Mobil (APK) va admin build'iga na sozlama, na src/paywall.js tushadi:
+   APK'da natija bepul qoladi. */
+const PAYWALL_ON = TARGET === 'web' && !!(siteCfg.paywall && siteCfg.paywall.enabled);
+if (PAYWALL_ON) {
+  const p = siteCfg.paywall;
+  NZ_SITE.paywall = { enabled: true, price: String(p.price || ''), card: String(p.card || ''),
+                      cardOwner: String(p.cardOwner || ''), adminTg: String(p.adminTg || '').replace(/^@/, ''),
+                      bot: String(p.bot || '').replace(/^@/, ''),
+                      secret: String(p.secret || '') };
+}
 const siteSnippet = `window.nzSite = ${JSON.stringify(NZ_SITE)};`;
 const shellCss = read(join(SRC, CFG.shell));
 const bootstrap = read(join(SRC, 'bootstrap.js'));
@@ -799,6 +810,7 @@ const SCRIPTS = [
   ['src/wallet.js',   optional('wallet.js')],
   ['src/badges.js',   optional('badges.js')],
   ['src/league.js',   optional('league.js')],
+  ['src/paywall.js',  PAYWALL_ON ? read(join(SRC, 'paywall.js')) : null],
   ['IQ bundle',       iqBundle],
   ['Main (logic)',    logic],
   ['src/data.js',     supaSnippet + '\n' + data],
@@ -956,6 +968,7 @@ if (removed.length) console.log(`kesildi        — admin qatlami (${removed.len
 if (absent.length) console.log(`oʻtkazildi     — hali yoʻq v1.1 modullari: ${absent.join(', ')}`);
 console.log(`versiya        — ${NZ_SITE.version} (versionCode ${VERSION.versionCode})`);
 console.log(`tillar         — ${LANGS.join(', ')}`);
+if (PAYWALL_ON) console.log('paywall        — yoqilgan (qoʻlda toʻlov, PAYWALL.md)');
 if (FORCE_EN) console.log('⚠ EN darvozasi --lang-en bilan MAJBURAN ochildi — faqat ishlab chiqish uchun');
 else if (enWhy.length) {
   console.log(`⚠ EN darvozasi yopiq (${enWhy.length} ta sabab) — English taklif qilinmaydi:`);

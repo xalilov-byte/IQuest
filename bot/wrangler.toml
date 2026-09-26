@@ -1,0 +1,7 @@
+# Cloudflare Worker — IQuest toʻlov boti (bot/README.md)
+name = "iquest-pay-bot"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+# Maxfiy qiymatlar bu yerga YOZILMAYDI — `npx wrangler secret put ...`:
+#   BOT_TOKEN, ADMIN_CHAT_ID, UNLOCK_SECRET, WEBAPP_URL, WEBHOOK_SECRET (ixtiyoriy)

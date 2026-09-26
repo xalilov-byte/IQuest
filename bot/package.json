@@ -1,0 +1,6 @@
+{
+  "name": "iquest-pay-bot",
+  "private": true,
+  "type": "module",
+  "main": "worker.js"
+}

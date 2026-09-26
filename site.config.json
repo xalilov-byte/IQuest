@@ -32,5 +32,16 @@
   "publisher": "IQuest",
   "publisherLegal": "",
 
-  "playUrl": ""
+  "playUrl": "",
+
+  "paywall": {
+    "_izoh": "Faqat web (Telegram Mini App) build'ida. Karta, egasi, admin va bot Telegram nomi (@ siz), sir — PAYWALL.md, bot/README.md. Sir bundle'da ko'rinadi va bot UNLOCK_SECRET bilan bir xil bo'lishi shart.",
+    "enabled": true,
+    "price": "10 000 soʻm",
+    "card": "8600 0000 0000 0000",
+    "cardOwner": "ISM FAMILIYA",
+    "adminTg": "iquest_admin",
+    "bot": "IQuestBot",
+    "secret": "change-me"
+  }
 }

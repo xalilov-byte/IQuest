@@ -707,7 +707,7 @@
           <h2 class="nz-h2">Testlar tarixi</h2>
           <div class="nz-group">
             <sc-for list="{{ historyRows }}" as="h" hint-placeholder-count="3">
-              <div style="{{ h.rowStyle }}">
+              <div style="{{ h.rowStyle }}" onClick="{{ h.open }}">
                 <span style="flex:1;min-width:0">
                   <span class="nz-ell nz-num" style="font-size:16px;font-weight:800">{{ h.value }}</span>
                   <span class="nz-ell nz-cap nz-num" style="font-weight:500">{{ h.sub }}</span>
@@ -1123,8 +1123,87 @@
             </div>
             </sc-if>
           </div>
-          <div style="position:sticky;bottom:0;padding:12px 16px 20px;background:var(--background);flex:none">
+          <div style="{{ resFootStyle }}">
+            <button onClick="{{ openCert }}" class="nz-btn ghost" style="{{ resCertStyle }}">Sertifikat</button>
             <button onClick="{{ resPrimary }}" class="nz-btn">{{ resPrimaryLabel }}</button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ── PAYWALL: NATIJA TAYYOR (faqat web, PAYWALL.md) ─────────────
+             Qatʼiy bloklar: sarlavha 36, karta 118, kod 92, tugma 52,
+             zaxira qatori 52 + xato 18 (doim joy egallaydi). -->
+        <sc-if value="{{ pwLockOn }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column">
+          <div style="padding:16px 16px 6px;display:flex;align-items:center;justify-content:space-between;gap:8px;height:66px;flex:none">
+            <button onClick="{{ pwClose }}" aria-label="Yopish" class="nz-iconbtn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="{{ ic.x.path1 }}"></path></svg>
+            </button>
+            <span class="nz-ell" style="flex:1;text-align:center;font-size:15px;font-weight:700">IQ test</span>
+            <span style="width:44px;flex:none"></span>
+          </div>
+          <div style="flex:1;padding:0 16px 20px;display:flex;flex-direction:column;gap:12px;animation:nzRise var(--dur-rise) ease-out">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;height:36px;flex:none">
+              <h1 class="nz-h1 nz-ell" style="font-size:26px">Natija tayyor</h1>
+              <span class="nz-chip" style="background:rgba(255,91,58,.14);color:var(--foreground)"><span style="width:8px;height:8px;border-radius:999px;background:#FF5B3A;flex:none"></span>Toʻlov kutilmoqda</span>
+            </div>
+            <div style="height:40px;flex:none;font-size:15px;font-weight:600;line-height:20px;color:var(--muted-foreground);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ pwLead }}</div>
+            <div class="nz-card" style="height:118px;flex:none;padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;height:30px">
+                <span class="nz-cap">Karta raqami</span>
+                <button onClick="{{ pwCopyCard }}" class="nz-chip" style="height:30px;padding:0 12px;background:var(--surface-alt);color:var(--foreground)">Nusxalash</button>
+              </div>
+              <span style="height:36px;font:700 23px/36px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pwCardRaw }}</span>
+              <span class="nz-ell" style="height:18px;line-height:18px;font-size:14px;font-weight:700">{{ pwOwnerRaw }}</span>
+            </div>
+            <div class="nz-card" style="height:92px;flex:none;padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between">
+              <span class="nz-cap">Test kodi</span>
+              <div style="display:flex;align-items:center;gap:8px;height:44px">
+                <span style="flex:1;min-width:0;font:800 30px/44px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;white-space:nowrap">{{ pwCodeRaw }}</span>
+                <button onClick="{{ pwCopyCode }}" class="nz-chip" style="height:36px;padding:0 12px;background:var(--surface-alt);color:var(--foreground)">Nusxalash</button>
+              </div>
+            </div>
+            <div style="flex:none;display:flex;flex-direction:column;gap:2px;font-size:14px;font-weight:600;line-height:20px">
+              <span class="nz-ell">1) Ilovangizda toʻlov qiling</span>
+              <span class="nz-ell">2) Chek rasmini botga yuboring</span>
+            </div>
+            <button onClick="{{ pwSend }}" class="nz-btn" style="flex:none">{{ pwSendLabel }}</button>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;height:24px;flex:none;margin-top:4px">
+              <span class="nz-cap">Kodni kiritish</span>
+              <button onClick="{{ pwAdmin }}" style="background:transparent;padding:0;height:24px;font-size:13px;font-weight:700;color:var(--primary-ink)">Adminga yozish</button>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;flex:none">
+              <input id="nz-pw-key" class="nz-input" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ochish kodi" aria-label="Ochish kodi" style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase;letter-spacing:.08em">
+              <button onClick="{{ pwTryUnlock }}" class="nz-btn soft" style="width:auto;padding:0 20px">Ochish</button>
+            </div>
+            <div style="{{ pwErrStyle }}">Kod notoʻgʻri</div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ── PAYWALL: SERTIFIKAT — oldindan koʻrinish = yuklab olinadigan
+             PNG (1600×1131). Rasm joyi aspect-ratio bilan band. -->
+        <sc-if value="{{ pwCertOn }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column">
+          <div style="padding:16px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;height:70px;flex:none">
+            <button onClick="{{ pwCertBack }}" aria-label="Orqaga" class="nz-iconbtn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="{{ ic.x.path1 }}"></path></svg>
+            </button>
+            <span class="nz-ell" style="flex:1;text-align:center;font-size:15px;font-weight:700">Sertifikat</span>
+            <span style="width:44px;flex:none"></span>
+          </div>
+          <div style="flex:1;padding:4px 16px 16px;display:flex;flex-direction:column;gap:12px">
+            <img src="{{ pwPngUrl }}" alt="Sertifikat" style="{{ pwImgStyle }}">
+            <span class="nz-cap" style="margin-top:4px">Toʻliq ismingiz</span>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;flex:none">
+              <input id="nz-pw-name" class="nz-input" type="text" maxlength="60" autocomplete="name" spellcheck="false" value="{{ pwNameRaw }}" placeholder="Ism Familiya" aria-label="Toʻliq ismingiz">
+              <button onClick="{{ pwSaveName }}" class="nz-btn soft" style="width:auto;padding:0 20px">Saqlash</button>
+            </div>
+            <div style="{{ pwNameErrStyle }}">Ismingizni yozing</div>
+          </div>
+          <div style="position:sticky;bottom:0;padding:12px 16px 12px;background:var(--background);flex:none">
+            <button onClick="{{ pwDownload }}" class="nz-btn">Yuklab olish</button>
+            <a href="{{ pwPngUrl }}" download="{{ pwFileRaw }}" target="_blank" style="{{ pwLinkStyle }}">Rasm yuklanmasa — shu yerni bosing</a>
           </div>
         </div>
         </sc-if>
@@ -2318,6 +2397,7 @@ function typeLabel(type, lang) {
 function hasIQ(r) { return !!r && r.reliable === true && typeof r.iq === "number"; }
 function iqValue(r) {
   if (!r) return "—";
+  if (hasIQ(r) && pwLockedAt(r.at)) return T("Toʻlov kutilmoqda");
   return hasIQ(r) ? "IQ " + r.iq : r.correct + "/" + r.n;
 }
 /* Oraliq shkala chegarasida (55 yoki 145) qisilgan boʻlsa, u OCHIQ
@@ -2616,6 +2696,16 @@ const site = (() => {
     base: c && typeof c.siteUrl === "string" ? c.siteUrl : "https://iquest.uz/",
   };
 })();
+
+/* Qoʻlda toʻlov paywall'i (PAYWALL.md, src/paywall.js). Faqat web build'da
+   (nzSite.paywall + nzPaywall ikkalasi bor boʻlsa); mobil va admin'da PW
+   null — natija oddiygidek ochiq. */
+const PW = (() => {
+  const c = window.nzSite && window.nzSite.paywall;
+  return c && c.enabled && window.nzPaywall ? c : null;
+})();
+function pwItemAt(at) { return PW && at ? window.nzPaywall.byAt(at) : null; }
+function pwLockedAt(at) { const it = pwItemAt(at); return !!it && !it.unlocked; }
 
 /* Qurilmada saqlangan progress (src/progress.js). Design Canvas'da bu
    qatlam yo'q — o'shanda SAVED null va props'dagi demo qiymatlar
@@ -3224,6 +3314,7 @@ class Component extends DCLogic {
     };
     document.addEventListener("focusin", this.onFocus);
     this.appOpen();
+    this.pwFromLink();
   }
   componentWillUnmount() {
     this.stopGameTimer();
@@ -3600,6 +3691,7 @@ class Component extends DCLogic {
     if (s.run && s.run.explain) { this.setState({ run: Object.assign({}, s.run, { explain: false }) }); return true; }
     if (s.game) { this.exitGame(); return true; }
     if (s.run) { this.askExitRun(); return true; }
+    if (s.result && s.result.cert) { this.setState({ result: Object.assign({}, s.result, { cert: false }) }); this.scrollTop(); return true; }
     if (s.result) { this.setState({ result: null }); this.scrollTop(); return true; }
     if (s.stack.length) { this.pop(); return true; }
     if (s.view === "app" && s.tab !== "home") { this.setState({ tab: "home" }); this.scrollTop(); return true; }
@@ -3740,6 +3832,7 @@ class Component extends DCLogic {
       app && s.onboard ? this.valsOnboard(s) : {},
       app ? this.valsRun(s) : {},
       app ? this.valsResult(s) : {},
+      app ? this.valsPaywall(s) : {},
       app ? this.valsGame(s) : {},
       app ? this.valsSheet(s) : {},
       app ? this.valsCelebrate(s) : {},
@@ -4776,8 +4869,19 @@ class Component extends DCLogic {
     if (!run || !sess) return;
     let r;
     try { r = sess.result(); } catch (e) { this.failed(e); return; }
+    let rec = null;
     if (run.kind !== "review" && window.nzProgress && window.nzProgress.recordTest) {
-      try { window.nzProgress.recordTest(r); } catch (e) {}
+      try { rec = window.nzProgress.recordTest(r); } catch (e) {}
+    }
+    /* Paywall (faqat web): toʻliq ishonchli test natijasi toʻlovgacha
+       yopiq; qisqa nusxasi nz-paywall ga yoziladi (keyin qaytib ochish). */
+    let pw = null;
+    if (PW && run.kind === "test" && hasIQ(r)) {
+      try {
+        pw = window.nzPaywall.testCode(r.seed);
+        window.nzPaywall.add(pw, rec ? rec.at : Date.now(), rec || { at: Date.now(), iq: r.iq, lo: r.lo, hi: r.hi,
+          loOpen: r.loOpen, hiOpen: r.hiOpen, n: r.n, correct: r.correct, reliable: true, byType: r.byType });
+      } catch (e) { pw = null; }
     }
     const wrongIds = (r.items || []).filter(x => !x.correct).map(x => x.id);
     if (run.kind === "test") {
@@ -4798,7 +4902,8 @@ class Component extends DCLogic {
     this.setState(st => ({
       run: null, dialog: null,
       result: { kind: run.kind, type: run.type, title: run.title, source: run.source || null,
-                r: r, earned: (st.run ? st.run.earned : 0) + (lastAward || 0), coins: coins, wrongIds: wrongIds }
+                r: r, earned: (st.run ? st.run.earned : 0) + (lastAward || 0), coins: coins, wrongIds: wrongIds, pw: pw },
+      pwErr: false
     }));
     this.checkBadges({ lastRun: { kind: run.kind, n: r.n, correct: r.correct } });
     this.checkLeagueUp();
@@ -5287,6 +5392,9 @@ class Component extends DCLogic {
     const p = s.profile || PROFILE_BLANK;
     /* IQ kartasi — uch holat, balandlik bir xil (180 px, §9.6). */
     const state = snap ? "resume" : last ? "done" : "new";
+    /* Paywall: oxirgi natija toʻlov kutsa — ikkinchi tugma uni ochadi. */
+    const lastPw = state === "done" && hasIQ(last) ? pwItemAt(last.at) : null;
+    const lastLocked = !!lastPw && !lastPw.unlocked;
     const white = { height: "52px", borderRadius: "var(--r-btn)", fontSize: "16px", fontWeight: 800,
                     background: hasTypes ? "#fff" : "rgba(255,255,255,.3)", color: "#1C1B29", padding: "0 12px",
                     whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 };
@@ -5315,14 +5423,14 @@ class Component extends DCLogic {
       snapTrackStyle: { height: "8px", borderRadius: "999px", background: "rgba(255,255,255,.22)", overflow: "hidden",
                         marginTop: "14px", flex: "none", visibility: state === "resume" ? "visible" : "hidden" },
       snapBarStyle: { width: Math.round(done / snapLen * 100) + "%", height: "100%", borderRadius: "999px", background: "#fff" },
-      heroRowStyle: { display: "grid", gridTemplateColumns: state === "resume" ? "1.4fr 1fr" : "1fr", gap: "10px",
+      heroRowStyle: { display: "grid", gridTemplateColumns: state === "resume" ? "1.4fr 1fr" : lastLocked ? "1fr 1fr" : "1fr", gap: "10px",
                       height: "52px", marginTop: "14px", flex: "none" },
       heroPrimaryLabel: state === "resume" ? "Davom ettirish" : state === "done" ? "Qayta topshirish" : "Boshlash",
       heroPrimaryStyle: state === "done" ? ghost : white,
       heroPrimary: () => (state === "resume" ? this.resumeTest() : this.heroStart()),
-      heroSecondaryLabel: "Yangidan",
-      heroSecondaryStyle: Object.assign({}, ghost, { display: state === "resume" ? "block" : "none" }),
-      heroSecondary: () => this.setState({ dialog: { kind: "discardTest" } }),
+      heroSecondaryLabel: lastLocked ? "Natijani ochish" : "Yangidan",
+      heroSecondaryStyle: Object.assign({}, lastLocked ? white : ghost, { display: state === "resume" || lastLocked ? "block" : "none" }),
+      heroSecondary: () => (lastLocked ? this.pwShow(lastPw.code) : this.setState({ dialog: { kind: "discardTest" } })),
       testUnavailable: !hasTypes,
 
       questCountLabel: doneN === quests.length && quests.length ? doneN + "/" + quests.length + " ✓" : doneN + "/" + quests.length,
@@ -5446,9 +5554,18 @@ class Component extends DCLogic {
 
   bestTest() {
     const P = window.nzProgress;
-    try { if (P && P.testStats) return P.testStats(); } catch (e) {}
-    const hist = this.history();
-    return { count: hist.length, best: hist.filter(hasIQ).reduce((a, b) => (!a || b.iq > a.iq ? b : a), null) };
+    /* Paywall: toʻlanmagan natija «Eng yaxshi IQ» da ham koʻrinmaydi. */
+    const own = () => {
+      const hist = this.history();
+      return hist.filter(h => hasIQ(h) && !pwLockedAt(h.at)).reduce((a, b) => (!a || b.iq > a.iq ? b : a), null);
+    };
+    try {
+      if (P && P.testStats) {
+        const st = P.testStats();
+        return PW ? { count: st.count, best: own() } : st;
+      }
+    } catch (e) {}
+    return { count: this.history().length, best: own() };
   }
 
   // ─── MODUL 6: Reyting — haftalik liga (§3.3) ───────────────────────
@@ -5595,15 +5712,20 @@ class Component extends DCLogic {
       badgeCountLabel: (sum.earned + ownedN) + "/" + totalAll,
 
       noHistory: hist.length === 0,
-      historyRows: hist.slice().reverse().slice(0, 30).map((h, i, arr) => ({
-        value: iqValue(h),
-        sub: hasIQ(h) ? rangeLine(h) : trn("{0} ta savol", h.n),
-        dateRaw: fmtDate(h.at),
-        rowStyle: {
-          display: "flex", alignItems: "center", gap: "12px", height: "64px", padding: "0 16px",
-          borderBottom: i === arr.length - 1 ? "none" : "1px solid var(--hairline)"
-        }
-      })),
+      historyRows: hist.slice().reverse().slice(0, 30).map((h, i, arr) => {
+        const pw = hasIQ(h) ? pwItemAt(h.at) : null;
+        return {
+          value: iqValue(h),
+          sub: pw && !pw.unlocked ? pw.code : hasIQ(h) ? rangeLine(h) : trn("{0} ta savol", h.n),
+          dateRaw: fmtDate(h.at),
+          open: pw ? () => this.pwShow(pw.code) : null,
+          rowStyle: {
+            display: "flex", alignItems: "center", gap: "12px", height: "64px", padding: "0 16px",
+            borderBottom: i === arr.length - 1 ? "none" : "1px solid var(--hairline)",
+            cursor: pw ? "pointer" : "default"
+          }
+        };
+      }),
 
       /* Daraja hamma joyda bir xil yoziladi: «3-daraja» (F36). */
       typeLevels: this.iqTypes().map(t => {
@@ -6261,6 +6383,9 @@ class Component extends DCLogic {
   valsResult(s) {
     const R = s.result;
     if (!R || !R.r) return { resultOn: false };
+    /* Paywall: yopiq natija va sertifikat — valsPaywall ekranlari. */
+    const pwIt = PW && R.pw ? window.nzPaywall.get(R.pw) : null;
+    if (pwIt && (R.cert || !pwIt.unlocked)) return { resultOn: false };
     const r = R.r, lang = s.lang;
     const isTest = R.kind === "test";
     const showIQ = isTest && hasIQ(r);
@@ -6277,7 +6402,7 @@ class Component extends DCLogic {
       resBig: showIQ ? String(r.iq) : r.correct + "/" + r.n,
       resSub: showIQ ? rangeLine(r) : "",
       resBallLabel: trn("+{0} ball", R.earned || 0),
-      resBallChipStyle: chip(true, "var(--ball-ink)"),
+      resBallChipStyle: chip(!R.old, "var(--ball-ink)"),
       /* Testda tanga chipi hech qachon chiqmaydi; qator balandligi saqlanadi (§3.9). */
       resCoinLabel: trn("+{0} tanga", R.coins || 0),
       resCoinChipStyle: chip(!isTest && R.coins > 0, "var(--coin-ink)"),
@@ -6292,6 +6417,10 @@ class Component extends DCLogic {
         return { name: typeLabel(t, lang), value: b.correct + "/" + b.n,
                  barStyle: this.bar(b.n ? b.correct / b.n * 100 : 0, "--primary") };
       }),
+      resFootStyle: { position: "sticky", bottom: "0", padding: "12px 16px 20px", background: "var(--background)", flex: "none",
+                      display: "grid", gridTemplateColumns: pwIt ? "1fr 1fr" : "1fr", gap: "10px" },
+      resCertStyle: { display: pwIt ? "flex" : "none" },
+      openCert: () => { this.setState({ result: Object.assign({}, R, { cert: true }) }); this.scrollTop(); },
       resPrimaryLabel: isTest ? "Mashq qilish" : R.kind === "practice" ? "Yana mashq" : "Tayyor",
       resPrimary: () => {
         if (R.kind === "practice") { this.startPractice(R.type || null); return; }
@@ -6302,6 +6431,245 @@ class Component extends DCLogic {
          tabga (F68). */
       closeResult: () => { this.setState({ result: null }); this.scrollTop(); }
     };
+  }
+
+  // ─── MODUL 9b: Paywall — qoʻlda toʻlov va sertifikat (faqat web) ────
+  /* Qatʼiy joylashuv: har blok oʻzgarmas balandlikda; xato qatori doim
+     joy egallaydi (visibility). Toʻlov chekini bot qabul qiladi
+     (bot/worker.js), admin tasdiqlasa bot ochish havolasini yuboradi
+     (?unlock=KOD-OCHISH) — pwFromLink. Qoʻlda kod kiritish — zaxira. */
+  valsPaywall(s) {
+    const R = s.result;
+    const off = { pwLockOn: false, pwCertOn: false };
+    if (!PW || !R || !R.pw) return off;
+    const it = window.nzPaywall.get(R.pw);
+    if (!it) return off;
+    const code = it.code;
+    const hide = on => ({ height: "18px", lineHeight: "18px", fontSize: "13px", fontWeight: 700,
+                          color: "var(--destructive, #D92D20)", visibility: on ? "visible" : "hidden" });
+    if (!it.unlocked) {
+      const bot = String(PW.bot || "").replace(/^@/, "");
+      return Object.assign(off, {
+        pwLockOn: true,
+        pwLead: T("Natija va sertifikatni olish uchun {0} toʻlang").replace("{0}", PW.price || ""),
+        pwCardRaw: PW.card || "",
+        pwOwnerRaw: PW.cardOwner || "",
+        pwCodeRaw: code,
+        pwSendLabel: bot ? "Chekni yuborish" : "Adminga yozish",
+        pwSend: () => this.pwOpenTg(bot ? bot + "?start=pay_" + code : PW.adminTg),
+        pwAdmin: () => this.pwOpenTg(PW.adminTg),
+        pwCopyCard: () => this.pwCopy(String(PW.card || "").replace(/\s+/g, "")),
+        pwCopyCode: () => this.pwCopy(code),
+        pwTryUnlock: () => this.pwTryUnlock(code),
+        pwErrStyle: hide(!!s.pwErr),
+        pwClose: () => { this.setState({ result: null, pwErr: false }); this.scrollTop(); }
+      });
+    }
+    if (!R.cert) return off;
+    if (!this.pwPng || this.pwPngFor !== code + "|" + window.nzPaywall.name() + "|" + s.lang) this.pwRender(it);
+    return Object.assign(off, {
+      pwCertOn: true,
+      pwNameRaw: window.nzPaywall.name(),
+      pwPngUrl: this.pwPng || "",
+      pwFileRaw: "IQuest-" + code + ".png",
+      pwImgStyle: { display: "block", width: "100%", aspectRatio: "1600 / 1131", borderRadius: "14px",
+                    background: "#10183A", boxShadow: "var(--shadow)", objectFit: "cover" },
+      pwNameErrStyle: hide(!!s.pwNameErr),
+      pwLinkStyle: { display: "block", height: "20px", lineHeight: "20px", textAlign: "center", fontSize: "13px",
+                     fontWeight: 700, color: "var(--primary-ink)", visibility: s.pwLink ? "visible" : "hidden" },
+      pwSaveName: () => this.pwSaveName(),
+      pwDownload: () => this.pwDownload(code),
+      pwCertBack: () => { this.setState({ result: Object.assign({}, R, { cert: false }), pwNameErr: false, pwLink: false }); this.scrollTop(); }
+    });
+  }
+
+  /* Tarix yoki bosh ekrandan: saqlangan natijani ochish (yopiq boʻlsa — toʻlov ekrani). */
+  pwShow(code, cert) {
+    const it = PW ? window.nzPaywall.get(code) : null;
+    if (!it || !it.r) return;
+    this.setState({ view: "app", pwErr: false, pwNameErr: false, pwLink: false,
+                    result: { kind: "test", type: null, title: "IQ test", source: null, r: it.r, earned: 0, coins: 0,
+                              wrongIds: [], pw: code, old: true, cert: !!cert && it.unlocked } });
+    this.scrollTop();
+  }
+
+  pwCopy(text) {
+    const done = () => this.showToast(T("Nusxalandi"));
+    const fallback = () => {
+      try {
+        const t = document.createElement("textarea");
+        t.value = text; t.setAttribute("readonly", "");
+        t.style.position = "fixed"; t.style.top = "0"; t.style.opacity = "0";
+        document.body.appendChild(t); t.select(); t.setSelectionRange(0, text.length);
+        const ok = document.execCommand("copy");
+        document.body.removeChild(t);
+        if (ok) done();
+      } catch (e) {}
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, fallback); return; }
+    } catch (e) {}
+    fallback();
+  }
+
+  /* t.me havolasi: Telegram ichida — openTelegramLink (Mini App yopilmaydi). */
+  pwOpenTg(path) {
+    const url = "https://t.me/" + String(path || "").replace(/^@/, "");
+    try {
+      const tg = window.Telegram && window.Telegram.WebApp;
+      if (tg && tg.openTelegramLink) { tg.openTelegramLink(url); return; }
+    } catch (e) {}
+    try { window.open(url, "_blank", "noopener"); } catch (e) {}
+  }
+
+  pwTryUnlock(code) {
+    const el = document.getElementById("nz-pw-key");
+    const v = el ? el.value : "";
+    if (!window.nzPaywall.check(code, PW.secret, v)) { this.setState({ pwErr: true }); return; }
+    window.nzPaywall.unlock(code);
+    sfx("finish");
+    this.setState(st => ({ pwErr: false, result: st.result ? Object.assign({}, st.result) : null }));
+    this.scrollTop();
+  }
+
+  /* Bot havolasi: ?unlock=IQ-4F7K-ABC123 (web_app tugmasi) yoki Telegram
+     start_param «unlock_IQ-4F7K_ABC123». Natija shu qurilmada boʻlsa va kod
+     toʻgʻri boʻlsa — ochiladi va natija ekrani koʻrsatiladi. */
+  pwFromLink() {
+    if (!PW) return;
+    let raw = "";
+    try {
+      const q = new URLSearchParams(window.location.search);
+      raw = q.get("unlock") || q.get("tgWebAppStartParam") || q.get("startapp") || "";
+    } catch (e) {}
+    try {
+      const tg = window.Telegram && window.Telegram.WebApp;
+      const sp = tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param;
+      if (!raw && sp) raw = sp;
+    } catch (e) {}
+    const m = /^(?:unlock_)?(?:IQ[-_]?)?([0-9A-Za-z]{4})[-_]([0-9A-Za-z]{6})$/.exec(String(raw).trim());
+    if (!m) return;
+    const code = window.nzPaywall.normCode(m[1]);
+    const it = window.nzPaywall.get(code);
+    if (!it) return;
+    if (!it.unlocked && window.nzPaywall.check(code, PW.secret, m[2])) window.nzPaywall.unlock(code);
+    try { window.history.replaceState(null, "", window.location.pathname + window.location.hash); } catch (e) {}
+    this.pwShow(code);
+  }
+
+  pwSaveName() {
+    const el = document.getElementById("nz-pw-name");
+    const v = el ? el.value.trim() : "";
+    if (v.length < 3) { this.setState({ pwNameErr: true }); return; }
+    window.nzPaywall.setName(v);
+    this.pwPng = null;
+    this.setState({ pwNameErr: false });
+  }
+
+  pwDownload(code) {
+    if (!window.nzPaywall.name()) { this.setState({ pwNameErr: true }); return; }
+    const url = this.pwPng;
+    if (!url) return;
+    const tg = !!(window.Telegram && window.Telegram.WebApp) || /Telegram/i.test(navigator.userAgent || "");
+    if (!tg) {
+      try {
+        const a = document.createElement("a");
+        a.href = url; a.download = "IQuest-" + code + ".png";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      } catch (e) {}
+    }
+    /* Telegram WebView yuklab olishni bermasligi mumkin — havola va rasm
+       (bosib turib saqlash) zaxira sifatida koʻrinadi. */
+    this.setState({ pwLink: true });
+  }
+
+  /* Sertifikat — 1600×1131 kanvas (PNG). Oldindan koʻrinish ham shu rasm:
+     ekrandagi va yuklab olinadigan sertifikat aynan bir xil. */
+  pwRender(it) {
+    const name = window.nzPaywall.name();
+    this.pwPngFor = it.code + "|" + name + "|" + this.state.lang;
+    let url = "";
+    try {
+      const W = 1600, H = 1131;
+      const cv = document.createElement("canvas");
+      cv.width = W; cv.height = H;
+      const g = cv.getContext("2d");
+      const NAVY = "#10183A", CORAL = "#FF5B3A", WHITE = "#FFFFFF";
+      const HEAD = "'Space Grotesk', Manrope, system-ui, sans-serif", BODY = "Manrope, system-ui, sans-serif";
+      const rr = (x, y, w, h, r) => {
+        g.beginPath();
+        g.moveTo(x + r, y); g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r);
+        g.lineTo(x + w, y + h - r); g.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        g.lineTo(x + r, y + h); g.quadraticCurveTo(x, y + h, x, y + h - r);
+        g.lineTo(x, y + r); g.quadraticCurveTo(x, y, x + r, y); g.closePath();
+      };
+      /* Brend belgisi «Matritsa» (tools/brand.html, 512 setka): 3×3,
+         kvadrat → doira diagonal boʻylab, oxirgi katak — javob (coral). */
+      const mark = (x, y, size, fg, acc) => {
+        const k = size / 277.25, o = 118.25;
+        for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+          const t = (i + j) / 4, grow = t * 3.5, r = 4 + t * 32 + grow;
+          const cx = 120 + j * 100 - grow, cy = 120 + i * 100 - grow, sz = 72 + 2 * grow;
+          g.fillStyle = i === 2 && j === 2 ? acc : fg;
+          rr(x + (cx - o) * k, y + (cy - o) * k, sz * k, sz * k, r * k);
+          g.fill();
+        }
+      };
+      const fit = (text, font, px, max) => {
+        let p = px;
+        g.font = font.replace("{px}", p);
+        while (p > 28 && g.measureText(text).width > max) { p -= 4; g.font = font.replace("{px}", p); }
+        return p;
+      };
+      g.fillStyle = NAVY; g.fillRect(0, 0, W, H);
+      g.globalAlpha = 0.07; mark(W - 120 - 480, 250, 480, WHITE, CORAL); g.globalAlpha = 1;
+      g.strokeStyle = "rgba(255,255,255,.18)"; g.lineWidth = 3; rr(48, 48, W - 96, H - 96, 36); g.stroke();
+      g.fillStyle = CORAL; g.fillRect(120, 300, 96, 8);
+
+      mark(120, 120, 104, WHITE, CORAL);
+      g.textBaseline = "alphabetic";
+      g.font = "700 60px " + HEAD;
+      g.fillStyle = CORAL; g.fillText("IQ", 252, 194);
+      const iqW = g.measureText("IQ").width;
+      g.fillStyle = WHITE; g.fillText("uest", 252 + iqW, 194);
+
+      g.fillStyle = "rgba(255,255,255,.72)"; g.font = "700 34px " + BODY;
+      g.fillText(T("IQuest testi natijasi").toUpperCase(), 120, 380);
+
+      const nm = name || "—";
+      fit(nm, "800 {px}px " + BODY, 84, W - 240);
+      g.fillStyle = WHITE; g.fillText(nm, 120, 490);
+
+      const r = it.r || {};
+      g.fillStyle = CORAL; g.font = "800 48px " + HEAD; g.fillText("IQ", 120, 720);
+      g.fillStyle = WHITE; g.font = "700 220px " + HEAD; g.fillText(String(r.iq), 200, 720);
+      g.fillStyle = "rgba(255,255,255,.78)"; g.font = "700 40px " + BODY;
+      g.fillText(rangeLine(r), 120, 800);
+
+      g.fillStyle = "rgba(255,255,255,.18)"; g.fillRect(120, 890, W - 240, 2);
+      const col = (label, value, x) => {
+        g.fillStyle = "rgba(255,255,255,.6)"; g.font = "700 26px " + BODY; g.fillText(label.toUpperCase(), x, 960);
+        g.fillStyle = WHITE; g.font = "800 40px " + BODY; g.fillText(value, x, 1012);
+      };
+      col(T("Sana"), fmtDate(it.at), 120);
+      col(T("Sertifikat kodi"), it.code, 520);
+      g.fillStyle = "rgba(255,255,255,.78)"; g.font = "700 30px " + BODY; g.textAlign = "right";
+      g.fillText(T("IQuest.uz tomonidan berilgan"), W - 120, 1012);
+      g.textAlign = "left";
+      url = cv.toDataURL("image/png");
+    } catch (e) { url = ""; }
+    this.pwPng = url;
+    /* Shriftlar hali yuklanmagan boʻlsa — yuklangach bir marta qayta chiziladi. */
+    if (!this.pwFontsAsked) {
+      this.pwFontsAsked = true;
+      try {
+        if (document.fonts && document.fonts.load) {
+          Promise.all([document.fonts.load("700 60px 'Space Grotesk'"), document.fonts.load("800 40px Manrope"),
+                       document.fonts.load("700 40px Manrope")])
+            .then(() => { this.pwPng = null; this.setState({}); }, () => {});
+        }
+      } catch (e) {}
+    }
   }
 
   // ─── MODUL 10: O'yin ekrani (GameView → markup) ─────────────────────
