@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IQuest 30 s (uz). Azure TTS: kontentni <voice name="uz-UZ-MadinaNeural"> … </voice> ichiga oling
+     (yoki uz-UZ-SardorNeural); Google TTS <speak> ni shundayligicha qabul qiladi. -->
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="uz-UZ">
+  <break time="200ms"/><sub alias="ay kvest">IQuest</sub>.
+  <break time="1271ms"/>Matritsa, shakl, soʻz va sonlar: <break time="200ms"/> mantiqingizni sinab koʻring.
+  <break time="2371ms"/>Test soʻngida <break time="150ms"/> <sub alias="ay kyu">IQ</sub> natijasi va oraligʻi.
+  <break time="850ms"/>Xato qildingizmi? <break time="250ms"/> Har bir javobga izoh bor.
+  <break time="750ms"/>Olti xil <sub alias="ay kyu">IQ</sub> oʻyini: <break time="150ms"/> xotira, diqqat va tezlik.
+  <break time="1921ms"/>Tanga yigʻing <break time="150ms"/> va profilingizni nishonlar bilan bezang.
+  <break time="950ms"/><sub alias="ay kvest">IQuest</sub>. <break time="300ms"/> Toʻrt tilda, internetsiz.
+</speak>

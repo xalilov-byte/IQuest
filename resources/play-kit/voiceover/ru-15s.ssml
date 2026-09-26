@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IQuest 15 s (ru). Azure TTS: kontentni <voice name="ru-RU-SvetlanaNeural"> … </voice> ichiga oling
+     (yoki ru-RU-DmitryNeural); Google TTS <speak> ni shundayligicha qabul qiladi. -->
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ru-RU">
+  <break time="200ms"/><sub alias="ай квест">IQuest</sub>.
+  <break time="671ms"/>Проверьте свою логику: <break time="150ms"/> матрицы, фигуры, слова.
+  <break time="750ms"/>Результат <sub alias="ай кью">IQ</sub> <break time="150ms"/> с диапазоном.
+  <break time="1350ms"/>Шесть <sub alias="ай кью">IQ</sub>-игр для ума.
+  <break time="1686ms"/><sub alias="ай квест">IQuest</sub>. <break time="200ms"/> Работает без интернета.
+</speak>
