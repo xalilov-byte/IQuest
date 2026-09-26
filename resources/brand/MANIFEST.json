@@ -9,8 +9,8 @@
    "h": 720,
    "lang": null,
    "format": "png",
-   "bytes": 216377,
-   "sha256": "8ff0a54b331b065f764941d3c4f19f925ada3965246e9982b6d8b38ae064966f"
+   "bytes": 86107,
+   "sha256": "63d63965810194524e353f2caad70e0a3b88809c9837675f6a5083accf80c990"
   },
   {
    "file": "facebook/cover-1640x924-ru.png",
@@ -20,8 +20,8 @@
    "h": 924,
    "lang": "ru",
    "format": "png",
-   "bytes": 962199,
-   "sha256": "c78ddf9fa2d86c44cd6d4b513bc6519c45dce5e3fbb08c85052e0651ca4833a4"
+   "bytes": 820664,
+   "sha256": "93cb974bb1ab1481054a276dbf1ca941bcbfbcddfa20b8c1c3ace83aeadde871"
   },
   {
    "file": "facebook/cover-1640x924-uz.png",
@@ -31,8 +31,8 @@
    "h": 924,
    "lang": "uz",
    "format": "png",
-   "bytes": 950255,
-   "sha256": "0d6a4c05aa52bb9565cc14a6f3350f635676209545e830fb4f89eefb452a76fc"
+   "bytes": 808871,
+   "sha256": "1deef49883f3b18762cad2c779fc1841c07ac934cd644fa687bc8a322697c185"
   },
   {
    "file": "instagram/avatar-1080x1080.png",
@@ -42,8 +42,8 @@
    "h": 1080,
    "lang": null,
    "format": "png",
-   "bytes": 384372,
-   "sha256": "72f47855dcbddb3fd92475d954f11145f5167e0ca779d80dbfd20c5693671b10"
+   "bytes": 164184,
+   "sha256": "d0c696624ac0ed100ee616bd5af403f643b1d79e51861b5789d7619e376651c8"
   },
   {
    "file": "instagram/highlight-mashq-1080x1920.png",
@@ -53,8 +53,8 @@
    "h": 1920,
    "lang": null,
    "format": "png",
-   "bytes": 1108827,
-   "sha256": "4475fe4eb81ce51cac50101ed3dd112ea3f82997d31c6fe3d1414a82d50a9dab"
+   "bytes": 899669,
+   "sha256": "e1f89f528369a6373bf1a43e0e3cdc8c5db4e54cd994101c7b3551765159f99b"
   },
   {
    "file": "instagram/highlight-oyinlar-1080x1920.png",
@@ -64,8 +64,8 @@
    "h": 1920,
    "lang": null,
    "format": "png",
-   "bytes": 1110754,
-   "sha256": "b3a9fa43c8a422af1f1dfe0b4e9521860dd86067326b460ed2ab9f419cc1b4ea"
+   "bytes": 901779,
+   "sha256": "3486d2fb4dd7d3e4af64e6f79f62baf983d6e271966ad48bcf3eadd8faaa7560"
   },
   {
    "file": "instagram/highlight-test-1080x1920.png",
@@ -75,8 +75,8 @@
    "h": 1920,
    "lang": null,
    "format": "png",
-   "bytes": 1105555,
-   "sha256": "16f57c48b618fc1165def8ec06c09b738a2a828d0e458b19f42600110b92895d"
+   "bytes": 896774,
+   "sha256": "1dcedc7260c82f0422a6b179fa1c31cb0488c9346f9b99bfdaba6f9cc67a8053"
   },
   {
    "file": "instagram/highlight-yangiliklar-1080x1920.png",
@@ -86,8 +86,8 @@
    "h": 1920,
    "lang": null,
    "format": "png",
-   "bytes": 1108838,
-   "sha256": "231027a9edd75f7f39edb464b6d1b4f65c7b2f2e26c94ebb920bc4315f468203"
+   "bytes": 899915,
+   "sha256": "94a79b055c373f144b6a94cc002cfc207e94644ab33f23729e3c8743fd0a92bb"
   },
   {
    "file": "instagram/highlight-yordam-1080x1920.png",
@@ -97,8 +97,8 @@
    "h": 1920,
    "lang": null,
    "format": "png",
-   "bytes": 1110208,
-   "sha256": "7a08160d8ce2bdc7618a82a14cdca36bd98a2cf1924571671faccbb25cb55473"
+   "bytes": 901335,
+   "sha256": "0972f9e289c9e2c44e5435d5845119b009afb5f1830eb0798efb9241c4412ce9"
   },
   {
    "file": "instagram/portrait-1080x1350-ru.png",
@@ -108,8 +108,8 @@
    "h": 1350,
    "lang": "ru",
    "format": "png",
-   "bytes": 816490,
-   "sha256": "a4b117e36553ae9de34f6d8df87a9fafc71174a837db46995ec60e3e8c11e2ee"
+   "bytes": 720449,
+   "sha256": "f34ae70c90c6298450f6a468f6c28e0d9e9370d12c6f6ae9ffca6b0655bde912"
   },
   {
    "file": "instagram/portrait-1080x1350-uz.png",
@@ -119,8 +119,8 @@
    "h": 1350,
    "lang": "uz",
    "format": "png",
-   "bytes": 798154,
-   "sha256": "75e7032cff6231eed6232674f8978c9c65764fc41c7b4617535695b0190d0d10"
+   "bytes": 702878,
+   "sha256": "c62c5f558dfb5ae14617945ed1c3f26b4c4554ff045b43f746d5d3c5678a1dbb"
   },
   {
    "file": "instagram/post-1080x1080-ru.png",
@@ -130,8 +130,8 @@
    "h": 1080,
    "lang": "ru",
    "format": "png",
-   "bytes": 652515,
-   "sha256": "4e3f960cf8b95f50664d1143485852d325c5779ca2483df6b9163212b01cb0c9"
+   "bytes": 574782,
+   "sha256": "edbc41abf0563d174e051848fcc7138c3250fe7e8272cf75b5ac2a7b1f25aa6b"
   },
   {
    "file": "instagram/post-1080x1080-uz.png",
@@ -141,8 +141,8 @@
    "h": 1080,
    "lang": "uz",
    "format": "png",
-   "bytes": 640150,
-   "sha256": "5a163ea6d34c63f0c134f4b66765fb2f8bc27ea086fc6c369f3672da252a932b"
+   "bytes": 562310,
+   "sha256": "cfe9bd7b81effe8554dc7780b25eb76298c5eb09bf1e038da8a939ad313ea347"
   },
   {
    "file": "instagram/story-1080x1920-ru.png",
@@ -152,8 +152,8 @@
    "h": 1920,
    "lang": "ru",
    "format": "png",
-   "bytes": 1212781,
-   "sha256": "ac7b4d2643fa138a44381c2d03642228a3aef254280a82bb68a9af6aa4755e25"
+   "bytes": 1033447,
+   "sha256": "93c80b65822f42542925366aa7fbb89ab195a8034fb9706fd603678ac14e8248"
   },
   {
    "file": "instagram/story-1080x1920-uz.png",
@@ -163,140 +163,272 @@
    "h": 1920,
    "lang": "uz",
    "format": "png",
-   "bytes": 1193098,
-   "sha256": "85f574441780072702589b82856b68aca846b3acd6095a1b179d0299dcae439e"
+   "bytes": 1014396,
+   "sha256": "7297162f8180625b24eff95d393236926560a6e52eedadb00c2f08e7e67c698d"
   },
   {
-   "file": "logo/iquest-horizontal-dark-1600x549.png",
+   "file": "logo/iquest-glyph-dark-1024x1024.png",
+   "platform": "logo",
+   "id": "iquest-glyph-dark",
+   "w": 1024,
+   "h": 1024,
+   "lang": null,
+   "format": "png",
+   "bytes": 18935,
+   "sha256": "a422e4ccc7c74d2fdf3b4a905a1b477d13647abed62b67bf295416c50ef651be"
+  },
+  {
+   "file": "logo/iquest-glyph-dark.pdf",
+   "platform": "logo",
+   "id": "iquest-glyph-dark",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "pdf",
+   "bytes": 9599,
+   "sha256": "2c4c23e8c1e58a1cb370e6067508983fa3c6c04c939dddc1e66be1f3583b3ccb"
+  },
+  {
+   "file": "logo/iquest-glyph-dark.svg",
+   "platform": "logo",
+   "id": "iquest-glyph-dark",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "svg",
+   "bytes": 1027,
+   "sha256": "73f7536fce3de3c3bab13b3006ed57a24c1f1092cb6b999da381b3fa5c4e744b"
+  },
+  {
+   "file": "logo/iquest-glyph-light-1024x1024.png",
+   "platform": "logo",
+   "id": "iquest-glyph-light",
+   "w": 1024,
+   "h": 1024,
+   "lang": null,
+   "format": "png",
+   "bytes": 22877,
+   "sha256": "7829a2893e347e05a975933ce1f9de8f51422020ea22ff537c63612c9bc304f0"
+  },
+  {
+   "file": "logo/iquest-glyph-light.pdf",
+   "platform": "logo",
+   "id": "iquest-glyph-light",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "pdf",
+   "bytes": 9603,
+   "sha256": "9a1715ecbba3c0eb14efa66c7d6fea272b5654337c7240e6cb67f3ce2c34028d"
+  },
+  {
+   "file": "logo/iquest-glyph-light.svg",
+   "platform": "logo",
+   "id": "iquest-glyph-light",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "svg",
+   "bytes": 1028,
+   "sha256": "18319a65f051f2649ddba580b4e403b0577e6c02a22b8036f28124f01fe4c01b"
+  },
+  {
+   "file": "logo/iquest-glyph-mono-black-1024x1024.png",
+   "platform": "logo",
+   "id": "iquest-glyph-mono-black",
+   "w": 1024,
+   "h": 1024,
+   "lang": null,
+   "format": "png",
+   "bytes": 17591,
+   "sha256": "d29d9288416880362126bf1c523b3b12a1058444cfd18705ee528df2553c2930"
+  },
+  {
+   "file": "logo/iquest-glyph-mono-black.pdf",
+   "platform": "logo",
+   "id": "iquest-glyph-mono-black",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "pdf",
+   "bytes": 9579,
+   "sha256": "9ba0b79e5e27945eb2aefce15ddb57e4873c683f3844f347901e9363cf73638c"
+  },
+  {
+   "file": "logo/iquest-glyph-mono-black.svg",
+   "platform": "logo",
+   "id": "iquest-glyph-mono-black",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "svg",
+   "bytes": 1033,
+   "sha256": "4736352fb23e9ef4acf9a4880d6ee3dd9fd4b1df8b120dc3cefd75b609ac11a3"
+  },
+  {
+   "file": "logo/iquest-glyph-mono-white-1024x1024.png",
+   "platform": "logo",
+   "id": "iquest-glyph-mono-white",
+   "w": 1024,
+   "h": 1024,
+   "lang": null,
+   "format": "png",
+   "bytes": 17697,
+   "sha256": "aedeff7301995e3e9689a32a488159ef0cd6b1e073050325093fdf6eb3596410"
+  },
+  {
+   "file": "logo/iquest-glyph-mono-white.pdf",
+   "platform": "logo",
+   "id": "iquest-glyph-mono-white",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "pdf",
+   "bytes": 9581,
+   "sha256": "40ffc38f24d7dbe6309fd5d6634f0ba85b7919cd2ff54fa960c62ac28eb37eba"
+  },
+  {
+   "file": "logo/iquest-glyph-mono-white.svg",
+   "platform": "logo",
+   "id": "iquest-glyph-mono-white",
+   "w": 151.94,
+   "h": 151.94,
+   "lang": null,
+   "format": "svg",
+   "bytes": 1033,
+   "sha256": "6df4deef152306d6db29316eb5726f414a7292f176e94fc2650367641bda43e1"
+  },
+  {
+   "file": "logo/iquest-horizontal-dark-1600x656.png",
    "platform": "logo",
    "id": "iquest-horizontal-dark",
    "w": 1600,
-   "h": 549,
+   "h": 656,
    "lang": null,
    "format": "png",
-   "bytes": 73199,
-   "sha256": "159dceca5229bfd3643bfa0c2b407861159f26e4aa662085a9373a7603fe32f9"
+   "bytes": 21848,
+   "sha256": "2e3b31a1ff673b4fc17e2a7f0992d7fc2f703faa2157a7fe1c4f02aae93f7fb7"
   },
   {
    "file": "logo/iquest-horizontal-dark.pdf",
    "platform": "logo",
    "id": "iquest-horizontal-dark",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "pdf",
-   "bytes": 10937,
-   "sha256": "7fe6ddcfb0d44200bf66cce0bbbd8b12b4d64229b1697d0d295c596a5a3773f0"
+   "bytes": 9590,
+   "sha256": "55284b7b12a72fad16ee0399dca3e872e2e5756cdee13cbbedf207b72ebc183a"
   },
   {
    "file": "logo/iquest-horizontal-dark.svg",
    "platform": "logo",
    "id": "iquest-horizontal-dark",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "svg",
-   "bytes": 3589,
-   "sha256": "80f8d6841dfa4a6c1c927af99bf64a27c88492ad9a63a5baf3e0fdd0f839198d"
+   "bytes": 3657,
+   "sha256": "e6c6657f60ea0fdfcc936433abbbefa0299069aa58474e45c7896779ad872dc3"
   },
   {
-   "file": "logo/iquest-horizontal-light-1600x549.png",
+   "file": "logo/iquest-horizontal-light-1600x656.png",
    "platform": "logo",
    "id": "iquest-horizontal-light",
    "w": 1600,
-   "h": 549,
+   "h": 656,
    "lang": null,
    "format": "png",
-   "bytes": 67263,
-   "sha256": "318264aefb0b84b58cf578ac22049110ed3e50800f64bc2a8042e312afa3c6e0"
+   "bytes": 26839,
+   "sha256": "1b3c4c880710b0adb30fcfbe51144121a42c971da581bd5963c41b7c412e2390"
   },
   {
    "file": "logo/iquest-horizontal-light.pdf",
    "platform": "logo",
    "id": "iquest-horizontal-light",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "pdf",
-   "bytes": 8249,
-   "sha256": "a89c8e4e2126a57cfb34d84e1a2533d0f1ce3e85e702368da9d2eea2cf93e338"
+   "bytes": 9595,
+   "sha256": "2fe2c33ab0abd1bdba705564d8e22fb2834bee63d94a1c7e5f171bdfee3ef3d5"
   },
   {
    "file": "logo/iquest-horizontal-light.svg",
    "platform": "logo",
    "id": "iquest-horizontal-light",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "svg",
-   "bytes": 3461,
-   "sha256": "4aeab446c420863c1567ecde3d242691eab8b20f8eb8f78d96071398c62fbe55"
+   "bytes": 3658,
+   "sha256": "5ac6866073259f36b5971ef48cb59294ec5b3612eac0d1f11449238e5bb741c9"
   },
   {
-   "file": "logo/iquest-horizontal-mono-black-1600x549.png",
+   "file": "logo/iquest-horizontal-mono-black-1600x656.png",
    "platform": "logo",
    "id": "iquest-horizontal-mono-black",
    "w": 1600,
-   "h": 549,
+   "h": 656,
    "lang": null,
    "format": "png",
-   "bytes": 23301,
-   "sha256": "fc9b21cff65bd84eb432119ed965dc3d235906139601b2ae3cc4d22bd910cae3"
+   "bytes": 21237,
+   "sha256": "b548b6fe67defecc02ac9de388ed5450ee30c8391b131d8283582193a7764295"
   },
   {
    "file": "logo/iquest-horizontal-mono-black.pdf",
    "platform": "logo",
    "id": "iquest-horizontal-mono-black",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "pdf",
-   "bytes": 26657,
-   "sha256": "5e9bdcfb7fd138d0e16b1ef11b8b752e5788681f89fee000b8a7b3a8cdff122e"
+   "bytes": 9572,
+   "sha256": "594d1c12f66f8d35cdda1a24da07b75c1d381d63a4d4297b7775a12d7383df83"
   },
   {
    "file": "logo/iquest-horizontal-mono-black.svg",
    "platform": "logo",
    "id": "iquest-horizontal-mono-black",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "svg",
-   "bytes": 3466,
-   "sha256": "ca907080a51068b078cbb794448474687ac23961b67678e98e9903467a6a7933"
+   "bytes": 3663,
+   "sha256": "1e0d8c988363b355a04a1eceb03e2dde74d3229d691b1a0698a8510f853b1a56"
   },
   {
-   "file": "logo/iquest-horizontal-mono-white-1600x549.png",
+   "file": "logo/iquest-horizontal-mono-white-1600x656.png",
    "platform": "logo",
    "id": "iquest-horizontal-mono-white",
    "w": 1600,
-   "h": 549,
+   "h": 656,
    "lang": null,
    "format": "png",
-   "bytes": 23466,
-   "sha256": "22ecf2b6e74eb15f1eb44e30758d205c1ad20e117426eb580527d4d7de543058"
+   "bytes": 21293,
+   "sha256": "6403b53820cc2bf122f25e99cf2d1f499bbcba1fd10c4f0e40567502cbff4aab"
   },
   {
    "file": "logo/iquest-horizontal-mono-white.pdf",
    "platform": "logo",
    "id": "iquest-horizontal-mono-white",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "pdf",
-   "bytes": 26666,
-   "sha256": "11f7fbd0a2c707551c25d55822fa1f516cb8d0f2df8bb42cf6d9383d4efb8f39"
+   "bytes": 9574,
+   "sha256": "ba7b007e8618b0c5920219831ac1b9247bd4f8313fec03cb137540c54a8409ef"
   },
   {
    "file": "logo/iquest-horizontal-mono-white.svg",
    "platform": "logo",
    "id": "iquest-horizontal-mono-white",
-   "w": 337.84,
-   "h": 116,
+   "w": 326.97,
+   "h": 134,
    "lang": null,
    "format": "svg",
-   "bytes": 3466,
-   "sha256": "5374d90dc4b2625d436bd7e9d4566ed66878a372f6ab66ec44825f9fa13e4824"
+   "bytes": 3663,
+   "sha256": "ec13d5c22a59061cccd9e070078e318f896922a58776dabb66a0a93d7ee7711e"
   },
   {
    "file": "logo/iquest-mark-1024x1024.png",
@@ -306,8 +438,8 @@
    "h": 1024,
    "lang": null,
    "format": "png",
-   "bytes": 144408,
-   "sha256": "63779fb3e2ae66da90067d54054162861e0b290009e6b8002ee90003e426fcf7"
+   "bytes": 25936,
+   "sha256": "6cdf636855e6f72374f360edf33924479b0fd01e38d9e2f02884a18a5849a1c4"
   },
   {
    "file": "logo/iquest-mark-mono-black-1024x1024.png",
@@ -317,30 +449,30 @@
    "h": 1024,
    "lang": null,
    "format": "png",
-   "bytes": 18196,
-   "sha256": "73d6582718a48d2348ea8d1becb0f04088cb914b27dbbc07133b9655edfe34d1"
+   "bytes": 19391,
+   "sha256": "71372ed581c4184667b4f081c5d116691c89ad4e754dec4d7b321c5b2eb92a5d"
   },
   {
    "file": "logo/iquest-mark-mono-black.pdf",
    "platform": "logo",
    "id": "iquest-mark-mono-black",
-   "w": 116,
-   "h": 116,
+   "w": 124,
+   "h": 124,
    "lang": null,
    "format": "pdf",
-   "bytes": 26081,
-   "sha256": "3c25a72955620bdea1910893d34e7817f9af79a80da437330eb7e47b2a03c4bd"
+   "bytes": 32052,
+   "sha256": "264ae7d2813da6cd757f69bb618fe2e4f0f01474d7e4e70c0226c1b9a5ecd4a2"
   },
   {
    "file": "logo/iquest-mark-mono-black.svg",
    "platform": "logo",
    "id": "iquest-mark-mono-black",
-   "w": 116,
-   "h": 116,
+   "w": 124,
+   "h": 124,
    "lang": null,
    "format": "svg",
-   "bytes": 755,
-   "sha256": "012275ac444251c111cda424e71a09f24ed7bc8ca8067228d0bfde1d7b29a324"
+   "bytes": 1238,
+   "sha256": "178cb512d50759a5f5412e01d692af97e86750a9da6ef8e2a3fdb98747eea040"
   },
   {
    "file": "logo/iquest-mark-mono-white-1024x1024.png",
@@ -350,283 +482,184 @@
    "h": 1024,
    "lang": null,
    "format": "png",
-   "bytes": 18865,
-   "sha256": "9fc6f417daace1178c073fb23534734b74c95796b7413933500f641ed6c42123"
+   "bytes": 19770,
+   "sha256": "236a632bd83632bbf6d411c04374148f70f3c56a05fb014dd99bae089dcf4152"
   },
   {
    "file": "logo/iquest-mark-mono-white.pdf",
    "platform": "logo",
    "id": "iquest-mark-mono-white",
-   "w": 116,
-   "h": 116,
+   "w": 124,
+   "h": 124,
    "lang": null,
    "format": "pdf",
-   "bytes": 26082,
-   "sha256": "5d357904e24268c8797a3069a548ff8d2b865a1ce844042f7ae2d67a5d70f579"
+   "bytes": 32052,
+   "sha256": "b7f8ce3148da187cfad3b2caa49210ec497d0d4f021c600398b3a5127f5c4a96"
   },
   {
    "file": "logo/iquest-mark-mono-white.svg",
    "platform": "logo",
    "id": "iquest-mark-mono-white",
-   "w": 116,
-   "h": 116,
+   "w": 124,
+   "h": 124,
    "lang": null,
    "format": "svg",
-   "bytes": 755,
-   "sha256": "ed6ef1eea84bfe1e688ba93b22fc08ba796989e62bd21681deb7c84a86b29282"
+   "bytes": 1238,
+   "sha256": "75df1557413646d65ddb61da91905a6a9e5b0da2af38e3dba0fb7fe2479808e7"
   },
   {
    "file": "logo/iquest-mark.pdf",
    "platform": "logo",
    "id": "iquest-mark",
-   "w": 116,
-   "h": 116,
+   "w": 124,
+   "h": 124,
    "lang": null,
    "format": "pdf",
-   "bytes": 8902,
-   "sha256": "eff7a6157383a5810bab3f3cf52fa68b66451f38b3400b583cab071e5bd294d7"
+   "bytes": 11922,
+   "sha256": "d12f2e4a65bd5eaad7b38323852f18a98ae6dd311b38f30cbe6bf3034f45c2c3"
   },
   {
    "file": "logo/iquest-mark.svg",
    "platform": "logo",
    "id": "iquest-mark",
-   "w": 116,
-   "h": 116,
+   "w": 124,
+   "h": 124,
    "lang": null,
    "format": "svg",
-   "bytes": 873,
-   "sha256": "7e1c11039e04cb0880645bd0bd1288d4a5324ca7fa7f4e72e702d07301025923"
+   "bytes": 1078,
+   "sha256": "696184b8e0ef95bf6b71881a3cddd20ca01a79a7bfe9385941a8680a394a21b6"
   },
   {
-   "file": "logo/iquest-monogram-black-1024x843.png",
-   "platform": "logo",
-   "id": "iquest-monogram-black",
-   "w": 1024,
-   "h": 843,
-   "lang": null,
-   "format": "png",
-   "bytes": 17566,
-   "sha256": "ce47f39070d2af86602034cdb24e3638e9abd0923007ca18adf3e61f08e59329"
-  },
-  {
-   "file": "logo/iquest-monogram-black.pdf",
-   "platform": "logo",
-   "id": "iquest-monogram-black",
-   "w": 107.5,
-   "h": 88.5,
-   "lang": null,
-   "format": "pdf",
-   "bytes": 4800,
-   "sha256": "4f6a1333a26f061c01f2c09452ba89e265c4cd9547ec34686fdfc98d9b2baf57"
-  },
-  {
-   "file": "logo/iquest-monogram-black.svg",
-   "platform": "logo",
-   "id": "iquest-monogram-black",
-   "w": 107.5,
-   "h": 88.5,
-   "lang": null,
-   "format": "svg",
-   "bytes": 516,
-   "sha256": "abebf239744f2b38a3ffec7a34e7c366bbd62a12a4966a3c40faa8baeb0e2393"
-  },
-  {
-   "file": "logo/iquest-monogram-gold-1024x843.png",
-   "platform": "logo",
-   "id": "iquest-monogram-gold",
-   "w": 1024,
-   "h": 843,
-   "lang": null,
-   "format": "png",
-   "bytes": 23960,
-   "sha256": "69428718293e9765973306565d8447f695869095d60758d462c399bcaa34e4c3"
-  },
-  {
-   "file": "logo/iquest-monogram-gold.pdf",
-   "platform": "logo",
-   "id": "iquest-monogram-gold",
-   "w": 107.5,
-   "h": 88.5,
-   "lang": null,
-   "format": "pdf",
-   "bytes": 4805,
-   "sha256": "1aab523f028e1dbf0bf8046eda0008a462ef2b7099cc397092886f64515c7d6e"
-  },
-  {
-   "file": "logo/iquest-monogram-gold.svg",
-   "platform": "logo",
-   "id": "iquest-monogram-gold",
-   "w": 107.5,
-   "h": 88.5,
-   "lang": null,
-   "format": "svg",
-   "bytes": 515,
-   "sha256": "b5c90c0b796b7e57b530d96829a1fb2b23efdbd0353e6e3309f5b14224b8f360"
-  },
-  {
-   "file": "logo/iquest-monogram-white-1024x843.png",
-   "platform": "logo",
-   "id": "iquest-monogram-white",
-   "w": 1024,
-   "h": 843,
-   "lang": null,
-   "format": "png",
-   "bytes": 18156,
-   "sha256": "44dbfc5a419a3fbcf5a809e66c4f8837b3bac92d74a1467ef37bd38f759f5236"
-  },
-  {
-   "file": "logo/iquest-monogram-white.pdf",
-   "platform": "logo",
-   "id": "iquest-monogram-white",
-   "w": 107.5,
-   "h": 88.5,
-   "lang": null,
-   "format": "pdf",
-   "bytes": 4800,
-   "sha256": "7e689612c993c681d051c38a3f1a8e7162e60038ada7881acdf7d51db0371cec"
-  },
-  {
-   "file": "logo/iquest-monogram-white.svg",
-   "platform": "logo",
-   "id": "iquest-monogram-white",
-   "w": 107.5,
-   "h": 88.5,
-   "lang": null,
-   "format": "svg",
-   "bytes": 516,
-   "sha256": "fce21b439362cb8c19f5f6ab80a8b3e33c7e3823581f1c91ffefc29f7da2989d"
-  },
-  {
-   "file": "logo/iquest-stacked-dark-1600x1738.png",
+   "file": "logo/iquest-stacked-dark-1600x1592.png",
    "platform": "logo",
    "id": "iquest-stacked-dark",
    "w": 1600,
-   "h": 1738,
+   "h": 1592,
    "lang": null,
    "format": "png",
-   "bytes": 182198,
-   "sha256": "016e2b142d60fde91912b3012f8ff562db4977c5d7788767abab09324ceccb79"
+   "bytes": 39176,
+   "sha256": "e5ad86626f5e9c3ba2e21a4b80f7928e78049c0a7f9bb8a583c8eff125c418cb"
   },
   {
    "file": "logo/iquest-stacked-dark.pdf",
    "platform": "logo",
    "id": "iquest-stacked-dark",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "pdf",
-   "bytes": 10138,
-   "sha256": "5d3e8791bf9b0fc36cc86ff1ffb40b4c04733922092098697ec2468b1ca1cb40"
+   "bytes": 11635,
+   "sha256": "b433aacd31d04eb80cb79754cecacd9b03db4cea09d257d14eb22bb99f6036fc"
   },
   {
    "file": "logo/iquest-stacked-dark.svg",
    "platform": "logo",
    "id": "iquest-stacked-dark",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "svg",
-   "bytes": 3698,
-   "sha256": "99bd66c8b8621a8a3d8a826fb1f0e6b6c8b1400dc17a66997f6e49f8d30e911e"
+   "bytes": 3785,
+   "sha256": "794b054b72c5bb13336158f4d510304daa9f7ee02a20741b207252b7078ed7ed"
   },
   {
-   "file": "logo/iquest-stacked-light-1600x1738.png",
+   "file": "logo/iquest-stacked-light-1600x1592.png",
    "platform": "logo",
    "id": "iquest-stacked-light",
    "w": 1600,
-   "h": 1738,
+   "h": 1592,
    "lang": null,
    "format": "png",
-   "bytes": 171808,
-   "sha256": "180fe309151a077b1731bc0c0aa4b58518a7ed4133371412f78275ff182e3d69"
+   "bytes": 47801,
+   "sha256": "ede945fa3a987acbc91cb7af2b21d7f683d896d682a6c585fe7ec74cfe3b12cc"
   },
   {
    "file": "logo/iquest-stacked-light.pdf",
    "platform": "logo",
    "id": "iquest-stacked-light",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "pdf",
-   "bytes": 6858,
-   "sha256": "59a9c167be91f453467663dee3021ff05408eecc412db17585a63e80cf4c74b1"
+   "bytes": 11640,
+   "sha256": "9f1482317763a26696b2ac8e09e96673c447868e8c05afbd650d7fb5f90342c9"
   },
   {
    "file": "logo/iquest-stacked-light.svg",
    "platform": "logo",
    "id": "iquest-stacked-light",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "svg",
-   "bytes": 3556,
-   "sha256": "44df63f604c69a50e4d55662e3b401507e131be2ee6bb610deb7cc8270df7475"
+   "bytes": 3786,
+   "sha256": "544b132e70ed11be6b24d330cf544c9c49a7f2cfd2595fc5a455570416288139"
   },
   {
-   "file": "logo/iquest-stacked-mono-black-1600x1738.png",
+   "file": "logo/iquest-stacked-mono-black-1600x1592.png",
    "platform": "logo",
    "id": "iquest-stacked-mono-black",
    "w": 1600,
-   "h": 1738,
+   "h": 1592,
    "lang": null,
    "format": "png",
-   "bytes": 46966,
-   "sha256": "6f674eac13292b5adc6b8f00f4f67ec949531b9cc776b3aaad565d8f864057dc"
+   "bytes": 37769,
+   "sha256": "ac294ca9939224cca9183dfc26c81748879282c7915914a998657e6fb992ed8d"
   },
   {
    "file": "logo/iquest-stacked-mono-black.pdf",
    "platform": "logo",
    "id": "iquest-stacked-mono-black",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "pdf",
-   "bytes": 36372,
-   "sha256": "cfb08e6846d53a2548b4cb48c40b4160f031d411f8ec9d06943a134ef3bce8a5"
+   "bytes": 11617,
+   "sha256": "7adab7ec854be8ea2aa90ee122c5704ebfc1eaef0103834549dd57052cd4fd4b"
   },
   {
    "file": "logo/iquest-stacked-mono-black.svg",
    "platform": "logo",
    "id": "iquest-stacked-mono-black",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "svg",
-   "bytes": 3593,
-   "sha256": "12c4a78e743e88dcb5e46954369950e8d01e5334ff101c758bb95ddfe9a06f9a"
+   "bytes": 3791,
+   "sha256": "ef2f096ae457b5458fcc8e79bff9e39cbb0adf09331a1588819c920272626896"
   },
   {
-   "file": "logo/iquest-stacked-mono-white-1600x1738.png",
+   "file": "logo/iquest-stacked-mono-white-1600x1592.png",
    "platform": "logo",
    "id": "iquest-stacked-mono-white",
    "w": 1600,
-   "h": 1738,
+   "h": 1592,
    "lang": null,
    "format": "png",
-   "bytes": 47290,
-   "sha256": "453ecc5f520e9ac691b3e3ee1458bb7d8376ee756a64ef7992d314163adbacbb"
+   "bytes": 38096,
+   "sha256": "5e57cfdb823d454eea5c664b8b50693079d0c2079b6ec18b65d04ae4b4007e01"
   },
   {
    "file": "logo/iquest-stacked-mono-white.pdf",
    "platform": "logo",
    "id": "iquest-stacked-mono-white",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "pdf",
-   "bytes": 36373,
-   "sha256": "6fb11577ab2d4d022ea8acd986dd8b38e7b654064e82434df7a6517bde457103"
+   "bytes": 11618,
+   "sha256": "1b72e0d33f92ec784fc6059a5f5aae621cde066bb806770a2146f448d9ee8f3f"
   },
   {
    "file": "logo/iquest-stacked-mono-white.svg",
    "platform": "logo",
    "id": "iquest-stacked-mono-white",
-   "w": 181.31,
-   "h": 197,
+   "w": 240.17,
+   "h": 239,
    "lang": null,
    "format": "svg",
-   "bytes": 3593,
-   "sha256": "92a361857cd0b69610a421538adfd75f371196473c905a9e0ec5e46c95fbe284"
+   "bytes": 3791,
+   "sha256": "25d361da26a51fd4dc83b880ae0ee66bebc8c22df687f5a56a6a92d79f55cc9a"
   },
   {
    "file": "play/feature-graphic-1024x500-ru.jpg",
@@ -636,8 +669,8 @@
    "h": 500,
    "lang": "ru",
    "format": "jpg",
-   "bytes": 70471,
-   "sha256": "0d87ce74b84c36ce07d2a4e95908bbb113b672bbf5d60809388f6592fe5fb7ff"
+   "bytes": 69759,
+   "sha256": "20de837409045f6e81fef4b5f48a7258f2add8a86ed7ddf952739b4a99ff0005"
   },
   {
    "file": "play/feature-graphic-1024x500-uz.jpg",
@@ -647,8 +680,8 @@
    "h": 500,
    "lang": "uz",
    "format": "jpg",
-   "bytes": 68429,
-   "sha256": "0f78adeb7c816139fab3e586d06a21a1efa19a2e76ca85d3fa3eba778089d948"
+   "bytes": 67654,
+   "sha256": "521f460f51374ce36b9f69fc742e5bf17d65cf5107c06c5765033b481afb76c1"
   },
   {
    "file": "play/icon-512x512.png",
@@ -658,8 +691,8 @@
    "h": 512,
    "lang": null,
    "format": "png",
-   "bytes": 24328,
-   "sha256": "caa47c69ed7c2e4e2be84fbd4dc09344bba2a94a1b0b9d55f03e54bfe3841e68"
+   "bytes": 8812,
+   "sha256": "3a5afdc27f00a1021eacc79d8383edc04fb612eb64b23eefe3672617588ff8dc"
   },
   {
    "file": "telegram/avatar-640x640.png",
@@ -669,8 +702,8 @@
    "h": 640,
    "lang": null,
    "format": "png",
-   "bytes": 178798,
-   "sha256": "3cd6bb9038baf4471d047aa85e17b7e6605d9bf37895f4d1dab55a9475a1e18d"
+   "bytes": 68523,
+   "sha256": "ee41db473a2adcecd4e51b6f3b5652b15d45a712fe55a1b9f0347b31082cbd49"
   },
   {
    "file": "telegram/bot-description-640x360-ru.png",
@@ -680,8 +713,8 @@
    "h": 360,
    "lang": "ru",
    "format": "png",
-   "bytes": 200656,
-   "sha256": "2f244f1da3641e6ff2d48a3a253f046bdd891276b85c578703dcc54f797083f7"
+   "bytes": 179335,
+   "sha256": "588d3af063d9b646aa3fb379906b6a757aabcd585db201d8dc03aa49ad6bcd35"
   },
   {
    "file": "telegram/bot-description-640x360-uz.png",
@@ -691,8 +724,8 @@
    "h": 360,
    "lang": "uz",
    "format": "png",
-   "bytes": 196505,
-   "sha256": "23938bd647596d440db7d2811454d2d09854d4526716e5b4aaca0e559fdf25b7"
+   "bytes": 175623,
+   "sha256": "05ab8bd9c91630444b76cfd24d459c782acc77a579120882bbbf56f3d9559221"
   },
   {
    "file": "telegram/post-1280x720-ru.png",
@@ -702,8 +735,8 @@
    "h": 720,
    "lang": "ru",
    "format": "png",
-   "bytes": 623678,
-   "sha256": "a6c89bc236800e4a13d9d664bd749bdb2e4e50453426835673c98aa7e0b63da1"
+   "bytes": 543909,
+   "sha256": "4f9ba12b24e0b93c5d41815e8e9d51799ff73f31c2ec18cb6b32be5a028ee8ea"
   },
   {
    "file": "telegram/post-1280x720-uz.png",
@@ -713,8 +746,8 @@
    "h": 720,
    "lang": "uz",
    "format": "png",
-   "bytes": 613086,
-   "sha256": "c1e50650cac2ffc8446057659a5f06a3ac19b7e1d47a03b7b29dd134b960a1a8"
+   "bytes": 533667,
+   "sha256": "47d23bec501e35027683128a8ff98d8dd36f5bb2b6ef85688ae7b45c3ac7e4dd"
   },
   {
    "file": "web/og-1200x630-ru.jpg",
@@ -724,8 +757,8 @@
    "h": 630,
    "lang": "ru",
    "format": "jpg",
-   "bytes": 97070,
-   "sha256": "9f51db006350e6a3e2877344fb38cc4ab8248d204d6fae7a0bb7c112cc5add90"
+   "bytes": 94460,
+   "sha256": "63f2bce1c39f6fbb17d404124e5319ae0d079a389a93528e8c59ee2bdef50388"
   },
   {
    "file": "web/og-1200x630-uz.jpg",
@@ -735,8 +768,8 @@
    "h": 630,
    "lang": "uz",
    "format": "jpg",
-   "bytes": 93079,
-   "sha256": "16d56f33cfa8fc69193b1391a041fecc3d9e315d0095b0abca98eaf0f02242e4"
+   "bytes": 90542,
+   "sha256": "812656d8acb493d2ef87d1746a495f1f81a4134ecbab27ea36b9bc67dc807fe1"
   },
   {
    "file": "x/avatar-400x400.png",
@@ -746,8 +779,8 @@
    "h": 400,
    "lang": null,
    "format": "png",
-   "bytes": 90267,
-   "sha256": "35aa14650e727ec7798675d028ca59a4dfd04cf1bca9b677ad15133d99b929a3"
+   "bytes": 35318,
+   "sha256": "a04e1e0a802aafa1d2b7d09938332fb5c0d137438952729b41387843b5aec361"
   },
   {
    "file": "x/header-1500x500-ru.png",
@@ -757,8 +790,8 @@
    "h": 500,
    "lang": "ru",
    "format": "png",
-   "bytes": 570213,
-   "sha256": "bff95abd80ccad365eaf0e95bf5b143449163e48b21cababf61269fd78aced30"
+   "bytes": 496979,
+   "sha256": "6bd7822268ec5dc2fb95d39087a5edee9c37dc910772b0286d73ec4529d7b071"
   },
   {
    "file": "x/header-1500x500-uz.png",
@@ -768,8 +801,8 @@
    "h": 500,
    "lang": "uz",
    "format": "png",
-   "bytes": 561003,
-   "sha256": "9876a7641766970619cbebc008cae12c2feda4a84ef4e0a56ba3651bf9b34e87"
+   "bytes": 487490,
+   "sha256": "616af60e289f110afd4669d739c38e208cc5d82df175b6470b9d1e2a12f04f36"
   },
   {
    "file": "x/post-1600x900-ru.png",
@@ -779,8 +812,8 @@
    "h": 900,
    "lang": "ru",
    "format": "png",
-   "bytes": 914077,
-   "sha256": "28f0968274c2a58943e6d8cbc1e3b96d863323eaec61a22abb53e01db6f0ad35"
+   "bytes": 793853,
+   "sha256": "5d819b8c3942b9df1e88134ed26b94ac7de53373991b5873e94f14779a24c2ec"
   },
   {
    "file": "x/post-1600x900-uz.png",
@@ -790,8 +823,8 @@
    "h": 900,
    "lang": "uz",
    "format": "png",
-   "bytes": 897065,
-   "sha256": "64dd87c5245bcefaa745abd4dc31720ebf2730d616fc8fc187f8d9e78bb3e24e"
+   "bytes": 777743,
+   "sha256": "0fb10f3394bd18067a31183904ca073644adfb6657782bd55f1c4abb47036309"
   },
   {
    "file": "youtube/avatar-800x800.png",
@@ -801,8 +834,8 @@
    "h": 800,
    "lang": null,
    "format": "png",
-   "bytes": 252193,
-   "sha256": "2cb3df89ab2b8bc805254e44fffb86efc5048d8f7fe070e22d5e23b9ada74947"
+   "bytes": 101822,
+   "sha256": "757bea6f6407d3e31ea07e1a7a0d33a360a46c77f920fb2614f21414fb11e2d0"
   },
   {
    "file": "youtube/banner-2560x1440-ru.png",
@@ -812,8 +845,8 @@
    "h": 1440,
    "lang": "ru",
    "format": "png",
-   "bytes": 1948705,
-   "sha256": "14c889d04f3a6b27a438e813ae0abdd80f1ee8441efd40c57d52123a14a6d117"
+   "bytes": 1644138,
+   "sha256": "fbe93cfe628b37f47a8908ecb3041f5601e70e2ce0e0cafc093bddb742d79897"
   },
   {
    "file": "youtube/banner-2560x1440-uz.png",
@@ -823,8 +856,8 @@
    "h": 1440,
    "lang": "uz",
    "format": "png",
-   "bytes": 1928659,
-   "sha256": "9c9b73014ee4bb7829936807f458880582b505fceda78ae4b7630890acabcd01"
+   "bytes": 1624264,
+   "sha256": "7ef731d0d6415ee09da67686dc26c4b53dcc9e8c79484379d31d68ac9c4915ad"
   },
   {
    "file": "youtube/thumbnail-1280x720-ru.png",
@@ -834,8 +867,8 @@
    "h": 720,
    "lang": "ru",
    "format": "png",
-   "bytes": 519733,
-   "sha256": "e4cec12afa72ab7cc4c43002db7daacc1344ad2b25c1a15b2fb3e5fc1b3f6b42"
+   "bytes": 453695,
+   "sha256": "7fffc190721cf086e04803f5bd7f60ec761892fa2391195e4fc2282db61791ec"
   },
   {
    "file": "youtube/thumbnail-1280x720-uz.png",
@@ -845,8 +878,8 @@
    "h": 720,
    "lang": "uz",
    "format": "png",
-   "bytes": 518537,
-   "sha256": "b5c62ae7f7de42e7509c82854da33256a691a1ecf3497ac77f86939e20165278"
+   "bytes": 451952,
+   "sha256": "010142e1837af94bcf14065d2f84f5ee309536c62afcdcfad78409b96446c4c6"
   },
   {
    "file": "youtube/watermark-150x150.png",
@@ -856,8 +889,8 @@
    "h": 150,
    "lang": null,
    "format": "png",
-   "bytes": 6622,
-   "sha256": "080372a264537eb8ffc395267d9dce335e58479a890fba5d5b2974c74dbe6890"
+   "bytes": 3413,
+   "sha256": "d7fb471589b295d6ff4693a32c77e852b965d0c9d74262affc67473d36be31cc"
   }
  ]
 }

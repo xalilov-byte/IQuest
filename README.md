@@ -447,16 +447,39 @@ va aktivlar reyestri. Ko'rish: `node tools/mkbrand.mjs --serve`.
 | `npm run play:assets` (`node tools/mkplay.mjs`) | Play ekran suratlari 1080×1920, har til 6 ta — **haqiqiy** ilovadan |
 | `npm run og` | faqat OG rasm |
 
-**Palitra:** Tun `#14121F` · Indigo `#2B2270` · Oltin `#FFA726` (yorug'
-fonda so'z belgisidagi «IQ» `#E8890C`) · Ko'k `#3D5EFF` · Binafsha
-`#8552F0` · Qog'oz `#F5F3FF`. Naqsh — 12 px nuqtali setka, oq 15%.
+**Belgi — «Matritsa»** (egasi tanlagan, 2026-09-26): 3×3 Raven
+matritsasi, kvadratlar diagonal bo'ylab doiraga aylanadi, oxirgi katak —
+marjon rangli doira, ya'ni **javob**. Qonuniyatni topish mumkin — ilova
+g'oyasi shu. 512 birlikli setka: katak 72, oraliq 28, burchak radiusi
+4 → 36 (diagonal bo'ylab), glif plitkaning 54% i.
+
+| | Rang | Qayerda |
+|---|---|---|
+| To'q ko'k (navy) | `#10183A` | plitka, ikonka foni, yorug' fondagi belgi va so'z |
+| Tun | `#0C1230` | qorong'i fon (bannerlar, qorong'i splash) |
+| Oq | `#FFFFFF` | plitkadagi kataklar, qorong'i fondagi so'z belgisi |
+| Marjon (coral) | `#FF5B3A` (qorong'i fonda `#FF6A4B`) | **faqat** javob katagi va kichik urg'ular (chip nuqtasi) |
+
+**Tipografika:** so'z belgisi «IQuest» — Space Grotesk 700, tracking
+−0.01em, bitta rangda; harflar konturga aylantirilgan (SVG shriftsiz).
+Banner matni — Manrope 800/600 (kirill harflari bor).
 Shior: «Mantiqni mashq qiling» / «Тренируйте логику» / «Train your logic».
 
-**Belgi:** oltin geometrik «IQ» monogrammasi indigo plitkada; Q dumi —
-«quest», oldinga yo'l. Bo'sh joy har tomondan 8 birlik (100 birlikli
-setkada; SVG fayllarda shu zaxira bor). Eng kichik: belgi 20 px,
-gorizontal lokap 96 px eni; ≤32 px da kichik variant (halqa 18, dum 13).
-Lokaplar: gorizontal, vertikal, faqat belgi — qorong'i, yorug', oq, qora.
+**Lokaplar va bo'sh joy** (`resources/brand/logo/`, SVG + PDF + PNG):
+gorizontal va vertikal lokap, plitka (`iquest-mark`) va plitkasiz glif
+(`iquest-glyph-*`) — yorug', qorong'i, oq, qora. Gorizontal lokapda
+belgi balandligi = 1,55 × bosh harf (C), belgi va so'z orasi 0,62 C,
+**bo'sh joy har tomondan 0,9 C**; plitka atrofida 12%, glif atrofida
+bitta katak. SVG fayllarda bu zaxira bor. Eng kichik: glif 20 px,
+gorizontal lokap 96 px eni. Belgi burilmaydi, cho'zilmaydi, kataklar
+qayta bo'yalmaydi; marjon rang faqat oxirgi katakda.
+
+**Ikonkalar:** adaptiv ikonka orqa qatlami tekis `#10183A`, old qatlam —
+glif (eng uzoq burchagi markazdan 27,6dp, xavfsiz zona 33dp — doira,
+squircle va tomchi niqoblarida kesilmaydi); Android 13 monoxrom — glif
+siluetti; bildirishnoma `ic_stat_iquest` — soddalashtirilgan 3×3 (8
+kvadrat + to'la doira), butun dp setkasida, 24 px da tiniq; splash
+yorug' (oq) va qorong'i (`#0C1230`).
 
 **Taqiqlar** (CONTRACT §6, ARXITEKTURA §12.4, §16-2): miya, stetoskop,
 xoch, dafna, «rasmiy» muhr, «IQ 150» kabi raqam; liga, reyting,

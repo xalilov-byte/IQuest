@@ -3,7 +3,7 @@
    (ARXITEKTURA.md §12.2)
 
    Ishga tushirish:  node tools/mkicons.mjs        (npm run icons)
-                     node tools/mkicons.mjs --splash   (splash drawable'larini ham)
+                     node tools/mkicons.mjs --no-splash   (splash drawable'larisiz)
 
    Manba — tools/brand.html (_icons bo'limi; belgi geometriyasi o'sha yerda).
    Yoziladi:
@@ -17,7 +17,7 @@
        mipmap-{ldpi..xxxhdpi}/ic_launcher_{foreground,background,monochrome}.png  108dp
        mipmap-anydpi-v26/ic_launcher.xml, ic_launcher_round.xml  (+ <monochrome>)
        drawable-{mdpi..xxxhdpi}/ic_stat_iquest.png   24/36/48/72/96 px, oq siluet
-       (--splash bilan) drawable-…/splash.png
+       drawable{,-night}, drawable-{port,land}{,-night}-…/splash.png  (yorug' / qorong'i)
 
    NIMA UCHUN capacitor-assets ISHLATILMAYDI: u adaptiv qatlamni 48dp PNG
    qilib `inset 16.7%` bilan 72dp ga CHO'ZADI (ikonka xira chiqadi), orqa
@@ -34,7 +34,7 @@ import { loadChromium, CHROME } from './mkplay.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RES = join(ROOT, 'android', 'app', 'src', 'main', 'res');
-const SPLASH = process.argv.includes('--splash');
+const SPLASH = !process.argv.includes('--no-splash');
 
 /* `npm run icons` hali eski ko'rinishda bo'lsa (… && npx capacitor-assets
    generate), capacitor-assets shu skriptdan KEYIN ishlab, mavzuli ikonkani
@@ -57,6 +57,7 @@ const srv = await new Promise(r => {
 const chromium = await loadChromium('mkicons');
 const b = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox'] });
 
+let STAT_SVG = '';
 async function shot(id, alpha) {
   const p = await b.newPage({ viewport: { width: 1200, height: 1200 } });
   await p.goto(`http://127.0.0.1:${srv.address().port}/tools/brand.html?group=_icons&id=${id}`);
@@ -65,6 +66,7 @@ async function shot(id, alpha) {
   if (err) throw new Error(`[mkicons] ${id}: ${err}`);
   await p.evaluate(() => { document.documentElement.style.background = 'transparent'; });
   const [w, h] = await p.evaluate(() => { const s = document.querySelector('section.on'); return [+s.dataset.w, +s.dataset.h]; });
+  if (id === 'stat') STAT_SVG = await p.evaluate(() => document.querySelector('section.on svg').outerHTML.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
   await p.setViewportSize({ width: w, height: h });
   const buf = await p.locator('section.on').screenshot({ omitBackground: alpha });
   await p.close();
@@ -74,14 +76,14 @@ async function shot(id, alpha) {
 const SRC = {
   only: await shot('icon-only', false), legacy: await shot('icon-legacy', true), round: await shot('icon-round', true),
   fg: await shot('icon-fg', true), bg: await shot('icon-bg', false), mono: await shot('icon-mono', true),
-  stat: await shot('stat', true), splash: await shot('splash', false),
+  stat: await shot('stat', true), splash: await shot('splash', false), splashDark: await shot('splash-dark', false),
 };
 await b.close();
 srv.close();
 
 const png = (buf, size, opaque) => {
   let s = sharp(buf).resize(size, size, { kernel: 'lanczos3' });
-  s = opaque ? s.flatten({ background: '#14121F' }).removeAlpha() : s.ensureAlpha();
+  s = opaque ? s.flatten({ background: '#10183A' }).removeAlpha() : s.ensureAlpha();
   return s.png({ compressionLevel: 9 }).toBuffer();
 };
 const put = async (file, buf) => { mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, buf); };
@@ -93,7 +95,7 @@ await put(R('icon-foreground.png'), await png(SRC.fg, 1024, false));
 await put(R('icon-background.png'), await png(SRC.bg, 1024, true));
 await put(R('icon-monochrome.png'), await png(SRC.mono, 1024, false));
 await put(R('splash.png'), await png(SRC.splash, 2732, true));
-await put(R('splash-dark.png'), await png(SRC.splash, 2732, true));
+await put(R('splash-dark.png'), await png(SRC.splashDark, 2732, true));
 
 /* 2. Launcher ikonkalari */
 const DENS = { ldpi: .75, mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 };
@@ -117,26 +119,28 @@ const ADAPTIVE = `<?xml version="1.0" encoding="utf-8"?>
 await put(join(RES, 'mipmap-anydpi-v26', 'ic_launcher.xml'), Buffer.from(ADAPTIVE));
 await put(join(RES, 'mipmap-anydpi-v26', 'ic_launcher_round.xml'), Buffer.from(ADAPTIVE));
 await put(join(RES, 'values', 'ic_launcher_background.xml'), Buffer.from(
-  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#2B2270</color>\n</resources>\n`));
+  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#10183A</color>\n</resources>\n`));
 
 /* 3. Bildirishnoma kichik ikonkasi: 24dp, faqat oq + alfa (tizim o'zi bo'yaydi) */
 const STAT = { mdpi: 24, hdpi: 36, xhdpi: 48, xxhdpi: 72, xxxhdpi: 96 };
 for (const [d, px] of Object.entries(STAT)) {
-  const alpha = await sharp(SRC.stat).resize(px, px, { kernel: 'lanczos3' }).ensureAlpha().extractChannel(3).toBuffer();
+  // SVG aynan shu o'lchamda chiziladi (kichraytirilmaydi) — 24 px da ham tiniq.
+  const alpha = await sharp(Buffer.from(STAT_SVG), { density: 72 * px / 24 }).resize(px, px).ensureAlpha().extractChannel(3).toBuffer();
   const buf = await sharp({ create: { width: px, height: px, channels: 3, background: '#FFFFFF' } })
     .joinChannel(alpha).png({ compressionLevel: 9 }).toBuffer();
   await put(join(RES, `drawable-${d}`, 'ic_stat_iquest.png'), buf);
 }
 
-/* 4. Splash drawable'lari (faqat --splash; odatda o'zgarmaydi, §12.2) */
+/* 4. Splash drawable'lari: yorug' (drawable-port-*) va qorong'i (-night) */
 if (SPLASH) {
   const sizes = { ldpi: [240, 320], mdpi: [320, 480], hdpi: [480, 800], xhdpi: [720, 1280], xxhdpi: [960, 1600], xxxhdpi: [1280, 1920] };
   for (const night of ['', '-night']) for (const [d, [w, h]] of Object.entries(sizes)) {
-    await put(join(RES, `drawable-port${night}-${d}`, 'splash.png'), await sharp(SRC.splash).resize(w, h, { fit: 'cover' }).png().toBuffer());
-    await put(join(RES, `drawable-land${night}-${d}`, 'splash.png'), await sharp(SRC.splash).resize(h, w, { fit: 'cover' }).png().toBuffer());
+    const src = night ? SRC.splashDark : SRC.splash;
+    await put(join(RES, `drawable-port${night}-${d}`, 'splash.png'), await sharp(src).resize(w, h, { fit: 'cover' }).png().toBuffer());
+    await put(join(RES, `drawable-land${night}-${d}`, 'splash.png'), await sharp(src).resize(h, w, { fit: 'cover' }).png().toBuffer());
   }
   await put(join(RES, 'drawable', 'splash.png'), await sharp(SRC.splash).resize(320, 480, { fit: 'cover' }).png().toBuffer());
-  await put(join(RES, 'drawable-night', 'splash.png'), await sharp(SRC.splash).resize(320, 480, { fit: 'cover' }).png().toBuffer());
+  await put(join(RES, 'drawable-night', 'splash.png'), await sharp(SRC.splashDark).resize(320, 480, { fit: 'cover' }).png().toBuffer());
 }
 
 console.log('[mkicons] resources/icon-*.png, mipmap-* (legacy + adaptiv 108dp + monochrome), ' +

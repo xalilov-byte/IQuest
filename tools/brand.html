@@ -20,18 +20,20 @@
   URL: brand.html?id=<aktiv>&lang=uz|ru|en  — faqat shu aktiv ko'rinadi.
        brand.html                         — hamma aktivlar ro'yxati (ko'rik).
 
-  ── BELGI (o'zgarmaydi, §12.1) ─────────────────────────────────────────
-  100 birlikli setka. I: x8 y21 w16 h58 r3. Halqa: markaz (63,50), r21,
-  chiziq 16. Dum: (60,64)→(92,86), chiziq 15, uchlari yumaloq. ≤32 px
-  uchun kichik variant: halqa 18, dum 13. Oltin #FFA726, indigo gradient
-  #2B2270 → #14121F ustida. Miya, xoch, dafna, «rasmiy» muhr, raqam YO'Q.
+  ── BELGI «Matritsa» (egasi tanlagan, 2026-09-26) ──────────────────────
+  3×3 Raven matritsasi: kvadratlar diagonal bo'ylab doiraga aylanadi,
+  oxirgi katak — marjon rangli doira (javob). 512 birlikli setka:
+  katak 72, oraliq 28, boshlanishi 120; k=(qator+ustun)/4, burchak
+  radiusi 4 + k·32, kattalashish k·3.5. Glif chegarasi 118.25…395.5.
+  Plitka: to'q ko'k #10183A, kataklar oq, javob #FF5B3A (qorong'i fonda
+  #FF6A4B, fon #0C1230). Miya, xoch, dafna, «rasmiy» muhr, raqam YO'Q.
 
   ── SO'Z BELGISI ───────────────────────────────────────────────────────
-  «IQuest», Space Grotesk 700, tracking −0.02em. Harflar shriftdan
-  KONTURGA aylantiriladi (pastdagi woff tahlilchisi) — SVG fayllar
-  shriftsiz ham bir xil ko'rinadi. «IQ» oltin, «uest» qorong'i fonda
-  #F4F2FF, yorug' fonda #1C1B29. Yorug' fonda oltin chuqurroq (#E8890C):
-  #FFA726 oq ustida 1.9:1 — harf ko'rinmay qoladi.
+  «IQuest», Space Grotesk 700, tracking −0.01em, bir rangda: yorug' fonda
+  #10183A, qorong'i fonda #FFFFFF. Harflar shriftdan KONTURGA
+  aylantiriladi (pastdagi woff tahlilchisi) — SVG shriftsiz ham bir xil.
+  Lokap: belgi balandligi = 1.55 × bosh harf, oraliq 0.62 × bosh harf,
+  bo'sh joy har tomondan 0.9 × bosh harf.
 
   ── HALOLLIK (§12.4, CONTRACT §6) ──────────────────────────────────────
   Matnlar faqat T lug'atida. Liga, reyting, sertifikat, «rasmiy», Mensa,
@@ -55,9 +57,9 @@
 @font-face{font-family:'Space Grotesk';font-weight:700;src:url(../node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 
 :root{
-  --night:#14121F; --indigo:#2B2270; --gold:#FFA726; --gold-deep:#E8890C;
-  --blue:#3D5EFF; --purple:#8552F0; --paper:#F5F3FF; --ink:#1C1B29;
-  --snow:#F4F2FF; --muted:#A9A4C8; --surface:#1E1B2E; --surface-2:#262239;
+  --navy:#10183A; --night:#0C1230; --coral:#FF5B3A; --coral-d:#FF6A4B;
+  --blue:#3D5EFF; --paper:#F5F3FF; --ink:#10183A;
+  --snow:#FFFFFF; --muted:#A3ACD2; --surface:#18214A; --surface-2:#1E2858;
 }
 *{box-sizing:border-box;margin:0}
 html,body{background:#0c0b12}
@@ -70,12 +72,12 @@ body.one{background:transparent}
 /* ── Fon ──────────────────────────────────────────────────────────── */
 .bg{position:absolute;inset:0;background:var(--night)}
 .bg .g1,.bg .g2,.bg .g3{position:absolute;border-radius:50%}
-.bg .g1{background:radial-gradient(circle,rgba(61,94,255,.42),rgba(61,94,255,0) 62%)}
-.bg .g2{background:radial-gradient(circle,rgba(133,82,240,.36),rgba(133,82,240,0) 62%)}
-.bg .g3{background:radial-gradient(circle,rgba(43,34,112,.9),rgba(43,34,112,0) 70%)}
+.bg .g1{background:radial-gradient(circle,rgba(61,94,255,.30),rgba(61,94,255,0) 62%)}
+.bg .g2{background:radial-gradient(circle,rgba(255,91,58,.13),rgba(255,91,58,0) 60%)}
+.bg .g3{background:radial-gradient(circle,rgba(24,36,92,.95),rgba(24,36,92,0) 70%)}
 /* 12 px nuqtali setka, oq 15% — ilovadagi matritsa tili. Chetga qarab so'nadi. */
 .dots{position:absolute;inset:0;
-  background-image:radial-gradient(rgba(255,255,255,.15) 1.3px,transparent 1.7px);
+  background-image:radial-gradient(rgba(255,255,255,.13) 1.3px,transparent 1.7px);
   background-size:12px 12px;background-position:6px 6px;
   -webkit-mask-image:radial-gradient(ellipse 70% 70% at 70% 45%,#000 20%,transparent 85%);}
 
@@ -88,25 +90,25 @@ body.one{background:transparent}
 .chips{display:flex;flex-wrap:wrap}
 .chip{display:inline-flex;align-items:center;font-weight:800;color:var(--snow);
   background:rgba(244,242,255,.08);border:1px solid rgba(244,242,255,.12);border-radius:999px}
-.chip i{display:inline-block;border-radius:50%;background:var(--gold);flex:none}
-.url{font-weight:700;color:var(--gold);letter-spacing:.01em}
+.chip i{display:inline-block;border-radius:50%;background:var(--coral-d);flex:none}
+.url{font-weight:700;color:var(--coral-d);letter-spacing:.01em}
 
 /* ── Kartalar to'plami (1000×800 ichki koordinata) ──────────────────── */
 .cluster{position:absolute;width:1000px;height:800px;transform-origin:0 0;z-index:2}
 .card{position:absolute;border-radius:36px;box-shadow:0 40px 80px rgba(0,0,0,.45),0 8px 20px rgba(0,0,0,.25)}
 .card.matrix{background:#fff;padding:26px}
 .card.matrix img{display:block;width:100%;height:auto}
-.card.medal{background:linear-gradient(160deg,#262239,#1a1729);border:1px solid rgba(244,242,255,.10)}
+.card.medal{background:linear-gradient(160deg,#1E2858,#141C44);border:1px solid rgba(255,255,255,.10)}
 .phone{position:absolute;border-radius:54px;background:#0b0a10;padding:12px;
   box-shadow:0 50px 100px rgba(0,0,0,.55),0 0 0 2px rgba(244,242,255,.10) inset}
-.phone .scr{width:100%;height:100%;border-radius:44px;overflow:hidden;background:#1E1B2E}
+.phone .scr{width:100%;height:100%;border-radius:44px;overflow:hidden;background:#18214A}
 .phone img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
 
 /* ── Kun savoli ───────────────────────────────────────────────────── */
 .dq{position:absolute;inset:0;display:flex;flex-direction:column}
 .dq>*{flex:none}
 .dq .top{display:flex;align-items:center;justify-content:space-between}
-.dq .kick{font-weight:800;color:var(--gold);letter-spacing:.02em;text-transform:uppercase}
+.dq .kick{font-weight:800;color:var(--coral-d);letter-spacing:.02em;text-transform:uppercase}
 .dq .q{font-weight:800;letter-spacing:-.02em;line-height:1.18;color:var(--snow)}
 .dq .stim{background:#fff;border-radius:32px;display:flex;align-items:center;justify-content:center;color:var(--ink);flex:1 1 0;min-height:0}
 .dq .stim img{display:block;height:100%;width:100%;object-fit:contain}
@@ -144,9 +146,10 @@ body.one{background:transparent}
 <section data-id="iquest-mark"                 data-group="logo" data-tpl="logo" data-v="mark:dark"></section>
 <section data-id="iquest-mark-mono-white"      data-group="logo" data-tpl="logo" data-v="mark:white"></section>
 <section data-id="iquest-mark-mono-black"      data-group="logo" data-tpl="logo" data-v="mark:black"></section>
-<section data-id="iquest-monogram-gold"        data-group="logo" data-tpl="logo" data-v="monogram:gold"></section>
-<section data-id="iquest-monogram-white"       data-group="logo" data-tpl="logo" data-v="monogram:white"></section>
-<section data-id="iquest-monogram-black"       data-group="logo" data-tpl="logo" data-v="monogram:black"></section>
+<section data-id="iquest-glyph-light"          data-group="logo" data-tpl="logo" data-v="glyph:light"></section>
+<section data-id="iquest-glyph-dark"           data-group="logo" data-tpl="logo" data-v="glyph:dark"></section>
+<section data-id="iquest-glyph-mono-white"     data-group="logo" data-tpl="logo" data-v="glyph:white"></section>
+<section data-id="iquest-glyph-mono-black"     data-group="logo" data-tpl="logo" data-v="glyph:black"></section>
 
 <!-- Google Play -->
 <section data-id="icon"            data-group="play" data-w="512"  data-h="512"  data-fmt="png"  data-tpl="icon-only"></section>
@@ -157,7 +160,7 @@ body.one{background:transparent}
 <section data-id="post"       data-group="instagram" data-w="1080" data-h="1080" data-fmt="png" data-tpl="square" data-langs="uz,ru,en" data-safe="80,80,920,920"></section>
 <section data-id="portrait"   data-group="instagram" data-w="1080" data-h="1350" data-fmt="png" data-tpl="portrait" data-langs="uz,ru,en" data-safe="80,90,920,1170"></section>
 <section data-id="story"      data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="story" data-langs="uz,ru,en" data-safe="90,250,900,1330"></section>
-<section data-id="highlight-test"   data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="matrix"></section>
+<section data-id="highlight-test"   data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="brand"></section>
 <section data-id="highlight-mashq"  data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="dumbbell"></section>
 <section data-id="highlight-oyinlar" data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="puzzle"></section>
 <section data-id="highlight-yangiliklar" data-group="instagram" data-w="1080" data-h="1920" data-fmt="png" data-tpl="highlight" data-glyph="sparkle"></section>
@@ -200,7 +203,8 @@ body.one{background:transparent}
 <section data-id="icon-bg"     data-group="_icons" data-w="1080" data-h="1080" data-fmt="png" data-tpl="adaptive" data-layer="bg"></section>
 <section data-id="icon-mono"   data-group="_icons" data-w="1080" data-h="1080" data-fmt="png-alpha" data-tpl="adaptive" data-layer="mono"></section>
 <section data-id="stat"        data-group="_icons" data-w="960"  data-h="960"  data-fmt="png-alpha" data-tpl="stat"></section>
-<section data-id="splash"      data-group="_icons" data-w="2732" data-h="2732" data-fmt="png" data-tpl="splash"></section>
+<section data-id="splash"      data-group="_icons" data-w="2732" data-h="2732" data-fmt="png" data-tpl="splash" data-mode="light"></section>
+<section data-id="splash-dark" data-group="_icons" data-w="2732" data-h="2732" data-fmt="png" data-tpl="splash" data-mode="dark"></section>
 
 <script src="../src/iq/rng.js"></script>
 <script src="../src/iq/index.js"></script>
@@ -228,48 +232,61 @@ const T = {
         next: 'Answer on the next slide', why: 'Why' },
 };
 
-const C = { night: '#14121F', indigo: '#2B2270', gold: '#FFA726', goldDeep: '#E8890C',
-            blue: '#3D5EFF', purple: '#8552F0', paper: '#F5F3FF', ink: '#1C1B29',
-            snow: '#F4F2FF', white: '#FFFFFF', black: '#000000' };
+const C = { navy: '#10183A', night: '#0C1230', coral: '#FF5B3A', coralDark: '#FF6A4B',
+            blue: '#3D5EFF', paper: '#F5F3FF', ink: '#10183A', snow: '#FFFFFF',
+            white: '#FFFFFF', black: '#000000' };
 
 /* Banner kartalari uchun QAT'IY urug'lar: bir xil urug' → aynan bir xil
    haqiqiy savol (generator deterministik, CONTRACT §2). */
 const HERO_MATRIX = { type: 'matrix', seed: 31415, level: 4 };
 
-/* ═══════════════════════════ BELGI (§12.1) ════════════════════════════ */
-function monogram(color, small) {
-  return `<rect x="8" y="21" width="16" height="58" rx="3" fill="${color}"/>` +
-    `<circle cx="63" cy="50" r="21" fill="none" stroke="${color}" stroke-width="${small ? 18 : 16}"/>` +
-    `<path d="M60 64L92 86" fill="none" stroke="${color}" stroke-width="${small ? 13 : 15}" stroke-linecap="round"/>`;
+/* ═══════════════════════════ BELGI (§12.1) ════════════════════════════
+   «Matritsa»: 3×3, kvadrat → doira diagonal bo'ylab, oxirgisi javob.
+   512 setka (manba: tasdiqlangan concept-01.svg, proporsiyalar aynan). */
+const MK = { s: 72, g: 28, o: 120, box: [118.25, 118.25, 395.5, 395.5] };
+/* fg — kataklar, acc — javob katagi rangi (bir rangli variantda fg bilan bir xil). */
+function cells(fg, acc) {
+  let out = '';
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+    const x = MK.o + j * (MK.s + MK.g), y = MK.o + i * (MK.s + MK.g);
+    const k = (i + j) / 4, rr = 4 + k * (MK.s / 2 - 4), grow = k * 3.5;
+    out += `<rect x="${r2(x - grow)}" y="${r2(y - grow)}" width="${r2(MK.s + 2 * grow)}" height="${r2(MK.s + 2 * grow)}" rx="${r2(rr + grow)}" fill="${i === 2 && j === 2 ? acc : fg}"/>`;
+  }
+  return out;
 }
-/* Monogramma 100 setkada; plitkada 0.6 masshtab, (20,18) — I va halqa
-   massasi markazda, dum pastga tortgani uchun 2 birlik yuqorida. */
-const TILE_R = 22;
+/* Glifni markazi (cx, cy) ga, eni w ga joylash. */
+function cellsAt(cx, cy, w, fg, acc) {
+  const bw = MK.box[2] - MK.box[0], k = w / bw, gx = (MK.box[0] + MK.box[2]) / 2, gy = (MK.box[1] + MK.box[3]) / 2;
+  return `<g transform="translate(${r2(cx - gx * k)} ${r2(cy - gy * k)}) scale(${r2(k * 1e5) / 1e5})">${cells(fg, acc)}</g>`;
+}
+/* Plitka: 512 setkadagi belgining o'zi (glif 54%). Burchak radiusi 22.5%.
+   mode: dark | light — rangli; white | black — bir rangli, glif o'yilgan. */
+const TILE_R = 0.225;
 let uid = 0;
 function tile(x, y, size, mode) {
-  // mode: dark | light (gradient + oltin), white | black (bir rangli, belgi o'yilgan)
-  const s = size / 100, id = 'q' + (++uid);
-  const inner = `<g transform="translate(${x + 20 * s} ${y + 18 * s}) scale(${0.6 * s})">`;
+  const k = size / 512, rx = r2(size * TILE_R), id = 't' + (++uid);
+  const inner = fg => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${r2(k * 1e5) / 1e5})">${fg}</g>`;
   if (mode === 'white' || mode === 'black') {
     const col = mode === 'white' ? C.white : C.black;
-    return `<defs><mask id="${id}m" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${size}" height="${size}">` +
-      `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="#fff"/>${inner}${monogram('#000')}</g></mask></defs>` +
-      `<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${TILE_R * s}" fill="${col}" mask="url(#${id}m)"/>`;
+    return `<defs><mask id="${id}m" maskUnits="userSpaceOnUse" x="${r2(x)}" y="${r2(y)}" width="${r2(size)}" height="${r2(size)}">` +
+      `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(size)}" height="${r2(size)}" fill="#fff"/>${inner(cells('#000', '#000'))}</mask></defs>` +
+      `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(size)}" height="${r2(size)}" rx="${rx}" fill="${col}" mask="url(#${id}m)"/>`;
   }
   const edge = mode === 'dark'
-    ? `<rect x="${x + 0.4 * s}" y="${y + 0.4 * s}" width="${size - 0.8 * s}" height="${size - 0.8 * s}" rx="${(TILE_R - 0.4) * s}" fill="none" stroke="#F4F2FF" stroke-opacity=".14" stroke-width="${0.8 * s}"/>`
+    ? `<rect x="${r2(x + .004 * size)}" y="${r2(y + .004 * size)}" width="${r2(size * .992)}" height="${r2(size * .992)}" rx="${r2(rx - .004 * size)}" fill="none" stroke="#FFFFFF" stroke-opacity=".14" stroke-width="${r2(.008 * size)}"/>`
     : '';
-  return `<defs><linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs>` +
-    `<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${TILE_R * s}" fill="url(#${id}g)"/>${edge}` +
-    `${inner}${monogram(C.gold)}</g>`;
+  return `<rect x="${r2(x)}" y="${r2(y)}" width="${r2(size)}" height="${r2(size)}" rx="${rx}" fill="${C.navy}"/>${edge}${inner(cells(C.white, C.coral))}`;
 }
+/* Rejimlar bo'yicha glif ranglari (lokaplar, plitkasiz). */
+const MARK_COL = { dark: [C.white, C.coralDark], light: [C.navy, C.coral], white: [C.white, C.white], black: [C.black, C.black] };
 
 /* ═══════════════ SO'Z BELGISI: woff → kontur (shriftsiz SVG) ═══════════
    WOFF 1.0 = sfnt jadvallari, har biri zlib bilan siqilgan. TrueType
    glyf konturlari (kvadratik Bezye) SVG yo'liga aylantiriladi. Harflar
    orasidagi masofa (kerning + tracking) brauzerning o'zidan o'lchanadi —
-   ya'ni natija ekrandagi matn bilan aynan bir xil. */
-const WM_TEXT = 'IQuest', WM_TRACK = -0.02;
+   ya'ni natija ekrandagi matn bilan aynan bir xil. Space Grotesk 700,
+   tracking −0.01em, bitta rang (concept-01). */
+const WM_TEXT = 'IQuest', WM_TRACK = -0.01;
 let FONT = null, WM = null;
 async function inflate(u8) {
   const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate'));
@@ -398,32 +415,34 @@ function wordmark(x, baseline, capH, colIQ, colRest) {
   return { svg: `<path fill="${colIQ}" d="${d(0, 2)}"/><path fill="${colRest}" d="${d(2)}"/>`,
            w: (WM.x1 - WM.x0) * s, top: baseline - WM.y1 * s, bottom: baseline - WM.y0 * s };
 }
-const WM_COL = { dark: [C.gold, C.snow], light: [C.goldDeep, C.ink], white: [C.white, C.white], black: [C.black, C.black] };
+const WM_COL = { dark: [C.white, C.white], light: [C.navy, C.navy], white: [C.white, C.white], black: [C.black, C.black] };
 
-/* ═══════════════ LOKAPLAR (§12.1): bo'sh joy har tomondan 8 birlik ═════ */
-const PAD = 8;
-function logo(kind, mode) {
+/* ═══════════════ LOKAPLAR (§12.1) ══════════════════════════════════════
+   Concept-01 qoidasi: belgi balandligi = 1.55 × bosh harf (C), oraliq
+   0.62 C, bo'sh joy har tomondan 0.9 C (SVG fayllarda shu zaxira bor).
+   Belgi o'lchami: plitka uchun 100 birlik, glif uchun 100 birlik eni. */
+const CAP = 40;
+function logo(kind, mode, tight) {
   let body, W, H;
-  if (kind === 'mark') {
-    W = H = 100 + 2 * PAD; body = tile(PAD, PAD, 100, mode);
-  } else if (kind === 'monogram') {
-    // Belgi o'zi (plitkasiz): ink chegarasi x8..99.5, y21..93.5
-    const col = mode === 'gold' ? C.gold : mode === 'white' ? C.white : C.black;
-    W = 91.5 + 2 * PAD; H = 72.5 + 2 * PAD;
-    body = `<g transform="translate(${PAD - 8} ${PAD - 21})">${monogram(col)}</g>`;
+  const pad = tight ? 0 : 0.9 * CAP;   // tight — bannerlar ichida (bo'sh joyni maket beradi)
+  if (kind === 'mark') {                 // plitka
+    const t = 100, pad2 = 0.12 * t;
+    W = H = t + 2 * pad2; body = tile(pad2, pad2, t, mode === 'dark' ? 'light' : mode);  // chegara chizig'i faqat watermark'da
+  } else if (kind === 'glyph') {        // plitkasiz glif; bo'sh joy = 1 katak oralig'i
+    const w = 100, cp = w * 72 / 277.25;   // bo'sh joy = bitta katak
+    W = H = w + 2 * cp; body = cellsAt(W / 2, H / 2, w, ...MARK_COL[mode]);
   } else if (kind === 'horizontal') {
-    // belgi + 0.4×belgi balandligi oraliq + so'z belgisi (bosh harf = 0.44 belgi)
-    const cap = 44, base = PAD + 50 + cap / 2 + 2;
-    const wm = wordmark(PAD + 100 + 40, base, cap, ...WM_COL[mode]);
-    W = PAD + 140 + wm.w + PAD; H = 100 + 2 * PAD;
-    body = tile(PAD, PAD, 100, mode) + wm.svg;
-  } else { // stacked
-    const cap = 40, wm0 = wordmark(0, 0, cap, '#000', '#000');
-    W = Math.max(100, wm0.w) + 2 * PAD;
-    const base = PAD + 100 + 30 + cap;
-    const wm = wordmark((W - wm0.w) / 2, base, cap, ...WM_COL[mode]);
-    H = Math.ceil(wm.bottom) + PAD;
-    body = tile((W - 100) / 2, PAD, 100, mode) + wm.svg;
+    const mh = 1.55 * CAP, gap = 0.62 * CAP, mid = pad + Math.max(mh, CAP) / 2;
+    const wm = wordmark(pad + mh + gap, mid + CAP / 2, CAP, ...WM_COL[mode]);
+    W = pad + mh + gap + wm.w + pad; H = Math.max(mh, CAP) + 2 * pad;
+    body = cellsAt(pad + mh / 2, mid, mh, ...MARK_COL[mode]) + wm.svg;
+  } else {                               // stacked
+    const mh = 2.2 * CAP, gap = 0.7 * CAP, wm0 = wordmark(0, 0, CAP, '#000', '#000');
+    W = Math.max(mh, wm0.w) + 2 * pad;
+    const base = pad + mh + gap + CAP;
+    const wm = wordmark((W - wm0.w) / 2, base, CAP, ...WM_COL[mode]);
+    H = Math.ceil(wm.bottom) + pad;
+    body = cellsAt(W / 2, pad + mh / 2, mh, ...MARK_COL[mode]) + wm.svg;
   }
   W = r2(W); H = r2(H);
   return { w: W, h: H, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W * 4}" height="${H * 4}">${body}</svg>` };
@@ -457,7 +476,7 @@ function medalSVG(size) {
   const hex = (r, cx, cy) => Array.from({ length: 6 }, (_, i) => {
     const a = Math.PI / 180 * (60 * i - 90); return `${r2(cx + r * Math.cos(a))},${r2(cy + r * Math.sin(a))}`; }).join(' ');
   return `<svg viewBox="0 0 280 220" width="${size}" height="${size * 220 / 280}" style="display:block">
-    <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9C7BFF"/><stop offset="1" stop-color="#6B3FE0"/></linearGradient>
+    <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B78FF"/><stop offset="1" stop-color="#2F4BE0"/></linearGradient>
     <linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC45C"/><stop offset="1" stop-color="#FFA726"/></linearGradient></defs>
     <polygon points="${hex(78, 112, 110)}" fill="#E0A100"/>
     <polygon points="${hex(66, 112, 110)}" fill="url(#mg)"/>
@@ -490,7 +509,7 @@ function bgHTML(w, h, glow = [0.72, 0.4]) {
   </div><div class="dots"></div>`;
 }
 function lockupImg(height, mode = 'dark', kind = 'horizontal') {
-  const L = logo(kind, mode);
+  const L = logo(kind, mode, true);
   const k = height / L.h;
   return `<div class="lock" style="width:${r2(L.w * k)}px;height:${height}px">${L.svg.replace(/width="[^"]+" height="[^"]+"/, `width="${r2(L.w * k)}" height="${height}"`)}</div>`;
 }
@@ -500,7 +519,7 @@ function textBlock(lang, s, o = {}) {
   const chips = o.chips === false ? '' : `<div class="chips" style="gap:${s * .16}px;margin-top:${s * .6}px;flex-wrap:nowrap">${t.chips.map(c =>
       `<span class="chip" style="font-size:${s * .25}px;padding:${s * .14}px ${s * .24}px;gap:${s * .12}px;white-space:nowrap"><i style="width:${s * .1}px;height:${s * .1}px"></i>${c}</span>`).join('')}</div>`;
   const url = SITE.url ? `<div class="url" style="font-size:${s * .3}px;margin-top:${s * .5}px">${SITE.url}</div>` : '';
-  return `<div class="lock-wrap" style="margin-left:${-s * .1}px">${lockupImg(o.lock || s * 1.35)}</div>
+  return `<div class="lock-wrap">${lockupImg(o.lock || s * .9)}</div>
     <div class="tag" style="font-size:${s}px;margin-top:${s * (o.gap || .55)}px;max-width:${o.maxw || 99999}px">${t.tag}</div>
     ${o.sub === false ? '' : `<div class="sub" style="font-size:${s * .38}px;margin-top:${s * .3}px">${t.sub}</div>`}
     ${chips}${url}`;
@@ -511,46 +530,53 @@ const TPL = {
   logo(sec) {
     const [kind, mode] = sec.dataset.v.split(':');
     const L = logo(kind, mode);
-    const scale = kind === 'mark' || kind === 'monogram' ? 1024 / Math.max(L.w, L.h) : 1600 / L.w;
+    const scale = kind === 'mark' || kind === 'glyph' ? 1024 / Math.max(L.w, L.h) : 1600 / L.w;
     const W = Math.round(L.w * scale), H = Math.round(L.h * scale);
     sec.dataset.w = W; sec.dataset.h = H; sec.dataset.fmt = 'png-alpha';
     sec.innerHTML = L.svg.replace(/width="[^"]+" height="[^"]+"/, `width="${W}" height="${H}" style="display:block"`);
   },
+  /* Play 512 va eski ikonka manbasi: to'liq kvadrat (Play burchakni o'zi yumaloqlaydi). */
   'icon-only'(sec, w) {
-    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs>
-      <rect width="100" height="100" fill="url(#ig)"/><g transform="translate(20 18) scale(.6)">${monogram(C.gold)}</g></svg>`;
+    sec.innerHTML = `<svg viewBox="0 0 512 512" width="${w}" height="${w}" style="display:block"><rect width="512" height="512" fill="${C.navy}"/>${cells(C.white, C.coral)}</svg>`;
   },
   'icon-legacy'(sec, w) {  // API 24–25: yumaloq kvadrat, chetda 4% zaxira
     sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block">${tile(4, 4, 92, 'light')}</svg>`;
   },
   'icon-round'(sec, w) {
-    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs>
-      <circle cx="50" cy="50" r="46" fill="url(#rg)"/><g transform="translate(${50 - 50 * .56} ${50 - 50 * .56 - 1.1}) scale(.56)">${monogram(C.gold)}</g></svg>`;
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><circle cx="50" cy="50" r="46" fill="${C.navy}"/>${cellsAt(50, 50, 46, C.white, C.coral)}</svg>`;
   },
   /* Adaptiv ikonka: 108 birlikli qatlam, ko'rinadigan qism markazdagi 72,
-     xavfsiz zona 66 diametrli doira. Belgi 0.432 masshtabda — eski
-     ikonkadagi (ko'rinadigan maydonning 60%) bilan bir xil, uzoq nuqtasi
-     markazdan 27.6 birlik (< 33). Monoxrom qatlam aynan shu geometriya. */
+     xavfsiz zona 66 diametrli doira. Orqa qatlam — tekis #10183A; old —
+     glif, plitkadagi proporsiyada (512 → 72): eni 39, eng uzoq burchak
+     markazdan 27.6 (< 33) — doira, squircle, tomchi niqoblarida kesilmaydi.
+     Monoxrom — shu glif bir rangda (javob katagi ham to'la doira). */
   adaptive(sec, w) {
-    const k = .432, ox = 54 - 50 * k, oy = 54 - 50 * k - 1.44, layer = sec.dataset.layer;
-    const mono = `<g transform="translate(${ox} ${oy}) scale(${k})">${monogram(layer === 'mono' ? '#fff' : C.gold)}</g>`;
-    const bg = `<defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient></defs><rect width="108" height="108" fill="url(#ag)"/>`;
-    sec.innerHTML = `<svg viewBox="0 0 108 108" width="${w}" height="${w}" style="display:block">${layer === 'bg' ? bg : mono}</svg>`;
+    const layer = sec.dataset.layer, gw = 277.25 * 72 / 512;
+    const body = layer === 'bg' ? `<rect width="108" height="108" fill="${C.navy}"/>`
+      : layer === 'mono' ? cellsAt(54, 54, gw, '#fff', '#fff') : cellsAt(54, 54, gw, C.white, C.coral);
+    sec.innerHTML = `<svg viewBox="0 0 108 108" width="${w}" height="${w}" style="display:block">${body}</svg>`;
   },
-  /* Bildirishnoma ikonkasi: 24dp, jonli maydon 20×20, oq siluet, kichik variant. */
+  /* Bildirishnoma ikonkasi: 24dp, jonli maydon 20×20, oq siluet. Kichik
+     o'lchamda o'qilishi uchun soddalashtirilgan: 8 ta kvadrat (bir xil
+     yumshoq burchak) + to'la doira — javob. Oraliq nisbatan kengroq. */
   stat(sec, w) {
-    const k = 20 / 91.5, ox = 12 - 53.75 * k, oy = 12 - 57.25 * k;
-    sec.innerHTML = `<svg viewBox="0 0 24 24" width="${w}" height="${w}" style="display:block"><g transform="translate(${r2(ox)} ${r2(oy)}) scale(${r2(k * 1e4) / 1e4})">${monogram('#fff', true)}</g></svg>`;
+    let d = '';
+    // Butun dp setkasi: katak 5, oraliq 2, chekka 2 → mdpi/xhdpi/xxxhdpi da piksel-aniq.
+    const c = 5, g = 2, o = 2;  // 0.5dp chapga — xxhdpi (3×) da ham butun piksel
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+      const x = o + j * (c + g), y = o + i * (c + g), last = i === 2 && j === 2;
+      d += `<rect x="${r2(x)}" y="${r2(y)}" width="${c}" height="${c}" rx="${last ? c / 2 : 1.1}" fill="#fff"/>`;
+    }
+    sec.innerHTML = `<svg viewBox="0 0 24 24" width="${w}" height="${w}" style="display:block">${d}</svg>`;
   },
+  /* Splash: yorug' (oq fon, to'q ko'k glif) va qorong'i (#0C1230, oq glif). */
   splash(sec, w) {
-    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><rect width="100" height="100" fill="${C.night}"/><g transform="translate(41 40) scale(.18)">${monogram(C.gold)}</g></svg>`;
+    const dark = sec.dataset.mode === 'dark';
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><rect width="100" height="100" fill="${dark ? C.night : C.white}"/>${cellsAt(50, 50, 15, ...(dark ? [C.white, C.coralDark] : [C.navy, C.coral]))}</svg>`;
   },
-  avatar(sec, w) {  // doira ichida xavfsiz: belgi eni 56%
-    const k = .56 * 100 / 91.5, ox = 50 - 53.75 * k, oy = 50 - 50 * k;
-    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.indigo}"/><stop offset="1" stop-color="${C.night}"/></linearGradient>
-      <radialGradient id="vr" cx=".3" cy=".22" r=".7"><stop offset="0" stop-color="${C.blue}" stop-opacity=".35"/><stop offset="1" stop-color="${C.blue}" stop-opacity="0"/></radialGradient></defs>
-      <rect width="100" height="100" fill="url(#vg)"/><rect width="100" height="100" fill="url(#vr)"/>
-      <g transform="translate(${r2(ox)} ${r2(oy)}) scale(${r2(k * 1e4) / 1e4})">${monogram(C.gold, w <= 32)}</g></svg>`;
+  avatar(sec, w) {  // doira ichida xavfsiz: glif eni 52%
+    sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block"><defs><radialGradient id="vr" cx=".3" cy=".22" r=".8"><stop offset="0" stop-color="#1C2A66"/><stop offset="1" stop-color="${C.navy}"/></radialGradient></defs>
+      <rect width="100" height="100" fill="url(#vr)"/>${cellsAt(50, 50, 52, C.white, C.coral)}</svg>`;
   },
   watermark(sec, w) {
     sec.innerHTML = `<svg viewBox="0 0 100 100" width="${w}" height="${w}" style="display:block">${tile(4, 4, 92, 'dark')}</svg>`;
@@ -558,7 +584,7 @@ const TPL = {
   highlight(sec, w, h) {  // glif markazdagi 420 px doira ichida
     const g = sec.dataset.glyph;
     sec.innerHTML = bgHTML(w, h, [.5, .5]) + `<div style="position:absolute;left:${w / 2 - 210}px;top:${h / 2 - 210}px;width:420px;height:420px;border-radius:50%;
-      background:radial-gradient(circle at 35% 30%,#3a2f8f,#241d5c 70%);box-shadow:0 0 0 2px rgba(255,167,38,.35) inset;display:grid;place-items:center">${glyph(g, 220, C.gold, 1.9)}</div>`;
+      background:radial-gradient(circle at 35% 30%,#22307A,#141D4A 70%);box-shadow:0 0 0 3px rgba(255,106,75,.55) inset;display:grid;place-items:center">${g === 'brand' ? `<svg viewBox="0 0 100 100" width="210" height="210">${cellsAt(50, 50, 84, C.white, C.coralDark)}</svg>` : glyph(g, 210, '#FFFFFF', 1.9)}</div>`;
   },
   wide(sec, w, h, lang) {
     const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
@@ -578,7 +604,7 @@ const TPL = {
   mini(sec, w, h, lang) {
     const [sx, sy, sw, sh] = sec.dataset.safe.split(',').map(Number);
     sec.innerHTML = bgHTML(w, h) +
-      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .56}px;justify-content:center">${textBlock(lang, 34, { chips: false, sub: false, lock: 42 })}</div>` +
+      `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .56}px;justify-content:center">${textBlock(lang, 34, { chips: false, sub: false, lock: 30 })}</div>` +
       cluster({ x: sx + sw * .5, y: sy - 20, w: sw * .56, h: sh + 40 }, lang, { ax: 1 });
   },
   square(sec, w, h, lang) {
@@ -612,7 +638,7 @@ const TPL = {
     const it = heroMatrix();
     sec.innerHTML = bgHTML(w, h, [.7, .5]) +
       `<div class="txt" style="left:${sx}px;top:${sy}px;height:${sh}px;width:${sw * .5}px;justify-content:space-between">
-         ${lockupImg(64)}<div class="tag" style="font-size:78px;line-height:1.05">${T[lang].thumb}</div><div></div></div>
+         ${lockupImg(46)}<div class="tag" style="font-size:78px;line-height:1.05">${T[lang].thumb}</div><div></div></div>
        <div class="card matrix" style="position:absolute;left:${sx + sw - sh + 50}px;top:${sy + 30}px;width:${sh - 60}px;transform:rotate(-3deg)"><img src="${IQ.svgSrc(it.stimulus.svg)}" alt=""></div>`;
   },
   daily(sec, w, h, lang) { DAILY.render(sec, w, h, lang); },
@@ -651,11 +677,11 @@ const DAILY = {
       ? `<img src="${IQ.svgSrc(item.stimulus.svg)}" alt="">`
       : `<div style="font:800 ${tall ? 64 : 56}px 'Space Grotesk',Manrope;letter-spacing:-.01em;padding:0 32px;text-align:center">${tx(item.stimulus)}</div>`;
     sec.innerHTML = bgHTML(w, h, [.5, .5]) + `<div class="dq" style="height:${h}px;padding:${tall ? '250px' : pad + 'px'} ${pad}px ${tall ? '340px' : pad + 'px'};gap:${tall ? 36 : 26}px">
-      <div class="top">${lockupImg(tall ? 64 : 54)}<span class="kick" style="font-size:${tall ? 32 : 28}px">${ans ? t.answer : t.daily} · ${date}</span></div>
+      <div class="top">${lockupImg(tall ? 44 : 38)}<span class="kick" style="font-size:${tall ? 32 : 28}px">${ans ? t.answer : t.daily} · ${date}</span></div>
       <div class="q" style="font-size:${tall ? 50 : 42}px">${tx(item.prompt)}</div>
       <div class="stim" style="padding:24px">${stim}</div>
       <div class="opts" style="grid-template-columns:repeat(${cols},${cell}px);gap:${gap}px">${item.options.map(opt).join('')}</div>
-      ${ans ? `<div class="exp" style="font-size:${tall ? 28 : 26}px;padding:${tall ? 24 : 20}px ${tall ? 28 : 26}px"><b style="color:var(--gold)">${t.why}: </b>${tx(item.explain)}</div>`
+      ${ans ? `<div class="exp" style="font-size:${tall ? 28 : 26}px;padding:${tall ? 24 : 20}px ${tall ? 28 : 26}px"><b style="color:var(--coral-d)">${t.why}: </b>${tx(item.explain)}</div>`
             : `<div class="foot" style="font-size:${tall ? 30 : 24}px"><span>${t.next} →</span></div>`}
     </div>`;
   },

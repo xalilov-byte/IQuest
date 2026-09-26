@@ -208,10 +208,10 @@ for (const a of list) {
       const m0 = await sharp(buf).metadata();
       if (m0.width !== a.w || m0.height !== a.h) throw new Error(`oʻlcham ${m0.width}×${m0.height}, kutilgan ${a.w}×${a.h}`);
       let ext = 'png';
-      if (a.fmt === 'jpg') { buf = await sharp(buf).flatten({ background: '#14121F' }).jpeg({ quality: 90, mozjpeg: true }).toBuffer(); ext = 'jpg'; }
+      if (a.fmt === 'jpg') { buf = await sharp(buf).flatten({ background: '#0C1230' }).jpeg({ quality: 90, mozjpeg: true }).toBuffer(); ext = 'jpg'; }
       else if (alpha) buf = await sharp(buf).png({ compressionLevel: 9 }).toBuffer();
-      else if (a.group === 'play' && a.id === 'icon') buf = await sharp(buf).flatten({ background: '#14121F' }).ensureAlpha().png({ compressionLevel: 9 }).toBuffer(); // Play: 32-bit PNG
-      else buf = await sharp(buf).flatten({ background: '#14121F' }).png({ compressionLevel: 9 }).toBuffer();
+      else if (a.group === 'play' && a.id === 'icon') buf = await sharp(buf).flatten({ background: '#10183A' }).ensureAlpha().png({ compressionLevel: 9 }).toBuffer(); // Play: 32-bit PNG
+      else buf = await sharp(buf).flatten({ background: '#0C1230' }).png({ compressionLevel: 9 }).toBuffer();
       /* 3. Tekshiruv: sarlavhadan aniq o'lcham; alfa taqiqlangan joyda alfa yo'q */
       const m = await sharp(buf).metadata();
       if (m.width !== a.w || m.height !== a.h) throw new Error('yozilgan fayl oʻlchami notoʻgʻri');
@@ -228,6 +228,21 @@ for (const a of list) {
 if (!DAILY) {
   const og = join(OUT, 'web', 'og-1200x630-uz.jpg');
   if (existsSync(og) && (!ONLY || ONLY.some(o => /og|web/.test(o)))) copyFileSync(og, join(ROOT, 'resources', 'og.jpg'));
+}
+
+/* To'liq ishga tushirishda eskirgan fayllar (masalan, eski belgi nomlari)
+   o'chiriladi: resources/brand faqat manba yasagan narsani saqlaydi.
+   _shots, daily, MANIFEST.json va PREVIEW.jpg tegilmaydi. */
+if (!DAILY && !ONLY && !errors.length) {
+  const made = new Set(manifest.map(x => x.file));
+  for (const g of readdirSync(OUT)) {
+    const dir = join(OUT, g);
+    if (g.startsWith('_') || g === 'daily' || !statSync(dir).isDirectory()) continue;
+    for (const f of readdirSync(dir)) {
+      if (g === 'play' && f.startsWith('screenshot-')) continue;          // mkplay yozadi
+      if (!made.has(`${g}/${f}`)) { rmSync(join(dir, f)); console.log('  − eskirgan: ' + g + '/' + f); }
+    }
+  }
 }
 
 /* 5. MANIFEST.json (daily bundan tashqari — u kunlik kontent) */
@@ -266,7 +281,7 @@ async function contactSheet(files, out) {
     const src = join(OUT, f.file);
     const k = Math.min(COLW / f.w, 360 / f.h);
     const w = Math.max(1, Math.round(f.w * k)), h = Math.max(1, Math.round(f.h * k));
-    const bg = /light|black/.test(f.file) ? '#F5F3FF' : '#2a2638';
+    const bg = /light|black/.test(f.file) ? '#FFFFFF' : '#1B2550';
     const img = await sharp(src).resize(w, h).flatten({ background: bg }).png().toBuffer();
     tiles.push({ img, w, h, label: f.file });
   }
@@ -285,6 +300,6 @@ async function contactSheet(files, out) {
     });
     y += rowH[ri] + GAP;
   });
-  await sharp({ create: { width: W, height: H, channels: 3, background: '#14121F' } })
+  await sharp({ create: { width: W, height: H, channels: 3, background: '#0C1230' } })
     .composite(comps).jpeg({ quality: 82, mozjpeg: true }).toFile(out);
 }

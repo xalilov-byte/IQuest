@@ -124,7 +124,7 @@ har doim «IQ» yoki «natija» deb ataladi.
 11. **Bildirishnomalar**: yangi oʻrnatishda standart holati oʻchiq. Ruxsat faqat tugma bosilganda soʻraladi. Kuniga koʻpi bilan 2 ta, faqat noaniq alarm ishlatiladi, ilovaning oʻz kichik ikonkasi bor.
 12. **Main.dc.html yagona orkestrator.** Hamma mantiq kichik modullarda (`settings`, `profile`, `wallet`, `badges`, `league`, `catalog`, `avatars`, `icons`, `art`). Modullar bir-birining holatiga tegmaydi.
 13. **Runtimeʼga matn va fayl kiritish qoʻshiladi**: delegatsiyalangan `input`/`change` hodisalari, «boshqarilmaydigan» inputlar. Bu UI paketining birinchi ishi.
-14. **Brend**: mavjud IQ monogrammasi saqlanadi. Android 13 mavzuli ikonkasi, bildirishnoma ikonkasi va barcha ijtimoiy tarmoq oʻlchamlari bitta `tools/brand.html` manbasidan qayta yasaladi. Play ekran suratlari **1080×1920** ga oʻtadi (hozirgi 1170×2532 Playʼning 2:1 chegarasidan oshadi).
+14. **Brend**: «Matritsa» belgisi (egasi tanlagan, 2026-09-26). Android 13 mavzuli ikonkasi, bildirishnoma ikonkasi va barcha ijtimoiy tarmoq oʻlchamlari bitta `tools/brand.html` manbasidan qayta yasaladi. Play ekran suratlari **1080×1920** ga oʻtadi (hozirgi 1170×2532 Playʼning 2:1 chegarasidan oshadi).
 15. **Hozircha shu** (egasining «hozirchaga shu boʻladi» qarori): v1.1 da streak himoyasi, kunlik maqsad tanlovi, inbox, tip-varaqlar (faqat bitta test tanishtiruvi bor), kamera, ism yonidagi emblema va pulsiz sotilmaydigan ranglar **yoʻq**. Ular kerak boʻlsa, avval navigatsiya daraxtida uyi belgilanadi.
 
 ---
@@ -1529,9 +1529,9 @@ week_scores(user_id, week, ball_verified)            -- faqat §10 tekshirgan na
 
 ## 12. Brend: logo, ilova ikonkasi, bannerlar
 
-### 12.1 Logo tizimi (mavjud belgi saqlanadi va rasmiylashtiriladi)
+### 12.1 Logo tizimi («Matritsa» belgisi)
 
-- **Belgi** — geometrik «IQ» monogrammasi, 100 birlikli setkada. Q ning dumi yoʻl kabi choʻzilgan: «quest» — oldinga yurish.
+- **Belgi** — «Matritsa»: toʻq koʻk (#10183A) fonda 3×3 Raven matritsasi; diagonal boʻylab kvadratlar doiraga aylanadi, oxirgi katak — marjon rang (#FF5B3A) doira, ya'ni yechilgan javob. Soʻz belgisi — Space Grotesk 700 (konturga aylantirilgan). Batafsil: README «Brend» boʻlimi, manba — `tools/brand.html`.
   - I tayoqchasi: `x8 y21 w16 h58 r3`;
   - halqa: markaz (63, 50), r 21, chiziq 16;
   - dum: (60, 64) → (92, 86), chiziq 15, uchlari yumaloq.
@@ -1551,7 +1551,7 @@ week_scores(user_id, week, ball_verified)            -- faqat §10 tekshirgan na
 
 ### 12.2 Ilova ikonkasi
 
-- **Adaptiv ikonka** (mavjud): oldingi qatlamda monogramma 66/108 xavfsiz zonada, orqasida gradient.
+- **Adaptiv ikonka**: oldingi qatlamda 3×3 belgi 66/108 xavfsiz zonada, orqa qatlam — tekis #10183A.
 - **YANGI — Android 13 mavzuli ikonkasi:**
   - `ic_launcher_monochrome` — shaffof fondagi bir rangli belgi, xuddi shu xavfsiz zonada;
   - `mipmap-anydpi-v26/ic_launcher.xml` va `ic_launcher_round.xml` ga `<monochrome>` qoʻshiladi.

@@ -48,7 +48,7 @@ savolni yo'q qiladi. Ayniqsa Data safety: u maxfiylik siyosati bilan
 | `targetSdk` 36, `minSdk` 24 | ✅ |
 | Ortiqcha ruxsat yo'q | ✅ faqat `INTERNET` (+ bildirishnoma). `READ_MEDIA_IMAGES`, `READ_EXTERNAL_STORAGE`, `CAMERA` manifestda `tools:node="remove"`, CI birlashtirilgan manifestni tekshiradi |
 | `SCHEDULE_EXACT_ALARM` olib tashlangan | ✅ manifestda `tools:node="remove"` |
-| Ikonka (IQ monogramma) | ✅ `tools/brand.html` → `npm run icons` → `android/.../res`: adaptiv (108dp), Android 13 mavzuli (`<monochrome>`), bildirishnoma `ic_stat_iquest` |
+| Ikonka («Matritsa» belgisi: 3×3, marjon javob katagi) | ✅ `tools/brand.html` → `npm run icons` → `android/.../res`: adaptiv (108dp), Android 13 mavzuli (`<monochrome>`), bildirishnoma `ic_stat_iquest` |
 | Maxfiylik siyosati (ochiq URL) | ⚠️ matn IQuest uchun yozilgan (`src/site/pages.mjs`) — faqat **hosting** va domen qoldi |
 | Ma'lumotni o'chirish sahifasi | ⚠️ matn tayyor — **hosting** kerak |
 | Aloqa manzili | ❌ `site.config.json` → `contactEmail` (hozir PLACEHOLDER) |
@@ -429,7 +429,7 @@ tahrirlash kerak emas.
 - [x] Paket nomi `uz.iquest.app`, ilova nomi "IQuest"
 - [x] Ortiqcha ruxsat yo'q
 - [x] Ishlamaydigan to'lov oqimi mobil build'dan kesilgan
-- [x] Ikonka (IQ monogramma), mavzuli ikonka, bildirishnoma ikonkasi, splash, OG rasm
+- [x] Ikonka («Matritsa» belgisi), mavzuli ikonka, bildirishnoma ikonkasi, splash, OG rasm
 - [x] Brend to'plami: logo (SVG/PDF), ijtimoiy tarmoq bannerlari, Play sarlavha rasmi — `npm run brand` (`resources/brand/MANIFEST.json`)
 - [x] Birlashtirilgan manifestda `READ_MEDIA_IMAGES`, `READ_EXTERNAL_STORAGE`, `CAMERA` yo'q (CI tekshiradi)
 - [x] Do'kon matnlari (uz + ru), §6 qoidalari bilan tekshirilgan
